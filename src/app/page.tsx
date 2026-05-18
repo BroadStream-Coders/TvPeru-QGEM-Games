@@ -1,85 +1,12 @@
 import Link from "next/link";
-import {
-  SpellCheck,
-  Calculator,
-  VenetianMask,
-  BookOpen,
-  ArrowRight,
-  Search,
-  Image as ImageIcon,
-  Trophy,
-  Grid2x2,
-  Sigma,
-  HelpCircle,
-  Shuffle,
-} from "lucide-react";
+import { SpellCheck, ArrowRight, Trophy } from "lucide-react";
 
 const workspaces = [
-  {
-    name: "Mi Libro Favorito",
-    description: "Preguntas y respuestas de libros",
-    href: "/workspaces/mi-libro-favorito",
-    icon: BookOpen,
-  },
   {
     name: "Deletreo",
     description: "Gestión de palabras por rondas",
     href: "/workspaces/deletreo",
     icon: SpellCheck,
-  },
-  {
-    name: "Cálculo Mental",
-    description: "Preguntas rápidas de cálculo",
-    href: "/workspaces/calculo-mental",
-    icon: Calculator,
-  },
-  {
-    name: "Intruso",
-    description: "Colector de fotos y selección",
-    href: "/workspaces/intruso",
-    icon: VenetianMask,
-  },
-  {
-    name: "Detective Literario",
-    description: "Encuentra los errores ocultos",
-    href: "/workspaces/detective-literario",
-    icon: Search,
-  },
-  {
-    name: "Album",
-    description: "Colector de fotos en columnas",
-    href: "/workspaces/album",
-    icon: ImageIcon,
-  },
-  {
-    name: "Reto Cruzado",
-    description: "Evaluación y listas dinámicas",
-    href: "/workspaces/reto-cruzado",
-    icon: Shuffle,
-  },
-  {
-    name: "De par en par",
-    description: "Juego de memoria clásico",
-    href: "/workspaces/de-par-en-par",
-    icon: Grid2x2,
-  },
-  {
-    name: "Operaciones Combinadas",
-    description: "Tableros de operaciones cruzadas",
-    href: "/workspaces/operaciones-combinadas",
-    icon: Sigma,
-  },
-  {
-    name: "La Sabes o No",
-    description: "Preguntas de verdadero o falso",
-    href: "/workspaces/la-sabes-o-no",
-    icon: HelpCircle,
-  },
-  {
-    name: "Galería de Fotos",
-    description: "Colector de fotografías",
-    href: "/workspaces/galeria-fotos",
-    icon: ImageIcon,
   },
 ];
 

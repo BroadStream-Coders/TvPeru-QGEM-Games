@@ -45,8 +45,5 @@ export default function DeletreoPage() {
     });
   }, [setHeader, handleLoad]);
 
-  return (
-    <main className="flex-1 overflow-hidden">
-    </main>
-  );
+  return <main className="flex-1 overflow-hidden"></main>;
 }

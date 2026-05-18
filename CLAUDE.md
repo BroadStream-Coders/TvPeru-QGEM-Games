@@ -42,6 +42,7 @@ The goal is fullscreen game displays that load session data from `.json` or `.zi
 5. **`src/helpers/data-processing.ts`** — `parseExcelPaste` / `getColumnData` — parse tab-separated text pasted from Excel for quick-load features.
 
 **Adding a new workspace:**
+
 - Create `src/app/workspaces/<name>/page.tsx` — client component that uses `useWorkspaceGroups` and calls `setHeader` with save/load handlers.
 - Create a domain column component composing `GroupColumn`.
 - Register the workspace in `src/app/page.tsx`'s `workspaces` array.

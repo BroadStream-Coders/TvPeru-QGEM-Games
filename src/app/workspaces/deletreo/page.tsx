@@ -2,14 +2,12 @@
 
 import { useEffect, useCallback } from "react";
 import { SpellCheck } from "lucide-react";
-import { saveAsJson, loadJsonFile } from "@/helpers/persistence";
+import { loadJsonFile } from "@/helpers/persistence";
 import { getColumnData } from "@/helpers/data-processing";
 import { GroupsContainer } from "@/components/shared/group-column/layout/GroupsContainer";
 import { useWorkspaceHeader } from "@/hooks/use-workspace-header";
 import { useWorkspaceGroups } from "@/hooks/use-workspace-groups";
 import { DeletreoColumn } from "./components/DeletreoColumn";
-
-const DEFAULT_FILENAME = "Deletreo.json";
 
 interface DeletreoGroup {
   words: string[];
@@ -38,11 +36,6 @@ export default function DeletreoPage() {
     replaceGroup(groupIndex, getColumnData(matrix, 0));
   };
 
-  const handleSave = useCallback(() => {
-    const data: DeletreoData = { groups: groups.map((words) => ({ words })) };
-    saveAsJson(DEFAULT_FILENAME, data);
-  }, [groups]);
-
   const handleLoad = useCallback(
     async (file: File) => {
       try {
@@ -70,11 +63,9 @@ export default function DeletreoPage() {
     setHeader({
       title: "Deletreo",
       icon: <SpellCheck className="h-3 w-3" />,
-      format: "json",
-      onSave: handleSave,
       onLoad: handleLoad,
     });
-  }, [setHeader, handleSave, handleLoad]);
+  }, [setHeader, handleLoad]);
 
   return (
     <main className="flex-1 overflow-hidden">

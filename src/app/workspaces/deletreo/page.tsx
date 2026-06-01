@@ -52,7 +52,8 @@ export default function DeletreoPage() {
       <FullScreen
         background={{
           type: "video",
-          value: "https://lorem.video/bunny_4k_h265_30fps_60s_23crf_aac_192kbps.mp4",
+          value:
+            "https://lorem.video/bunny_4k_h265_30fps_60s_23crf_aac_192kbps.mp4",
         }}
       >
         <div className="w-full h-full flex flex-col items-center justify-center gap-8 relative text-white">

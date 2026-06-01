@@ -39,7 +39,12 @@ function StageBackground({ background }: { background: FullScreenBackground }) {
     );
   }
 
-  return <div className="absolute inset-0" style={{ backgroundColor: background.value }} />;
+  return (
+    <div
+      className="absolute inset-0"
+      style={{ backgroundColor: background.value }}
+    />
+  );
 }
 
 export function FullScreen({
@@ -59,7 +64,8 @@ export function FullScreen({
     };
 
     document.addEventListener("fullscreenchange", onFullscreenChange);
-    return () => document.removeEventListener("fullscreenchange", onFullscreenChange);
+    return () =>
+      document.removeEventListener("fullscreenchange", onFullscreenChange);
   }, []);
 
   const toggleFullscreen = async () => {
@@ -73,20 +79,22 @@ export function FullScreen({
         await document.exitFullscreen();
       }
     } catch (err) {
-      console.error("Error al intentar cambiar el modo de pantalla completa:", err);
+      console.error(
+        "Error al intentar cambiar el modo de pantalla completa:",
+        err,
+      );
     }
   };
 
   return (
     // 'group' nos sirve para mostrar el botón de maximizar solo cuando pasamos el mouse
     <div className="relative group w-full flex flex-col items-center">
-
       <div
         ref={containerRef}
         tabIndex={0}
         className={cn(
           "relative focus:outline-none flex items-center justify-center transition-all duration-300",
-          isFullscreen ? "w-screen h-screen bg-black" : "w-full"
+          isFullscreen ? "w-screen h-screen bg-black" : "w-full",
         )}
       >
         <div
@@ -96,7 +104,7 @@ export function FullScreen({
             isFullscreen
               ? "h-full w-auto max-w-full"
               : "w-full max-w-[1280px] rounded-xl shadow-lg border border-slate-800",
-            className
+            className,
           )}
           {...props}
         >
@@ -109,7 +117,7 @@ export function FullScreen({
               onClick={toggleFullscreen}
               className={cn(
                 "absolute bottom-4 right-4 p-2 bg-black/60 hover:bg-black/80 text-white rounded-lg transition-opacity z-50 backdrop-blur-sm",
-                "opacity-0 group-hover:opacity-100"
+                "opacity-0 group-hover:opacity-100",
               )}
               title="Pantalla completa"
             >
@@ -118,7 +126,6 @@ export function FullScreen({
           )}
         </div>
       </div>
-
     </div>
   );
 }

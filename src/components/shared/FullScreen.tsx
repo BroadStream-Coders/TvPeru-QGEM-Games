@@ -1,19 +1,52 @@
 "use client";
 
 import React, { useRef, useState, useEffect } from "react";
-import { Maximize, Minimize } from "lucide-react";
+import { Maximize } from "lucide-react";
 import { cn } from "@/lib/utils";
+
+export type FullScreenBackground =
+  | { type: "color"; value: string }
+  | { type: "image"; value: string }
+  | { type: "video"; value: string };
 
 interface FullScreenProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
   /** Clase para manejar la proporción, por defecto 16:9 (aspect-video) */
   aspectRatioClass?: string;
+  background?: FullScreenBackground;
+}
+
+function StageBackground({ background }: { background: FullScreenBackground }) {
+  if (background.type === "video") {
+    return (
+      <video
+        className="absolute inset-0 w-full h-full object-cover"
+        src={background.value}
+        autoPlay
+        loop
+        muted
+        playsInline
+      />
+    );
+  }
+
+  if (background.type === "image") {
+    return (
+      <div
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: `url(${background.value})` }}
+      />
+    );
+  }
+
+  return <div className="absolute inset-0" style={{ backgroundColor: background.value }} />;
 }
 
 export function FullScreen({
   children,
   className,
   aspectRatioClass = "aspect-video",
+  background = { type: "color", value: "#000000" },
   ...props
 }: FullScreenProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -58,7 +91,7 @@ export function FullScreen({
       >
         <div
           className={cn(
-            "relative overflow-hidden bg-slate-900 [container-type:size]",
+            "relative overflow-hidden [container-type:size]",
             aspectRatioClass,
             isFullscreen
               ? "h-full w-auto max-w-full"
@@ -67,7 +100,9 @@ export function FullScreen({
           )}
           {...props}
         >
-          {children}
+          <StageBackground background={background} />
+
+          <div className="relative z-10 w-full h-full">{children}</div>
 
           {!isFullscreen && (
             <button

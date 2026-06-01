@@ -49,16 +49,13 @@ export default function DeletreoPage() {
 
   return (
     <main className="flex-1 p-6 overflow-hidden flex flex-col gap-6">
-      <FullScreen className="bg-slate-950">
+      <FullScreen
+        background={{
+          type: "video",
+          value: "https://lorem.video/bunny_4k_h265_30fps_60s_23crf_aac_192kbps.mp4",
+        }}
+      >
         <div className="w-full h-full flex flex-col items-center justify-center gap-8 relative text-white">
-          {/* Fondo de prueba con cuadros de colores */}
-          <div className="absolute inset-0 grid grid-cols-2 grid-rows-2 opacity-20 pointer-events-none">
-            <div className="bg-red-500"></div>
-            <div className="bg-blue-500"></div>
-            <div className="bg-green-500"></div>
-            <div className="bg-yellow-500"></div>
-          </div>
-
           <h1 className="text-[8cqi] font-black z-10 drop-shadow-lg tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-600">
             DELETREO
           </h1>

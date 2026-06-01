@@ -6,12 +6,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ```bash
 pnpm dev        # dev server at localhost:3000
-pnpm build      # production build
-pnpm lint       # eslint
+pnpm build      # production build — preferred for validation (also runs the TS type-check)
+pnpm lint       # eslint (style/rules only — does NOT type-check)
 pnpm format     # prettier --write over the repo
 ```
 
-No test suite configured yet.
+To validate a change, prefer `pnpm build`: `eslint` does not type-check, so `next build` (which runs TypeScript) is what catches type errors. No test suite configured yet.
 
 ## Stack
 

@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { SpellCheck, ArrowRight, Trophy } from "lucide-react";
+import { SpellCheck, ArrowRight, Trophy, Layers } from "lucide-react";
 
 const workspaces = [
   {
@@ -7,6 +7,12 @@ const workspaces = [
     description: "Gestión de palabras por rondas",
     href: "/workspaces/deletreo",
     icon: SpellCheck,
+  },
+  {
+    name: "Escena",
+    description: "Compositor de escena estilo OBS",
+    href: "/workspaces/escena",
+    icon: Layers,
   },
 ];
 

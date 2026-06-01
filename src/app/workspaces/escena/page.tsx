@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useCallback, useState } from "react";
+import { useEffect, useCallback, useRef, useState } from "react";
 import {
   Layers,
   Plus,
@@ -10,6 +10,7 @@ import {
   Frame,
   Type,
   Image as ImageIcon,
+  Move,
 } from "lucide-react";
 import { loadJsonFile } from "@/helpers/persistence";
 import { useWorkspaceHeader } from "@/hooks/use-workspace-header";
@@ -35,10 +36,13 @@ interface TextContent {
   letterSpacing: number;
 }
 
+type ImageFit = "contain" | "cover" | "fill";
+
 interface ImageContent {
   type: "image";
   value: string;
   mode: "url" | "file";
+  fit: ImageFit;
   fileName?: string;
 }
 
@@ -72,7 +76,7 @@ function defaultTransform(): TransformValues {
 
 function defaultContent(type: SourceType, name: string): SourceContent {
   if (type === "image") {
-    return { type: "image", value: "", mode: "url" };
+    return { type: "image", value: "", mode: "url", fit: "contain" };
   }
   return {
     type: "text",
@@ -118,10 +122,11 @@ function NumberField({
 function SourceView({ content }: { content: SourceContent }) {
   if (content.type === "image") {
     if (!content.value) return null;
+    const backgroundSize = content.fit === "fill" ? "100% 100%" : content.fit;
     return (
       <div
-        className="w-full h-full bg-contain bg-center bg-no-repeat"
-        style={{ backgroundImage: `url(${content.value})` }}
+        className="w-full h-full bg-center bg-no-repeat"
+        style={{ backgroundImage: `url(${content.value})`, backgroundSize }}
       />
     );
   }
@@ -152,6 +157,19 @@ function SourceView({ content }: { content: SourceContent }) {
   );
 }
 
+type Handle = "nw" | "n" | "ne" | "e" | "se" | "s" | "sw" | "w";
+
+const HANDLES: { h: Handle; pos: string; cursor: string }[] = [
+  { h: "nw", pos: "left-0 top-0", cursor: "cursor-nwse-resize" },
+  { h: "n", pos: "left-1/2 top-0", cursor: "cursor-ns-resize" },
+  { h: "ne", pos: "left-full top-0", cursor: "cursor-nesw-resize" },
+  { h: "e", pos: "left-full top-1/2", cursor: "cursor-ew-resize" },
+  { h: "se", pos: "left-full top-full", cursor: "cursor-nwse-resize" },
+  { h: "s", pos: "left-1/2 top-full", cursor: "cursor-ns-resize" },
+  { h: "sw", pos: "left-0 top-full", cursor: "cursor-nesw-resize" },
+  { h: "w", pos: "left-0 top-1/2", cursor: "cursor-ew-resize" },
+];
+
 export default function EscenaPage() {
   const setHeader = useWorkspaceHeader((s) => s.setHeader);
   const resetHeader = useWorkspaceHeader((s) => s.resetHeader);
@@ -159,8 +177,112 @@ export default function EscenaPage() {
   const [sources, setSources] = useState<Source[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [addMenuOpen, setAddMenuOpen] = useState(false);
+  const [editMode, setEditMode] = useState(false);
+
+  const stageRef = useRef<HTMLDivElement>(null);
+  const gestureRef = useRef<{
+    id: string;
+    handle: Handle | "move";
+    clientX: number;
+    clientY: number;
+    left: number;
+    top: number;
+    right: number;
+    bottom: number;
+    pivot: Vec2;
+  } | null>(null);
 
   const selected = sources.find((s) => s.id === selectedId) ?? null;
+
+  const onGestureMove = useCallback((e: PointerEvent) => {
+    const g = gestureRef.current;
+    const stage = stageRef.current;
+    if (!g || !stage) return;
+    const rect = stage.getBoundingClientRect();
+    if (rect.width === 0 || rect.height === 0) return;
+    const dx = ((e.clientX - g.clientX) * DESIGN_WIDTH) / rect.width;
+    const dy = ((e.clientY - g.clientY) * DESIGN_HEIGHT) / rect.height;
+
+    let left = g.left;
+    let top = g.top;
+    let right = g.right;
+    let bottom = g.bottom;
+
+    if (g.handle === "move") {
+      left += dx;
+      right += dx;
+      top += dy;
+      bottom += dy;
+    } else {
+      if (g.handle.includes("w")) left = g.left + dx;
+      if (g.handle.includes("e")) right = g.right + dx;
+      if (g.handle.includes("n")) top = g.top + dy;
+      if (g.handle.includes("s")) bottom = g.bottom + dy;
+      const MIN = 20;
+      if (right - left < MIN) {
+        if (g.handle.includes("w")) left = right - MIN;
+        else right = left + MIN;
+      }
+      if (bottom - top < MIN) {
+        if (g.handle.includes("n")) top = bottom - MIN;
+        else bottom = top + MIN;
+      }
+    }
+
+    const w = right - left;
+    const h = bottom - top;
+    const position = {
+      x: Math.round(left + g.pivot.x * w),
+      y: Math.round(top + g.pivot.y * h),
+    };
+    const size = { x: Math.round(w), y: Math.round(h) };
+    setSources((prev) =>
+      prev.map((s) =>
+        s.id === g.id
+          ? { ...s, transform: { ...s.transform, position, size } }
+          : s,
+      ),
+    );
+  }, []);
+
+  const endGesture = useCallback(() => {
+    gestureRef.current = null;
+    window.removeEventListener("pointermove", onGestureMove);
+    window.removeEventListener("pointerup", endGesture);
+  }, [onGestureMove]);
+
+  const beginGesture = useCallback(
+    (id: string, handle: Handle | "move", e: React.PointerEvent) => {
+      const src = sources.find((s) => s.id === id);
+      if (!src) return;
+      e.preventDefault();
+      e.stopPropagation();
+      const t = src.transform;
+      const left = t.position.x - t.pivot.x * t.size.x;
+      const top = t.position.y - t.pivot.y * t.size.y;
+      gestureRef.current = {
+        id,
+        handle,
+        clientX: e.clientX,
+        clientY: e.clientY,
+        left,
+        top,
+        right: left + t.size.x,
+        bottom: top + t.size.y,
+        pivot: { ...t.pivot },
+      };
+      window.addEventListener("pointermove", onGestureMove);
+      window.addEventListener("pointerup", endGesture);
+    },
+    [sources, onGestureMove, endGesture],
+  );
+
+  useEffect(() => {
+    return () => {
+      window.removeEventListener("pointermove", onGestureMove);
+      window.removeEventListener("pointerup", endGesture);
+    };
+  }, [onGestureMove, endGesture]);
 
   const addSource = (type: SourceType) => {
     setAddMenuOpen(false);
@@ -186,15 +308,39 @@ export default function EscenaPage() {
   const updateContent = (id: string, content: SourceContent) =>
     setSources((prev) => prev.map((s) => (s.id === id ? { ...s, content } : s)));
 
+  const applyNaturalSize = useCallback((id: string, src: string) => {
+    if (!src) return;
+    const img = new window.Image();
+    img.onload = () =>
+      setSources((prev) =>
+        prev.map((s) =>
+          s.id === id
+            ? {
+                ...s,
+                transform: {
+                  ...s.transform,
+                  size: { x: img.naturalWidth, y: img.naturalHeight },
+                },
+              }
+            : s,
+        ),
+      );
+    img.src = src;
+  }, []);
+
   const onPickFile = (id: string, file: File) => {
     const reader = new FileReader();
-    reader.onload = () =>
+    reader.onload = () => {
+      const src = String(reader.result);
       updateContent(id, {
         type: "image",
-        value: String(reader.result),
+        value: src,
         mode: "file",
+        fit: "contain",
         fileName: file.name,
       });
+      applyNaturalSize(id, src);
+    };
     reader.readAsDataURL(file);
   };
 
@@ -253,21 +399,38 @@ export default function EscenaPage() {
   return (
     <main className="flex-1 p-6 overflow-auto flex flex-col gap-6">
       <FullScreen background={{ type: "color", value: "#00B140" }}>
-        {sources.map((s) => (
-          <Transform
-            key={s.id}
-            position={s.transform.position}
-            size={s.transform.size}
-            pivot={s.transform.pivot}
-            className={
-              s.id === selectedId
-                ? "border-2 border-dashed border-white"
-                : "border border-dashed border-white/30"
-            }
-          >
-            <SourceView content={s.content} />
-          </Transform>
-        ))}
+        <div ref={stageRef} className="absolute inset-0">
+          {sources.map((s) => (
+            <Transform
+              key={s.id}
+              position={s.transform.position}
+              size={s.transform.size}
+              pivot={s.transform.pivot}
+              className={
+                s.id === selectedId
+                  ? "border-2 border-dashed border-white"
+                  : "border border-dashed border-white/30"
+              }
+            >
+              <SourceView content={s.content} />
+              {editMode && s.id === selectedId && (
+                <>
+                  <div
+                    onPointerDown={(e) => beginGesture(s.id, "move", e)}
+                    className="absolute inset-0 cursor-move touch-none select-none"
+                  />
+                  {HANDLES.map((hd) => (
+                    <div
+                      key={hd.h}
+                      onPointerDown={(e) => beginGesture(s.id, hd.h, e)}
+                      className={`absolute ${hd.pos} ${hd.cursor} h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border border-slate-700 bg-white touch-none`}
+                    />
+                  ))}
+                </>
+              )}
+            </Transform>
+          ))}
+        </div>
       </FullScreen>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -398,6 +561,7 @@ export default function EscenaPage() {
                     content={selected.content}
                     onChange={(c) => updateContent(selected.id, c)}
                     onPickFile={(file) => onPickFile(selected.id, file)}
+                    onResolveSize={(src) => applyNaturalSize(selected.id, src)}
                   />
                 )}
               </div>
@@ -407,11 +571,23 @@ export default function EscenaPage() {
 
         {/* Transform */}
         <div className="border border-slate-200 rounded-xl bg-slate-50 flex flex-col h-[380px]">
-          <div className="border-b border-slate-200 px-4 py-3">
+          <div className="flex items-center justify-between border-b border-slate-200 px-4 py-3">
             <h3 className="flex items-center gap-2 font-bold text-slate-700">
               <Frame size={16} className="text-slate-400" />
               Transform
             </h3>
+            <button
+              onClick={() => setEditMode((v) => !v)}
+              disabled={!selected}
+              className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-40 ${
+                editMode
+                  ? "bg-brand text-white"
+                  : "bg-white border border-slate-300 text-slate-600 hover:bg-slate-100"
+              }`}
+            >
+              <Move size={14} />
+              Editar
+            </button>
           </div>
 
           <div className="p-4 flex-1 overflow-auto">
@@ -544,10 +720,12 @@ function ImageProperties({
   content,
   onChange,
   onPickFile,
+  onResolveSize,
 }: {
   content: ImageContent;
   onChange: (content: ImageContent) => void;
   onPickFile: (file: File) => void;
+  onResolveSize: (src: string) => void;
 }) {
   return (
     <>
@@ -562,6 +740,7 @@ function ImageProperties({
               type: "image",
               value: "",
               mode: e.target.value as ImageContent["mode"],
+              fit: content.fit,
             })
           }
           className="h-9 w-full rounded-md border border-slate-300 bg-white px-2 text-sm text-slate-800 focus:border-slate-500 focus:outline-none"
@@ -580,6 +759,7 @@ function ImageProperties({
             type="text"
             value={content.value}
             onChange={(e) => onChange({ ...content, value: e.target.value })}
+            onBlur={(e) => onResolveSize(e.target.value)}
             placeholder="https://…"
             className="w-full rounded-md border border-slate-300 bg-white px-2 py-1.5 text-sm text-slate-800 focus:border-slate-500 focus:outline-none"
           />
@@ -609,6 +789,23 @@ function ImageProperties({
           )}
         </div>
       )}
+
+      <label className="flex flex-col gap-1">
+        <span className="text-2xs font-mono uppercase tracking-wider text-slate-500">
+          Ajuste
+        </span>
+        <select
+          value={content.fit}
+          onChange={(e) =>
+            onChange({ ...content, fit: e.target.value as ImageFit })
+          }
+          className="h-9 w-full rounded-md border border-slate-300 bg-white px-2 text-sm text-slate-800 focus:border-slate-500 focus:outline-none"
+        >
+          <option value="contain">Ajustar (sin recortar)</option>
+          <option value="cover">Llenar (recorta)</option>
+          <option value="fill">Estirar (deforma)</option>
+        </select>
+      </label>
 
       {content.mode === "url" && content.value && (
         <div

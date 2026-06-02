@@ -117,6 +117,7 @@ export default function DeletreoPage() {
     fontSize: 80,
     letterSpacing: 20,
     offset: { x: 0, y: 0 },
+    underlineGap: 0,
   });
 
   const [spellStep, setSpellStep] = useState(0);
@@ -323,27 +324,28 @@ export default function DeletreoPage() {
             }}
           >
             <div
-              className={`${jetBrainsMono.className} w-full h-full flex items-center justify-center font-black uppercase text-white`}
+              className={`${jetBrainsMono.className} w-full h-full flex items-center justify-center font-black uppercase leading-none text-white`}
               style={{
                 fontSize: `${(textConfig.fontSize / DESIGN_WIDTH) * 100}cqw`,
-                letterSpacing: `${(textConfig.letterSpacing / DESIGN_WIDTH) * 100}cqw`,
+                gap: `${(textConfig.letterSpacing / DESIGN_WIDTH) * 100}cqw`,
                 transform: `translate(${(textConfig.offset.x / DESIGN_WIDTH) * 100}cqw, ${(textConfig.offset.y / DESIGN_HEIGHT) * 100}cqh)`,
               }}
             >
               {word.split("").map((char, i) => (
                 <span
                   key={i}
-                  style={
-                    i < spellStep
-                      ? {
-                          textDecorationLine: "underline",
-                          textDecorationThickness: "0.08em",
-                          textUnderlineOffset: "0.12em",
-                        }
-                      : undefined
-                  }
+                  className="inline-flex flex-col items-center leading-none"
                 >
-                  {char}
+                  <span className="leading-none">{char}</span>
+                  <span
+                    className="bg-current"
+                    style={{
+                      marginTop: `${textConfig.underlineGap / 100}em`,
+                      width: "0.7em",
+                      height: "0.09em",
+                      opacity: i < spellStep ? 1 : 0,
+                    }}
+                  />
                 </span>
               ))}
             </div>
@@ -492,6 +494,13 @@ export default function DeletreoPage() {
                 label="Offset Y"
                 value={textConfig.offset.y}
                 onChange={setOffset("y")}
+              />
+              <NumberField
+                label="Subrayado ↕"
+                value={textConfig.underlineGap}
+                onChange={(underlineGap) =>
+                  setTextConfig((c) => ({ ...c, underlineGap }))
+                }
               />
             </div>
           </div>

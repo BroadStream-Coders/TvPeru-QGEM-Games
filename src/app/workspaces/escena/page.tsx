@@ -291,7 +291,12 @@ export default function EscenaPage() {
       const name = `Fuente ${prev.length + 1}`;
       return [
         ...prev,
-        { id, name, content: defaultContent(type, name), transform: defaultTransform() },
+        {
+          id,
+          name,
+          content: defaultContent(type, name),
+          transform: defaultTransform(),
+        },
       ];
     });
     setSelectedId(id);
@@ -306,7 +311,9 @@ export default function EscenaPage() {
     setSources((prev) => prev.map((s) => (s.id === id ? { ...s, name } : s)));
 
   const updateContent = (id: string, content: SourceContent) =>
-    setSources((prev) => prev.map((s) => (s.id === id ? { ...s, content } : s)));
+    setSources((prev) =>
+      prev.map((s) => (s.id === id ? { ...s, content } : s)),
+    );
 
   const applyNaturalSize = useCallback((id: string, src: string) => {
     if (!src) return;

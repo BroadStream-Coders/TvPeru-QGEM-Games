@@ -7,7 +7,10 @@ import { useWorkspaceHeader } from "@/hooks/use-workspace-header";
 
 import mainFrame from "./graphics/mainFrame.png";
 
-import { FullScreen, FullScreenBackground } from "@/components/shared/FullScreen";
+import {
+  FullScreen,
+  FullScreenBackground,
+} from "@/components/shared/FullScreen";
 import { BackgroundConfig } from "@/components/shared/BackgroundConfig";
 import {
   Transform,
@@ -289,7 +292,9 @@ export default function DeletreoPage() {
               Cambiar palabra
             </button>
             <span className="text-sm text-slate-500">
-              {words.length > 0 ? `${index + 1} / ${words.length}` : "Sin datos"}
+              {words.length > 0
+                ? `${index + 1} / ${words.length}`
+                : "Sin datos"}
             </span>
           </div>
 

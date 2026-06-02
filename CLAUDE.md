@@ -24,7 +24,7 @@ To validate a change, prefer `pnpm build`: `eslint` does not type-check, so `nex
 
 ## What this app is
 
-QGEM Games is a **fullscreen game display** system for TV Perú's show "Que Gane el Mejor". It is a *display/visualization* tool, not a data collector: each game loads a session file and renders it fullscreen for broadcast (often over a chroma background that the TV studio keys). Each game is a self-contained **workspace** route under `src/app/workspaces/<name>/`.
+QGEM Games is a **fullscreen game display** system for TV Perú's show "Que Gane el Mejor". It is a _display/visualization_ tool, not a data collector: each game loads a session file and renders it fullscreen for broadcast (often over a chroma background that the TV studio keys). Each game is a self-contained **workspace** route under `src/app/workspaces/<name>/`.
 
 ## Architecture
 
@@ -40,7 +40,7 @@ QGEM Games is a **fullscreen game display** system for TV Perú's show "Que Gane
 
 **`FullScreen` is the display primitive** (`src/components/shared/FullScreen.tsx`). It renders a 16:9 "stage" that a workspace fills with its game UI. Two things are essential and non-obvious:
 
-1. **The stage is a container-query context (`[container-type:size]`), so game content MUST be sized in container-query units (`cqi`/`cqw`/`cqh`), not `vw`/`rem`/`px`.** This is the whole point: `cqi` resolves against the stage box, so the layout looks *identical* whether or not the user is in browser fullscreen. Sizing content in viewport/absolute units reintroduces the bug where fullscreen and windowed views diverge. In fullscreen the stage is letterboxed (centered 16:9 on black) so the aspect ratio never distorts.
+1. **The stage is a container-query context (`[container-type:size]`), so game content MUST be sized in container-query units (`cqi`/`cqw`/`cqh`), not `vw`/`rem`/`px`.** This is the whole point: `cqi` resolves against the stage box, so the layout looks _identical_ whether or not the user is in browser fullscreen. Sizing content in viewport/absolute units reintroduces the bug where fullscreen and windowed views diverge. In fullscreen the stage is letterboxed (centered 16:9 on black) so the aspect ratio never distorts.
 
 2. **The `background` prop** is a discriminated union — all three variants take a URL/value, render behind the content, and are meant to be swappable per game:
 

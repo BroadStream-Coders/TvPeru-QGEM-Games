@@ -6,6 +6,7 @@ import { loadJsonFile } from "@/helpers/persistence";
 import { useWorkspaceHeader } from "@/hooks/use-workspace-header";
 import { useGameKeys } from "@/hooks/use-game-keys";
 import { useTransformGesture, HANDLES } from "@/hooks/use-transform-gesture";
+import { useShake } from "@/hooks/use-shake";
 import { SOUNDS, playSound } from "@/lib/audio";
 
 import {
@@ -63,6 +64,8 @@ export default function DeletreoPage() {
   const setAxis =
     (field: keyof TransformValues, axis: keyof Vec2) => (value: number) =>
       setTransform((t) => ({ ...t, [field]: { ...t[field], [axis]: value } }));
+
+  const { ref: frameRef, shake } = useShake<HTMLDivElement>();
 
   const stageRef = useRef<HTMLDivElement>(null);
   const { beginGesture } = useTransformGesture({
@@ -147,6 +150,7 @@ export default function DeletreoPage() {
     onMarkError: () => {
       setErrorMode(true);
       playSound(SOUNDS.incorrectAnswer);
+      shake();
     },
     onInteract: () => setSpellStep((s) => Math.min(s + 1, word.length)),
   });
@@ -168,6 +172,7 @@ export default function DeletreoPage() {
                 }
               >
                 <SpellFrame
+                  frameRef={frameRef}
                   word={word}
                   spellStep={spellStep}
                   errorMode={errorMode}

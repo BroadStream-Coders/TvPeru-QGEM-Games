@@ -1,3 +1,4 @@
+import type { Ref } from "react";
 import { jetBrainsMono } from "@/lib/fonts";
 import { DESIGN_WIDTH, DESIGN_HEIGHT } from "@/components/shared/Transform";
 
@@ -16,14 +17,17 @@ export function SpellFrame({
   spellStep,
   errorMode,
   textConfig,
+  frameRef,
 }: {
   word: string;
   spellStep: number;
   errorMode: boolean;
   textConfig: SpellTextConfig;
+  frameRef?: Ref<HTMLDivElement>;
 }) {
   return (
     <div
+      ref={frameRef}
       className="w-full h-full"
       style={{
         backgroundImage: `url(${errorMode ? errorFrame.src : mainFrame.src})`,

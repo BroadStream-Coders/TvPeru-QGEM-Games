@@ -13,11 +13,7 @@ import { loadJsonFile } from "@/helpers/persistence";
 import { useWorkspaceHeader } from "@/hooks/use-workspace-header";
 import { useGameKeys } from "@/hooks/use-game-keys";
 import { useTransformGesture, HANDLES } from "@/hooks/use-transform-gesture";
-import { jetBrainsMono } from "@/lib/fonts";
 import { SOUNDS, playSound } from "@/lib/audio";
-
-import mainFrame from "./graphics/mainFrame.png";
-import errorFrame from "./graphics/errorFrame.png";
 
 import {
   FullScreen,
@@ -25,13 +21,8 @@ import {
 } from "@/components/shared/FullScreen";
 import { BackgroundConfig } from "@/components/shared/BackgroundConfig";
 import { NumberField } from "@/components/shared/NumberField";
-import {
-  Transform,
-  TransformValues,
-  Vec2,
-  DESIGN_WIDTH,
-  DESIGN_HEIGHT,
-} from "@/components/shared/Transform";
+import { Transform, TransformValues, Vec2 } from "@/components/shared/Transform";
+import { SpellFrame } from "./components/SpellFrame";
 
 interface DeletreoGroup {
   words: string[];
@@ -188,38 +179,13 @@ export default function DeletreoPage() {
                 ? "border-2 border-dashed border-white/60"
                 : undefined
             }
-            style={{
-              backgroundImage: `url(${errorMode ? errorFrame.src : mainFrame.src})`,
-              backgroundSize: "100% 100%",
-              backgroundRepeat: "no-repeat",
-            }}
           >
-            <div
-              className={`${jetBrainsMono.className} w-full h-full flex items-center justify-center font-black uppercase leading-none text-white`}
-              style={{
-                fontSize: `${(textConfig.fontSize / DESIGN_WIDTH) * 100}cqw`,
-                gap: `${(textConfig.letterSpacing / DESIGN_WIDTH) * 100}cqw`,
-                transform: `translate(${(textConfig.offset.x / DESIGN_WIDTH) * 100}cqw, ${(textConfig.offset.y / DESIGN_HEIGHT) * 100}cqh)`,
-              }}
-            >
-              {word.split("").map((char, i) => (
-                <span
-                  key={i}
-                  className="inline-flex flex-col items-center leading-none"
-                >
-                  <span className="leading-none">{char}</span>
-                  <span
-                    className="bg-current"
-                    style={{
-                      marginTop: `${textConfig.underlineGap / 100}em`,
-                      width: "0.7em",
-                      height: "0.09em",
-                      opacity: i < spellStep ? 1 : 0,
-                    }}
-                  />
-                </span>
-              ))}
-            </div>
+            <SpellFrame
+              word={word}
+              spellStep={spellStep}
+              errorMode={errorMode}
+              textConfig={textConfig}
+            />
             {editMode && (
               <>
                 <div

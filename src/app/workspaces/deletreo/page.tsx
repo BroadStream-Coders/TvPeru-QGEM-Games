@@ -1,14 +1,7 @@
 "use client";
 
 import { useEffect, useCallback, useRef, useState } from "react";
-import {
-  SpellCheck,
-  Frame,
-  Move,
-  Eye,
-  EyeOff,
-  Type,
-} from "lucide-react";
+import { SpellCheck } from "lucide-react";
 import { loadJsonFile } from "@/helpers/persistence";
 import { useWorkspaceHeader } from "@/hooks/use-workspace-header";
 import { useGameKeys } from "@/hooks/use-game-keys";
@@ -20,9 +13,12 @@ import {
   FullScreenBackground,
 } from "@/components/shared/FullScreen";
 import { BackgroundConfig } from "@/components/shared/BackgroundConfig";
-import { NumberField } from "@/components/shared/NumberField";
 import { Transform, TransformValues, Vec2 } from "@/components/shared/Transform";
 import { SpellFrame } from "./components/SpellFrame";
+import { StatusCard } from "./components/StatusCard";
+import { LegendCard } from "./components/LegendCard";
+import { PositionCard } from "./components/PositionCard";
+import { TextCard } from "./components/TextCard";
 
 interface DeletreoGroup {
   words: string[];
@@ -31,15 +27,6 @@ interface DeletreoGroup {
 interface DeletreoData {
   groups: DeletreoGroup[];
 }
-
-const KEY_LEGEND: { keys: string; label: string }[] = [
-  { keys: "Num 0-9", label: "Elegir grupo" },
-  { keys: "0-9", label: "Elegir slot (Shift +10)" },
-  { keys: "N / B", label: "Slot siguiente / anterior" },
-  { keys: "M", label: "Mostrar respuesta" },
-  { keys: "F", label: "Marcar error" },
-  { keys: "E", label: "Interacción" },
-];
 
 export default function DeletreoPage() {
   const setHeader = useWorkspaceHeader((s) => s.setHeader);
@@ -71,9 +58,7 @@ export default function DeletreoPage() {
 
   const [spellStep, setSpellStep] = useState(0);
   const [errorMode, setErrorMode] = useState(false);
-
-  const setOffset = (axis: keyof Vec2) => (value: number) =>
-    setTextConfig((c) => ({ ...c, offset: { ...c.offset, [axis]: value } }));
+  const [manualText, setManualText] = useState("");
 
   const setAxis =
     (field: keyof TransformValues, axis: keyof Vec2) => (value: number) =>
@@ -120,7 +105,7 @@ export default function DeletreoPage() {
   }, [setHeader, handleLoad]);
 
   const currentGroup = groups[groupIndex] ?? [];
-  const word = currentGroup[slotIndex] ?? "";
+  const word = manualText !== "" ? manualText : (currentGroup[slotIndex] ?? "");
 
   const selectGroup = (n: number) => {
     if (n < 0 || n >= groups.length) return;
@@ -168,173 +153,75 @@ export default function DeletreoPage() {
 
   return (
     <main className="flex-1 p-6 overflow-auto flex flex-col gap-6">
-      <FullScreen background={background}>
-        <div ref={stageRef} className="absolute inset-0">
-          <Transform
-            position={transform.position}
-            size={transform.size}
-            pivot={transform.pivot}
-            className={
-              showGuides || editMode
-                ? "border-2 border-dashed border-white/60"
-                : undefined
-            }
-          >
-            <SpellFrame
-              word={word}
-              spellStep={spellStep}
-              errorMode={errorMode}
-              textConfig={textConfig}
-            />
-            {editMode && (
-              <>
-                <div
-                  onPointerDown={(e) => beginGesture("move", e)}
-                  className="absolute inset-0 cursor-move touch-none select-none"
+      <div className="flex flex-col lg:flex-row gap-4">
+        <div className="flex-1 min-w-0">
+          <FullScreen background={background}>
+            <div ref={stageRef} className="absolute inset-0">
+              <Transform
+                position={transform.position}
+                size={transform.size}
+                pivot={transform.pivot}
+                className={
+                  showGuides || editMode
+                    ? "border-2 border-dashed border-white/60"
+                    : undefined
+                }
+              >
+                <SpellFrame
+                  word={word}
+                  spellStep={spellStep}
+                  errorMode={errorMode}
+                  textConfig={textConfig}
                 />
-                {HANDLES.map((hd) => (
-                  <div
-                    key={hd.h}
-                    onPointerDown={(e) => beginGesture(hd.h, e)}
-                    className={`absolute ${hd.pos} ${hd.cursor} h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border border-slate-700 bg-white touch-none`}
-                  />
-                ))}
-              </>
-            )}
-          </Transform>
+                {editMode && (
+                  <>
+                    <div
+                      onPointerDown={(e) => beginGesture("move", e)}
+                      className="absolute inset-0 cursor-move touch-none select-none"
+                    />
+                    {HANDLES.map((hd) => (
+                      <div
+                        key={hd.h}
+                        onPointerDown={(e) => beginGesture(hd.h, e)}
+                        className={`absolute ${hd.pos} ${hd.cursor} h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border border-slate-700 bg-white touch-none`}
+                      />
+                    ))}
+                  </>
+                )}
+              </Transform>
+            </div>
+          </FullScreen>
         </div>
-      </FullScreen>
+
+        <div className="flex flex-col gap-4 lg:w-72 shrink-0">
+          <StatusCard
+            groups={groups}
+            groupIndex={groupIndex}
+            slotIndex={slotIndex}
+          />
+          <LegendCard />
+        </div>
+      </div>
 
       {/* Config */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-          {/* Estado */}
-          <div className="flex flex-col gap-3 rounded-xl border border-slate-200 bg-slate-50 p-4">
-            <span className="flex items-center gap-2 text-2xs font-mono uppercase tracking-wider text-slate-500">
-              <SpellCheck size={14} className="text-slate-400" />
-              Estado
-            </span>
-            <span className="text-sm font-semibold text-slate-700">
-              {groups.length > 0
-                ? `Grupo ${groupIndex + 1}/${groups.length} · Slot ${slotIndex + 1}/${currentGroup.length}`
-                : "Sin datos"}
-            </span>
-
-            <span className="mt-1 text-2xs font-mono uppercase tracking-wider text-slate-500">
-              Teclas
-            </span>
-            <ul className="flex flex-col gap-1 text-xs text-slate-600">
-              {KEY_LEGEND.map((k) => (
-                <li key={k.keys} className="flex items-center gap-2">
-                  <kbd className="min-w-10 rounded border border-slate-300 bg-white px-1.5 py-0.5 text-center font-mono text-2xs text-slate-700">
-                    {k.keys}
-                  </kbd>
-                  <span>{k.label}</span>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Fondo */}
-          <div className="flex flex-col gap-3 rounded-xl border border-slate-200 bg-slate-50 p-4">
-            <BackgroundConfig value={background} onChange={setBackground} />
-          </div>
-
-          {/* Posición */}
-          <div className="flex flex-col gap-3 rounded-xl border border-slate-200 bg-slate-50 p-4">
-            <div className="flex items-center justify-between">
-              <span className="flex items-center gap-2 text-2xs font-mono uppercase tracking-wider text-slate-500">
-                <Frame size={14} className="text-slate-400" />
-                Posición
-              </span>
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => setShowGuides((v) => !v)}
-                  title={showGuides ? "Ocultar guías" : "Mostrar guías"}
-                  className={`flex items-center justify-center rounded-md p-1.5 transition-colors ${
-                    showGuides
-                      ? "bg-brand text-white"
-                      : "border border-slate-300 bg-white text-slate-600 hover:bg-slate-100"
-                  }`}
-                >
-                  {showGuides ? <Eye size={14} /> : <EyeOff size={14} />}
-                </button>
-                <button
-                  onClick={() => setEditMode((v) => !v)}
-                  className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-semibold transition-colors ${
-                    editMode
-                      ? "bg-brand text-white"
-                      : "border border-slate-300 bg-white text-slate-600 hover:bg-slate-100"
-                  }`}
-                >
-                  <Move size={14} />
-                  Editar
-                </button>
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-3">
-              <NumberField
-                label="Pos X"
-                value={transform.position.x}
-                onChange={setAxis("position", "x")}
-              />
-              <NumberField
-                label="Pos Y"
-                value={transform.position.y}
-                onChange={setAxis("position", "y")}
-              />
-              <NumberField
-                label="Width"
-                value={transform.size.x}
-                onChange={setAxis("size", "x")}
-              />
-              <NumberField
-                label="Height"
-                value={transform.size.y}
-                onChange={setAxis("size", "y")}
-              />
-            </div>
-          </div>
-
-          {/* Texto */}
-          <div className="flex flex-col gap-3 rounded-xl border border-slate-200 bg-slate-50 p-4">
-            <span className="flex items-center gap-2 text-2xs font-mono uppercase tracking-wider text-slate-500">
-              <Type size={14} className="text-slate-400" />
-              Texto
-            </span>
-            <div className="grid grid-cols-2 gap-3">
-              <NumberField
-                label="Tamaño"
-                value={textConfig.fontSize}
-                onChange={(fontSize) =>
-                  setTextConfig((c) => ({ ...c, fontSize }))
-                }
-              />
-              <NumberField
-                label="Espaciado"
-                value={textConfig.letterSpacing}
-                onChange={(letterSpacing) =>
-                  setTextConfig((c) => ({ ...c, letterSpacing }))
-                }
-              />
-              <NumberField
-                label="Offset X"
-                value={textConfig.offset.x}
-                onChange={setOffset("x")}
-              />
-              <NumberField
-                label="Offset Y"
-                value={textConfig.offset.y}
-                onChange={setOffset("y")}
-              />
-              <NumberField
-                label="Subrayado ↕"
-                value={textConfig.underlineGap}
-                onChange={(underlineGap) =>
-                  setTextConfig((c) => ({ ...c, underlineGap }))
-                }
-              />
-            </div>
-          </div>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <div className="flex flex-col gap-3 rounded-xl border border-slate-200 bg-slate-50 p-4">
+          <BackgroundConfig value={background} onChange={setBackground} />
+        </div>
+        <PositionCard
+          transform={transform}
+          setAxis={setAxis}
+          showGuides={showGuides}
+          onToggleGuides={() => setShowGuides((v) => !v)}
+          editMode={editMode}
+          onToggleEdit={() => setEditMode((v) => !v)}
+        />
+        <TextCard
+          textConfig={textConfig}
+          onChange={setTextConfig}
+          manualText={manualText}
+          onManualTextChange={setManualText}
+        />
       </div>
     </main>
   );

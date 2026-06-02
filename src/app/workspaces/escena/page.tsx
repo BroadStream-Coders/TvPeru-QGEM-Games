@@ -180,6 +180,7 @@ export default function EscenaPage() {
   const [editMode, setEditMode] = useState(false);
 
   const stageRef = useRef<HTMLDivElement>(null);
+  const cleanupRef = useRef<(() => void) | null>(null);
   const gestureRef = useRef<{
     id: string;
     handle: Handle | "move";
@@ -245,12 +246,6 @@ export default function EscenaPage() {
     );
   }, []);
 
-  const endGesture = useCallback(() => {
-    gestureRef.current = null;
-    window.removeEventListener("pointermove", onGestureMove);
-    window.removeEventListener("pointerup", endGesture);
-  }, [onGestureMove]);
-
   const beginGesture = useCallback(
     (id: string, handle: Handle | "move", e: React.PointerEvent) => {
       const src = sources.find((s) => s.id === id);
@@ -271,18 +266,22 @@ export default function EscenaPage() {
         bottom: top + t.size.y,
         pivot: { ...t.pivot },
       };
+      const endGesture = () => {
+        gestureRef.current = null;
+        window.removeEventListener("pointermove", onGestureMove);
+        window.removeEventListener("pointerup", endGesture);
+        cleanupRef.current = null;
+      };
+      cleanupRef.current = endGesture;
       window.addEventListener("pointermove", onGestureMove);
       window.addEventListener("pointerup", endGesture);
     },
-    [sources, onGestureMove, endGesture],
+    [sources, onGestureMove],
   );
 
   useEffect(() => {
-    return () => {
-      window.removeEventListener("pointermove", onGestureMove);
-      window.removeEventListener("pointerup", endGesture);
-    };
-  }, [onGestureMove, endGesture]);
+    return () => cleanupRef.current?.();
+  }, []);
 
   const addSource = (type: SourceType) => {
     setAddMenuOpen(false);

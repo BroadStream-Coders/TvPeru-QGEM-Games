@@ -96,6 +96,7 @@ export default function DeletreoPage() {
       setTransform((t) => ({ ...t, [field]: { ...t[field], [axis]: value } }));
 
   const stageRef = useRef<HTMLDivElement>(null);
+  const cleanupRef = useRef<(() => void) | null>(null);
   const gestureRef = useRef<{
     handle: Handle | "move";
     clientX: number;
@@ -154,12 +155,6 @@ export default function DeletreoPage() {
     }));
   }, []);
 
-  const endGesture = useCallback(() => {
-    gestureRef.current = null;
-    window.removeEventListener("pointermove", onGestureMove);
-    window.removeEventListener("pointerup", endGesture);
-  }, [onGestureMove]);
-
   const beginGesture = useCallback(
     (handle: Handle | "move", e: React.PointerEvent) => {
       e.preventDefault();
@@ -179,18 +174,22 @@ export default function DeletreoPage() {
         };
         return t;
       });
+      const endGesture = () => {
+        gestureRef.current = null;
+        window.removeEventListener("pointermove", onGestureMove);
+        window.removeEventListener("pointerup", endGesture);
+        cleanupRef.current = null;
+      };
+      cleanupRef.current = endGesture;
       window.addEventListener("pointermove", onGestureMove);
       window.addEventListener("pointerup", endGesture);
     },
-    [onGestureMove, endGesture],
+    [onGestureMove],
   );
 
   useEffect(() => {
-    return () => {
-      window.removeEventListener("pointermove", onGestureMove);
-      window.removeEventListener("pointerup", endGesture);
-    };
-  }, [onGestureMove, endGesture]);
+    return () => cleanupRef.current?.();
+  }, []);
 
   const handleLoad = useCallback(async (file: File) => {
     try {

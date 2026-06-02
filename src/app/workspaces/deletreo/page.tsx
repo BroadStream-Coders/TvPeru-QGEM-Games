@@ -12,6 +12,7 @@ import {
 import { loadJsonFile } from "@/helpers/persistence";
 import { useWorkspaceHeader } from "@/hooks/use-workspace-header";
 import { useGameKeys } from "@/hooks/use-game-keys";
+import { useTransformGesture, HANDLES } from "@/hooks/use-transform-gesture";
 import { jetBrainsMono } from "@/lib/fonts";
 import { SOUNDS, playSound } from "@/lib/audio";
 
@@ -78,19 +79,6 @@ const KEY_LEGEND: { keys: string; label: string }[] = [
   { keys: "E", label: "Interacción" },
 ];
 
-type Handle = "nw" | "n" | "ne" | "e" | "se" | "s" | "sw" | "w";
-
-const HANDLES: { h: Handle; pos: string; cursor: string }[] = [
-  { h: "nw", pos: "left-0 top-0", cursor: "cursor-nwse-resize" },
-  { h: "n", pos: "left-1/2 top-0", cursor: "cursor-ns-resize" },
-  { h: "ne", pos: "left-full top-0", cursor: "cursor-nesw-resize" },
-  { h: "e", pos: "left-full top-1/2", cursor: "cursor-ew-resize" },
-  { h: "se", pos: "left-full top-full", cursor: "cursor-nwse-resize" },
-  { h: "s", pos: "left-1/2 top-full", cursor: "cursor-ns-resize" },
-  { h: "sw", pos: "left-0 top-full", cursor: "cursor-nesw-resize" },
-  { h: "w", pos: "left-0 top-1/2", cursor: "cursor-ew-resize" },
-];
-
 export default function DeletreoPage() {
   const setHeader = useWorkspaceHeader((s) => s.setHeader);
   const resetHeader = useWorkspaceHeader((s) => s.resetHeader);
@@ -130,100 +118,12 @@ export default function DeletreoPage() {
       setTransform((t) => ({ ...t, [field]: { ...t[field], [axis]: value } }));
 
   const stageRef = useRef<HTMLDivElement>(null);
-  const cleanupRef = useRef<(() => void) | null>(null);
-  const gestureRef = useRef<{
-    handle: Handle | "move";
-    clientX: number;
-    clientY: number;
-    left: number;
-    top: number;
-    right: number;
-    bottom: number;
-    pivot: Vec2;
-  } | null>(null);
-
-  const onGestureMove = useCallback((e: PointerEvent) => {
-    const g = gestureRef.current;
-    const stage = stageRef.current;
-    if (!g || !stage) return;
-    const rect = stage.getBoundingClientRect();
-    if (rect.width === 0 || rect.height === 0) return;
-    const dx = ((e.clientX - g.clientX) * DESIGN_WIDTH) / rect.width;
-    const dy = ((e.clientY - g.clientY) * DESIGN_HEIGHT) / rect.height;
-
-    let left = g.left;
-    let top = g.top;
-    let right = g.right;
-    let bottom = g.bottom;
-
-    if (g.handle === "move") {
-      left += dx;
-      right += dx;
-      top += dy;
-      bottom += dy;
-    } else {
-      if (g.handle.includes("w")) left = g.left + dx;
-      if (g.handle.includes("e")) right = g.right + dx;
-      if (g.handle.includes("n")) top = g.top + dy;
-      if (g.handle.includes("s")) bottom = g.bottom + dy;
-      const MIN = 20;
-      if (right - left < MIN) {
-        if (g.handle.includes("w")) left = right - MIN;
-        else right = left + MIN;
-      }
-      if (bottom - top < MIN) {
-        if (g.handle.includes("n")) top = bottom - MIN;
-        else bottom = top + MIN;
-      }
-    }
-
-    const w = right - left;
-    const h = bottom - top;
-    setTransform((t) => ({
-      ...t,
-      position: {
-        x: Math.round(left + g.pivot.x * w),
-        y: Math.round(top + g.pivot.y * h),
-      },
-      size: { x: Math.round(w), y: Math.round(h) },
-    }));
-  }, []);
-
-  const beginGesture = useCallback(
-    (handle: Handle | "move", e: React.PointerEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-      setTransform((t) => {
-        const left = t.position.x - t.pivot.x * t.size.x;
-        const top = t.position.y - t.pivot.y * t.size.y;
-        gestureRef.current = {
-          handle,
-          clientX: e.clientX,
-          clientY: e.clientY,
-          left,
-          top,
-          right: left + t.size.x,
-          bottom: top + t.size.y,
-          pivot: { ...t.pivot },
-        };
-        return t;
-      });
-      const endGesture = () => {
-        gestureRef.current = null;
-        window.removeEventListener("pointermove", onGestureMove);
-        window.removeEventListener("pointerup", endGesture);
-        cleanupRef.current = null;
-      };
-      cleanupRef.current = endGesture;
-      window.addEventListener("pointermove", onGestureMove);
-      window.addEventListener("pointerup", endGesture);
-    },
-    [onGestureMove],
-  );
-
-  useEffect(() => {
-    return () => cleanupRef.current?.();
-  }, []);
+  const { beginGesture } = useTransformGesture({
+    stageRef,
+    getTransform: () => transform,
+    onChange: ({ position, size }) =>
+      setTransform((t) => ({ ...t, position, size })),
+  });
 
   const handleLoad = useCallback(async (file: File) => {
     try {

@@ -14,7 +14,11 @@ import {
   FullScreenBackground,
 } from "@/components/shared/FullScreen";
 import { BackgroundConfig } from "@/components/shared/BackgroundConfig";
-import { Transform, TransformValues, Vec2 } from "@/components/shared/Transform";
+import {
+  Transform,
+  TransformValues,
+  Vec2,
+} from "@/components/shared/Transform";
 import { SpellFrame } from "./components/SpellFrame";
 import { StatusCard } from "./components/StatusCard";
 import { LegendCard } from "./components/LegendCard";

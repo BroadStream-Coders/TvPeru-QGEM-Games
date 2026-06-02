@@ -13,8 +13,12 @@ export function TextCard({
   manualText: string;
   onManualTextChange: (value: string) => void;
 }) {
-  const setOffset = (axis: keyof SpellTextConfig["offset"]) => (value: number) =>
-    onChange({ ...textConfig, offset: { ...textConfig.offset, [axis]: value } });
+  const setOffset =
+    (axis: keyof SpellTextConfig["offset"]) => (value: number) =>
+      onChange({
+        ...textConfig,
+        offset: { ...textConfig.offset, [axis]: value },
+      });
 
   return (
     <div className="flex flex-col gap-3 rounded-xl border border-slate-200 bg-slate-50 p-4">
@@ -43,7 +47,9 @@ export function TextCard({
         <NumberField
           label="Espaciado"
           value={textConfig.letterSpacing}
-          onChange={(letterSpacing) => onChange({ ...textConfig, letterSpacing })}
+          onChange={(letterSpacing) =>
+            onChange({ ...textConfig, letterSpacing })
+          }
         />
         <NumberField
           label="Subrayado ↕"

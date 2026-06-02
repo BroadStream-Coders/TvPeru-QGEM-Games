@@ -3,7 +3,6 @@
 import { useEffect, useCallback, useRef, useState } from "react";
 import {
   SpellCheck,
-  Settings,
   Frame,
   Move,
   Eye,
@@ -14,10 +13,10 @@ import { loadJsonFile } from "@/helpers/persistence";
 import { useWorkspaceHeader } from "@/hooks/use-workspace-header";
 import { useGameKeys } from "@/hooks/use-game-keys";
 import { jetBrainsMono } from "@/lib/fonts";
-
-const CORRECT_ANSWER_SRC = "/audio/correct_answer.mp3";
+import { SOUNDS, playSound } from "@/lib/audio";
 
 import mainFrame from "./graphics/mainFrame.png";
+import errorFrame from "./graphics/errorFrame.png";
 
 import {
   FullScreen,
@@ -121,15 +120,7 @@ export default function DeletreoPage() {
   });
 
   const [spellStep, setSpellStep] = useState(0);
-  const correctAudioRef = useRef<HTMLAudioElement | null>(null);
-
-  const playCorrect = () => {
-    if (!correctAudioRef.current) {
-      correctAudioRef.current = new Audio(CORRECT_ANSWER_SRC);
-    }
-    correctAudioRef.current.currentTime = 0;
-    correctAudioRef.current.play().catch(() => {});
-  };
+  const [errorMode, setErrorMode] = useState(false);
 
   const setOffset = (axis: keyof Vec2) => (value: number) =>
     setTextConfig((c) => ({ ...c, offset: { ...c.offset, [axis]: value } }));
@@ -248,6 +239,7 @@ export default function DeletreoPage() {
       setGroupIndex(0);
       setSlotIndex(0);
       setSpellStep(0);
+      setErrorMode(false);
     } catch {
       console.error("Error al cargar el archivo JSON.");
     }
@@ -273,22 +265,26 @@ export default function DeletreoPage() {
     setGroupIndex(n);
     setSlotIndex(0);
     setSpellStep(0);
+    setErrorMode(false);
   };
 
   const selectSlot = (n: number) => {
     if (n < 0 || n >= currentGroup.length) return;
     setSlotIndex(n);
     setSpellStep(0);
+    setErrorMode(false);
   };
 
   const nextSlot = () => {
     setSlotIndex((i) => Math.min(i + 1, currentGroup.length - 1));
     setSpellStep(0);
+    setErrorMode(false);
   };
 
   const prevSlot = () => {
     setSlotIndex((i) => Math.max(i - 1, 0));
     setSpellStep(0);
+    setErrorMode(false);
   };
 
   useGameKeys({
@@ -298,9 +294,13 @@ export default function DeletreoPage() {
     onBack: prevSlot,
     onShowAnswer: () => {
       setSpellStep(word.length);
-      playCorrect();
+      setErrorMode(false);
+      playSound(SOUNDS.correctAnswer);
     },
-    onMarkError: () => console.log("[deletreo] marcar error (F)"),
+    onMarkError: () => {
+      setErrorMode(true);
+      playSound(SOUNDS.incorrectAnswer);
+    },
     onInteract: () => setSpellStep((s) => Math.min(s + 1, word.length)),
   });
 
@@ -318,7 +318,7 @@ export default function DeletreoPage() {
                 : undefined
             }
             style={{
-              backgroundImage: `url(${mainFrame.src})`,
+              backgroundImage: `url(${errorMode ? errorFrame.src : mainFrame.src})`,
               backgroundSize: "100% 100%",
               backgroundRepeat: "no-repeat",
             }}
@@ -369,17 +369,9 @@ export default function DeletreoPage() {
       </FullScreen>
 
       {/* Config */}
-      <div className="border border-slate-200 rounded-xl bg-slate-50">
-        <div className="border-b border-slate-200 px-4 py-3">
-          <h3 className="flex items-center gap-2 font-bold text-slate-700">
-            <Settings size={16} className="text-slate-400" />
-            Config
-          </h3>
-        </div>
-
-        <div className="p-4 grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
           {/* Estado */}
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-3 rounded-xl border border-slate-200 bg-slate-50 p-4">
             <span className="flex items-center gap-2 text-2xs font-mono uppercase tracking-wider text-slate-500">
               <SpellCheck size={14} className="text-slate-400" />
               Estado
@@ -406,10 +398,12 @@ export default function DeletreoPage() {
           </div>
 
           {/* Fondo */}
-          <BackgroundConfig value={background} onChange={setBackground} />
+          <div className="flex flex-col gap-3 rounded-xl border border-slate-200 bg-slate-50 p-4">
+            <BackgroundConfig value={background} onChange={setBackground} />
+          </div>
 
           {/* Posición */}
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-3 rounded-xl border border-slate-200 bg-slate-50 p-4">
             <div className="flex items-center justify-between">
               <span className="flex items-center gap-2 text-2xs font-mono uppercase tracking-wider text-slate-500">
                 <Frame size={14} className="text-slate-400" />
@@ -465,7 +459,7 @@ export default function DeletreoPage() {
           </div>
 
           {/* Texto */}
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-3 rounded-xl border border-slate-200 bg-slate-50 p-4">
             <span className="flex items-center gap-2 text-2xs font-mono uppercase tracking-wider text-slate-500">
               <Type size={14} className="text-slate-400" />
               Texto
@@ -504,7 +498,6 @@ export default function DeletreoPage() {
               />
             </div>
           </div>
-        </div>
       </div>
     </main>
   );

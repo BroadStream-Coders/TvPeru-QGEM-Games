@@ -14,6 +14,8 @@ interface FullScreenProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Clase para manejar la proporción, por defecto 16:9 (aspect-video) */
   aspectRatioClass?: string;
   background?: FullScreenBackground;
+  /** Oculta el cursor mientras está en pantalla completa (se sale con ESC) */
+  hideCursorOnFullscreen?: boolean;
 }
 
 function StageBackground({ background }: { background: FullScreenBackground }) {
@@ -52,6 +54,7 @@ export function FullScreen({
   className,
   aspectRatioClass = "aspect-video",
   background = { type: "color", value: "#000000" },
+  hideCursorOnFullscreen = false,
   ...props
 }: FullScreenProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -95,6 +98,7 @@ export function FullScreen({
         className={cn(
           "relative focus:outline-none flex items-center justify-center transition-all duration-300",
           isFullscreen ? "w-screen h-screen bg-black" : "w-full",
+          isFullscreen && hideCursorOnFullscreen && "cursor-none",
         )}
       >
         <div

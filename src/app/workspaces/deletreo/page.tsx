@@ -197,7 +197,7 @@ export default function DeletreoPage() {
     <main className="flex-1 p-6 overflow-auto flex flex-col gap-6">
       <div className="mx-auto w-full max-w-[1280px]">
         <ViewModeTabs mode={viewMode} onChange={setViewMode} />
-        <FullScreen background={background}>
+        <FullScreen background={background} hideCursorOnFullscreen>
           <div ref={stageRef} className="absolute inset-0">
             <Transform
               position={transform.position}

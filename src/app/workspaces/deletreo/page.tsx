@@ -27,6 +27,7 @@ import { StatusCard } from "./components/StatusCard";
 import { LegendCard } from "./components/LegendCard";
 import { PositionCard } from "./components/PositionCard";
 import { TextCard } from "./components/TextCard";
+import { ViewModeTabs, ViewMode } from "./components/ViewModeTabs";
 
 interface DeletreoGroup {
   words: string[];
@@ -49,10 +50,10 @@ export default function DeletreoPage() {
 
   const [background, setBackground] = useState<FullScreenBackground>({
     type: "color",
-    value: "#00B140",
+    value: "#01FF02",
   });
   const [editMode, setEditMode] = useState(false);
-  const [showGuides, setShowGuides] = useState(false);
+  const [viewMode, setViewMode] = useState<ViewMode>("game");
 
   const [transform, setTransform] = useState<TransformValues>({
     position: { ...HIDDEN_POS },
@@ -194,43 +195,46 @@ export default function DeletreoPage() {
 
   return (
     <main className="flex-1 p-6 overflow-auto flex flex-col gap-6">
-      <FullScreen background={background}>
-        <div ref={stageRef} className="absolute inset-0">
-          <Transform
-            position={transform.position}
-            size={transform.size}
-            pivot={transform.pivot}
-            className={
-              showGuides || editMode
-                ? "border-2 border-dashed border-white/60"
-                : undefined
-            }
-          >
-            <SpellFrame
-              frameRef={frameRef}
-              word={word}
-              spellStep={spellStep}
-              errorMode={errorMode}
-              textConfig={textConfig}
-            />
-            {editMode && (
-              <>
-                <div
-                  onPointerDown={(e) => beginGesture("move", e)}
-                  className="absolute inset-0 cursor-move touch-none select-none"
-                />
-                {HANDLES.map((hd) => (
+      <div className="mx-auto w-full max-w-[1280px]">
+        <ViewModeTabs mode={viewMode} onChange={setViewMode} />
+        <FullScreen background={background}>
+          <div ref={stageRef} className="absolute inset-0">
+            <Transform
+              position={transform.position}
+              size={transform.size}
+              pivot={transform.pivot}
+              className={
+                viewMode === "escena" || editMode
+                  ? "border-2 border-dashed border-white/60"
+                  : undefined
+              }
+            >
+              <SpellFrame
+                frameRef={frameRef}
+                word={word}
+                spellStep={spellStep}
+                errorMode={errorMode}
+                textConfig={textConfig}
+              />
+              {editMode && (
+                <>
                   <div
-                    key={hd.h}
-                    onPointerDown={(e) => beginGesture(hd.h, e)}
-                    className={`absolute ${hd.pos} ${hd.cursor} h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border border-slate-700 bg-white touch-none`}
+                    onPointerDown={(e) => beginGesture("move", e)}
+                    className="absolute inset-0 cursor-move touch-none select-none"
                   />
-                ))}
-              </>
-            )}
-          </Transform>
-        </div>
-      </FullScreen>
+                  {HANDLES.map((hd) => (
+                    <div
+                      key={hd.h}
+                      onPointerDown={(e) => beginGesture(hd.h, e)}
+                      className={`absolute ${hd.pos} ${hd.cursor} h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border border-slate-700 bg-white touch-none`}
+                    />
+                  ))}
+                </>
+              )}
+            </Transform>
+          </div>
+        </FullScreen>
+      </div>
 
       {/* Config */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -240,8 +244,6 @@ export default function DeletreoPage() {
         <PositionCard
           transform={transform}
           setAxis={setAxis}
-          showGuides={showGuides}
-          onToggleGuides={() => setShowGuides((v) => !v)}
           editMode={editMode}
           onToggleEdit={() => setEditMode((v) => !v)}
         />

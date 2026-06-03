@@ -1,12 +1,10 @@
-import { Frame, Move, Eye, EyeOff } from "lucide-react";
+import { Frame, Move } from "lucide-react";
 import { NumberField } from "@/components/shared/NumberField";
 import { TransformValues, Vec2 } from "@/components/shared/Transform";
 
 export function PositionCard({
   transform,
   setAxis,
-  showGuides,
-  onToggleGuides,
   editMode,
   onToggleEdit,
 }: {
@@ -15,8 +13,6 @@ export function PositionCard({
     field: keyof TransformValues,
     axis: keyof Vec2,
   ) => (value: number) => void;
-  showGuides: boolean;
-  onToggleGuides: () => void;
   editMode: boolean;
   onToggleEdit: () => void;
 }) {
@@ -28,17 +24,6 @@ export function PositionCard({
           Posición
         </span>
         <div className="flex items-center gap-2">
-          <button
-            onClick={onToggleGuides}
-            title={showGuides ? "Ocultar guías" : "Mostrar guías"}
-            className={`flex items-center justify-center rounded-md p-1.5 transition-colors ${
-              showGuides
-                ? "bg-brand text-white"
-                : "border border-slate-300 bg-white text-slate-600 hover:bg-slate-100"
-            }`}
-          >
-            {showGuides ? <Eye size={14} /> : <EyeOff size={14} />}
-          </button>
           <button
             onClick={onToggleEdit}
             className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-semibold transition-colors ${

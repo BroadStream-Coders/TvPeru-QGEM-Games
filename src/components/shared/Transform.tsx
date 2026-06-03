@@ -24,7 +24,7 @@ interface TransformProps {
   style?: React.CSSProperties;
 }
 
-const DEFAULT_POSITION: Vec2 = { x: DESIGN_WIDTH / 2, y: DESIGN_HEIGHT / 2 };
+const DEFAULT_POSITION: Vec2 = { x: 0, y: 0 };
 const DEFAULT_SIZE: Vec2 = { x: 400, y: 200 };
 const DEFAULT_PIVOT: Vec2 = { x: 0.5, y: 0.5 };
 
@@ -40,8 +40,8 @@ export function Transform({
     <div
       className={cn("absolute", className)}
       style={{
-        left: `${(position.x / DESIGN_WIDTH) * 100}cqw`,
-        top: `${(position.y / DESIGN_HEIGHT) * 100}cqh`,
+        left: `${((DESIGN_WIDTH / 2 + position.x) / DESIGN_WIDTH) * 100}cqw`,
+        top: `${((DESIGN_HEIGHT / 2 - position.y) / DESIGN_HEIGHT) * 100}cqh`,
         width: `${(size.x / DESIGN_WIDTH) * 100}cqw`,
         height: `${(size.y / DESIGN_HEIGHT) * 100}cqh`,
         transform: `translate(${-pivot.x * 100}%, ${-pivot.y * 100}%)`,

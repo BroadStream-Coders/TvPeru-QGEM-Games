@@ -23,7 +23,6 @@ import {
   TransformValues,
   Vec2,
   DESIGN_WIDTH,
-  DESIGN_HEIGHT,
 } from "@/components/shared/Transform";
 
 type TextAlign = "left" | "center" | "right";
@@ -70,7 +69,7 @@ interface EscenaData {
 
 function defaultTransform(): TransformValues {
   return {
-    position: { x: DESIGN_WIDTH / 2, y: DESIGN_HEIGHT / 2 },
+    position: { x: 0, y: 0 },
     size: { x: 600, y: 300 },
     pivot: { x: 0.5, y: 0.5 },
   };

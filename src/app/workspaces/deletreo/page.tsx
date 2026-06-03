@@ -50,7 +50,7 @@ export default function DeletreoPage() {
   const [showGuides, setShowGuides] = useState(false);
 
   const [transform, setTransform] = useState<TransformValues>({
-    position: { x: 960, y: 907 },
+    position: { x: 0, y: -367 },
     size: { x: 1170, y: 204 },
     pivot: { x: 0.5, y: 0.5 },
   });

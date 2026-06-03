@@ -59,8 +59,10 @@ export function useTransformGesture({
       e.preventDefault();
       e.stopPropagation();
 
-      const left = t.position.x - t.pivot.x * t.size.x;
-      const top = t.position.y - t.pivot.y * t.size.y;
+      const pivotLeft = DESIGN_WIDTH / 2 + t.position.x;
+      const pivotTop = DESIGN_HEIGHT / 2 - t.position.y;
+      const left = pivotLeft - t.pivot.x * t.size.x;
+      const top = pivotTop - t.pivot.y * t.size.y;
       gestureRef.current = {
         handle,
         clientX: e.clientX,
@@ -108,10 +110,12 @@ export function useTransformGesture({
 
         const w = right - left;
         const h = bottom - top;
+        const pivotLeft = left + g.pivot.x * w;
+        const pivotTop = top + g.pivot.y * h;
         optsRef.current.onChange({
           position: {
-            x: Math.round(left + g.pivot.x * w),
-            y: Math.round(top + g.pivot.y * h),
+            x: Math.round(pivotLeft - DESIGN_WIDTH / 2),
+            y: Math.round(DESIGN_HEIGHT / 2 - pivotTop),
           },
           size: { x: Math.round(w), y: Math.round(h) },
         });

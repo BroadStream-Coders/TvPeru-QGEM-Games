@@ -8,6 +8,8 @@ import { useGameKeys } from "@/hooks/use-game-keys";
 import { useTransformGesture, HANDLES } from "@/hooks/use-transform-gesture";
 import { useShake } from "@/hooks/use-shake";
 import { usePop } from "@/hooks/use-pop";
+import { useBounceMove } from "@/hooks/use-bounce-move";
+import { useSlide } from "@/hooks/use-slide";
 import { SOUNDS, playSound } from "@/lib/audio";
 
 import {
@@ -34,6 +36,9 @@ interface DeletreoData {
   groups: DeletreoGroup[];
 }
 
+const HIDDEN_POS = { x: 25, y: -688 };
+const SHOWN_POS = { x: 25, y: -358 };
+
 export default function DeletreoPage() {
   const setHeader = useWorkspaceHeader((s) => s.setHeader);
   const resetHeader = useWorkspaceHeader((s) => s.resetHeader);
@@ -50,7 +55,7 @@ export default function DeletreoPage() {
   const [showGuides, setShowGuides] = useState(false);
 
   const [transform, setTransform] = useState<TransformValues>({
-    position: { x: 0, y: -367 },
+    position: { ...HIDDEN_POS },
     size: { x: 1170, y: 204 },
     pivot: { x: 0.5, y: 0.5 },
   });
@@ -72,6 +77,21 @@ export default function DeletreoPage() {
 
   const { ref: shakeRef, shake } = useShake<HTMLDivElement>();
   const { ref: popRef, pop } = usePop<HTMLDivElement>();
+  const bounce = useBounceMove();
+  const slide = useSlide();
+
+  const setFramePosition = (position: Vec2) =>
+    setTransform((t) => ({ ...t, position }));
+
+  const showFrame = () => {
+    slide.cancel();
+    bounce.moveTo(transform.position, SHOWN_POS, setFramePosition);
+  };
+
+  const hideFrame = () => {
+    bounce.cancel();
+    slide.moveTo(transform.position, HIDDEN_POS, setFramePosition);
+  };
 
   const frameRef = useCallback(
     (node: HTMLDivElement | null) => {
@@ -168,6 +188,8 @@ export default function DeletreoPage() {
       shake();
     },
     onInteract: () => setSpellStep((s) => Math.min(s + 1, word.length)),
+    onArrowUp: showFrame,
+    onArrowDown: hideFrame,
   });
 
   return (

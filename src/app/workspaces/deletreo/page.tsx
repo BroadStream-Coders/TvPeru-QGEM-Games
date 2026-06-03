@@ -25,9 +25,11 @@ import {
 import { SpellFrame } from "./components/SpellFrame";
 import { StatusCard } from "./components/StatusCard";
 import { LegendCard } from "./components/LegendCard";
-import { PositionCard } from "./components/PositionCard";
 import { TextCard } from "./components/TextCard";
 import { ViewModeTabs, ViewMode } from "./components/ViewModeTabs";
+import { SidePanel } from "./components/SidePanel";
+import { Inspector } from "./components/Inspector";
+import { RectTransform } from "./components/RectTransform";
 
 interface DeletreoGroup {
   words: string[];
@@ -54,6 +56,9 @@ export default function DeletreoPage() {
   });
   const [editMode, setEditMode] = useState(false);
   const [viewMode, setViewMode] = useState<ViewMode>("game");
+
+  const [frameName, setFrameName] = useState("MainFrame");
+  const [frameActive, setFrameActive] = useState(true);
 
   const [transform, setTransform] = useState<TransformValues>({
     position: { ...HIDDEN_POS },
@@ -194,68 +199,78 @@ export default function DeletreoPage() {
   });
 
   return (
-    <main className="flex-1 p-6 overflow-auto flex flex-col gap-6">
-      <div className="mx-auto w-full max-w-[1280px]">
-        <ViewModeTabs mode={viewMode} onChange={setViewMode} />
-        <FullScreen background={background} hideCursorOnFullscreen>
-          <div ref={stageRef} className="absolute inset-0">
-            <Transform
-              position={transform.position}
-              size={transform.size}
-              pivot={transform.pivot}
-              className={
-                viewMode === "escena" || editMode
-                  ? "border-2 border-dashed border-white/60"
-                  : undefined
-              }
-            >
-              <SpellFrame
-                frameRef={frameRef}
-                word={word}
-                spellStep={spellStep}
-                errorMode={errorMode}
-                textConfig={textConfig}
-              />
-              {editMode && (
-                <>
-                  <div
-                    onPointerDown={(e) => beginGesture("move", e)}
-                    className="absolute inset-0 cursor-move touch-none select-none"
+    <main className="flex-1 p-3 overflow-auto flex flex-col gap-3">
+      <div className="flex gap-1.5">
+        <SidePanel title="Hierarchy" className="w-72 shrink-0" />
+        <div className="flex min-w-0 flex-1 flex-col">
+          <ViewModeTabs mode={viewMode} onChange={setViewMode} />
+          <FullScreen background={background} hideCursorOnFullscreen>
+            <div ref={stageRef} className="absolute inset-0">
+              <Transform
+                position={transform.position}
+                size={transform.size}
+                pivot={transform.pivot}
+                className={
+                  viewMode === "scene" || editMode
+                    ? "border-2 border-dashed border-white/60"
+                    : undefined
+                }
+              >
+                {frameActive && (
+                  <SpellFrame
+                    frameRef={frameRef}
+                    word={word}
+                    spellStep={spellStep}
+                    errorMode={errorMode}
+                    textConfig={textConfig}
                   />
-                  {HANDLES.map((hd) => (
+                )}
+                {editMode && (
+                  <>
                     <div
-                      key={hd.h}
-                      onPointerDown={(e) => beginGesture(hd.h, e)}
-                      className={`absolute ${hd.pos} ${hd.cursor} h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border border-slate-700 bg-white touch-none`}
+                      onPointerDown={(e) => beginGesture("move", e)}
+                      className="absolute inset-0 cursor-move touch-none select-none"
                     />
-                  ))}
-                </>
-              )}
-            </Transform>
-          </div>
-        </FullScreen>
+                    {HANDLES.map((hd) => (
+                      <div
+                        key={hd.h}
+                        onPointerDown={(e) => beginGesture(hd.h, e)}
+                        className={`absolute ${hd.pos} ${hd.cursor} h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border border-slate-700 bg-white touch-none`}
+                      />
+                    ))}
+                  </>
+                )}
+              </Transform>
+            </div>
+          </FullScreen>
+        </div>
+        <SidePanel title="Inspector" className="w-72 shrink-0">
+          <Inspector
+            name={frameName}
+            onNameChange={setFrameName}
+            active={frameActive}
+            onActiveChange={setFrameActive}
+          />
+          <RectTransform
+            transform={transform}
+            setAxis={setAxis}
+            editMode={editMode}
+            onToggleEdit={() => setEditMode((v) => !v)}
+          />
+        </SidePanel>
       </div>
 
       {/* Config */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
         <div className="flex flex-col gap-3 rounded-xl border border-slate-200 bg-slate-50 p-4">
           <BackgroundConfig value={background} onChange={setBackground} />
         </div>
-        <PositionCard
-          transform={transform}
-          setAxis={setAxis}
-          editMode={editMode}
-          onToggleEdit={() => setEditMode((v) => !v)}
-        />
         <TextCard
           textConfig={textConfig}
           onChange={setTextConfig}
           manualText={manualText}
           onManualTextChange={setManualText}
         />
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <StatusCard
           groups={groups}
           groupIndex={groupIndex}

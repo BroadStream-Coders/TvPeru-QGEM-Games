@@ -1,5 +1,22 @@
 import { useEffect, useRef } from "react";
 
+/**
+ * Teclas que NO conviene usar como atajos de juego porque el navegador las
+ * reserva y un `preventDefault()` no las detiene (o saca del fullscreen):
+ *
+ * - Escape       → siempre sale del fullscreen; el navegador lo intercepta antes,
+ *                  no es cancelable desde la página.
+ * - F11          → conmuta el fullscreen del navegador (no cancelable).
+ * - F5 / Ctrl+R  → recargan la página.
+ * - F12 / Ctrl+Shift+I → abren las DevTools.
+ * - F3 / Ctrl+F  → buscar en la página.
+ * - Tab          → mueve el foco entre elementos.
+ * - Ctrl/Cmd/Alt + cualquier tecla → atajos del navegador/SO (W cerrar pestaña,
+ *                  T nueva pestaña, etc.). Por eso este hook ignora esos modificadores.
+ *
+ * Seguras para mapear aquí: letras sueltas, dígitos, numpad y flechas
+ * (estas últimas hacen scroll, por eso se cancela su acción por defecto).
+ */
 export interface GameKeyHandlers {
   /** Fila superior 0-9. Con Shift entrega el número +10. */
   onNumber?: (value: number) => void;
@@ -15,6 +32,14 @@ export interface GameKeyHandlers {
   onMarkError?: () => void;
   /** Tecla E (interacción). */
   onInteract?: () => void;
+  /** Flecha arriba. */
+  onArrowUp?: () => void;
+  /** Flecha abajo. */
+  onArrowDown?: () => void;
+  /** Flecha izquierda. */
+  onArrowLeft?: () => void;
+  /** Flecha derecha. */
+  onArrowRight?: () => void;
 }
 
 export function useGameKeys(handlers: GameKeyHandlers) {
@@ -54,6 +79,10 @@ export function useGameKeys(handlers: GameKeyHandlers) {
         KeyM: "onShowAnswer",
         KeyF: "onMarkError",
         KeyE: "onInteract",
+        ArrowUp: "onArrowUp",
+        ArrowDown: "onArrowDown",
+        ArrowLeft: "onArrowLeft",
+        ArrowRight: "onArrowRight",
       };
       const handlerKey = map[code];
       if (!handlerKey) return;

@@ -2,11 +2,12 @@ import { Keyboard } from "lucide-react";
 
 const KEY_LEGEND: { keys: string; label: string }[] = [
   { keys: "Num 0-9", label: "Elegir grupo" },
-  { keys: "0-9", label: "Elegir slot (Shift +10)" },
+  { keys: "0-9", label: "Elegir slot (Shift +10 · Alt +20)" },
   { keys: "N / B", label: "Slot siguiente / anterior" },
   { keys: "M", label: "Mostrar respuesta" },
   { keys: "F", label: "Marcar error" },
   { keys: "E", label: "Interacción" },
+  { keys: "↑ / ↓", label: "Mostrar / ocultar cuadro" },
 ];
 
 export function LegendCard() {

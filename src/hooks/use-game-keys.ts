@@ -11,14 +11,19 @@ import { useEffect, useRef } from "react";
  * - F12 / Ctrl+Shift+I → abren las DevTools.
  * - F3 / Ctrl+F  → buscar en la página.
  * - Tab          → mueve el foco entre elementos.
- * - Ctrl/Cmd/Alt + cualquier tecla → atajos del navegador/SO (W cerrar pestaña,
- *                  T nueva pestaña, etc.). Por eso este hook ignora esos modificadores.
+ * - Ctrl/Cmd + cualquier tecla → atajos del navegador/SO no cancelables
+ *                  (Ctrl+1..9 cambia de pestaña, Ctrl+0 resetea zoom, W cierra
+ *                  pestaña, T nueva pestaña…). Por eso este hook los ignora.
+ *
+ * Alt SÍ se usa, pero sólo en la fila de dígitos (Alt = +20): Alt+dígito no
+ * tiene acción por defecto en el navegador y es cancelable. Fuera de los
+ * dígitos, Alt se ignora.
  *
  * Seguras para mapear aquí: letras sueltas, dígitos, numpad y flechas
  * (estas últimas hacen scroll, por eso se cancela su acción por defecto).
  */
 export interface GameKeyHandlers {
-  /** Fila superior 0-9. Con Shift entrega el número +10. */
+  /** Fila superior 0-9. Shift suma 10, Alt suma 20 (combinables → +30). */
   onNumber?: (value: number) => void;
   /** Teclado numérico 0-9 (navegar entre grupos). */
   onNavigate?: (value: number) => void;
@@ -53,7 +58,7 @@ export function useGameKeys(handlers: GameKeyHandlers) {
     const onKeyDown = (e: KeyboardEvent) => {
       const target = e.target as HTMLElement | null;
       if (target && /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName)) return;
-      if (e.repeat || e.ctrlKey || e.metaKey || e.altKey) return;
+      if (e.repeat || e.ctrlKey || e.metaKey) return;
 
       const h = ref.current;
       const code = e.code;
@@ -62,9 +67,13 @@ export function useGameKeys(handlers: GameKeyHandlers) {
         if (!h.onNumber) return;
         e.preventDefault();
         const n = Number(code.slice(5));
-        h.onNumber(e.shiftKey ? n + 10 : n);
+        const offset = (e.shiftKey ? 10 : 0) + (e.altKey ? 20 : 0);
+        h.onNumber(n + offset);
         return;
       }
+
+      // Alt sólo aplica a la fila de dígitos; en el resto se ignora.
+      if (e.altKey) return;
 
       if (/^Numpad[0-9]$/.test(code)) {
         if (!h.onNavigate) return;

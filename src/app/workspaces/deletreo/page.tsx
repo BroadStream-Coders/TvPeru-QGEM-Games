@@ -194,56 +194,43 @@ export default function DeletreoPage() {
 
   return (
     <main className="flex-1 p-6 overflow-auto flex flex-col gap-6">
-      <div className="flex flex-col lg:flex-row gap-4">
-        <div className="flex-1 min-w-0">
-          <FullScreen background={background}>
-            <div ref={stageRef} className="absolute inset-0">
-              <Transform
-                position={transform.position}
-                size={transform.size}
-                pivot={transform.pivot}
-                className={
-                  showGuides || editMode
-                    ? "border-2 border-dashed border-white/60"
-                    : undefined
-                }
-              >
-                <SpellFrame
-                  frameRef={frameRef}
-                  word={word}
-                  spellStep={spellStep}
-                  errorMode={errorMode}
-                  textConfig={textConfig}
+      <FullScreen background={background}>
+        <div ref={stageRef} className="absolute inset-0">
+          <Transform
+            position={transform.position}
+            size={transform.size}
+            pivot={transform.pivot}
+            className={
+              showGuides || editMode
+                ? "border-2 border-dashed border-white/60"
+                : undefined
+            }
+          >
+            <SpellFrame
+              frameRef={frameRef}
+              word={word}
+              spellStep={spellStep}
+              errorMode={errorMode}
+              textConfig={textConfig}
+            />
+            {editMode && (
+              <>
+                <div
+                  onPointerDown={(e) => beginGesture("move", e)}
+                  className="absolute inset-0 cursor-move touch-none select-none"
                 />
-                {editMode && (
-                  <>
-                    <div
-                      onPointerDown={(e) => beginGesture("move", e)}
-                      className="absolute inset-0 cursor-move touch-none select-none"
-                    />
-                    {HANDLES.map((hd) => (
-                      <div
-                        key={hd.h}
-                        onPointerDown={(e) => beginGesture(hd.h, e)}
-                        className={`absolute ${hd.pos} ${hd.cursor} h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border border-slate-700 bg-white touch-none`}
-                      />
-                    ))}
-                  </>
-                )}
-              </Transform>
-            </div>
-          </FullScreen>
+                {HANDLES.map((hd) => (
+                  <div
+                    key={hd.h}
+                    onPointerDown={(e) => beginGesture(hd.h, e)}
+                    className={`absolute ${hd.pos} ${hd.cursor} h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border border-slate-700 bg-white touch-none`}
+                  />
+                ))}
+              </>
+            )}
+          </Transform>
         </div>
-
-        <div className="flex flex-col gap-4 lg:w-72 shrink-0">
-          <StatusCard
-            groups={groups}
-            groupIndex={groupIndex}
-            slotIndex={slotIndex}
-          />
-          <LegendCard />
-        </div>
-      </div>
+      </FullScreen>
 
       {/* Config */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -264,6 +251,15 @@ export default function DeletreoPage() {
           manualText={manualText}
           onManualTextChange={setManualText}
         />
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <StatusCard
+          groups={groups}
+          groupIndex={groupIndex}
+          slotIndex={slotIndex}
+        />
+        <LegendCard />
       </div>
     </main>
   );

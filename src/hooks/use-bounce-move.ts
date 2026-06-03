@@ -54,20 +54,21 @@ export function useBounceMove({
         y: to.y + dir.y * bounceAmplitude,
       };
 
-      const travelDist = Math.hypot(
-        overshoot.x - from.x,
-        overshoot.y - from.y,
-      );
+      const travelDist = Math.hypot(overshoot.x - from.x, overshoot.y - from.y);
       const travel = travelDist / travelSpeed;
       const start = performance.now();
 
       const tick = (now: number) => {
         const t = (now - start) / 1000;
         if (t < travel) {
-          onUpdate(lerp(from, overshoot, easeOutSine(travel > 0 ? t / travel : 1)));
+          onUpdate(
+            lerp(from, overshoot, easeOutSine(travel > 0 ? t / travel : 1)),
+          );
           rafRef.current = requestAnimationFrame(tick);
         } else if (t < travel + bounceDuration) {
-          onUpdate(lerp(overshoot, to, easeOutBounce((t - travel) / bounceDuration)));
+          onUpdate(
+            lerp(overshoot, to, easeOutBounce((t - travel) / bounceDuration)),
+          );
           rafRef.current = requestAnimationFrame(tick);
         } else {
           onUpdate(to);

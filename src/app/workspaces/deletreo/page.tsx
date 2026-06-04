@@ -33,7 +33,11 @@ import {
   GameObjectComponent,
   createGameObject,
 } from "@/components/shared/engine/gameObject";
-import { COMPONENT_REGISTRY } from "@/components/shared/engine/componentRegistry";
+import {
+  COMPONENT_REGISTRY,
+  COMPONENT_OPTIONS,
+} from "@/components/shared/engine/componentRegistry";
+import { AddComponentButton } from "@/components/shared/engine/AddComponentButton";
 import {
   ImageComponent,
   createImageComponent,
@@ -145,6 +149,56 @@ export default function DeletreoPage() {
           ? {
               ...go,
               components: go.components.map((c, i) => (i === index ? next : c)),
+            }
+          : go,
+      ),
+    );
+
+  const createNewGameObject = () => {
+    const id = crypto.randomUUID();
+    setGameObjects((prev) => [
+      ...prev,
+      createGameObject({
+        id,
+        name: "GameObject",
+        transform: {
+          position: { x: 0, y: 0 },
+          size: { x: 100, y: 100 },
+          pivot: { x: 0.5, y: 0.5 },
+        },
+      }),
+    ]);
+    setSelectedId(id);
+  };
+
+  const addComponent = (goId: string, type: string) => {
+    const def = COMPONENT_REGISTRY[type];
+    if (!def) return;
+    setGameObjects((prev) =>
+      prev.map((go) =>
+        go.id === goId
+          ? { ...go, components: [...go.components, def.create()] }
+          : go,
+      ),
+    );
+  };
+
+  const setGameObjectSize = (goId: string, size: Vec2) =>
+    setGameObjects((prev) =>
+      prev.map((go) =>
+        go.id === goId
+          ? { ...go, transform: { ...go.transform, size } }
+          : go,
+      ),
+    );
+
+  const removeComponent = (goId: string, index: number) =>
+    setGameObjects((prev) =>
+      prev.map((go) =>
+        go.id === goId
+          ? {
+              ...go,
+              components: go.components.filter((_, i) => i !== index),
             }
           : go,
       ),
@@ -353,6 +407,7 @@ export default function DeletreoPage() {
             nodes={hierarchyNodes}
             selectedId={selectedId}
             onSelect={setSelectedId}
+            onAdd={createNewGameObject}
           />
         </SidePanel>
         <div className="flex min-w-0 flex-1 flex-col">
@@ -428,9 +483,15 @@ export default function DeletreoPage() {
                     key={index}
                     component={component}
                     onChange={onComponentChange(selected.id, index)}
+                    onRemove={() => removeComponent(selected.id, index)}
+                    onResize={(size) => setGameObjectSize(selected.id, size)}
                   />
                 ) : null;
               })}
+              <AddComponentButton
+                options={COMPONENT_OPTIONS}
+                onAdd={(type) => addComponent(selected.id, type)}
+              />
             </>
           ) : (
             <p className="px-1 py-2 text-2xs text-muted-foreground">

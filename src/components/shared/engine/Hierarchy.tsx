@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronRight, ChevronDown } from "lucide-react";
+import { ChevronRight, ChevronDown, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export interface TreeNode {
@@ -14,13 +14,26 @@ export function Hierarchy({
   nodes,
   selectedId,
   onSelect,
+  onAdd,
 }: {
   nodes: TreeNode[];
   selectedId: string | null;
   onSelect: (id: string) => void;
+  onAdd?: () => void;
 }) {
   return (
     <div className="flex flex-col">
+      {onAdd && (
+        <div className="mb-1 flex justify-end">
+          <button
+            onClick={onAdd}
+            title="Crear GameObject"
+            className="flex size-5 items-center justify-center rounded border border-border text-muted-foreground transition-colors hover:border-brand hover:text-foreground"
+          >
+            <Plus size={13} />
+          </button>
+        </div>
+      )}
       {nodes.map((node) => (
         <TreeItem
           key={node.id}

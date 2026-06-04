@@ -1,4 +1,4 @@
-import { Image as ImageIcon, Upload } from "lucide-react";
+import { Image as ImageIcon, Upload, Trash2, Maximize2 } from "lucide-react";
 import {
   ImageComponent,
   ImageFit,
@@ -7,9 +7,13 @@ import {
 export function ImageInspector({
   component,
   onChange,
+  onRemove,
+  onResize,
 }: {
   component: ImageComponent;
   onChange: (next: ImageComponent) => void;
+  onRemove: () => void;
+  onResize: (size: { x: number; y: number }) => void;
 }) {
   const onPickFile = (file: File) => {
     const reader = new FileReader();
@@ -22,11 +26,28 @@ export function ImageInspector({
     reader.readAsDataURL(file);
   };
 
+  const fitToImage = () => {
+    if (!component.src) return;
+    const img = new window.Image();
+    img.onload = () =>
+      onResize({ x: img.naturalWidth, y: img.naturalHeight });
+    img.src = component.src;
+  };
+
   return (
     <div className="rounded-md border border-border">
-      <div className="flex items-center gap-1.5 border-b border-border bg-background/40 px-2.5 py-1.5">
-        <ImageIcon size={13} className="text-muted-foreground" />
-        <span className="text-xs font-semibold text-foreground">Image</span>
+      <div className="flex items-center justify-between border-b border-border bg-background/40 px-2.5 py-1.5">
+        <span className="flex items-center gap-1.5 text-xs font-semibold text-foreground">
+          <ImageIcon size={13} className="text-muted-foreground" />
+          Image
+        </span>
+        <button
+          onClick={onRemove}
+          title="Eliminar componente"
+          className="flex size-5 items-center justify-center rounded text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
+        >
+          <Trash2 size={13} />
+        </button>
       </div>
       <div className="flex flex-col gap-2 p-2.5">
         <div
@@ -58,6 +79,14 @@ export function ImageInspector({
             {component.fileName}
           </span>
         )}
+        <button
+          onClick={fitToImage}
+          disabled={!component.src}
+          className="inline-flex w-fit items-center gap-1.5 rounded-md border border-border px-2.5 py-1 text-2xs font-semibold uppercase tracking-wider text-muted-foreground transition-colors hover:border-brand hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          <Maximize2 size={13} />
+          Ajustar al tamaño de la imagen
+        </button>
         <label className="flex items-center gap-2">
           <span className="w-12 shrink-0 text-2xs font-mono uppercase tracking-wider text-muted-foreground">
             Ajuste
@@ -69,9 +98,15 @@ export function ImageInspector({
             }
             className="h-7 w-full min-w-0 rounded-md border border-input bg-input/30 px-2 text-xs text-foreground outline-none focus:border-ring"
           >
-            <option value="contain">Contener</option>
-            <option value="cover">Cubrir</option>
-            <option value="fill">Estirar</option>
+            <option value="contain" className="bg-card text-foreground">
+              Contener
+            </option>
+            <option value="cover" className="bg-card text-foreground">
+              Cubrir
+            </option>
+            <option value="fill" className="bg-card text-foreground">
+              Estirar
+            </option>
           </select>
         </label>
       </div>

@@ -251,9 +251,6 @@ pestañas viajan con la `Scene`: aparecen en deletreo, sandbox y cualquier juego
   mismo layout Hierarchy + Scene + Inspector que deletreo, sin GameObjects iniciales.
   Sirve para crear objetos con "+" y agregarles componentes (Image, Color) libremente,
   con `BackgroundConfig` para el fondo de la Scene.
-  - La implementación vieja (modelo ad-hoc `Source` texto/imagen con paneles
-    Fuentes/Propiedades/Transform) se movió íntegra y **sin usar** a
-    `sandbox/legacy/LegacySandbox.tsx`, apartada para borrarla más adelante (**TD-005**).
 
 ---
 
@@ -285,8 +282,7 @@ pestañas viajan con la `Scene`: aparecen en deletreo, sandbox y cualquier juego
   (posiciona el rectTransform). Ver memoria `engine-text-component-direction`.
 - El estado del grafo vive en `deletreo/page.tsx` y `sandbox/page.tsx` (duplicado);
   aún no se levantó a un store `useScene` (ver Decisión C).
-- Parenting de un solo nivel (**TD-002**); tipado laxo del registro (**TD-004**);
-  legacy del sandbox por borrar (**TD-005**).
+- Parenting de un solo nivel (**TD-002**); tipado laxo del registro (**TD-004**).
 
 ---
 

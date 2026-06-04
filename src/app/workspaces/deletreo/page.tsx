@@ -26,7 +26,7 @@ import { TextCard } from "./components/TextCard";
 import { ViewModeTabs, ViewMode } from "./components/ViewModeTabs";
 import { SidePanel } from "./components/SidePanel";
 import { Hierarchy, TreeNode } from "@/components/shared/engine/Hierarchy";
-import { Inspector } from "@/components/shared/engine/Inspector";
+import { GameObjectInspector } from "@/components/shared/engine/GameObjectInspector";
 import { RectTransformInspector } from "@/components/shared/engine/RectTransformInspector";
 import {
   GameObject,
@@ -356,7 +356,7 @@ export default function DeletreoPage() {
         <SidePanel title="Inspector" className="w-72 shrink-0">
           {selected ? (
             <>
-              <Inspector
+              <GameObjectInspector
                 name={selected.name}
                 onNameChange={(name) => patchGameObject(selected.id, { name })}
                 active={selected.active}

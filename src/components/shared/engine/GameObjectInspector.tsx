@@ -1,6 +1,6 @@
 import { Input } from "@/components/ui/input";
 
-export function Inspector({
+export function GameObjectInspector({
   name,
   onNameChange,
   active,

@@ -1,11 +1,5 @@
 import Link from "next/link";
-import {
-  SpellCheck,
-  ArrowRight,
-  Trophy,
-  Layers,
-  FlaskConical,
-} from "lucide-react";
+import { SpellCheck, ArrowRight, Trophy, FlaskConical } from "lucide-react";
 
 const workspaces = [
   {
@@ -15,14 +9,8 @@ const workspaces = [
     icon: SpellCheck,
   },
   {
-    name: "Escena",
-    description: "Compositor de escena estilo OBS",
-    href: "/workspaces/escena",
-    icon: Layers,
-  },
-  {
     name: "Sandbox",
-    description: "Prototipo del engine de GameObjects",
+    description: "Compositor estilo OBS",
     href: "/workspaces/sandbox",
     icon: FlaskConical,
   },

@@ -24,7 +24,7 @@ import { StatusCard } from "./components/StatusCard";
 import { LegendCard } from "./components/LegendCard";
 import { TextCard } from "./components/TextCard";
 import { ViewModeTabs, ViewMode } from "./components/ViewModeTabs";
-import { SidePanel } from "./components/SidePanel";
+import { SidePanel } from "@/components/shared/engine/SidePanel";
 import { Hierarchy, TreeNode } from "@/components/shared/engine/Hierarchy";
 import { GameObjectInspector } from "@/components/shared/engine/GameObjectInspector";
 import { RectTransformInspector } from "@/components/shared/engine/RectTransformInspector";

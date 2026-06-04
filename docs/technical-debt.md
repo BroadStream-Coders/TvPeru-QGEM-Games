@@ -36,6 +36,14 @@ Registro de atajos, decisiones pendientes y riesgos a futuro de este proyecto.
 - **Impacto futuro:** Si no se quita, en producción aparecerán nodos falsos en el Hierarchy de un juego en vivo. Eliminar `HIERARCHY_TEST_TREE` y su uso cuando el Tree View esté validado.
 - **Fecha:** 2026-06-04 · **Estado:** Abierto
 
+## [TD-005] Sandbox legado pendiente de eliminar
+
+- **Ubicación:** `src/app/workspaces/sandbox/legacy/LegacySandbox.tsx`
+- **Riesgo:** 2/10
+- **Problema:** El sandbox se reescribió sobre el sistema del engine (GameObject + Hierarchy + Inspector + registro de componentes). La implementación anterior, basada en el modelo ad-hoc `Source` (text/image con paneles Fuentes/Propiedades/Transform), se movió íntegra a `LegacySandbox` y quedó **sin usar** (ningún route ni componente la importa), solo apartada para borrarla más adelante.
+- **Impacto futuro:** Código muerto que se compila y mantiene sin aportar. Eliminar el archivo (y la carpeta `legacy/`) una vez validado el sandbox del engine.
+- **Fecha:** 2026-06-04 · **Estado:** Abierto
+
 ## [TD-004] Tipado laxo del registro de componentes
 
 - **Ubicación:** `src/components/shared/engine/componentRegistry.ts`

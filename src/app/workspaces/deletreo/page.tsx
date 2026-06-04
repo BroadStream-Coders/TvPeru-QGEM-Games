@@ -18,18 +18,20 @@ import {
 } from "@/components/shared/FullScreen";
 import { BackgroundConfig } from "@/components/shared/BackgroundConfig";
 import {
-  Transform,
-  TransformValues,
+  RectTransform,
+  RectTransformValues,
   Vec2,
-} from "@/components/shared/Transform";
+} from "@/components/shared/RectTransform";
 import { SpellFrame } from "./components/SpellFrame";
 import { StatusCard } from "./components/StatusCard";
 import { LegendCard } from "./components/LegendCard";
 import { TextCard } from "./components/TextCard";
 import { ViewModeTabs, ViewMode } from "./components/ViewModeTabs";
 import { SidePanel } from "./components/SidePanel";
+import { Hierarchy, TreeNode } from "@/components/shared/Hierarchy";
 import { Inspector } from "./components/Inspector";
-import { RectTransform } from "./components/RectTransform";
+import { RectTransformInspector } from "./components/RectTransformInspector";
+import { GameObject, createGameObject } from "./gameObject";
 
 interface DeletreoGroup {
   words: string[];
@@ -41,6 +43,37 @@ interface DeletreoData {
 
 const HIDDEN_POS = { x: 25, y: -688 };
 const SHOWN_POS = { x: 25, y: -358 };
+
+const FRAME_ID = "main-frame";
+const TEXT_ID = "text";
+
+const HIERARCHY_TEST_TREE: TreeNode = {
+  id: "test-root",
+  name: "Test",
+  children: [
+    {
+      id: "test-canvas",
+      name: "Canvas",
+      children: [
+        {
+          id: "test-panel",
+          name: "Panel",
+          children: [
+            { id: "test-title", name: "Title" },
+            { id: "test-subtitle", name: "Subtitle" },
+          ],
+        },
+        {
+          id: "test-button",
+          name: "Button",
+          children: [{ id: "test-label", name: "Label" }],
+        },
+      ],
+    },
+    { id: "test-camera", name: "Camera" },
+    { id: "test-light", name: "Directional Light" },
+  ],
+};
 
 export default function DeletreoPage() {
   const setHeader = useWorkspaceHeader((s) => s.setHeader);
@@ -57,14 +90,27 @@ export default function DeletreoPage() {
   const [editMode, setEditMode] = useState(false);
   const [viewMode, setViewMode] = useState<ViewMode>("game");
 
-  const [frameName, setFrameName] = useState("MainFrame");
-  const [frameActive, setFrameActive] = useState(true);
-
-  const [transform, setTransform] = useState<TransformValues>({
-    position: { ...HIDDEN_POS },
-    size: { x: 1170, y: 204 },
-    pivot: { x: 0.5, y: 0.5 },
-  });
+  const [gameObjects, setGameObjects] = useState<GameObject[]>(() => [
+    createGameObject({
+      id: FRAME_ID,
+      name: "MainFrame",
+      transform: {
+        position: { ...HIDDEN_POS },
+        size: { x: 1170, y: 204 },
+        pivot: { x: 0.5, y: 0.5 },
+      },
+    }),
+    createGameObject({
+      id: TEXT_ID,
+      name: "Text",
+      transform: {
+        position: { x: 25, y: -358 },
+        size: { x: 900, y: 160 },
+        pivot: { x: 0.5, y: 0.5 },
+      },
+    }),
+  ]);
+  const [selectedId, setSelectedId] = useState<string>(FRAME_ID);
 
   const [textConfig, setTextConfig] = useState({
     fontSize: 80,
@@ -77,9 +123,40 @@ export default function DeletreoPage() {
   const [errorMode, setErrorMode] = useState(false);
   const [manualText, setManualText] = useState("");
 
+  const selected = gameObjects.find((go) => go.id === selectedId) ?? null;
+  const mainFrame = gameObjects.find((go) => go.id === FRAME_ID)!;
+  const textVisible =
+    gameObjects.find((go) => go.id === TEXT_ID)?.active ?? true;
+
+  const hierarchyNodes: TreeNode[] = [
+    {
+      id: "deletreo-root",
+      name: "Deletreo",
+      children: gameObjects.map((go) => ({ id: go.id, name: go.name })),
+    },
+    HIERARCHY_TEST_TREE,
+  ];
+
+  const patchGameObject = (id: string, patch: Partial<GameObject>) =>
+    setGameObjects((prev) =>
+      prev.map((go) => (go.id === id ? { ...go, ...patch } : go)),
+    );
+
   const setAxis =
-    (field: keyof TransformValues, axis: keyof Vec2) => (value: number) =>
-      setTransform((t) => ({ ...t, [field]: { ...t[field], [axis]: value } }));
+    (field: keyof RectTransformValues, axis: keyof Vec2) => (value: number) =>
+      setGameObjects((prev) =>
+        prev.map((go) =>
+          go.id === selectedId
+            ? {
+                ...go,
+                transform: {
+                  ...go.transform,
+                  [field]: { ...go.transform[field], [axis]: value },
+                },
+              }
+            : go,
+        ),
+      );
 
   const { ref: shakeRef, shake } = useShake<HTMLDivElement>();
   const { ref: popRef, pop } = usePop<HTMLDivElement>();
@@ -87,16 +164,22 @@ export default function DeletreoPage() {
   const slide = useSlide();
 
   const setFramePosition = (position: Vec2) =>
-    setTransform((t) => ({ ...t, position }));
+    setGameObjects((prev) =>
+      prev.map((go) =>
+        go.id === FRAME_ID
+          ? { ...go, transform: { ...go.transform, position } }
+          : go,
+      ),
+    );
 
   const showFrame = () => {
     slide.cancel();
-    bounce.moveTo(transform.position, SHOWN_POS, setFramePosition);
+    bounce.moveTo(mainFrame.transform.position, SHOWN_POS, setFramePosition);
   };
 
   const hideFrame = () => {
     bounce.cancel();
-    slide.moveTo(transform.position, HIDDEN_POS, setFramePosition);
+    slide.moveTo(mainFrame.transform.position, HIDDEN_POS, setFramePosition);
   };
 
   const frameRef = useCallback(
@@ -110,9 +193,15 @@ export default function DeletreoPage() {
   const stageRef = useRef<HTMLDivElement>(null);
   const { beginGesture } = useTransformGesture({
     stageRef,
-    getTransform: () => transform,
+    getTransform: () => selected?.transform ?? null,
     onChange: ({ position, size }) =>
-      setTransform((t) => ({ ...t, position, size })),
+      setGameObjects((prev) =>
+        prev.map((go) =>
+          go.id === selectedId
+            ? { ...go, transform: { ...go.transform, position, size } }
+            : go,
+        ),
+      ),
   });
 
   const handleLoad = useCallback(async (file: File) => {
@@ -201,62 +290,87 @@ export default function DeletreoPage() {
   return (
     <main className="flex-1 p-3 overflow-auto flex flex-col gap-3">
       <div className="flex gap-1.5">
-        <SidePanel title="Hierarchy" className="w-72 shrink-0" />
+        <SidePanel title="Hierarchy" className="w-72 shrink-0">
+          <Hierarchy
+            nodes={hierarchyNodes}
+            selectedId={selectedId}
+            onSelect={setSelectedId}
+          />
+        </SidePanel>
         <div className="flex min-w-0 flex-1 flex-col">
           <ViewModeTabs mode={viewMode} onChange={setViewMode} />
           <FullScreen background={background} hideCursorOnFullscreen>
             <div ref={stageRef} className="absolute inset-0">
-              <Transform
-                position={transform.position}
-                size={transform.size}
-                pivot={transform.pivot}
-                className={
-                  viewMode === "scene" || editMode
-                    ? "border-2 border-dashed border-white/60"
-                    : undefined
-                }
-              >
-                {frameActive && (
-                  <SpellFrame
-                    frameRef={frameRef}
-                    word={word}
-                    spellStep={spellStep}
-                    errorMode={errorMode}
-                    textConfig={textConfig}
-                  />
-                )}
-                {editMode && (
-                  <>
-                    <div
-                      onPointerDown={(e) => beginGesture("move", e)}
-                      className="absolute inset-0 cursor-move touch-none select-none"
-                    />
-                    {HANDLES.map((hd) => (
-                      <div
-                        key={hd.h}
-                        onPointerDown={(e) => beginGesture(hd.h, e)}
-                        className={`absolute ${hd.pos} ${hd.cursor} h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border border-slate-700 bg-white touch-none`}
+              {gameObjects.map((go) => {
+                if (!go.active) return null;
+                const isSelected = go.id === selectedId;
+                const outline =
+                  viewMode === "scene" || (editMode && isSelected);
+                return (
+                  <RectTransform
+                    key={go.id}
+                    position={go.transform.position}
+                    size={go.transform.size}
+                    pivot={go.transform.pivot}
+                    className={
+                      outline
+                        ? `border-2 border-dashed ${isSelected ? "border-brand" : "border-white/60"}`
+                        : undefined
+                    }
+                  >
+                    {go.id === FRAME_ID && (
+                      <SpellFrame
+                        frameRef={frameRef}
+                        word={textVisible ? word : ""}
+                        spellStep={spellStep}
+                        errorMode={errorMode}
+                        textConfig={textConfig}
                       />
-                    ))}
-                  </>
-                )}
-              </Transform>
+                    )}
+                    {editMode && isSelected && (
+                      <>
+                        <div
+                          onPointerDown={(e) => beginGesture("move", e)}
+                          className="absolute inset-0 cursor-move touch-none select-none"
+                        />
+                        {HANDLES.map((hd) => (
+                          <div
+                            key={hd.h}
+                            onPointerDown={(e) => beginGesture(hd.h, e)}
+                            className={`absolute ${hd.pos} ${hd.cursor} h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border border-slate-700 bg-white touch-none`}
+                          />
+                        ))}
+                      </>
+                    )}
+                  </RectTransform>
+                );
+              })}
             </div>
           </FullScreen>
         </div>
         <SidePanel title="Inspector" className="w-72 shrink-0">
-          <Inspector
-            name={frameName}
-            onNameChange={setFrameName}
-            active={frameActive}
-            onActiveChange={setFrameActive}
-          />
-          <RectTransform
-            transform={transform}
-            setAxis={setAxis}
-            editMode={editMode}
-            onToggleEdit={() => setEditMode((v) => !v)}
-          />
+          {selected ? (
+            <>
+              <Inspector
+                name={selected.name}
+                onNameChange={(name) => patchGameObject(selected.id, { name })}
+                active={selected.active}
+                onActiveChange={(active) =>
+                  patchGameObject(selected.id, { active })
+                }
+              />
+              <RectTransformInspector
+                transform={selected.transform}
+                setAxis={setAxis}
+                editMode={editMode}
+                onToggleEdit={() => setEditMode((v) => !v)}
+              />
+            </>
+          ) : (
+            <p className="px-1 py-2 text-2xs text-muted-foreground">
+              Selecciona un objeto en Hierarchy.
+            </p>
+          )}
         </SidePanel>
       </div>
 

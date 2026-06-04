@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef } from "react";
-import type { Vec2 } from "@/components/shared/Transform";
+import type { Vec2 } from "@/components/shared/RectTransform";
 
 export interface BounceMoveOptions {
   /** Velocidad de viaje en unidades de diseño por segundo. */

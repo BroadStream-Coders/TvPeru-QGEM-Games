@@ -1,5 +1,5 @@
 import { Move } from "lucide-react";
-import { TransformValues, Vec2 } from "@/components/shared/Transform";
+import { RectTransformValues, Vec2 } from "@/components/shared/RectTransform";
 
 function Field({
   label,
@@ -28,15 +28,15 @@ function Field({
   );
 }
 
-export function RectTransform({
+export function RectTransformInspector({
   transform,
   setAxis,
   editMode,
   onToggleEdit,
 }: {
-  transform: TransformValues;
+  transform: RectTransformValues;
   setAxis: (
-    field: keyof TransformValues,
+    field: keyof RectTransformValues,
     axis: keyof Vec2,
   ) => (value: number) => void;
   editMode: boolean;

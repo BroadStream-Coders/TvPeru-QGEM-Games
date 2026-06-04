@@ -19,11 +19,11 @@ import { useTransformGesture, HANDLES } from "@/hooks/use-transform-gesture";
 import { FullScreen } from "@/components/shared/FullScreen";
 import { NumberField } from "@/components/shared/NumberField";
 import {
-  Transform,
-  TransformValues,
+  RectTransform,
+  RectTransformValues,
   Vec2,
   DESIGN_WIDTH,
-} from "@/components/shared/Transform";
+} from "@/components/shared/RectTransform";
 
 type TextAlign = "left" | "center" | "right";
 
@@ -54,20 +54,20 @@ interface Source {
   id: string;
   name: string;
   content: SourceContent;
-  transform: TransformValues;
+  transform: RectTransformValues;
 }
 
 interface SourceFile {
   name: string;
   content: SourceContent;
-  transform: TransformValues;
+  transform: RectTransformValues;
 }
 
 interface EscenaData {
   sources: SourceFile[];
 }
 
-function defaultTransform(): TransformValues {
+function defaultTransform(): RectTransformValues {
   return {
     position: { x: 0, y: 0 },
     size: { x: 600, y: 300 },
@@ -222,7 +222,7 @@ export default function EscenaPage() {
   };
 
   const updateAxis =
-    (id: string, field: keyof TransformValues, axis: keyof Vec2) =>
+    (id: string, field: keyof RectTransformValues, axis: keyof Vec2) =>
     (value: number) =>
       setSources((prev) =>
         prev.map((s) =>
@@ -278,7 +278,7 @@ export default function EscenaPage() {
       <FullScreen background={{ type: "color", value: "#00B140" }}>
         <div ref={stageRef} className="absolute inset-0">
           {sources.map((s) => (
-            <Transform
+            <RectTransform
               key={s.id}
               position={s.transform.position}
               size={s.transform.size}
@@ -305,7 +305,7 @@ export default function EscenaPage() {
                   ))}
                 </>
               )}
-            </Transform>
+            </RectTransform>
           ))}
         </div>
       </FullScreen>

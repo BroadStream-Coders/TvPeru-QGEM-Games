@@ -9,16 +9,17 @@ export interface Vec2 {
   y: number;
 }
 
-export interface TransformValues {
+export interface RectTransformValues {
   position: Vec2;
   size: Vec2;
   pivot: Vec2;
 }
 
-interface TransformProps {
+interface RectTransformProps {
   position?: Vec2;
   size?: Vec2;
   pivot?: Vec2;
+  parent?: RectTransformValues;
   children?: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
@@ -28,14 +29,14 @@ const DEFAULT_POSITION: Vec2 = { x: 0, y: 0 };
 const DEFAULT_SIZE: Vec2 = { x: 400, y: 200 };
 const DEFAULT_PIVOT: Vec2 = { x: 0.5, y: 0.5 };
 
-export function Transform({
+export function RectTransform({
   position = DEFAULT_POSITION,
   size = DEFAULT_SIZE,
   pivot = DEFAULT_PIVOT,
   className,
   style,
   children,
-}: TransformProps) {
+}: RectTransformProps) {
   return (
     <div
       className={cn("absolute", className)}

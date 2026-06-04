@@ -3,23 +3,23 @@ import {
   RectTransform,
   RectTransformValues,
 } from "@/components/shared/engine/RectTransform";
-import { GameObject as GameObjectType } from "../gameObject";
+import { GameObject } from "@/components/shared/engine/gameObject";
 
-interface GameObjectProps {
-  gameObject: GameObjectType;
+interface GameObjectViewProps {
+  gameObject: GameObject;
   parent?: RectTransformValues;
   outline?: boolean;
   selected?: boolean;
   children?: React.ReactNode;
 }
 
-export function GameObject({
+export function GameObjectView({
   gameObject,
   parent,
   outline,
   selected,
   children,
-}: GameObjectProps) {
+}: GameObjectViewProps) {
   return (
     <RectTransform
       position={gameObject.transform.position}

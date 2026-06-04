@@ -18,8 +18,8 @@ import {
   RectTransformValues,
   Vec2,
 } from "@/components/shared/engine/RectTransform";
+import { GameObjectView } from "@/components/shared/engine/GameObjectView";
 import { SpellFrame } from "./components/SpellFrame";
-import { GameObject as GameObjectView } from "./components/GameObject";
 import { StatusCard } from "./components/StatusCard";
 import { LegendCard } from "./components/LegendCard";
 import { TextCard } from "./components/TextCard";
@@ -28,7 +28,10 @@ import { SidePanel } from "./components/SidePanel";
 import { Hierarchy, TreeNode } from "@/components/shared/engine/Hierarchy";
 import { Inspector } from "@/components/shared/engine/Inspector";
 import { RectTransformInspector } from "@/components/shared/engine/RectTransformInspector";
-import { GameObject, createGameObject } from "./gameObject";
+import {
+  GameObject,
+  createGameObject,
+} from "@/components/shared/engine/gameObject";
 
 interface DeletreoGroup {
   words: string[];

@@ -12,10 +12,7 @@ import { useBounceMove } from "@/hooks/use-bounce-move";
 import { useSlide } from "@/hooks/use-slide";
 import { SOUNDS, playSound } from "@/lib/audio";
 
-import {
-  FullScreen,
-  FullScreenBackground,
-} from "@/components/shared/engine/FullScreen";
+import { Scene, SceneBackground } from "@/components/shared/engine/Scene";
 import { BackgroundConfig } from "@/components/shared/BackgroundConfig";
 import {
   RectTransform,
@@ -29,8 +26,8 @@ import { TextCard } from "./components/TextCard";
 import { ViewModeTabs, ViewMode } from "./components/ViewModeTabs";
 import { SidePanel } from "./components/SidePanel";
 import { Hierarchy, TreeNode } from "@/components/shared/engine/Hierarchy";
-import { Inspector } from "./components/Inspector";
-import { RectTransformInspector } from "./components/RectTransformInspector";
+import { Inspector } from "@/components/shared/engine/Inspector";
+import { RectTransformInspector } from "@/components/shared/engine/RectTransformInspector";
 import { GameObject, createGameObject } from "./gameObject";
 
 interface DeletreoGroup {
@@ -55,7 +52,7 @@ export default function DeletreoPage() {
   const [groupIndex, setGroupIndex] = useState(0);
   const [slotIndex, setSlotIndex] = useState(0);
 
-  const [background, setBackground] = useState<FullScreenBackground>({
+  const [background, setBackground] = useState<SceneBackground>({
     type: "color",
     value: "#01FF02",
   });
@@ -112,13 +109,9 @@ export default function DeletreoPage() {
     };
   };
 
-  const hierarchyNodes: TreeNode[] = [
-    {
-      id: "deletreo-root",
-      name: "Deletreo",
-      children: gameObjects.filter((go) => !go.parentId).map(buildNode),
-    },
-  ];
+  const hierarchyNodes: TreeNode[] = gameObjects
+    .filter((go) => !go.parentId)
+    .map(buildNode);
 
   const patchGameObject = (id: string, patch: Partial<GameObject>) =>
     setGameObjects((prev) =>
@@ -309,7 +302,7 @@ export default function DeletreoPage() {
         </SidePanel>
         <div className="flex min-w-0 flex-1 flex-col">
           <ViewModeTabs mode={viewMode} onChange={setViewMode} />
-          <FullScreen background={background} hideCursorOnFullscreen>
+          <Scene background={background} hideCursorOnFullscreen>
             <div ref={stageRef} className="absolute inset-0">
               {gameObjects.map((go) => {
                 if (!go.active) return null;
@@ -360,7 +353,7 @@ export default function DeletreoPage() {
                 );
               })}
             </div>
-          </FullScreen>
+          </Scene>
         </div>
         <SidePanel title="Inspector" className="w-72 shrink-0">
           {selected ? (

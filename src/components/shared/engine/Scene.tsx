@@ -4,21 +4,21 @@ import React, { useRef, useState, useEffect } from "react";
 import { Maximize } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export type FullScreenBackground =
+export type SceneBackground =
   | { type: "color"; value: string }
   | { type: "image"; value: string }
   | { type: "video"; value: string };
 
-interface FullScreenProps extends React.HTMLAttributes<HTMLDivElement> {
+interface SceneProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
   /** Clase para manejar la proporción, por defecto 16:9 (aspect-video) */
   aspectRatioClass?: string;
-  background?: FullScreenBackground;
+  background?: SceneBackground;
   /** Oculta el cursor mientras está en pantalla completa (se sale con ESC) */
   hideCursorOnFullscreen?: boolean;
 }
 
-function StageBackground({ background }: { background: FullScreenBackground }) {
+function StageBackground({ background }: { background: SceneBackground }) {
   if (background.type === "video") {
     return (
       <video
@@ -49,14 +49,14 @@ function StageBackground({ background }: { background: FullScreenBackground }) {
   );
 }
 
-export function FullScreen({
+export function Scene({
   children,
   className,
   aspectRatioClass = "aspect-video",
   background = { type: "color", value: "#000000" },
   hideCursorOnFullscreen = false,
   ...props
-}: FullScreenProps) {
+}: SceneProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
 

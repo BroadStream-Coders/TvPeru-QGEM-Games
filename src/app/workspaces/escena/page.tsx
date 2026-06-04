@@ -16,7 +16,7 @@ import { loadJsonFile } from "@/helpers/persistence";
 import { useWorkspaceHeader } from "@/hooks/use-workspace-header";
 import { useTransformGesture, HANDLES } from "@/hooks/use-transform-gesture";
 
-import { FullScreen } from "@/components/shared/engine/FullScreen";
+import { Scene } from "@/components/shared/engine/Scene";
 import { NumberField } from "@/components/shared/NumberField";
 import {
   RectTransform,
@@ -275,7 +275,7 @@ export default function EscenaPage() {
 
   return (
     <main className="flex-1 p-6 overflow-auto flex flex-col gap-6">
-      <FullScreen background={{ type: "color", value: "#00B140" }}>
+      <Scene background={{ type: "color", value: "#00B140" }}>
         <div ref={stageRef} className="absolute inset-0">
           {sources.map((s) => (
             <RectTransform
@@ -308,7 +308,7 @@ export default function EscenaPage() {
             </RectTransform>
           ))}
         </div>
-      </FullScreen>
+      </Scene>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Fuentes */}

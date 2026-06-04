@@ -69,11 +69,7 @@ function TreeItem({
             }}
             className="flex size-4 shrink-0 items-center justify-center opacity-70 hover:opacity-100"
           >
-            {expanded ? (
-              <ChevronDown size={12} />
-            ) : (
-              <ChevronRight size={12} />
-            )}
+            {expanded ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
           </button>
         ) : (
           <span className="size-4 shrink-0" />

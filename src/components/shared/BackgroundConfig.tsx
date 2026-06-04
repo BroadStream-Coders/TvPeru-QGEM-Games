@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { ImageIcon, Palette, Video } from "lucide-react";
-import type { FullScreenBackground } from "@/components/shared/engine/FullScreen";
+import type { SceneBackground } from "@/components/shared/engine/Scene";
 import {
   Select,
   SelectContent,
@@ -11,14 +11,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-type BackgroundType = FullScreenBackground["type"];
+type BackgroundType = SceneBackground["type"];
 
-export const DEFAULT_BACKGROUND: FullScreenBackground = {
+export const DEFAULT_BACKGROUND: SceneBackground = {
   type: "color",
   value: "#000000",
 };
 
-function defaultFor(type: BackgroundType): FullScreenBackground {
+function defaultFor(type: BackgroundType): SceneBackground {
   if (type === "video") return { type: "video", value: "" };
   if (type === "image") return { type: "image", value: "" };
   return { type: "color", value: "#000000" };
@@ -28,8 +28,8 @@ export function BackgroundConfig({
   value,
   onChange,
 }: {
-  value: FullScreenBackground;
-  onChange: (value: FullScreenBackground) => void;
+  value: SceneBackground;
+  onChange: (value: SceneBackground) => void;
 }) {
   const [fileName, setFileName] = useState<string | null>(null);
 

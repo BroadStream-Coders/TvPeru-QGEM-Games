@@ -1,5 +1,11 @@
 import Link from "next/link";
-import { SpellCheck, ArrowRight, Trophy, Layers } from "lucide-react";
+import {
+  SpellCheck,
+  ArrowRight,
+  Trophy,
+  Layers,
+  FlaskConical,
+} from "lucide-react";
 
 const workspaces = [
   {
@@ -13,6 +19,12 @@ const workspaces = [
     description: "Compositor de escena estilo OBS",
     href: "/workspaces/escena",
     icon: Layers,
+  },
+  {
+    name: "Sandbox",
+    description: "Prototipo del engine de GameObjects",
+    href: "/workspaces/sandbox",
+    icon: FlaskConical,
   },
 ];
 

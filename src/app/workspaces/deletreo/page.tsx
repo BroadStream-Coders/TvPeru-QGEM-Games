@@ -15,11 +15,11 @@ import { SOUNDS, playSound } from "@/lib/audio";
 import { Scene, SceneBackground } from "@/components/shared/engine/Scene";
 import { BackgroundConfig } from "@/components/shared/BackgroundConfig";
 import {
-  RectTransform,
   RectTransformValues,
   Vec2,
 } from "@/components/shared/engine/RectTransform";
 import { SpellFrame } from "./components/SpellFrame";
+import { GameObject as GameObjectView } from "./components/GameObject";
 import { StatusCard } from "./components/StatusCard";
 import { LegendCard } from "./components/LegendCard";
 import { TextCard } from "./components/TextCard";
@@ -313,17 +313,12 @@ export default function DeletreoPage() {
                   ? gameObjects.find((p) => p.id === go.parentId)?.transform
                   : undefined;
                 return (
-                  <RectTransform
+                  <GameObjectView
                     key={go.id}
-                    position={go.transform.position}
-                    size={go.transform.size}
-                    pivot={go.transform.pivot}
+                    gameObject={go}
                     parent={parentTransform}
-                    className={
-                      outline
-                        ? `border-2 border-dashed ${isSelected ? "border-brand" : "border-white/60"}`
-                        : undefined
-                    }
+                    outline={outline}
+                    selected={isSelected}
                   >
                     {go.id === FRAME_ID && (
                       <SpellFrame
@@ -349,7 +344,7 @@ export default function DeletreoPage() {
                         ))}
                       </>
                     )}
-                  </RectTransform>
+                  </GameObjectView>
                 );
               })}
             </div>

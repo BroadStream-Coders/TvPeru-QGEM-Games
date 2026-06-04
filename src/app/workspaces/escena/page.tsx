@@ -16,14 +16,14 @@ import { loadJsonFile } from "@/helpers/persistence";
 import { useWorkspaceHeader } from "@/hooks/use-workspace-header";
 import { useTransformGesture, HANDLES } from "@/hooks/use-transform-gesture";
 
-import { FullScreen } from "@/components/shared/FullScreen";
+import { FullScreen } from "@/components/shared/engine/FullScreen";
 import { NumberField } from "@/components/shared/NumberField";
 import {
   RectTransform,
   RectTransformValues,
   Vec2,
   DESIGN_WIDTH,
-} from "@/components/shared/RectTransform";
+} from "@/components/shared/engine/RectTransform";
 
 type TextAlign = "left" | "center" | "right";
 

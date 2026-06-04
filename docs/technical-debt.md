@@ -20,12 +20,12 @@ Registro de atajos, decisiones pendientes y riesgos a futuro de este proyecto.
 - **Impacto futuro:** Sesiones guardadas antes de este cambio aparecerán descolocadas. Si el productor de los archivos de sesión no adopta la nueva convención (centro, Y-up), las posiciones no coincidirán.
 - **Fecha:** 2026-06-02 · **Estado:** Abierto
 
-## [TD-002] `parent` de RectTransform declarado pero sin comportamiento
+## [TD-002] Parentesco de RectTransform solo soporta un nivel
 
-- **Ubicación:** `src/components/shared/RectTransform.tsx:21`
-- **Riesgo:** 3/10
-- **Problema:** El prop `parent?: RectTransformValues` existe en la interfaz pero no se consume: el render no posiciona relativo al padre todavía. Es scaffolding acordado para definir luego la semántica de parentesco.
-- **Impacto futuro:** Si se empieza a pasar `parent` esperando posicionamiento relativo, no tendrá efecto y puede confundir. Hay que definir e implementar la matemática de parentesco (offset, pivot/anchors, anidamiento) antes de apoyarse en él.
+- **Ubicación:** `src/components/shared/engine/RectTransform.tsx:32`, `src/app/workspaces/deletreo/page.tsx`
+- **Riesgo:** 4/10
+- **Problema:** El prop `parent` ya posiciona al hijo relativo al padre, pero solo suma `parent.position` (un nivel). Si el padre está a su vez parentado (abuelo), el render no acumula la cadena: el caller le pasa el transform local del padre inmediato, no su posición mundial. Tampoco considera `size`/`pivot`/anchors del padre, solo su punto de pivote como origen.
+- **Impacto futuro:** Al anidar 3+ niveles, las posiciones serán incorrectas. Para soportarlo hay que resolver la posición mundial del padre (subiendo por la cadena `parentId`) o que `RectTransform` acepte ya el transform mundial del padre.
 - **Fecha:** 2026-06-04 · **Estado:** Abierto
 
 ## [TD-003] Árbol de prueba hardcodeado en el Hierarchy de deletreo

@@ -15,20 +15,20 @@ import { SOUNDS, playSound } from "@/lib/audio";
 import {
   FullScreen,
   FullScreenBackground,
-} from "@/components/shared/FullScreen";
+} from "@/components/shared/engine/FullScreen";
 import { BackgroundConfig } from "@/components/shared/BackgroundConfig";
 import {
   RectTransform,
   RectTransformValues,
   Vec2,
-} from "@/components/shared/RectTransform";
+} from "@/components/shared/engine/RectTransform";
 import { SpellFrame } from "./components/SpellFrame";
 import { StatusCard } from "./components/StatusCard";
 import { LegendCard } from "./components/LegendCard";
 import { TextCard } from "./components/TextCard";
 import { ViewModeTabs, ViewMode } from "./components/ViewModeTabs";
 import { SidePanel } from "./components/SidePanel";
-import { Hierarchy, TreeNode } from "@/components/shared/Hierarchy";
+import { Hierarchy, TreeNode } from "@/components/shared/engine/Hierarchy";
 import { Inspector } from "./components/Inspector";
 import { RectTransformInspector } from "./components/RectTransformInspector";
 import { GameObject, createGameObject } from "./gameObject";
@@ -46,34 +46,6 @@ const SHOWN_POS = { x: 25, y: -358 };
 
 const FRAME_ID = "main-frame";
 const TEXT_ID = "text";
-
-const HIERARCHY_TEST_TREE: TreeNode = {
-  id: "test-root",
-  name: "Test",
-  children: [
-    {
-      id: "test-canvas",
-      name: "Canvas",
-      children: [
-        {
-          id: "test-panel",
-          name: "Panel",
-          children: [
-            { id: "test-title", name: "Title" },
-            { id: "test-subtitle", name: "Subtitle" },
-          ],
-        },
-        {
-          id: "test-button",
-          name: "Button",
-          children: [{ id: "test-label", name: "Label" }],
-        },
-      ],
-    },
-    { id: "test-camera", name: "Camera" },
-    { id: "test-light", name: "Directional Light" },
-  ],
-};
 
 export default function DeletreoPage() {
   const setHeader = useWorkspaceHeader((s) => s.setHeader);
@@ -103,8 +75,9 @@ export default function DeletreoPage() {
     createGameObject({
       id: TEXT_ID,
       name: "Text",
+      parentId: FRAME_ID,
       transform: {
-        position: { x: 25, y: -358 },
+        position: { x: 0, y: 0 },
         size: { x: 900, y: 160 },
         pivot: { x: 0.5, y: 0.5 },
       },
@@ -128,13 +101,23 @@ export default function DeletreoPage() {
   const textVisible =
     gameObjects.find((go) => go.id === TEXT_ID)?.active ?? true;
 
+  const buildNode = (go: GameObject): TreeNode => {
+    const children = gameObjects
+      .filter((c) => c.parentId === go.id)
+      .map(buildNode);
+    return {
+      id: go.id,
+      name: go.name,
+      children: children.length ? children : undefined,
+    };
+  };
+
   const hierarchyNodes: TreeNode[] = [
     {
       id: "deletreo-root",
       name: "Deletreo",
-      children: gameObjects.map((go) => ({ id: go.id, name: go.name })),
+      children: gameObjects.filter((go) => !go.parentId).map(buildNode),
     },
-    HIERARCHY_TEST_TREE,
   ];
 
   const patchGameObject = (id: string, patch: Partial<GameObject>) =>
@@ -190,17 +173,44 @@ export default function DeletreoPage() {
     [shakeRef, popRef],
   );
 
+  const parentPositionOf = (go: GameObject | null): Vec2 => {
+    const parent = go?.parentId
+      ? gameObjects.find((p) => p.id === go.parentId)
+      : null;
+    return parent?.transform.position ?? { x: 0, y: 0 };
+  };
+
   const stageRef = useRef<HTMLDivElement>(null);
   const { beginGesture } = useTransformGesture({
     stageRef,
-    getTransform: () => selected?.transform ?? null,
+    getTransform: () => {
+      if (!selected) return null;
+      const origin = parentPositionOf(selected);
+      return {
+        ...selected.transform,
+        position: {
+          x: selected.transform.position.x + origin.x,
+          y: selected.transform.position.y + origin.y,
+        },
+      };
+    },
     onChange: ({ position, size }) =>
       setGameObjects((prev) =>
-        prev.map((go) =>
-          go.id === selectedId
-            ? { ...go, transform: { ...go.transform, position, size } }
-            : go,
-        ),
+        prev.map((go) => {
+          if (go.id !== selectedId) return go;
+          const origin = parentPositionOf(go);
+          return {
+            ...go,
+            transform: {
+              ...go.transform,
+              position: {
+                x: position.x - origin.x,
+                y: position.y - origin.y,
+              },
+              size,
+            },
+          };
+        }),
       ),
   });
 
@@ -306,12 +316,16 @@ export default function DeletreoPage() {
                 const isSelected = go.id === selectedId;
                 const outline =
                   viewMode === "scene" || (editMode && isSelected);
+                const parentTransform = go.parentId
+                  ? gameObjects.find((p) => p.id === go.parentId)?.transform
+                  : undefined;
                 return (
                   <RectTransform
                     key={go.id}
                     position={go.transform.position}
                     size={go.transform.size}
                     pivot={go.transform.pivot}
+                    parent={parentTransform}
                     className={
                       outline
                         ? `border-2 border-dashed ${isSelected ? "border-brand" : "border-white/60"}`

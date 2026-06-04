@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef } from "react";
-import type { Vec2 } from "@/components/shared/RectTransform";
+import type { Vec2 } from "@/components/shared/engine/RectTransform";
 
 export interface SlideOptions {
   /** Velocidad del movimiento en unidades de diseño por segundo. */

@@ -33,16 +33,19 @@ export function RectTransform({
   position = DEFAULT_POSITION,
   size = DEFAULT_SIZE,
   pivot = DEFAULT_PIVOT,
+  parent,
   className,
   style,
   children,
 }: RectTransformProps) {
+  const worldX = position.x + (parent?.position.x ?? 0);
+  const worldY = position.y + (parent?.position.y ?? 0);
   return (
     <div
       className={cn("absolute", className)}
       style={{
-        left: `${((DESIGN_WIDTH / 2 + position.x) / DESIGN_WIDTH) * 100}cqw`,
-        top: `${((DESIGN_HEIGHT / 2 - position.y) / DESIGN_HEIGHT) * 100}cqh`,
+        left: `${((DESIGN_WIDTH / 2 + worldX) / DESIGN_WIDTH) * 100}cqw`,
+        top: `${((DESIGN_HEIGHT / 2 - worldY) / DESIGN_HEIGHT) * 100}cqh`,
         width: `${(size.x / DESIGN_WIDTH) * 100}cqw`,
         height: `${(size.y / DESIGN_HEIGHT) * 100}cqh`,
         transform: `translate(${-pivot.x * 100}%, ${-pivot.y * 100}%)`,

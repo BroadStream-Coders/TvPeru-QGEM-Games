@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { ImageIcon, Palette, Video } from "lucide-react";
-import type { FullScreenBackground } from "@/components/shared/FullScreen";
+import type { FullScreenBackground } from "@/components/shared/engine/FullScreen";
 import {
   Select,
   SelectContent,

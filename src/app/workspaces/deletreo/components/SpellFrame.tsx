@@ -1,6 +1,9 @@
 import type { Ref } from "react";
 import { jetBrainsMono } from "@/lib/fonts";
-import { DESIGN_WIDTH, DESIGN_HEIGHT } from "@/components/shared/RectTransform";
+import {
+  DESIGN_WIDTH,
+  DESIGN_HEIGHT,
+} from "@/components/shared/engine/RectTransform";
 
 import mainFrame from "../graphics/mainFrame.png";
 import errorFrame from "../graphics/errorFrame.png";

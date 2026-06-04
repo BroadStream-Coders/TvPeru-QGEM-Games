@@ -6,6 +6,9 @@ import { createImageComponent } from "@engine/components/image/imageComponent";
 import { ColorView } from "@engine/components/color/ColorView";
 import { ColorInspector } from "@engine/components/color/ColorInspector";
 import { createColorComponent } from "@engine/components/color/colorComponent";
+import { VideoView } from "@engine/components/video/VideoView";
+import { VideoInspector } from "@engine/components/video/VideoInspector";
+import { createVideoComponent } from "@engine/components/video/videoComponent";
 
 export interface ComponentDefinition {
   label: string;
@@ -31,6 +34,12 @@ export const COMPONENT_REGISTRY: Record<string, ComponentDefinition> = {
     create: () => createColorComponent(),
     view: ColorView as unknown as ComponentDefinition["view"],
     editor: ColorInspector as unknown as ComponentDefinition["editor"],
+  },
+  video: {
+    label: "Video",
+    create: () => createVideoComponent(),
+    view: VideoView as unknown as ComponentDefinition["view"],
+    editor: VideoInspector as unknown as ComponentDefinition["editor"],
   },
 };
 

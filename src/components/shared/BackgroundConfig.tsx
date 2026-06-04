@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { ImageIcon, Palette, Video } from "lucide-react";
-import type { SceneBackground } from "@/components/shared/engine/Scene";
+import type { SceneBackground } from "@engine/Scene";
 import {
   Select,
   SelectContent,

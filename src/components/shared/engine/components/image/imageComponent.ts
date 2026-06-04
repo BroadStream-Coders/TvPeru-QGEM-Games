@@ -1,4 +1,4 @@
-import { GameObjectComponent } from "@/components/shared/engine/gameObject";
+import { GameObjectComponent } from "@engine/gameObject";
 
 export type ImageFit = "contain" | "cover" | "fill";
 

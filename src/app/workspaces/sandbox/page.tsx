@@ -5,27 +5,24 @@ import { FlaskConical } from "lucide-react";
 import { useWorkspaceHeader } from "@/hooks/use-workspace-header";
 import { useTransformGesture, HANDLES } from "@/hooks/use-transform-gesture";
 
-import { Scene, SceneBackground } from "@/components/shared/engine/Scene";
+import { Scene, SceneBackground } from "@engine/Scene";
 import { BackgroundConfig } from "@/components/shared/BackgroundConfig";
-import {
-  RectTransformValues,
-  Vec2,
-} from "@/components/shared/engine/RectTransform";
-import { GameObjectView } from "@/components/shared/engine/GameObjectView";
-import { Hierarchy, TreeNode } from "@/components/shared/engine/Hierarchy";
-import { SidePanel } from "@/components/shared/engine/SidePanel";
-import { GameObjectInspector } from "@/components/shared/engine/GameObjectInspector";
-import { RectTransformInspector } from "@/components/shared/engine/RectTransformInspector";
-import { AddComponentButton } from "@/components/shared/engine/AddComponentButton";
+import { RectTransformValues, Vec2 } from "@engine/RectTransform";
+import { GameObjectView } from "@engine/GameObjectView";
+import { Hierarchy, TreeNode } from "@engine/Hierarchy";
+import { SidePanel } from "@engine/SidePanel";
+import { GameObjectInspector } from "@engine/GameObjectInspector";
+import { RectTransformInspector } from "@engine/RectTransformInspector";
+import { AddComponentButton } from "@engine/AddComponentButton";
 import {
   GameObject,
   GameObjectComponent,
   createGameObject,
-} from "@/components/shared/engine/gameObject";
+} from "@engine/gameObject";
 import {
   COMPONENT_REGISTRY,
   COMPONENT_OPTIONS,
-} from "@/components/shared/engine/componentRegistry";
+} from "@engine/componentRegistry";
 
 export default function SandboxPage() {
   const setHeader = useWorkspaceHeader((s) => s.setHeader);
@@ -122,9 +119,7 @@ export default function SandboxPage() {
   const setGameObjectSize = (goId: string, size: Vec2) =>
     setGameObjects((prev) =>
       prev.map((go) =>
-        go.id === goId
-          ? { ...go, transform: { ...go.transform, size } }
-          : go,
+        go.id === goId ? { ...go, transform: { ...go.transform, size } } : go,
       ),
     );
 

@@ -12,36 +12,33 @@ import { useBounceMove } from "@/hooks/use-bounce-move";
 import { useSlide } from "@/hooks/use-slide";
 import { SOUNDS, playSound } from "@/lib/audio";
 
-import { Scene, SceneBackground } from "@/components/shared/engine/Scene";
+import { Scene, SceneBackground } from "@engine/Scene";
 import { BackgroundConfig } from "@/components/shared/BackgroundConfig";
-import {
-  RectTransformValues,
-  Vec2,
-} from "@/components/shared/engine/RectTransform";
-import { GameObjectView } from "@/components/shared/engine/GameObjectView";
+import { RectTransformValues, Vec2 } from "@engine/RectTransform";
+import { GameObjectView } from "@engine/GameObjectView";
 import { SpellFrame } from "./components/SpellFrame";
 import { StatusCard } from "./components/StatusCard";
 import { LegendCard } from "./components/LegendCard";
 import { TextCard } from "./components/TextCard";
 import { ViewModeTabs, ViewMode } from "./components/ViewModeTabs";
-import { SidePanel } from "@/components/shared/engine/SidePanel";
-import { Hierarchy, TreeNode } from "@/components/shared/engine/Hierarchy";
-import { GameObjectInspector } from "@/components/shared/engine/GameObjectInspector";
-import { RectTransformInspector } from "@/components/shared/engine/RectTransformInspector";
+import { SidePanel } from "@engine/SidePanel";
+import { Hierarchy, TreeNode } from "@engine/Hierarchy";
+import { GameObjectInspector } from "@engine/GameObjectInspector";
+import { RectTransformInspector } from "@engine/RectTransformInspector";
 import {
   GameObject,
   GameObjectComponent,
   createGameObject,
-} from "@/components/shared/engine/gameObject";
+} from "@engine/gameObject";
 import {
   COMPONENT_REGISTRY,
   COMPONENT_OPTIONS,
-} from "@/components/shared/engine/componentRegistry";
-import { AddComponentButton } from "@/components/shared/engine/AddComponentButton";
+} from "@engine/componentRegistry";
+import { AddComponentButton } from "@engine/AddComponentButton";
 import {
   ImageComponent,
   createImageComponent,
-} from "@/components/shared/engine/components/image/imageComponent";
+} from "@engine/components/image/imageComponent";
 
 import mainFrame from "./graphics/mainFrame.png";
 import errorFrame from "./graphics/errorFrame.png";
@@ -186,9 +183,7 @@ export default function DeletreoPage() {
   const setGameObjectSize = (goId: string, size: Vec2) =>
     setGameObjects((prev) =>
       prev.map((go) =>
-        go.id === goId
-          ? { ...go, transform: { ...go.transform, size } }
-          : go,
+        go.id === goId ? { ...go, transform: { ...go.transform, size } } : go,
       ),
     );
 
@@ -316,25 +311,28 @@ export default function DeletreoPage() {
       ),
   });
 
-  const handleLoad = useCallback(async (file: File) => {
-    try {
-      const isValid = (data: unknown): data is DeletreoData =>
-        typeof data === "object" &&
-        data !== null &&
-        "groups" in data &&
-        Array.isArray((data as DeletreoData).groups) &&
-        (data as DeletreoData).groups.every((g) => Array.isArray(g.words));
+  const handleLoad = useCallback(
+    async (file: File) => {
+      try {
+        const isValid = (data: unknown): data is DeletreoData =>
+          typeof data === "object" &&
+          data !== null &&
+          "groups" in data &&
+          Array.isArray((data as DeletreoData).groups) &&
+          (data as DeletreoData).groups.every((g) => Array.isArray(g.words));
 
-      const data = await loadJsonFile<DeletreoData>(file, isValid);
-      setGroups(data.groups.map((g) => g.words));
-      setGroupIndex(0);
-      setSlotIndex(0);
-      setSpellStep(0);
-      setMainFrameImageSrc(normalSrc);
-    } catch {
-      console.error("Error al cargar el archivo JSON.");
-    }
-  }, [normalSrc]);
+        const data = await loadJsonFile<DeletreoData>(file, isValid);
+        setGroups(data.groups.map((g) => g.words));
+        setGroupIndex(0);
+        setSlotIndex(0);
+        setSpellStep(0);
+        setMainFrameImageSrc(normalSrc);
+      } catch {
+        console.error("Error al cargar el archivo JSON.");
+      }
+    },
+    [normalSrc],
+  );
 
   useEffect(() => {
     return () => resetHeader();

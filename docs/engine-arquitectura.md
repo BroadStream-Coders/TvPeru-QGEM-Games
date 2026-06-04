@@ -162,13 +162,13 @@ Espacio de diseño y origen (definidos en `engine/RectTransform.tsx`):
 
 Por cada tipo, el par es **`XxxInspector` (edita) / `XxxView` (dibuja)**:
 
-| Tipo             | Editor (Inspector)       | Vista (Scene)                           | Modelo             |
-| ---------------- | ------------------------ | --------------------------------------- | ------------------ |
-| GameObject       | `GameObjectInspector`    | `GameObjectView`                        | `gameObject.ts`    |
-| RectTransform    | `RectTransformInspector` | `RectTransform` _(plomería, excepción)_ | (campo `transform`)|
-| Image            | `ImageInspector`         | `ImageView`                             | `imageComponent.ts`|
-| Color            | `ColorInspector`         | `ColorView`                             | `colorComponent.ts`|
-| Text _(futuro)_  | `TextInspector`          | `TextView`                              | `textComponent.ts` |
+| Tipo            | Editor (Inspector)       | Vista (Scene)                           | Modelo              |
+| --------------- | ------------------------ | --------------------------------------- | ------------------- |
+| GameObject      | `GameObjectInspector`    | `GameObjectView`                        | `gameObject.ts`     |
+| RectTransform   | `RectTransformInspector` | `RectTransform` _(plomería, excepción)_ | (campo `transform`) |
+| Image           | `ImageInspector`         | `ImageView`                             | `imageComponent.ts` |
+| Color           | `ColorInspector`         | `ColorView`                             | `colorComponent.ts` |
+| Text _(futuro)_ | `TextInspector`          | `TextView`                              | `textComponent.ts`  |
 
 - `View` = "vista" de la tripleta (modelo / control / **vista**).
 - El **dato** se queda con el nombre limpio (`GameObject`), la **vista** lleva
@@ -181,8 +181,14 @@ Por cada tipo, el par es **`XxxInspector` (edita) / `XxxView` (dibuja)**:
 
 ## 7. Estructura de carpetas
 
+> **Import:** el engine se importa con el alias **`@engine/*`** (definido en
+> `tsconfig.json` `paths`, apunta a `src/components/shared/engine/*`). Usar
+> `import { Scene } from "@engine/Scene"`, **no** `@/components/shared/engine/Scene`.
+> Validar siempre con `pnpm build` (el alias debe resolver en Turbopack y en el
+> type-check de TS).
+
 ```
-src/components/shared/engine/
+src/components/shared/engine/   →  alias @engine/
 ├── Scene.tsx                  # el lienzo 16:9 (ex-FullScreen) + SceneBackground
 ├── RectTransform.tsx          # posicionador (#2) + tipos Vec2/RectTransformValues + DESIGN_*
 ├── gameObject.ts              # modelo GameObject + createGameObject + GameObjectComponent
@@ -220,12 +226,12 @@ src/components/shared/engine/
 
 - **`workspaces/deletreo`** → el juego de referencia. Usa el engine completo:
   `Scene` + `Hierarchy` (con "+") + `GameObjectInspector` + `RectTransformInspector`
-  + editores de `components[]` por el registro + `AddComponentButton`. Arranca con
-  dos GameObjects: **MainFrame** (con un componente **Image**) y **Text** (hijo).
-  La tecla **F** muta el `src` de ese Image (marco normal ↔ error); es la fuente de
-  verdad del swap. Tiene además lógica propia de juego (gestos de edición,
-  animaciones bounce/slide, sonidos, el deletreo de letras) que es **del juego**, no
-  del engine.
+  - editores de `components[]` por el registro + `AddComponentButton`. Arranca con
+    dos GameObjects: **MainFrame** (con un componente **Image**) y **Text** (hijo).
+    La tecla **F** muta el `src` de ese Image (marco normal ↔ error); es la fuente de
+    verdad del swap. Tiene además lógica propia de juego (gestos de edición,
+    animaciones bounce/slide, sonidos, el deletreo de letras) que es **del juego**, no
+    del engine.
 - **`workspaces/sandbox`** → banco de pruebas, ya **reescrito sobre el engine**:
   mismo layout Hierarchy + Scene + Inspector que deletreo, sin GameObjects iniciales.
   Sirve para crear objetos con "+" y agregarles componentes (Image, Color) libremente,

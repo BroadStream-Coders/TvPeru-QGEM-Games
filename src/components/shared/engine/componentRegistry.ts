@@ -1,11 +1,11 @@
 import { ComponentType } from "react";
-import { GameObjectComponent } from "@/components/shared/engine/gameObject";
-import { ImageView } from "@/components/shared/engine/components/image/ImageView";
-import { ImageInspector } from "@/components/shared/engine/components/image/ImageInspector";
-import { createImageComponent } from "@/components/shared/engine/components/image/imageComponent";
-import { ColorView } from "@/components/shared/engine/components/color/ColorView";
-import { ColorInspector } from "@/components/shared/engine/components/color/ColorInspector";
-import { createColorComponent } from "@/components/shared/engine/components/color/colorComponent";
+import { GameObjectComponent } from "@engine/gameObject";
+import { ImageView } from "@engine/components/image/ImageView";
+import { ImageInspector } from "@engine/components/image/ImageInspector";
+import { createImageComponent } from "@engine/components/image/imageComponent";
+import { ColorView } from "@engine/components/color/ColorView";
+import { ColorInspector } from "@engine/components/color/ColorInspector";
+import { createColorComponent } from "@engine/components/color/colorComponent";
 
 export interface ComponentDefinition {
   label: string;

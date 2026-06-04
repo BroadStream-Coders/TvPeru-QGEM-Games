@@ -1,4 +1,4 @@
-import { RectTransformValues } from "@/components/shared/engine/RectTransform";
+import { RectTransformValues } from "@engine/RectTransform";
 
 export interface GameObjectComponent {
   type: string;

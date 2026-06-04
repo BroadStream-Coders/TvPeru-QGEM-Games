@@ -5,7 +5,7 @@ import {
   Vec2,
   DESIGN_WIDTH,
   DESIGN_HEIGHT,
-} from "@/components/shared/engine/RectTransform";
+} from "@engine/RectTransform";
 
 export type Handle = "nw" | "n" | "ne" | "e" | "se" | "s" | "sw" | "w";
 

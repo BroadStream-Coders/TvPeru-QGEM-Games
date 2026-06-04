@@ -1,8 +1,5 @@
 import { Move } from "lucide-react";
-import {
-  RectTransformValues,
-  Vec2,
-} from "@/components/shared/engine/RectTransform";
+import { RectTransformValues, Vec2 } from "@engine/RectTransform";
 
 function Field({
   label,

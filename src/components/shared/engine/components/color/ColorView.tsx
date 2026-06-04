@@ -1,4 +1,4 @@
-import { ColorComponent } from "@/components/shared/engine/components/color/colorComponent";
+import { ColorComponent } from "@engine/components/color/colorComponent";
 
 export function ColorView({ component }: { component: ColorComponent }) {
   return (

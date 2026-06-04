@@ -1,10 +1,7 @@
 import React from "react";
-import {
-  RectTransform,
-  RectTransformValues,
-} from "@/components/shared/engine/RectTransform";
-import { GameObject } from "@/components/shared/engine/gameObject";
-import { COMPONENT_REGISTRY } from "@/components/shared/engine/componentRegistry";
+import { RectTransform, RectTransformValues } from "@engine/RectTransform";
+import { GameObject } from "@engine/gameObject";
+import { COMPONENT_REGISTRY } from "@engine/componentRegistry";
 
 interface GameObjectViewProps {
   gameObject: GameObject;

@@ -2,7 +2,7 @@ import { Image as ImageIcon, Upload, Trash2, Maximize2 } from "lucide-react";
 import {
   ImageComponent,
   ImageFit,
-} from "@/components/shared/engine/components/image/imageComponent";
+} from "@engine/components/image/imageComponent";
 
 export function ImageInspector({
   component,
@@ -29,8 +29,7 @@ export function ImageInspector({
   const fitToImage = () => {
     if (!component.src) return;
     const img = new window.Image();
-    img.onload = () =>
-      onResize({ x: img.naturalWidth, y: img.naturalHeight });
+    img.onload = () => onResize({ x: img.naturalWidth, y: img.naturalHeight });
     img.src = component.src;
   };
 

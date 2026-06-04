@@ -1,5 +1,5 @@
 import { Palette, Trash2 } from "lucide-react";
-import { ColorComponent } from "@/components/shared/engine/components/color/colorComponent";
+import { ColorComponent } from "@engine/components/color/colorComponent";
 
 export function ColorInspector({
   component,

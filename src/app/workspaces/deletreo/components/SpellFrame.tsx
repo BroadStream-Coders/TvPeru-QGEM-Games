@@ -1,9 +1,6 @@
 import type { Ref } from "react";
 import { jetBrainsMono } from "@/lib/fonts";
-import {
-  DESIGN_WIDTH,
-  DESIGN_HEIGHT,
-} from "@/components/shared/engine/RectTransform";
+import { DESIGN_WIDTH, DESIGN_HEIGHT } from "@engine/RectTransform";
 
 export interface SpellTextConfig {
   fontSize: number;

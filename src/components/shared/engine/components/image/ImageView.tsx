@@ -1,4 +1,4 @@
-import { ImageComponent } from "@/components/shared/engine/components/image/imageComponent";
+import { ImageComponent } from "@engine/components/image/imageComponent";
 
 export function ImageView({ component }: { component: ImageComponent }) {
   if (!component.src) return null;

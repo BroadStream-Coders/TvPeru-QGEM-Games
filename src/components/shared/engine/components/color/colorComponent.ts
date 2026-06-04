@@ -1,4 +1,4 @@
-import { GameObjectComponent } from "@/components/shared/engine/gameObject";
+import { GameObjectComponent } from "@engine/gameObject";
 
 export interface ColorComponent extends GameObjectComponent {
   type: "color";

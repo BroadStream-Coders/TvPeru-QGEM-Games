@@ -2,6 +2,7 @@ import React from "react";
 import { RectTransform, RectTransformValues } from "@engine/RectTransform";
 import { GameObject } from "@engine/gameObject";
 import { COMPONENT_REGISTRY } from "@engine/componentRegistry";
+import { useSceneViewMode } from "@engine/SceneViewMode";
 
 interface GameObjectViewProps {
   gameObject: GameObject;
@@ -18,6 +19,9 @@ export function GameObjectView({
   selected,
   children,
 }: GameObjectViewProps) {
+  const viewMode = useSceneViewMode();
+  const showOutline = outline || viewMode === "scene";
+
   return (
     <RectTransform
       position={gameObject.transform.position}
@@ -32,7 +36,7 @@ export function GameObjectView({
         })}
         {children}
       </div>
-      {outline && (
+      {showOutline && (
         <div
           className={`pointer-events-none absolute inset-0 border-2 border-dashed ${
             selected ? "border-brand" : "border-white/60"

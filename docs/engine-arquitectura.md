@@ -189,7 +189,9 @@ Por cada tipo, el par es **`XxxInspector` (edita) / `XxxView` (dibuja)**:
 
 ```
 src/components/shared/engine/   →  alias @engine/
-├── Scene.tsx                  # el lienzo 16:9 (ex-FullScreen) + SceneBackground
+├── Scene.tsx                  # el lienzo 16:9 (ex-FullScreen) + SceneBackground + pestañas Game/Scene
+├── ViewModeTabs.tsx           # pestañas Game/Scene que renderiza la propia Scene
+├── SceneViewMode.tsx          # contexto del viewMode (Scene lo provee, GameObjectView lo lee)
 ├── RectTransform.tsx          # posicionador (#2) + tipos Vec2/RectTransformValues + DESIGN_*
 ├── gameObject.ts              # modelo GameObject + createGameObject + GameObjectComponent
 ├── GameObjectView.tsx         # vista de un GameObject (posiciona + dibuja components[] + borde)
@@ -219,6 +221,13 @@ src/components/shared/engine/   →  alias @engine/
 3. un div de **borde** superpuesto (`absolute inset-0`, `pointer-events-none`),
    dibujado **al final** para que la selección siempre se vea por encima del
    contenido. Va aparte porque un `border` cambiaría el tamaño de la caja.
+
+El borde se dibuja si el `outline` que pasa el host es `true` **o** si el viewMode
+de la Scene es `"scene"`. La `Scene` renderiza las pestañas **Game/Scene** arriba a
+la izquierda, guarda el `viewMode` y lo expone por contexto (`SceneViewMode`); cada
+`GameObjectView` lo lee, así que en modo "scene" **todos** los GameObjects muestran
+su recuadro de referencia sin que el juego tenga que cablear nada. Por eso las
+pestañas viajan con la `Scene`: aparecen en deletreo, sandbox y cualquier juego.
 
 ---
 
@@ -287,8 +296,9 @@ patchComponent, setGameObjectSize, setAxis…). Candidato fuerte a un store `use
 mismo patrón que `useWorkspaceHeader`.
 
 **D — Nombre `Scene` vs choques.**
-Existe la pestaña "Scene" de `ViewModeTabs` y antes la ruta `/escena`. El
-componente `Scene` no rompe nada; se deja así salvo que moleste el nombre repetido.
+Existe la pestaña "Scene" de `ViewModeTabs` (ahora dentro del propio componente
+`Scene`) y antes la ruta `/escena`. El componente `Scene` no rompe nada; se deja
+así salvo que moleste el nombre repetido.
 
 ---
 

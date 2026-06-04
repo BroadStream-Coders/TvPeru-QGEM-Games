@@ -188,7 +188,7 @@ export default function SandboxPage() {
                     key={go.id}
                     gameObject={go}
                     parent={parentTransform}
-                    outline={isSelected}
+                    outline={editMode && isSelected}
                     selected={isSelected}
                   >
                     {editMode && isSelected && (

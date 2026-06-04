@@ -3,6 +3,8 @@
 import React, { useRef, useState, useEffect } from "react";
 import { Maximize } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ViewModeTabs } from "@engine/ViewModeTabs";
+import { SceneViewModeProvider, ViewMode } from "@engine/SceneViewMode";
 
 export type SceneBackground =
   | { type: "color"; value: string }
@@ -59,6 +61,7 @@ export function Scene({
 }: SceneProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [viewMode, setViewMode] = useState<ViewMode>("game");
 
   // Escuchar cuando el navegador entra o sale de FullScreen (por ejemplo si el usuario presiona ESC)
   useEffect(() => {
@@ -92,6 +95,11 @@ export function Scene({
   return (
     // 'group' nos sirve para mostrar el botón de maximizar solo cuando pasamos el mouse
     <div className="relative group w-full flex flex-col items-center">
+      {!isFullscreen && (
+        <div className="w-full max-w-[1280px]">
+          <ViewModeTabs mode={viewMode} onChange={setViewMode} />
+        </div>
+      )}
       <div
         ref={containerRef}
         tabIndex={0}
@@ -107,14 +115,18 @@ export function Scene({
             aspectRatioClass,
             isFullscreen
               ? "h-full w-auto max-w-full"
-              : "w-full max-w-[1280px] rounded-xl shadow-lg border border-slate-800",
+              : "w-full max-w-[1280px] shadow-lg border border-slate-800",
             className,
           )}
           {...props}
         >
           <StageBackground background={background} />
 
-          <div className="relative z-10 w-full h-full">{children}</div>
+          <div className="relative z-10 w-full h-full">
+            <SceneViewModeProvider value={viewMode}>
+              {children}
+            </SceneViewModeProvider>
+          </div>
 
           {!isFullscreen && (
             <button

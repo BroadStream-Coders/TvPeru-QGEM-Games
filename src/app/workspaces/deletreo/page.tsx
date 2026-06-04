@@ -20,7 +20,6 @@ import { SpellFrame } from "./components/SpellFrame";
 import { StatusCard } from "./components/StatusCard";
 import { LegendCard } from "./components/LegendCard";
 import { TextCard } from "./components/TextCard";
-import { ViewModeTabs, ViewMode } from "./components/ViewModeTabs";
 import { SidePanel } from "@engine/SidePanel";
 import { Hierarchy, TreeNode } from "@engine/Hierarchy";
 import { GameObjectInspector } from "@engine/GameObjectInspector";
@@ -73,7 +72,6 @@ export default function DeletreoPage() {
     value: "#01FF02",
   });
   const [editMode, setEditMode] = useState(false);
-  const [viewMode, setViewMode] = useState<ViewMode>("game");
 
   const [gameObjects, setGameObjects] = useState<GameObject[]>(() => [
     createGameObject({
@@ -409,14 +407,12 @@ export default function DeletreoPage() {
           />
         </SidePanel>
         <div className="flex min-w-0 flex-1 flex-col">
-          <ViewModeTabs mode={viewMode} onChange={setViewMode} />
           <Scene background={background} hideCursorOnFullscreen>
             <div ref={stageRef} className="absolute inset-0">
               {gameObjects.map((go) => {
                 if (!go.active) return null;
                 const isSelected = go.id === selectedId;
-                const outline =
-                  viewMode === "scene" || (editMode && isSelected);
+                const outline = editMode && isSelected;
                 const parentTransform = go.parentId
                   ? gameObjects.find((p) => p.id === go.parentId)?.transform
                   : undefined;

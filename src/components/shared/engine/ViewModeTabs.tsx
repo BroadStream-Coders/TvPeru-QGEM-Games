@@ -1,6 +1,5 @@
 import { Gamepad2, Eye } from "lucide-react";
-
-export type ViewMode = "game" | "scene";
+import { ViewMode } from "@engine/SceneViewMode";
 
 const TABS: { mode: ViewMode; label: string; icon: typeof Gamepad2 }[] = [
   { mode: "game", label: "Game", icon: Gamepad2 },

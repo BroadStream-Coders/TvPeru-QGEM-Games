@@ -35,3 +35,11 @@ Registro de atajos, decisiones pendientes y riesgos a futuro de este proyecto.
 - **Problema:** Se inyecta un subárbol de prueba ("Test" → Canvas/Panel/Button/…) en el Hierarchy para validar el Tree View compartido. No corresponde a objetos reales de la escena y seleccionarlo deja el Inspector vacío.
 - **Impacto futuro:** Si no se quita, en producción aparecerán nodos falsos en el Hierarchy de un juego en vivo. Eliminar `HIERARCHY_TEST_TREE` y su uso cuando el Tree View esté validado.
 - **Fecha:** 2026-06-04 · **Estado:** Abierto
+
+## [TD-004] Tipado laxo del registro de componentes
+
+- **Ubicación:** `src/components/shared/engine/componentRegistry.ts`
+- **Riesgo:** 3/10
+- **Problema:** `COMPONENT_REGISTRY` tipa `view`/`editor` sobre el `GameObjectComponent` base y castea las entradas concretas (`ImageView`/`ImageInspector`) con `as`. No hay garantía en compilación de que el `view`/`editor` registrado bajo una clave `type` coincida con el modelo de ese `type`.
+- **Impacto futuro:** Al sumar más componentes (Text, Video…) un registro mal emparejado (vista de un tipo con el modelo de otro) no lo detecta el compilador y se cae en runtime. Conviene un registro genérico parametrizado por la unión discriminada de componentes.
+- **Fecha:** 2026-06-04 · **Estado:** Abierto

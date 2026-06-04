@@ -4,6 +4,7 @@ import {
   RectTransformValues,
 } from "@/components/shared/engine/RectTransform";
 import { GameObject } from "@/components/shared/engine/gameObject";
+import { COMPONENT_REGISTRY } from "@/components/shared/engine/componentRegistry";
 
 interface GameObjectViewProps {
   gameObject: GameObject;
@@ -27,7 +28,13 @@ export function GameObjectView({
       pivot={gameObject.transform.pivot}
       parent={parent}
     >
-      <div className="absolute inset-0">{children}</div>
+      <div className="absolute inset-0">
+        {gameObject.components.map((component, index) => {
+          const View = COMPONENT_REGISTRY[component.type]?.view;
+          return View ? <View key={index} component={component} /> : null;
+        })}
+        {children}
+      </div>
       {outline && (
         <div
           className={`pointer-events-none absolute inset-0 border-2 border-dashed ${

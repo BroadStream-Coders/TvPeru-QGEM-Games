@@ -30,8 +30,20 @@ import { GameObjectInspector } from "@/components/shared/engine/GameObjectInspec
 import { RectTransformInspector } from "@/components/shared/engine/RectTransformInspector";
 import {
   GameObject,
+  GameObjectComponent,
   createGameObject,
 } from "@/components/shared/engine/gameObject";
+import { COMPONENT_REGISTRY } from "@/components/shared/engine/componentRegistry";
+import {
+  ImageComponent,
+  createImageComponent,
+} from "@/components/shared/engine/components/image/imageComponent";
+
+import mainFrame from "./graphics/mainFrame.png";
+import errorFrame from "./graphics/errorFrame.png";
+
+const NORMAL_SRC = mainFrame.src;
+const ERROR_SRC = errorFrame.src;
 
 interface DeletreoGroup {
   words: string[];
@@ -71,6 +83,7 @@ export default function DeletreoPage() {
         size: { x: 1170, y: 204 },
         pivot: { x: 0.5, y: 0.5 },
       },
+      components: [createImageComponent({ src: NORMAL_SRC, fit: "fill" })],
     }),
     createGameObject({
       id: TEXT_ID,
@@ -93,7 +106,7 @@ export default function DeletreoPage() {
   });
 
   const [spellStep, setSpellStep] = useState(0);
-  const [errorMode, setErrorMode] = useState(false);
+  const [normalSrc, setNormalSrc] = useState(NORMAL_SRC);
   const [manualText, setManualText] = useState("");
 
   const selected = gameObjects.find((go) => go.id === selectedId) ?? null;
@@ -120,6 +133,45 @@ export default function DeletreoPage() {
     setGameObjects((prev) =>
       prev.map((go) => (go.id === id ? { ...go, ...patch } : go)),
     );
+
+  const patchComponent = (
+    goId: string,
+    index: number,
+    next: GameObjectComponent,
+  ) =>
+    setGameObjects((prev) =>
+      prev.map((go) =>
+        go.id === goId
+          ? {
+              ...go,
+              components: go.components.map((c, i) => (i === index ? next : c)),
+            }
+          : go,
+      ),
+    );
+
+  const setMainFrameImageSrc = (src: string) =>
+    setGameObjects((prev) =>
+      prev.map((go) =>
+        go.id === FRAME_ID
+          ? {
+              ...go,
+              components: go.components.map((c) =>
+                c.type === "image" ? { ...c, src } : c,
+              ),
+            }
+          : go,
+      ),
+    );
+
+  const onComponentChange =
+    (goId: string, index: number) => (next: GameObjectComponent) => {
+      patchComponent(goId, index, next);
+      if (goId === FRAME_ID && next.type === "image") {
+        const src = (next as ImageComponent).src;
+        if (src !== ERROR_SRC) setNormalSrc(src);
+      }
+    };
 
   const setAxis =
     (field: keyof RectTransformValues, axis: keyof Vec2) => (value: number) =>
@@ -224,11 +276,11 @@ export default function DeletreoPage() {
       setGroupIndex(0);
       setSlotIndex(0);
       setSpellStep(0);
-      setErrorMode(false);
+      setMainFrameImageSrc(normalSrc);
     } catch {
       console.error("Error al cargar el archivo JSON.");
     }
-  }, []);
+  }, [normalSrc]);
 
   useEffect(() => {
     return () => resetHeader();
@@ -250,26 +302,26 @@ export default function DeletreoPage() {
     setGroupIndex(n);
     setSlotIndex(0);
     setSpellStep(0);
-    setErrorMode(false);
+    setMainFrameImageSrc(normalSrc);
   };
 
   const selectSlot = (n: number) => {
     if (n < 0 || n >= currentGroup.length) return;
     setSlotIndex(n);
     setSpellStep(0);
-    setErrorMode(false);
+    setMainFrameImageSrc(normalSrc);
   };
 
   const nextSlot = () => {
     setSlotIndex((i) => Math.min(i + 1, currentGroup.length - 1));
     setSpellStep(0);
-    setErrorMode(false);
+    setMainFrameImageSrc(normalSrc);
   };
 
   const prevSlot = () => {
     setSlotIndex((i) => Math.max(i - 1, 0));
     setSpellStep(0);
-    setErrorMode(false);
+    setMainFrameImageSrc(normalSrc);
   };
 
   useGameKeys({
@@ -279,12 +331,12 @@ export default function DeletreoPage() {
     onBack: prevSlot,
     onShowAnswer: () => {
       setSpellStep(word.length);
-      setErrorMode(false);
+      setMainFrameImageSrc(normalSrc);
       playSound(SOUNDS.correctAnswer);
       pop();
     },
     onMarkError: () => {
-      setErrorMode(true);
+      setMainFrameImageSrc(ERROR_SRC);
       playSound(SOUNDS.incorrectAnswer);
       shake();
     },
@@ -328,7 +380,6 @@ export default function DeletreoPage() {
                         frameRef={frameRef}
                         word={textVisible ? word : ""}
                         spellStep={spellStep}
-                        errorMode={errorMode}
                         textConfig={textConfig}
                       />
                     )}
@@ -370,6 +421,16 @@ export default function DeletreoPage() {
                 editMode={editMode}
                 onToggleEdit={() => setEditMode((v) => !v)}
               />
+              {selected.components.map((component, index) => {
+                const Editor = COMPONENT_REGISTRY[component.type]?.editor;
+                return Editor ? (
+                  <Editor
+                    key={index}
+                    component={component}
+                    onChange={onComponentChange(selected.id, index)}
+                  />
+                ) : null;
+              })}
             </>
           ) : (
             <p className="px-1 py-2 text-2xs text-muted-foreground">

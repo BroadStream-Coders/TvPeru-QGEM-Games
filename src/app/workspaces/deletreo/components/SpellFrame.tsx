@@ -5,9 +5,6 @@ import {
   DESIGN_HEIGHT,
 } from "@/components/shared/engine/RectTransform";
 
-import mainFrame from "../graphics/mainFrame.png";
-import errorFrame from "../graphics/errorFrame.png";
-
 export interface SpellTextConfig {
   fontSize: number;
   letterSpacing: number;
@@ -18,26 +15,16 @@ export interface SpellTextConfig {
 export function SpellFrame({
   word,
   spellStep,
-  errorMode,
   textConfig,
   frameRef,
 }: {
   word: string;
   spellStep: number;
-  errorMode: boolean;
   textConfig: SpellTextConfig;
   frameRef?: Ref<HTMLDivElement>;
 }) {
   return (
-    <div
-      ref={frameRef}
-      className="w-full h-full"
-      style={{
-        backgroundImage: `url(${errorMode ? errorFrame.src : mainFrame.src})`,
-        backgroundSize: "100% 100%",
-        backgroundRepeat: "no-repeat",
-      }}
-    >
+    <div ref={frameRef} className="w-full h-full">
       <div
         className={`${jetBrainsMono.className} w-full h-full flex items-center justify-center font-black uppercase leading-none text-white`}
         style={{

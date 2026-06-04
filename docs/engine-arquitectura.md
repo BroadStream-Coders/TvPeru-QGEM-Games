@@ -87,6 +87,7 @@ export interface ComponentDefinition {
 export const COMPONENT_REGISTRY: Record<string, ComponentDefinition> = {
   image: { label: "Image", create: createImageComponent, view: ImageView, editor: ImageInspector },
   color: { label: "Color", create: createColorComponent, view: ColorView, editor: ColorInspector },
+  video: { label: "Video", create: createVideoComponent, view: VideoView, editor: VideoInspector },
 };
 export const COMPONENT_OPTIONS = Object.entries(...); // {type,label}[] para el dropdown
 ```
@@ -168,6 +169,7 @@ Por cada tipo, el par es **`XxxInspector` (edita) / `XxxView` (dibuja)**:
 | RectTransform   | `RectTransformInspector` | `RectTransform` _(plomería, excepción)_ | (campo `transform`) |
 | Image           | `ImageInspector`         | `ImageView`                             | `imageComponent.ts` |
 | Color           | `ColorInspector`         | `ColorView`                             | `colorComponent.ts` |
+| Video           | `VideoInspector`         | `VideoView`                             | `videoComponent.ts` |
 | Text _(futuro)_ | `TextInspector`          | `TextView`                              | `textComponent.ts`  |
 
 - `View` = "vista" de la tripleta (modelo / control / **vista**).
@@ -206,10 +208,14 @@ src/components/shared/engine/   →  alias @engine/
     │   ├── imageComponent.ts  #   modelo (src, fit, fileName)
     │   ├── ImageView.tsx      #   vista (background-image según fit)
     │   └── ImageInspector.tsx #   editor (cargar desde equipo, ajuste, fit-a-imagen, eliminar)
-    └── color/
-        ├── colorComponent.ts  #   modelo (value)
-        ├── ColorView.tsx      #   vista (div que rellena el rect con backgroundColor)
-        └── ColorInspector.tsx #   editor (color picker + hex, eliminar)
+    ├── color/
+    │   ├── colorComponent.ts  #   modelo (value)
+    │   ├── ColorView.tsx      #   vista (div que rellena el rect con backgroundColor)
+    │   └── ColorInspector.tsx #   editor (color picker + hex, eliminar)
+    └── video/
+        ├── videoComponent.ts  #   modelo (src, fit, source: "file"|"url", fileName)
+        ├── VideoView.tsx      #   vista (<video> autoPlay loop muted playsInline, object-fit)
+        └── VideoInspector.tsx #   editor (Equipo/Link, ajuste, fit-a-original, eliminar)
 ```
 
 `GameObjectView` (la vista) hoy estructura cada objeto en 3 capas, en este orden:
@@ -261,9 +267,12 @@ pestañas viajan con la `Scene`: aparecen en deletreo, sandbox y cualquier juego
 - **El registro por `type` está vivo** (`componentRegistry.ts`): `GameObjectView`
   dibuja las Vistas de `components[]` y el Inspector recorre sus Editores, ambos
   desde el registro. Agregar un tipo no toca Inspector ni Scene.
-- **Dos componentes reales** con su tripleta: **Image** (cargar desde equipo —no URL—,
-  ajuste contain/cover/fill, "Ajustar al tamaño de la imagen", eliminar) y **Color**
-  (color picker + hex que rellena el rect, eliminar).
+- **Tres componentes reales** con su tripleta: **Image** (cargar desde equipo —no URL—,
+  ajuste contain/cover/fill, "Ajustar al tamaño de la imagen", eliminar), **Color**
+  (color picker + hex que rellena el rect, eliminar) y **Video** (dos modos: Equipo
+  —blob URL, no persiste, **TD-006**— y Link —URL de Supabase, el modo real—; siempre
+  `muted`+`loop`, ajuste contain/cover/fill, "Ajustar al tamaño del video", eliminar).
+  YouTube se evaluó y descartó como fuente (**TD-007**).
 - UI de composición genérica y compartida: **Hierarchy con "+"** (crear GameObject),
   **`AddComponentButton`** (dropdown que lista el registro), botón **eliminar** por
   componente, **`SidePanel`** como marco. La usan deletreo y sandbox igual.
@@ -310,5 +319,6 @@ así salvo que moleste el nombre repetido.
 4. ✅ `GameObjectView` dibuja las Vistas de `components[]` desde el registro.
 5. ✅ Inspector genérico que recorre `components[]` + `AddComponentButton` + eliminar.
 6. ✅ Segundo componente (**Color**) sumado solo con su carpeta + entrada del registro.
+   6b. ✅ Tercer componente (**Video**) sumado igual (carpeta + entrada del registro).
 7. ⏳ (Según **Decisión C**) levantar el grafo duplicado a un store `useScene`.
 8. ⏳ Componente **Text** (pausado, ver §9 y la memoria del proyecto).

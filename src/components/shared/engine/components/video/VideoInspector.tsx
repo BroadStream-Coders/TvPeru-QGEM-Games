@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { Video as VideoIcon, Upload, Trash2, Maximize2, Link } from "lucide-react";
+import {
+  Video as VideoIcon,
+  Upload,
+  Trash2,
+  Maximize2,
+  Link,
+} from "lucide-react";
 import {
   VideoComponent,
   VideoFit,
@@ -42,14 +48,18 @@ export function VideoInspector({
   };
 
   const applyUrl = () => {
-    onChange({ ...component, source: "url", src: urlDraft, fileName: undefined });
+    onChange({
+      ...component,
+      source: "url",
+      src: urlDraft,
+      fileName: undefined,
+    });
   };
 
   const fitToVideo = () => {
     if (!component.src) return;
     const v = document.createElement("video");
-    v.onloadedmetadata = () =>
-      onResize({ x: v.videoWidth, y: v.videoHeight });
+    v.onloadedmetadata = () => onResize({ x: v.videoWidth, y: v.videoHeight });
     v.src = component.src;
   };
 

@@ -1,32 +1,6 @@
 import { Move } from "lucide-react";
 import { RectTransformValues, Vec2 } from "@engine/RectTransform";
-
-function Field({
-  label,
-  value,
-  onChange,
-}: {
-  label: string;
-  value: number;
-  onChange: (value: number) => void;
-}) {
-  return (
-    <label className="flex items-center gap-2">
-      <span className="w-12 shrink-0 text-2xs font-mono uppercase tracking-wider text-muted-foreground">
-        {label}
-      </span>
-      <input
-        type="number"
-        value={value}
-        onChange={(e) => {
-          const n = Number(e.target.value);
-          if (!Number.isNaN(n)) onChange(n);
-        }}
-        className="h-7 w-full min-w-0 rounded-md border border-input bg-input/30 px-2 py-1 text-xs font-mono text-foreground outline-none focus:border-ring"
-      />
-    </label>
-  );
-}
+import { NumberField } from "@engine/NumberField";
 
 export function RectTransformInspector({
   transform,
@@ -62,22 +36,22 @@ export function RectTransformInspector({
         </button>
       </div>
       <div className="grid grid-cols-1 gap-2 p-2.5">
-        <Field
+        <NumberField
           label="Pos X"
           value={transform.position.x}
           onChange={setAxis("position", "x")}
         />
-        <Field
+        <NumberField
           label="Pos Y"
           value={transform.position.y}
           onChange={setAxis("position", "y")}
         />
-        <Field
+        <NumberField
           label="Width"
           value={transform.size.x}
           onChange={setAxis("size", "x")}
         />
-        <Field
+        <NumberField
           label="Height"
           value={transform.size.y}
           onChange={setAxis("size", "y")}

@@ -53,14 +53,6 @@ arquitectura cambió, refleja el cambio en `docs/engine-arquitectura.md`.
 > Ordenadas por dificultad (ascendente). El código `EF-XXX` es estable y se asignó
 > por orden de captura, no por posición en la lista.
 
-### [EF-002] Inputs de RectTransform tipo Unity (calculadora, negativos, sin 0 forzado)
-
-- **Dificultad:** 3/5
-- **Estado:** Pendiente
-- **Idea original:** "Corregir el ingreso de datos en rectTransform; es muy incómodo que siempre te aparezca un 0 y que si quiero poner un negativo no me deje escribir el guion. Idealmente debe funcionar como en Unity, que el input funciona como una calculadora. Revisar si esto es posible."
-- **Qué es:** Rehacer la edición de los campos numéricos del `RectTransformInspector` (Pos X/Y, Width, Height) para que se sientan como en Unity: permitir estados intermedios mientras se escribe (vacío, solo `-`, `-0`, decimales a medio escribir) sin forzar un `0`, y aceptar el signo negativo. **Bonus (revisar viabilidad):** que el campo evalúe una expresión tipo calculadora (`100+20`, `960/2`) al confirmar.
-- **Notas / encaje con la arquitectura:** El problema típico es un input numérico **controlado** que castea a número en cada `onChange` y pisa lo que escribes. Patrón: mantener un **string local** mientras el campo está enfocado y solo escribir al modelo (`transform`) cuando el valor es parseable / al `blur` / `Enter`. La calculadora se puede hacer parseando la expresión en el commit. No cambia el modelo de datos, solo el editor (#3 de §4). Si el patrón sirve, considerar extraerlo a un `NumberField` reutilizable para futuros editores.
-
 ### [EF-004] Componente Text (cargar fuente local, texto, tamaño)
 
 - **Dificultad:** 3/5

@@ -214,6 +214,7 @@ src/components/shared/engine/   →  alias @engine/
 ├── GameObjectView.tsx         # vista de un GameObject (posiciona + dibuja components[] + hijos en árbol + borde)
 ├── GameObjectInspector.tsx    # editor de los campos propios del GameObject (name, active)
 ├── RectTransformInspector.tsx # editor (#3) del transform (Pos/Width/Height + botón "Editar")
+├── NumberField.tsx            # input numérico reutilizable estilo Unity (draft local, commit en blur/Enter, calculadora +-*/() sin eval)
 ├── Hierarchy.tsx              # árbol de GameObjects (TreeNode + Hierarchy); prop onAdd → "+"
 ├── AddComponentButton.tsx     # botón + dropdown "Agregar componente" (lee COMPONENT_OPTIONS)
 ├── SidePanel.tsx              # marco visual (pestaña + caja) para Hierarchy e Inspector

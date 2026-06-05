@@ -142,20 +142,35 @@ Diferencias con un componente normal:
 ## 5. Sistema de coordenadas (clave para no romper el render)
 
 La **Scene** es un escenario 16:9 que es un _container-query context_
-(`[container-type:size]`). Por eso **todo se mide en unidades de container query
-(`cqw`/`cqh`/`cqi`), nunca en `vw`/`rem`/`px`.** Así la composición se ve idéntica
-en ventana o en fullscreen (en fullscreen se hace letterbox sobre negro).
+(`[container-type:size]`). El contenido que **no** depende de la jerarquía
+(p. ej. el tamaño de fuente del SpellFrame) se mide en unidades de container query
+(`cqw`/`cqh`/`cqi`), nunca en `vw`/`rem`/`px`, para verse idéntico en ventana o
+fullscreen (en fullscreen se hace letterbox sobre negro).
+
+El **posicionamiento de los GameObjects** (`RectTransform`), en cambio, usa
+porcentajes (`%`) **relativos al padre** y se apoya en el anidamiento DOM nativo
+para resolver la jerarquía (ver §7): cada `GameObjectView` hijo se renderiza
+**dentro** del div de contenido de su padre, así que su `%` resuelve contra la
+caja del padre. Para los root el "padre" es el stage (`parentSize = DESIGN`),
+y `100%` del stage equivale a `100cqw`/`100cqh`, así que el resultado es idéntico
+al esquema anterior.
 
 Espacio de diseño y origen (definidos en `engine/RectTransform.tsx`):
 
 - `DESIGN_WIDTH = 1920`, `DESIGN_HEIGHT = 1080`.
-- **Origen en el centro de la pantalla, eje Y hacia arriba.**
-- Conversión a CSS: `left = ((960 + x) / 1920) * 100 cqw`,
-  `top = ((540 − y) / 1080) * 100 cqh`; el `pivot` se aplica con
-  `translate(−pivot.x*100%, −pivot.y*100%)`.
-- **Parenting (`parent`):** hoy solo suma `parent.position` → **un solo nivel**
-  (no acumula abuelos, ni considera size/pivot del padre). Es la deuda **TD-002**
-  en `docs/technical-debt.md`.
+- **Origen en el centro del padre, eje Y hacia arriba.**
+- `RectTransform` recibe `parentSize: Vec2` (default `{ DESIGN_WIDTH, DESIGN_HEIGHT }`)
+  con las dimensiones de diseño del padre. Conversión a CSS:
+  `left = (0.5 + x / parentSize.x) * 100 %`,
+  `top = (0.5 − y / parentSize.y) * 100 %`,
+  `width = (size.x / parentSize.x) * 100 %`,
+  `height = (size.y / parentSize.y) * 100 %`;
+  el `pivot` se aplica con `translate(−pivot.x*100%, −pivot.y*100%)`.
+- **Parenting:** lo resuelve el DOM. La `position` del hijo es relativa al padre
+  (origen (0,0) = centro del padre) y mover el padre arrastra a toda su
+  descendencia, acumulando por toda la cadena de ancestros. Resolvió **TD-002**.
+  El sistema de coordenadas que ve el usuario en el Inspector **no cambió** (mismos
+  números, solo cambió la unidad CSS de salida de `cqw`/`cqh` a `%`).
 
 ---
 
@@ -194,9 +209,9 @@ src/components/shared/engine/   →  alias @engine/
 ├── Scene.tsx                  # el lienzo 16:9 (ex-FullScreen) + SceneBackground + pestañas Game/Scene
 ├── ViewModeTabs.tsx           # pestañas Game/Scene que renderiza la propia Scene
 ├── SceneViewMode.tsx          # contexto del viewMode (Scene lo provee, GameObjectView lo lee)
-├── RectTransform.tsx          # posicionador (#2) + tipos Vec2/RectTransformValues + DESIGN_*
+├── RectTransform.tsx          # posicionador (#2, unidades %, prop parentSize) + Vec2/RectTransformValues + DESIGN_*
 ├── gameObject.ts              # modelo GameObject + createGameObject + GameObjectComponent
-├── GameObjectView.tsx         # vista de un GameObject (posiciona + dibuja components[] + borde)
+├── GameObjectView.tsx         # vista de un GameObject (posiciona + dibuja components[] + hijos en árbol + borde)
 ├── GameObjectInspector.tsx    # editor de los campos propios del GameObject (name, active)
 ├── RectTransformInspector.tsx # editor (#3) del transform (Pos/Width/Height + botón "Editar")
 ├── Hierarchy.tsx              # árbol de GameObjects (TreeNode + Hierarchy); prop onAdd → "+"
@@ -220,10 +235,17 @@ src/components/shared/engine/   →  alias @engine/
 
 `GameObjectView` (la vista) hoy estructura cada objeto en 3 capas, en este orden:
 
-1. `<RectTransform>` que lo posiciona (capa #2 de arriba).
-2. un div de **contenido** (`absolute inset-0`) que dibuja primero las **Vistas de
-   `components[]`** (vía el registro) y luego el `children` (contenido propio del
-   juego, p. ej. el texto del deletreo, que queda por encima de los componentes).
+1. `<RectTransform>` que lo posiciona (capa #2 de arriba). Recibe `parentSize`
+   (el `transform.size` del padre) para resolver sus `%`; los root no lo reciben
+   y usan el default `DESIGN`.
+2. un div de **contenido** (`absolute inset-0`) que dibuja, en orden: las **Vistas
+   de `components[]`** (vía el registro), luego sus **GameObjects hijos** (cada uno
+   un `GameObjectView` anidado, encontrado con `allGameObjects.filter(parentId)` y
+   con `parentSize = este transform.size`), y por último el `children` (contenido
+   propio del juego, que queda por encima). Por eso las páginas renderizan en
+   **árbol**: solo mapean los root (`!parentId`) y la jerarquía la baja el DOM.
+   ⚠️ El `children` por-objeto (overlays de edición, SpellFrame) solo llega al root
+   mapeado, no a los hijos anidados (**TD-008**).
 3. un div de **borde** superpuesto (`absolute inset-0`, `pointer-events-none`),
    dibujado **al final** para que la selección siempre se vea por encima del
    contenido. Va aparte porque un `border` cambiaría el tamaño de la caja.
@@ -282,7 +304,8 @@ pestañas viajan con la `Scene`: aparecen en deletreo, sandbox y cualquier juego
   (posiciona el rectTransform). Ver memoria `engine-text-component-direction`.
 - El estado del grafo vive en `deletreo/page.tsx` y `sandbox/page.tsx` (duplicado);
   aún no se levantó a un store `useScene` (ver Decisión C).
-- Parenting de un solo nivel (**TD-002**); tipado laxo del registro (**TD-004**).
+- Tipado laxo del registro (**TD-004**); overlays de edición solo en root tras el
+  render en árbol (**TD-008**).
 
 ---
 

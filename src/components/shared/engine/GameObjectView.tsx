@@ -1,12 +1,13 @@
 import React from "react";
-import { RectTransform, RectTransformValues } from "@engine/RectTransform";
+import { RectTransform, Vec2 } from "@engine/RectTransform";
 import { GameObject } from "@engine/gameObject";
 import { COMPONENT_REGISTRY } from "@engine/componentRegistry";
 import { useSceneViewMode } from "@engine/SceneViewMode";
 
 interface GameObjectViewProps {
   gameObject: GameObject;
-  parent?: RectTransformValues;
+  allGameObjects: GameObject[];
+  parentSize?: Vec2;
   outline?: boolean;
   selected?: boolean;
   children?: React.ReactNode;
@@ -14,7 +15,8 @@ interface GameObjectViewProps {
 
 export function GameObjectView({
   gameObject,
-  parent,
+  allGameObjects,
+  parentSize,
   outline,
   selected,
   children,
@@ -22,18 +24,32 @@ export function GameObjectView({
   const viewMode = useSceneViewMode();
   const showOutline = outline || viewMode === "scene";
 
+  const childObjects = allGameObjects.filter(
+    (go) => go.parentId === gameObject.id,
+  );
+
   return (
     <RectTransform
       position={gameObject.transform.position}
       size={gameObject.transform.size}
       pivot={gameObject.transform.pivot}
-      parent={parent}
+      parentSize={parentSize}
     >
       <div className="absolute inset-0">
         {gameObject.components.map((component, index) => {
           const View = COMPONENT_REGISTRY[component.type]?.view;
           return View ? <View key={index} component={component} /> : null;
         })}
+        {childObjects.map((child) =>
+          child.active ? (
+            <GameObjectView
+              key={child.id}
+              gameObject={child}
+              allGameObjects={allGameObjects}
+              parentSize={gameObject.transform.size}
+            />
+          ) : null,
+        )}
         {children}
       </div>
       {showOutline && (

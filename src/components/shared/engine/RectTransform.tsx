@@ -19,7 +19,7 @@ interface RectTransformProps {
   position?: Vec2;
   size?: Vec2;
   pivot?: Vec2;
-  parent?: RectTransformValues;
+  parentSize?: Vec2;
   children?: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
@@ -28,26 +28,25 @@ interface RectTransformProps {
 const DEFAULT_POSITION: Vec2 = { x: 0, y: 0 };
 const DEFAULT_SIZE: Vec2 = { x: 400, y: 200 };
 const DEFAULT_PIVOT: Vec2 = { x: 0.5, y: 0.5 };
+const DEFAULT_PARENT_SIZE: Vec2 = { x: DESIGN_WIDTH, y: DESIGN_HEIGHT };
 
 export function RectTransform({
   position = DEFAULT_POSITION,
   size = DEFAULT_SIZE,
   pivot = DEFAULT_PIVOT,
-  parent,
+  parentSize = DEFAULT_PARENT_SIZE,
   className,
   style,
   children,
 }: RectTransformProps) {
-  const worldX = position.x + (parent?.position.x ?? 0);
-  const worldY = position.y + (parent?.position.y ?? 0);
   return (
     <div
       className={cn("absolute", className)}
       style={{
-        left: `${((DESIGN_WIDTH / 2 + worldX) / DESIGN_WIDTH) * 100}cqw`,
-        top: `${((DESIGN_HEIGHT / 2 - worldY) / DESIGN_HEIGHT) * 100}cqh`,
-        width: `${(size.x / DESIGN_WIDTH) * 100}cqw`,
-        height: `${(size.y / DESIGN_HEIGHT) * 100}cqh`,
+        left: `${(0.5 + position.x / parentSize.x) * 100}%`,
+        top: `${(0.5 - position.y / parentSize.y) * 100}%`,
+        width: `${(size.x / parentSize.x) * 100}%`,
+        height: `${(size.y / parentSize.y) * 100}%`,
         transform: `translate(${-pivot.x * 100}%, ${-pivot.y * 100}%)`,
         ...style,
       }}

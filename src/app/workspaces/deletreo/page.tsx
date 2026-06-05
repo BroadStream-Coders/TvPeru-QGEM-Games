@@ -409,18 +409,17 @@ export default function DeletreoPage() {
         <div className="flex min-w-0 flex-1 flex-col">
           <Scene background={background} hideCursorOnFullscreen>
             <div ref={stageRef} className="absolute inset-0">
-              {gameObjects.map((go) => {
-                if (!go.active) return null;
-                const isSelected = go.id === selectedId;
-                const outline = editMode && isSelected;
-                const parentTransform = go.parentId
-                  ? gameObjects.find((p) => p.id === go.parentId)?.transform
-                  : undefined;
-                return (
+              {gameObjects
+                .filter((go) => !go.parentId)
+                .map((go) => {
+                  if (!go.active) return null;
+                  const isSelected = go.id === selectedId;
+                  const outline = editMode && isSelected;
+                  return (
                   <GameObjectView
                     key={go.id}
                     gameObject={go}
-                    parent={parentTransform}
+                    allGameObjects={gameObjects}
                     outline={outline}
                     selected={isSelected}
                   >

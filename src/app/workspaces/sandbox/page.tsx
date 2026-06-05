@@ -23,12 +23,37 @@ import {
   COMPONENT_REGISTRY,
   COMPONENT_OPTIONS,
 } from "@engine/componentRegistry";
+import { createColorComponent } from "@engine/components/color/colorComponent";
+
+const NESTING_DEMO: GameObject[] = [
+  createGameObject({
+    id: "demo-parent",
+    name: "DemoParent",
+    transform: {
+      position: { x: 0, y: 0 },
+      size: { x: 600, y: 600 },
+      pivot: { x: 0.5, y: 0.5 },
+    },
+    components: [createColorComponent({ value: "#1d4ed8" })],
+  }),
+  createGameObject({
+    id: "demo-child",
+    name: "DemoChild",
+    parentId: "demo-parent",
+    transform: {
+      position: { x: 200, y: 0 },
+      size: { x: 150, y: 150 },
+      pivot: { x: 0.5, y: 0.5 },
+    },
+    components: [createColorComponent({ value: "#f59e0b" })],
+  }),
+];
 
 export default function SandboxPage() {
   const setHeader = useWorkspaceHeader((s) => s.setHeader);
   const resetHeader = useWorkspaceHeader((s) => s.resetHeader);
 
-  const [gameObjects, setGameObjects] = useState<GameObject[]>([]);
+  const [gameObjects, setGameObjects] = useState<GameObject[]>(NESTING_DEMO);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [editMode, setEditMode] = useState(false);
   const [background, setBackground] = useState<SceneBackground>({
@@ -177,17 +202,16 @@ export default function SandboxPage() {
         <div className="flex min-w-0 flex-1 flex-col">
           <Scene background={background} hideCursorOnFullscreen>
             <div ref={stageRef} className="absolute inset-0">
-              {gameObjects.map((go) => {
-                if (!go.active) return null;
-                const isSelected = go.id === selectedId;
-                const parentTransform = go.parentId
-                  ? gameObjects.find((p) => p.id === go.parentId)?.transform
-                  : undefined;
-                return (
+              {gameObjects
+                .filter((go) => !go.parentId)
+                .map((go) => {
+                  if (!go.active) return null;
+                  const isSelected = go.id === selectedId;
+                  return (
                   <GameObjectView
                     key={go.id}
                     gameObject={go}
-                    parent={parentTransform}
+                    allGameObjects={gameObjects}
                     outline={editMode && isSelected}
                     selected={isSelected}
                   >

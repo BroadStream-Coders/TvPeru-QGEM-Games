@@ -24,37 +24,12 @@ import {
   COMPONENT_REGISTRY,
   COMPONENT_OPTIONS,
 } from "@engine/componentRegistry";
-import { createColorComponent } from "@engine/components/color/colorComponent";
-
-const NESTING_DEMO: GameObject[] = [
-  createGameObject({
-    id: "demo-parent",
-    name: "DemoParent",
-    transform: {
-      position: { x: 0, y: 0 },
-      size: { x: 600, y: 600 },
-      pivot: { x: 0.5, y: 0.5 },
-    },
-    components: [createColorComponent({ value: "#1d4ed8" })],
-  }),
-  createGameObject({
-    id: "demo-child",
-    name: "DemoChild",
-    parentId: "demo-parent",
-    transform: {
-      position: { x: 200, y: 0 },
-      size: { x: 150, y: 150 },
-      pivot: { x: 0.5, y: 0.5 },
-    },
-    components: [createColorComponent({ value: "#f59e0b" })],
-  }),
-];
 
 export default function SandboxPage() {
   const setHeader = useWorkspaceHeader((s) => s.setHeader);
   const resetHeader = useWorkspaceHeader((s) => s.resetHeader);
 
-  const [gameObjects, setGameObjects] = useState<GameObject[]>(NESTING_DEMO);
+  const [gameObjects, setGameObjects] = useState<GameObject[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [editMode, setEditMode] = useState(false);
   const [background, setBackground] = useState<SceneBackground>({

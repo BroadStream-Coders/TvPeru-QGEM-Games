@@ -12,22 +12,6 @@ Registro de atajos, decisiones pendientes y riesgos a futuro de este proyecto.
 
 ---
 
-## [TD-002] Parentesco de RectTransform solo soporta un nivel
-
-- **Ubicación:** `src/components/shared/engine/RectTransform.tsx:32`, `src/app/workspaces/deletreo/page.tsx`
-- **Riesgo:** 4/10
-- **Problema:** El prop `parent` ya posiciona al hijo relativo al padre, pero solo suma `parent.position` (un nivel). Si el padre está a su vez parentado (abuelo), el render no acumula la cadena: el caller le pasa el transform local del padre inmediato, no su posición mundial. Tampoco considera `size`/`pivot`/anchors del padre, solo su punto de pivote como origen.
-- **Impacto futuro:** Al anidar 3+ niveles, las posiciones serán incorrectas. Para soportarlo hay que resolver la posición mundial del padre (subiendo por la cadena `parentId`) o que `RectTransform` acepte ya el transform mundial del padre.
-- **Fecha:** 2026-06-04 · **Estado:** Resuelto (2026-06-04, EF-003). `RectTransform` pasó de `cqw`/`cqh` a `%` y `GameObjectView` renderiza a los hijos dentro del div de contenido del padre: el anidamiento DOM nativo acumula la cadena de transforms a cualquier profundidad sin sumar posiciones a mano.
-
-## [TD-008] Los overlays de edición solo se renderizan en GameObjects root
-
-- **Ubicación:** `src/app/workspaces/deletreo/page.tsx`, `src/app/workspaces/sandbox/page.tsx` (bloque `children` del `GameObjectView` mapeado)
-- **Riesgo:** 4/10
-- **Problema:** Tras EF-003 el render es en árbol: solo se mapean los root y cada `GameObjectView` dibuja a sus hijos internamente. El contenido por-objeto que las páginas inyectan vía `children` (el overlay de mover/redimensionar cuando `editMode && isSelected`, y el `SpellFrame` del FRAME en deletreo) solo llega al objeto root mapeado; los GameObjects **anidados** no lo reciben. Seleccionar un hijo (p. ej. el `Text` de deletreo) en modo edición no muestra los handles de arrastre/resize.
-- **Impacto futuro:** No se puede editar con gestos un GameObject que sea hijo de otro. Para resolverlo, `GameObjectView` debe aceptar un render-prop (`renderContent?: (go) => ReactNode`) que se invoque para sí mismo y se pase recursivamente a los hijos, y las páginas mover su bloque `children` a esa función.
-- **Fecha:** 2026-06-04 · **Estado:** Resuelto (2026-06-04). `GameObjectView` recibe `renderContent`, `selectedId` y `editMode` y los baja recursivamente a los hijos, así que overlay de edición, borde de selección y SpellFrame se renderizan a cualquier profundidad. Además, el gesto convierte local↔mundo por **toda** la cadena de ancestros con `ancestorOffset(go, all)` (en `gameObject.ts`), que reemplazó el parche `parentPositionOf` de un solo nivel en deletreo y se sumó al gesto de sandbox. Nota: `ancestorOffset` asume `pivot = 0.5` en los ancestros (único caso editable hoy); si en el futuro el pivot se vuelve editable, hay que sumar el término `(0.5 − pivot)·size` por nivel tanto en el render como en el gesto.
-
 ## [TD-004] Tipado laxo del registro de componentes
 
 - **Ubicación:** `src/components/shared/engine/componentRegistry.ts`

@@ -44,3 +44,79 @@ export function ancestorOffset(go: GameObject, all: GameObject[]): Vec2 {
   }
   return offset;
 }
+
+export function isDescendantOf(
+  all: GameObject[],
+  nodeId: string,
+  ancestorId: string,
+): boolean {
+  let current = all.find((g) => g.id === nodeId);
+  while (current?.parentId) {
+    if (current.parentId === ancestorId) return true;
+    const parentId: string = current.parentId;
+    current = all.find((g) => g.id === parentId);
+  }
+  return false;
+}
+
+export function reorderGameObjects(
+  all: GameObject[],
+  draggedId: string,
+  targetId: string,
+  position: "before" | "after" | "inside",
+): GameObject[] {
+  if (draggedId === targetId) return all;
+
+  const dragged = all.find((g) => g.id === draggedId);
+  const target = all.find((g) => g.id === targetId);
+  if (!dragged || !target) return all;
+
+  if (isDescendantOf(all, targetId, draggedId)) return all;
+
+  const newParentId = position === "inside" ? targetId : target.parentId;
+
+  const offsetForParent = (parentId?: string): Vec2 => {
+    if (!parentId) return { x: 0, y: 0 };
+    const parent = all.find((g) => g.id === parentId);
+    if (!parent) return { x: 0, y: 0 };
+    const ancestors = ancestorOffset(parent, all);
+    return {
+      x: parent.transform.position.x + ancestors.x,
+      y: parent.transform.position.y + ancestors.y,
+    };
+  };
+
+  const oldOffset = offsetForParent(dragged.parentId);
+  const newOffset = offsetForParent(newParentId);
+  const moved: GameObject = {
+    ...dragged,
+    parentId: newParentId,
+    transform: {
+      ...dragged.transform,
+      position: {
+        x: dragged.transform.position.x + oldOffset.x - newOffset.x,
+        y: dragged.transform.position.y + oldOffset.y - newOffset.y,
+      },
+    },
+  };
+
+  const without = all.filter((g) => g.id !== draggedId);
+
+  let insertIndex: number;
+  if (position === "inside") {
+    let lastChildIndex = without.findIndex((g) => g.id === targetId);
+    without.forEach((g, i) => {
+      if (g.parentId === targetId) lastChildIndex = i;
+    });
+    insertIndex = lastChildIndex + 1;
+  } else {
+    const targetIndex = without.findIndex((g) => g.id === targetId);
+    insertIndex = position === "before" ? targetIndex : targetIndex + 1;
+  }
+
+  return [
+    ...without.slice(0, insertIndex),
+    moved,
+    ...without.slice(insertIndex),
+  ];
+}

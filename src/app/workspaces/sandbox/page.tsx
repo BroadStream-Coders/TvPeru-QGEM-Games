@@ -19,6 +19,7 @@ import {
   GameObjectComponent,
   createGameObject,
   ancestorOffset,
+  reorderGameObjects,
 } from "@engine/gameObject";
 import {
   COMPONENT_REGISTRY,
@@ -76,6 +77,15 @@ export default function SandboxPage() {
     ]);
     setSelectedId(id);
   };
+
+  const handleReorder = (
+    draggedId: string,
+    targetId: string,
+    position: "before" | "after" | "inside",
+  ) =>
+    setGameObjects((prev) =>
+      reorderGameObjects(prev, draggedId, targetId, position),
+    );
 
   const addComponent = (goId: string, type: string) => {
     const def = COMPONENT_REGISTRY[type];
@@ -210,6 +220,7 @@ export default function SandboxPage() {
             selectedId={selectedId}
             onSelect={setSelectedId}
             onAdd={createNewGameObject}
+            onReorder={handleReorder}
           />
         </SidePanel>
         <div className="flex min-w-0 flex-1 flex-col">

@@ -28,6 +28,7 @@ import {
   GameObject,
   GameObjectComponent,
   createGameObject,
+  ancestorOffset,
 } from "@engine/gameObject";
 import {
   COMPONENT_REGISTRY,
@@ -268,19 +269,12 @@ export default function DeletreoPage() {
     [shakeRef, popRef],
   );
 
-  const parentPositionOf = (go: GameObject | null): Vec2 => {
-    const parent = go?.parentId
-      ? gameObjects.find((p) => p.id === go.parentId)
-      : null;
-    return parent?.transform.position ?? { x: 0, y: 0 };
-  };
-
   const stageRef = useRef<HTMLDivElement>(null);
   const { beginGesture } = useTransformGesture({
     stageRef,
     getTransform: () => {
       if (!selected) return null;
-      const origin = parentPositionOf(selected);
+      const origin = ancestorOffset(selected, gameObjects);
       return {
         ...selected.transform,
         position: {
@@ -293,7 +287,7 @@ export default function DeletreoPage() {
       setGameObjects((prev) =>
         prev.map((go) => {
           if (go.id !== selectedId) return go;
-          const origin = parentPositionOf(go);
+          const origin = ancestorOffset(go, gameObjects);
           return {
             ...go,
             transform: {
@@ -395,6 +389,34 @@ export default function DeletreoPage() {
     onArrowDown: hideFrame,
   });
 
+  const renderContent = (go: GameObject) => (
+    <>
+      {go.id === FRAME_ID && (
+        <SpellFrame
+          frameRef={frameRef}
+          word={textVisible ? word : ""}
+          spellStep={spellStep}
+          textConfig={textConfig}
+        />
+      )}
+      {editMode && go.id === selectedId && (
+        <>
+          <div
+            onPointerDown={(e) => beginGesture("move", e)}
+            className="absolute inset-0 cursor-move touch-none select-none"
+          />
+          {HANDLES.map((hd) => (
+            <div
+              key={hd.h}
+              onPointerDown={(e) => beginGesture(hd.h, e)}
+              className={`absolute ${hd.pos} ${hd.cursor} h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border border-slate-700 bg-white touch-none`}
+            />
+          ))}
+        </>
+      )}
+    </>
+  );
+
   return (
     <main className="flex-1 p-3 overflow-auto flex flex-col gap-3">
       <div className="flex gap-1.5">
@@ -410,45 +432,17 @@ export default function DeletreoPage() {
           <Scene background={background} hideCursorOnFullscreen>
             <div ref={stageRef} className="absolute inset-0">
               {gameObjects
-                .filter((go) => !go.parentId)
-                .map((go) => {
-                  if (!go.active) return null;
-                  const isSelected = go.id === selectedId;
-                  const outline = editMode && isSelected;
-                  return (
+                .filter((go) => !go.parentId && go.active)
+                .map((go) => (
                   <GameObjectView
                     key={go.id}
                     gameObject={go}
                     allGameObjects={gameObjects}
-                    outline={outline}
-                    selected={isSelected}
-                  >
-                    {go.id === FRAME_ID && (
-                      <SpellFrame
-                        frameRef={frameRef}
-                        word={textVisible ? word : ""}
-                        spellStep={spellStep}
-                        textConfig={textConfig}
-                      />
-                    )}
-                    {editMode && isSelected && (
-                      <>
-                        <div
-                          onPointerDown={(e) => beginGesture("move", e)}
-                          className="absolute inset-0 cursor-move touch-none select-none"
-                        />
-                        {HANDLES.map((hd) => (
-                          <div
-                            key={hd.h}
-                            onPointerDown={(e) => beginGesture(hd.h, e)}
-                            className={`absolute ${hd.pos} ${hd.cursor} h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border border-slate-700 bg-white touch-none`}
-                          />
-                        ))}
-                      </>
-                    )}
-                  </GameObjectView>
-                );
-              })}
+                    selectedId={selectedId}
+                    editMode={editMode}
+                    renderContent={renderContent}
+                  />
+                ))}
             </div>
           </Scene>
         </div>

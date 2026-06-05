@@ -1,4 +1,4 @@
-import { RectTransformValues } from "@engine/RectTransform";
+import { RectTransformValues, Vec2 } from "@engine/RectTransform";
 
 export interface GameObjectComponent {
   type: string;
@@ -29,4 +29,18 @@ export function createGameObject(init: {
     transform: init.transform,
     components: init.components ?? [],
   };
+}
+
+export function ancestorOffset(go: GameObject, all: GameObject[]): Vec2 {
+  let offset: Vec2 = { x: 0, y: 0 };
+  let parent = go.parentId ? all.find((p) => p.id === go.parentId) : undefined;
+  while (parent) {
+    offset = {
+      x: offset.x + parent.transform.position.x,
+      y: offset.y + parent.transform.position.y,
+    };
+    const nextId: string | undefined = parent.parentId;
+    parent = nextId ? all.find((p) => p.id === nextId) : undefined;
+  }
+  return offset;
 }

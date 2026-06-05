@@ -18,6 +18,7 @@ import {
   GameObject,
   GameObjectComponent,
   createGameObject,
+  ancestorOffset,
 } from "@engine/gameObject";
 import {
   COMPONENT_REGISTRY,
@@ -166,14 +167,34 @@ export default function SandboxPage() {
 
   const { beginGesture } = useTransformGesture({
     stageRef,
-    getTransform: () => selected?.transform ?? null,
+    getTransform: () => {
+      if (!selected) return null;
+      const origin = ancestorOffset(selected, gameObjects);
+      return {
+        ...selected.transform,
+        position: {
+          x: selected.transform.position.x + origin.x,
+          y: selected.transform.position.y + origin.y,
+        },
+      };
+    },
     onChange: ({ position, size }) =>
       setGameObjects((prev) =>
-        prev.map((go) =>
-          go.id === selectedId
-            ? { ...go, transform: { ...go.transform, position, size } }
-            : go,
-        ),
+        prev.map((go) => {
+          if (go.id !== selectedId) return go;
+          const origin = ancestorOffset(go, gameObjects);
+          return {
+            ...go,
+            transform: {
+              ...go.transform,
+              position: {
+                x: position.x - origin.x,
+                y: position.y - origin.y,
+              },
+              size,
+            },
+          };
+        }),
       ),
   });
 
@@ -187,6 +208,23 @@ export default function SandboxPage() {
       icon: <FlaskConical className="h-3 w-3" />,
     });
   }, [setHeader]);
+
+  const renderContent = (go: GameObject) =>
+    editMode && go.id === selectedId ? (
+      <>
+        <div
+          onPointerDown={(e) => beginGesture("move", e)}
+          className="absolute inset-0 cursor-move touch-none select-none"
+        />
+        {HANDLES.map((hd) => (
+          <div
+            key={hd.h}
+            onPointerDown={(e) => beginGesture(hd.h, e)}
+            className={`absolute ${hd.pos} ${hd.cursor} h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border border-slate-700 bg-white touch-none`}
+          />
+        ))}
+      </>
+    ) : null;
 
   return (
     <main className="flex-1 p-3 overflow-auto flex flex-col gap-3">
@@ -203,36 +241,17 @@ export default function SandboxPage() {
           <Scene background={background} hideCursorOnFullscreen>
             <div ref={stageRef} className="absolute inset-0">
               {gameObjects
-                .filter((go) => !go.parentId)
-                .map((go) => {
-                  if (!go.active) return null;
-                  const isSelected = go.id === selectedId;
-                  return (
+                .filter((go) => !go.parentId && go.active)
+                .map((go) => (
                   <GameObjectView
                     key={go.id}
                     gameObject={go}
                     allGameObjects={gameObjects}
-                    outline={editMode && isSelected}
-                    selected={isSelected}
-                  >
-                    {editMode && isSelected && (
-                      <>
-                        <div
-                          onPointerDown={(e) => beginGesture("move", e)}
-                          className="absolute inset-0 cursor-move touch-none select-none"
-                        />
-                        {HANDLES.map((hd) => (
-                          <div
-                            key={hd.h}
-                            onPointerDown={(e) => beginGesture(hd.h, e)}
-                            className={`absolute ${hd.pos} ${hd.cursor} h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border border-slate-700 bg-white touch-none`}
-                          />
-                        ))}
-                      </>
-                    )}
-                  </GameObjectView>
-                );
-              })}
+                    selectedId={selectedId}
+                    editMode={editMode}
+                    renderContent={renderContent}
+                  />
+                ))}
             </div>
           </Scene>
         </div>

@@ -8,21 +8,22 @@ interface GameObjectViewProps {
   gameObject: GameObject;
   allGameObjects: GameObject[];
   parentSize?: Vec2;
-  outline?: boolean;
-  selected?: boolean;
-  children?: React.ReactNode;
+  selectedId?: string | null;
+  editMode?: boolean;
+  renderContent?: (go: GameObject) => React.ReactNode;
 }
 
 export function GameObjectView({
   gameObject,
   allGameObjects,
   parentSize,
-  outline,
-  selected,
-  children,
+  selectedId,
+  editMode,
+  renderContent,
 }: GameObjectViewProps) {
   const viewMode = useSceneViewMode();
-  const showOutline = outline || viewMode === "scene";
+  const selected = gameObject.id === selectedId;
+  const showOutline = (editMode && selected) || viewMode === "scene";
 
   const childObjects = allGameObjects.filter(
     (go) => go.parentId === gameObject.id,
@@ -47,10 +48,13 @@ export function GameObjectView({
               gameObject={child}
               allGameObjects={allGameObjects}
               parentSize={gameObject.transform.size}
+              selectedId={selectedId}
+              editMode={editMode}
+              renderContent={renderContent}
             />
           ) : null,
         )}
-        {children}
+        {renderContent?.(gameObject)}
       </div>
       {showOutline && (
         <div

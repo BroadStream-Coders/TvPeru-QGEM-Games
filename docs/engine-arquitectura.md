@@ -241,11 +241,15 @@ src/components/shared/engine/   →  alias @engine/
 2. un div de **contenido** (`absolute inset-0`) que dibuja, en orden: las **Vistas
    de `components[]`** (vía el registro), luego sus **GameObjects hijos** (cada uno
    un `GameObjectView` anidado, encontrado con `allGameObjects.filter(parentId)` y
-   con `parentSize = este transform.size`), y por último el `children` (contenido
-   propio del juego, que queda por encima). Por eso las páginas renderizan en
-   **árbol**: solo mapean los root (`!parentId`) y la jerarquía la baja el DOM.
-   ⚠️ El `children` por-objeto (overlays de edición, SpellFrame) solo llega al root
-   mapeado, no a los hijos anidados (**TD-008**).
+   con `parentSize = este transform.size`), y por último el contenido por-objeto que
+   inyecta el host. Por eso las páginas renderizan en **árbol**: solo mapean los root
+   (`!parentId`) y la jerarquía la baja el DOM. El contenido por-objeto (overlays de
+   edición, SpellFrame) NO viaja por `children` sino por el render-prop
+   **`renderContent(go)`**, que `GameObjectView` invoca para sí mismo y **pasa
+   recursivamente** a los hijos junto con `selectedId`/`editMode`; así los handles,
+   el borde de selección y el SpellFrame aparecen a cualquier profundidad. La
+   conversión local↔mundo del gesto de edición la hace `ancestorOffset(go, all)`
+   (en `gameObject.ts`), que acumula la posición de toda la cadena de ancestros.
 3. un div de **borde** superpuesto (`absolute inset-0`, `pointer-events-none`),
    dibujado **al final** para que la selección siempre se vea por encima del
    contenido. Va aparte porque un `border` cambiaría el tamaño de la caja.
@@ -304,8 +308,7 @@ pestañas viajan con la `Scene`: aparecen en deletreo, sandbox y cualquier juego
   (posiciona el rectTransform). Ver memoria `engine-text-component-direction`.
 - El estado del grafo vive en `deletreo/page.tsx` y `sandbox/page.tsx` (duplicado);
   aún no se levantó a un store `useScene` (ver Decisión C).
-- Tipado laxo del registro (**TD-004**); overlays de edición solo en root tras el
-  render en árbol (**TD-008**).
+- Tipado laxo del registro (**TD-004**).
 
 ---
 

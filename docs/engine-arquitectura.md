@@ -206,7 +206,7 @@ Por cada tipo, el par es **`XxxInspector` (edita) / `XxxView` (dibuja)**:
 
 ```
 src/components/shared/engine/   →  alias @engine/
-├── Scene.tsx                  # el lienzo 16:9 (ex-FullScreen) + SceneBackground + pestañas Game/Scene
+├── Scene.tsx                  # el lienzo 16:9 (ex-FullScreen) + pestañas Game/Scene; fondo fijo bg-muted (sin prop background)
 ├── ViewModeTabs.tsx           # pestañas Game/Scene que renderiza la propia Scene
 ├── SceneViewMode.tsx          # contexto del viewMode (Scene lo provee, GameObjectView lo lee)
 ├── RectTransform.tsx          # posicionador (#2, unidades %, prop parentSize) + Vec2/RectTransformValues + DESIGN_*
@@ -268,15 +268,17 @@ pestañas viajan con la `Scene`: aparecen en deletreo, sandbox y cualquier juego
 - **`workspaces/deletreo`** → el juego de referencia. Usa el engine completo:
   `Scene` + `Hierarchy` (con "+") + `GameObjectInspector` + `RectTransformInspector`
   - editores de `components[]` por el registro + `AddComponentButton`. Arranca con
-    dos GameObjects: **MainFrame** (con un componente **Image**) y **Text** (hijo).
-    La tecla **F** muta el `src` de ese Image (marco normal ↔ error); es la fuente de
+    tres GameObjects: **Background** (un componente **Color** verde croma que llena el
+    stage, sin lógica especial), **MainFrame** (con un componente **Image**) y **Text**
+    (hijo). La tecla **F** muta el `src` de ese Image (marco normal ↔ error); es la fuente de
     verdad del swap. Tiene además lógica propia de juego (gestos de edición,
     animaciones bounce/slide, sonidos, el deletreo de letras) que es **del juego**, no
     del engine.
 - **`workspaces/sandbox`** → banco de pruebas, ya **reescrito sobre el engine**:
   mismo layout Hierarchy + Scene + Inspector que deletreo, sin GameObjects iniciales.
-  Sirve para crear objetos con "+" y agregarles componentes (Image, Color) libremente,
-  con `BackgroundConfig` para el fondo de la Scene.
+  Sirve para crear objetos con "+" y agregarles componentes (Image, Color) libremente.
+  El fondo de la Scene es fijo (`bg-muted`); cualquier fondo real se compone como un
+  GameObject más.
 
 ---
 

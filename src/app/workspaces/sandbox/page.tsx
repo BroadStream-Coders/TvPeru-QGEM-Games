@@ -5,8 +5,7 @@ import { FlaskConical } from "lucide-react";
 import { useWorkspaceHeader } from "@/hooks/use-workspace-header";
 import { useTransformGesture, HANDLES } from "@/hooks/use-transform-gesture";
 
-import { Scene, SceneBackground } from "@engine/Scene";
-import { BackgroundConfig } from "@/components/shared/BackgroundConfig";
+import { Scene } from "@engine/Scene";
 import { RectTransformValues, Vec2 } from "@engine/RectTransform";
 import { GameObjectView } from "@engine/GameObjectView";
 import { Hierarchy, TreeNode } from "@engine/Hierarchy";
@@ -33,10 +32,6 @@ export default function SandboxPage() {
   const [gameObjects, setGameObjects] = useState<GameObject[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [editMode, setEditMode] = useState(false);
-  const [background, setBackground] = useState<SceneBackground>({
-    type: "color",
-    value: "#00B140",
-  });
 
   const stageRef = useRef<HTMLDivElement>(null);
   const selected = gameObjects.find((go) => go.id === selectedId) ?? null;
@@ -224,7 +219,7 @@ export default function SandboxPage() {
           />
         </SidePanel>
         <div className="flex min-w-0 flex-1 flex-col">
-          <Scene background={background} hideCursorOnFullscreen>
+          <Scene hideCursorOnFullscreen>
             <div ref={stageRef} className="absolute inset-0">
               {gameObjects
                 .filter((go) => !go.parentId && go.active)
@@ -283,10 +278,6 @@ export default function SandboxPage() {
             </p>
           )}
         </SidePanel>
-      </div>
-
-      <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-        <BackgroundConfig value={background} onChange={setBackground} />
       </div>
     </main>
   );

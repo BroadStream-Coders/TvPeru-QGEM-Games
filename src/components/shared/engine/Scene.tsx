@@ -6,56 +6,28 @@ import { cn } from "@/lib/utils";
 import { ViewModeTabs } from "@engine/ViewModeTabs";
 import { SceneViewModeProvider, ViewMode } from "@engine/SceneViewMode";
 
-export type SceneBackground =
-  | { type: "color"; value: string }
-  | { type: "image"; value: string }
-  | { type: "video"; value: string };
-
 interface SceneProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
   /** Clase para manejar la proporción, por defecto 16:9 (aspect-video) */
   aspectRatioClass?: string;
-  background?: SceneBackground;
   /** Oculta el cursor mientras está en pantalla completa (se sale con ESC) */
   hideCursorOnFullscreen?: boolean;
 }
 
-function StageBackground({ background }: { background: SceneBackground }) {
-  if (background.type === "video") {
-    return (
-      <video
-        className="absolute inset-0 w-full h-full object-cover"
-        src={background.value}
-        autoPlay
-        loop
-        muted
-        playsInline
-      />
-    );
-  }
+const STAGE_BACKGROUND_CLASS = "bg-muted";
 
-  if (background.type === "image") {
-    return (
-      <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url(${background.value})` }}
-      />
-    );
-  }
-
-  return (
-    <div
-      className="absolute inset-0"
-      style={{ backgroundColor: background.value }}
-    />
-  );
-}
+const GRID_CELL = "5.208333cqw";
+const STAGE_GRID_STYLE: React.CSSProperties = {
+  backgroundImage:
+    "linear-gradient(to right, var(--border) 0 1px, transparent 1px), linear-gradient(to bottom, var(--border) 0 1px, transparent 1px)",
+  backgroundSize: `${GRID_CELL} ${GRID_CELL}`,
+  backgroundPosition: "center",
+};
 
 export function Scene({
   children,
   className,
   aspectRatioClass = "aspect-video",
-  background = { type: "color", value: "#000000" },
   hideCursorOnFullscreen = false,
   ...props
 }: SceneProps) {
@@ -112,6 +84,7 @@ export function Scene({
         <div
           className={cn(
             "relative overflow-hidden [container-type:size]",
+            STAGE_BACKGROUND_CLASS,
             aspectRatioClass,
             isFullscreen
               ? "h-full w-auto max-w-full"
@@ -120,7 +93,7 @@ export function Scene({
           )}
           {...props}
         >
-          <StageBackground background={background} />
+          <div className="absolute inset-0" style={STAGE_GRID_STYLE} />
 
           <div className="relative z-10 w-full h-full">
             <SceneViewModeProvider value={viewMode}>

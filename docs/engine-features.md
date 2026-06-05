@@ -53,14 +53,6 @@ arquitectura cambió, refleja el cambio en `docs/engine-arquitectura.md`.
 > Ordenadas por dificultad (ascendente). El código `EF-XXX` es estable y se asignó
 > por orden de captura, no por posición en la lista.
 
-### [EF-001] Quitar el cambio de fondo de la Scene (fondo vacío por defecto)
-
-- **Dificultad:** 2/5
-- **Estado:** Pendiente
-- **Idea original:** "Tenemos que quitar la funcionalidad del componente scena, de cambiar el tipo de fondo, de color, image y video, todo eso se va a la basura, el fondo por defecto debe tener un color básico, que refleje que está vacío; si se requiere algo como color/img/video, se debe agregar como un gameobject nuevo."
-- **Qué es:** La Scene deja de tener configuración de fondo (las variantes `color` / `image` / `video` del `SceneBackground` / `BackgroundConfig` se eliminan). El fondo pasa a ser **fijo**: un color neutro que comunique "lienzo vacío". Cualquier fondo real (color, imagen, video) se compone **dentro de la escena** como un GameObject más con su componente correspondiente (Color/Image/Video), no como propiedad de la Scene.
-- **Notas / encaje con la arquitectura:** Toca `engine/Scene.tsx` (+ `SceneBackground`) y elimina el cableado de `BackgroundConfig` en `deletreo/page.tsx` y `sandbox/page.tsx`. Refuerza el modelo "todo es GameObject" del §1–§3 de la arquitectura. Revisar que ningún juego dependa hoy del fondo de Scene para su look; si lo hace, migrar ese fondo a un GameObject de fondo. Elegir el color "vacío" (gris medio / patrón) y dejarlo como constante. Actualizar la arquitectura (§5/§7) si cambia la firma de `Scene`.
-
 ### [EF-002] Inputs de RectTransform tipo Unity (calculadora, negativos, sin 0 forzado)
 
 - **Dificultad:** 3/5

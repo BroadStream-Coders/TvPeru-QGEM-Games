@@ -12,9 +12,13 @@ import { useBounceMove } from "@/hooks/use-bounce-move";
 import { useSlide } from "@/hooks/use-slide";
 import { SOUNDS, playSound } from "@/lib/audio";
 
-import { Scene, SceneBackground } from "@engine/Scene";
-import { BackgroundConfig } from "@/components/shared/BackgroundConfig";
-import { RectTransformValues, Vec2 } from "@engine/RectTransform";
+import { Scene } from "@engine/Scene";
+import {
+  RectTransformValues,
+  Vec2,
+  DESIGN_WIDTH,
+  DESIGN_HEIGHT,
+} from "@engine/RectTransform";
 import { GameObjectView } from "@engine/GameObjectView";
 import { SpellFrame } from "./components/SpellFrame";
 import { StatusCard } from "./components/StatusCard";
@@ -40,6 +44,7 @@ import {
   ImageComponent,
   createImageComponent,
 } from "@engine/components/image/imageComponent";
+import { createColorComponent } from "@engine/components/color/colorComponent";
 
 import mainFrame from "./graphics/mainFrame.png";
 import errorFrame from "./graphics/errorFrame.png";
@@ -69,13 +74,19 @@ export default function DeletreoPage() {
   const [groupIndex, setGroupIndex] = useState(0);
   const [slotIndex, setSlotIndex] = useState(0);
 
-  const [background, setBackground] = useState<SceneBackground>({
-    type: "color",
-    value: "#01FF02",
-  });
   const [editMode, setEditMode] = useState(false);
 
   const [gameObjects, setGameObjects] = useState<GameObject[]>(() => [
+    createGameObject({
+      id: "background",
+      name: "Background",
+      transform: {
+        position: { x: 0, y: 0 },
+        size: { x: DESIGN_WIDTH, y: DESIGN_HEIGHT },
+        pivot: { x: 0.5, y: 0.5 },
+      },
+      components: [createColorComponent({ value: "#01FF02" })],
+    }),
     createGameObject({
       id: FRAME_ID,
       name: "MainFrame",
@@ -440,7 +451,7 @@ export default function DeletreoPage() {
           />
         </SidePanel>
         <div className="flex min-w-0 flex-1 flex-col">
-          <Scene background={background} hideCursorOnFullscreen>
+          <Scene hideCursorOnFullscreen>
             <div ref={stageRef} className="absolute inset-0">
               {gameObjects
                 .filter((go) => !go.parentId && go.active)
@@ -501,9 +512,6 @@ export default function DeletreoPage() {
 
       {/* Config */}
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
-        <div className="flex flex-col gap-3 rounded-xl border border-slate-200 bg-slate-50 p-4">
-          <BackgroundConfig value={background} onChange={setBackground} />
-        </div>
         <TextCard
           textConfig={textConfig}
           onChange={setTextConfig}

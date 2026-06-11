@@ -11,12 +11,6 @@ Al terminar una tarea se mueve al changelog y se borra de aquí.
 
 ---
 
-## [RM-001] Componente Color acepta una imagen `shape`
-
-- **Objetivo:** Que el componente Color del engine acepte una imagen llamada `shape`: toma únicamente la forma (silueta) de la imagen entregada y aplica el color por encima de ella.
-- **Hecho cuando:** se puede asignar una imagen como `shape` a un componente Color y el render muestra esa forma rellenada con el color elegido; sin `shape`, se comporta como hoy.
-- **Fecha:** 2026-06-11 · **Estado:** Abierto
-
 ## [RM-002] Componente de Texto
 
 - **Objetivo:** Crear el componente Text del engine con control de tamaño y alineación, y sobre todo poder cambiar la tipografía subiendo una fuente desde el equipo.

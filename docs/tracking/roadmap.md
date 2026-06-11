@@ -21,7 +21,7 @@ Al terminar una tarea se mueve al changelog y se borra de aquí.
 
 - **Objetivo:** Generar el juego Operaciones Combinadas, aunque no use el sistema Engine.
 - **Hecho cuando:** existe su workspace, carga su session file y se muestra fullscreen listo para broadcast.
-- **Fecha:** 2026-06-11 · **Estado:** Abierto
+- **Fecha:** 2026-06-11 · **Estado:** En progreso (2026-06-11)
 
 ## [RM-005] GameObjects "especiales"
 

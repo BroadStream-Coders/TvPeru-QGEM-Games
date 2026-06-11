@@ -1,5 +1,11 @@
 import Link from "next/link";
-import { SpellCheck, ArrowRight, Trophy, FlaskConical } from "lucide-react";
+import {
+  SpellCheck,
+  ArrowRight,
+  Trophy,
+  FlaskConical,
+  Grid3x3,
+} from "lucide-react";
 
 const workspaces = [
   {
@@ -7,6 +13,12 @@ const workspaces = [
     description: "Gestión de palabras por rondas",
     href: "/workspaces/deletreo",
     icon: SpellCheck,
+  },
+  {
+    name: "Operaciones Combinadas",
+    description: "Crucigrama de operaciones en grid 11×11",
+    href: "/workspaces/operaciones-combinadas",
+    icon: Grid3x3,
   },
   {
     name: "Sandbox",

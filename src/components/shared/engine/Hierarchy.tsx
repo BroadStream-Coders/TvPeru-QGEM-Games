@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 export interface TreeNode {
   id: string;
   name: string;
+  active?: boolean;
   children?: TreeNode[];
 }
 
@@ -208,6 +209,7 @@ function TreeItem({
             ? "bg-brand text-brand-foreground"
             : "text-foreground hover:bg-accent",
           isInsideTarget && "ring-1 ring-brand ring-inset bg-brand/10",
+          node.active === false && "opacity-50",
           isDragging && "opacity-40",
         )}
       >

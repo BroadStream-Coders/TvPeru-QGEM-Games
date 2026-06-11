@@ -43,6 +43,7 @@ export default function SandboxPage() {
     return {
       id: go.id,
       name: go.name,
+      active: go.active,
       children: children.length ? children : undefined,
     };
   };

@@ -18,7 +18,3 @@ Solicitar a Claude Design una propuesta de diseño del engine a partir de estas 
 ## [WL-003] Sistema de anclajes estilo Unity Canvas
 
 Agregar el sistema de anclajes (anchors) del Canvas de Unity al rectTransform de los gameobjects.
-
-## [WL-004] Opacidad en el Hierarchy para gameobjects apagados
-
-Mostrar los gameobjects desactivados con un nivel de opacidad reducido en el Hierarchy, para distinguirlos de un vistazo.

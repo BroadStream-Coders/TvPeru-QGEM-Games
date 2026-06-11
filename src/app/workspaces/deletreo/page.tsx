@@ -133,6 +133,7 @@ export default function DeletreoPage() {
     return {
       id: go.id,
       name: go.name,
+      active: go.active,
       children: children.length ? children : undefined,
     };
   };

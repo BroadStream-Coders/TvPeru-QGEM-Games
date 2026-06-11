@@ -13,13 +13,6 @@ export function TextCard({
   manualText: string;
   onManualTextChange: (value: string) => void;
 }) {
-  const setOffset =
-    (axis: keyof SpellTextConfig["offset"]) => (value: number) =>
-      onChange({
-        ...textConfig,
-        offset: { ...textConfig.offset, [axis]: value },
-      });
-
   return (
     <div className="flex flex-col gap-3 rounded-xl border border-slate-200 bg-slate-50 p-4">
       <span className="flex items-center gap-2 text-2xs font-mono uppercase tracking-wider text-slate-500">
@@ -55,18 +48,6 @@ export function TextCard({
           label="Subrayado ↕"
           value={textConfig.underlineGap}
           onChange={(underlineGap) => onChange({ ...textConfig, underlineGap })}
-        />
-      </div>
-      <div className="grid grid-cols-2 gap-3">
-        <NumberField
-          label="Offset X"
-          value={textConfig.offset.x}
-          onChange={setOffset("x")}
-        />
-        <NumberField
-          label="Offset Y"
-          value={textConfig.offset.y}
-          onChange={setOffset("y")}
         />
       </div>
     </div>

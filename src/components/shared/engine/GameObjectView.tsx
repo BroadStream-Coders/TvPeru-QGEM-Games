@@ -11,6 +11,7 @@ interface GameObjectViewProps {
   selectedId?: string | null;
   editMode?: boolean;
   renderContent?: (go: GameObject) => React.ReactNode;
+  contentRef?: (go: GameObject) => React.Ref<HTMLDivElement> | undefined;
 }
 
 export function GameObjectView({
@@ -20,6 +21,7 @@ export function GameObjectView({
   selectedId,
   editMode,
   renderContent,
+  contentRef,
 }: GameObjectViewProps) {
   const viewMode = useSceneViewMode();
   const selected = gameObject.id === selectedId;
@@ -36,7 +38,7 @@ export function GameObjectView({
       pivot={gameObject.transform.pivot}
       parentSize={parentSize}
     >
-      <div className="absolute inset-0">
+      <div ref={contentRef?.(gameObject)} className="absolute inset-0">
         {gameObject.components.map((component, index) => {
           const View = COMPONENT_REGISTRY[component.type]?.view;
           return View ? <View key={index} component={component} /> : null;
@@ -51,6 +53,7 @@ export function GameObjectView({
               selectedId={selectedId}
               editMode={editMode}
               renderContent={renderContent}
+              contentRef={contentRef}
             />
           ) : null,
         )}

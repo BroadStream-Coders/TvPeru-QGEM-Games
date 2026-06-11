@@ -113,7 +113,6 @@ export default function DeletreoPage() {
   const [textConfig, setTextConfig] = useState({
     fontSize: 80,
     letterSpacing: 20,
-    offset: { x: 0, y: 0 },
     underlineGap: 0,
   });
 
@@ -413,9 +412,8 @@ export default function DeletreoPage() {
 
   const renderContent = (go: GameObject) => (
     <>
-      {go.id === FRAME_ID && (
+      {go.id === TEXT_ID && (
         <SpellFrame
-          frameRef={frameRef}
           word={textVisible ? word : ""}
           spellStep={spellStep}
           textConfig={textConfig}
@@ -464,6 +462,7 @@ export default function DeletreoPage() {
                     selectedId={selectedId}
                     editMode={editMode}
                     renderContent={renderContent}
+                    contentRef={(g) => (g.id === FRAME_ID ? frameRef : undefined)}
                   />
                 ))}
             </div>

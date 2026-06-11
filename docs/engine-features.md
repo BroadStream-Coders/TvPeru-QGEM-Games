@@ -56,7 +56,7 @@ arquitectura cambió, refleja el cambio en `docs/engine-arquitectura.md`.
 ### [EF-004] Componente Text (cargar fuente local, texto, tamaño)
 
 - **Dificultad:** 3/5
-- **Estado:** Pendiente
+- **Estado:** Hecho
 - **Idea original:** "Agregar el componente de Texto. El usuario debe poder cargar una fuente desde local; se tiene un texto y un tamaño de fuente. Puede que en un futuro se agreguen más detalles. Por ahora solo esto."
 - **Qué es:** Nueva **tripleta** Text (modelo `textComponent.ts` + `TextView` + `TextInspector`) registrada en `componentRegistry.ts`. Campos mínimos: **texto** (string), **tamaño de fuente**, y **fuente cargada desde local**. Diseñado para crecer (color, alineación, peso, subrayado…) sin rehacerlo.
 - **Notas / encaje con la arquitectura:** Es el patrón "agregar tripleta + entrada del registro" del §3 — no toca Inspector ni Scene. Tamaño de fuente debe ir en unidades container-query (`cqh`/`cqi`), no `px`, para respetar §5. La **fuente local** se carga con `FontFace` desde un archivo del equipo; ojo con la **persistencia del blob** (mismo riesgo que Video, ver **TD-006**) → registrar deuda si aplica. Revisar la memoria/decisión previa de Text (`engine-text-component-direction`): allí el subrayado es un `div` aparte y cada letra puede ser su propio GameObject — **esta feature es la versión base** (un Text simple por GameObject); la dirección "letra = GameObject" queda para una feature posterior si se necesita en deletreo. Sin Offset (posiciona el `rectTransform`).

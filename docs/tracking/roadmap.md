@@ -11,12 +11,6 @@ Al terminar una tarea se mueve al changelog y se borra de aquí.
 
 ---
 
-## [RM-002] Componente de Texto
-
-- **Objetivo:** Crear el componente Text del engine con control de tamaño y alineación, y sobre todo poder cambiar la tipografía subiendo una fuente desde el equipo.
-- **Hecho cuando:** se puede añadir un componente Text, editar tamaño y alineación, y cargar una tipografía propia desde el equipo que se aplica al render.
-- **Fecha:** 2026-06-11 · **Estado:** Abierto
-
 ## [RM-003] Componentes personalizados por juego
 
 - **Objetivo:** Estructurar el sistema de componentes para que cada juego pueda crear y registrar sus propios componentes personalizados, sin tocar el core del engine.

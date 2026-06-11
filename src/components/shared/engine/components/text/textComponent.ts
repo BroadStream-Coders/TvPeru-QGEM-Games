@@ -1,0 +1,35 @@
+import { GameObjectComponent } from "@engine/gameObject";
+
+export type TextAlignH = "left" | "center" | "right";
+export type TextAlignV = "top" | "middle" | "bottom";
+export type TextOverflow = "wrap" | "overflow" | "clip";
+
+export interface TextComponent extends GameObjectComponent {
+  type: "text";
+  text: string;
+  fontSize: number;
+  color: string;
+  fontFamily?: string;
+  fontSrc?: string;
+  fontFileName?: string;
+  alignH: TextAlignH;
+  alignV: TextAlignV;
+  overflow: TextOverflow;
+}
+
+export function createTextComponent(
+  init?: Partial<Omit<TextComponent, "type">>,
+): TextComponent {
+  return {
+    type: "text",
+    text: init?.text ?? "Texto",
+    fontSize: init?.fontSize ?? 8,
+    color: init?.color ?? "#ffffff",
+    fontFamily: init?.fontFamily,
+    fontSrc: init?.fontSrc,
+    fontFileName: init?.fontFileName,
+    alignH: init?.alignH ?? "center",
+    alignV: init?.alignV ?? "middle",
+    overflow: init?.overflow ?? "wrap",
+  };
+}

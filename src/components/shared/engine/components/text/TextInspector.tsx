@@ -1,4 +1,15 @@
-import { Type, Upload, Trash2 } from "lucide-react";
+import {
+  Type,
+  Upload,
+  Trash2,
+  AlignLeft,
+  AlignCenter,
+  AlignRight,
+  AlignStartHorizontal,
+  AlignCenterHorizontal,
+  AlignEndHorizontal,
+  LucideIcon,
+} from "lucide-react";
 import { NumberField } from "@engine/NumberField";
 import {
   TextAlignH,
@@ -6,6 +17,57 @@ import {
   TextComponent,
   TextOverflow,
 } from "@engine/components/text/textComponent";
+
+const ALIGN_H_OPTIONS: { value: TextAlignH; icon: LucideIcon; title: string }[] =
+  [
+    { value: "left", icon: AlignLeft, title: "Izquierda" },
+    { value: "center", icon: AlignCenter, title: "Centro" },
+    { value: "right", icon: AlignRight, title: "Derecha" },
+  ];
+
+const ALIGN_V_OPTIONS: { value: TextAlignV; icon: LucideIcon; title: string }[] =
+  [
+    { value: "top", icon: AlignStartHorizontal, title: "Arriba" },
+    { value: "middle", icon: AlignCenterHorizontal, title: "Medio" },
+    { value: "bottom", icon: AlignEndHorizontal, title: "Abajo" },
+  ];
+
+function AlignGroup<T extends string>({
+  label,
+  value,
+  options,
+  onChange,
+}: {
+  label: string;
+  value: T;
+  options: { value: T; icon: LucideIcon; title: string }[];
+  onChange: (value: T) => void;
+}) {
+  return (
+    <label className="flex items-center gap-2">
+      <span className="w-12 shrink-0 text-2xs font-mono uppercase tracking-wider text-muted-foreground">
+        {label}
+      </span>
+      <div className="flex flex-1 gap-1">
+        {options.map(({ value: v, icon: Icon, title }) => (
+          <button
+            key={v}
+            type="button"
+            onClick={() => onChange(v)}
+            title={title}
+            className={`flex h-7 flex-1 items-center justify-center rounded-md border transition-colors ${
+              value === v
+                ? "border-brand bg-brand/10 text-foreground"
+                : "border-border text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            <Icon size={14} />
+          </button>
+        ))}
+      </div>
+    </label>
+  );
+}
 
 export function TextInspector({
   component,
@@ -86,70 +148,43 @@ export function TextInspector({
           />
         </label>
 
-        <label className="inline-flex w-fit cursor-pointer items-center gap-1.5 rounded-md bg-brand px-2.5 py-1 text-2xs font-semibold uppercase tracking-wider text-brand-foreground transition-colors hover:opacity-90">
-          <Upload size={13} />
-          Cargar fuente desde equipo
-          <input
-            type="file"
-            accept=".ttf,.otf,.woff,.woff2,font/*"
-            onChange={(e) => {
-              const file = e.target.files?.[0];
-              if (file) onPickFont(file);
-            }}
-            className="hidden"
-          />
-        </label>
-        {component.fontFileName && (
-          <span className="truncate text-2xs text-muted-foreground">
-            {component.fontFileName}
+        <div className="flex items-center gap-2">
+          <span className="shrink-0 text-2xs font-mono uppercase tracking-wider text-muted-foreground">
+            Fuente:
           </span>
-        )}
-
-        <label className="flex items-center gap-2">
-          <span className="w-12 shrink-0 text-2xs font-mono uppercase tracking-wider text-muted-foreground">
-            Horiz.
+          <span className="min-w-0 flex-1 truncate text-xs text-foreground">
+            {component.fontFileName ?? "Ninguna"}
           </span>
-          <select
-            value={component.alignH}
-            onChange={(e) =>
-              onChange({ ...component, alignH: e.target.value as TextAlignH })
-            }
-            className="h-7 w-full min-w-0 rounded-md border border-input bg-input/30 px-2 text-xs text-foreground outline-none focus:border-ring"
+          <label
+            title="Cargar fuente desde equipo"
+            className="flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-border text-muted-foreground transition-colors hover:border-brand hover:text-foreground"
           >
-            <option value="left" className="bg-card text-foreground">
-              Izquierda
-            </option>
-            <option value="center" className="bg-card text-foreground">
-              Centro
-            </option>
-            <option value="right" className="bg-card text-foreground">
-              Derecha
-            </option>
-          </select>
-        </label>
+            <Upload size={13} />
+            <input
+              type="file"
+              accept=".ttf,.otf,.woff,.woff2,font/*"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) onPickFont(file);
+              }}
+              className="hidden"
+            />
+          </label>
+        </div>
 
-        <label className="flex items-center gap-2">
-          <span className="w-12 shrink-0 text-2xs font-mono uppercase tracking-wider text-muted-foreground">
-            Vert.
-          </span>
-          <select
-            value={component.alignV}
-            onChange={(e) =>
-              onChange({ ...component, alignV: e.target.value as TextAlignV })
-            }
-            className="h-7 w-full min-w-0 rounded-md border border-input bg-input/30 px-2 text-xs text-foreground outline-none focus:border-ring"
-          >
-            <option value="top" className="bg-card text-foreground">
-              Arriba
-            </option>
-            <option value="middle" className="bg-card text-foreground">
-              Medio
-            </option>
-            <option value="bottom" className="bg-card text-foreground">
-              Abajo
-            </option>
-          </select>
-        </label>
+        <AlignGroup
+          label="Horiz."
+          value={component.alignH}
+          options={ALIGN_H_OPTIONS}
+          onChange={(alignH) => onChange({ ...component, alignH })}
+        />
+
+        <AlignGroup
+          label="Vert."
+          value={component.alignV}
+          options={ALIGN_V_OPTIONS}
+          onChange={(alignV) => onChange({ ...component, alignV })}
+        />
 
         <label className="flex items-center gap-2">
           <span className="w-12 shrink-0 text-2xs font-mono uppercase tracking-wider text-muted-foreground">

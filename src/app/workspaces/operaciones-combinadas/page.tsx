@@ -30,6 +30,16 @@ import {
   OperacionesCombinadasData,
   isOperacionesCombinadasData,
 } from "./types";
+import {
+  GRID_CONFIG,
+  GRID_PIXEL_SIZE,
+  GRID_GAP_PERCENT,
+  INITIAL_TRAY,
+} from "./gridConfig";
+import { useGridDragDrop } from "./useGridDragDrop";
+import { GridCells, TrayPanel, DragGhost } from "./components/DragDropBoard";
+
+const GRID_ID = "grid";
 
 export default function OperacionesCombinadasPage() {
   const setHeader = useWorkspaceHeader((s) => s.setHeader);
@@ -37,12 +47,24 @@ export default function OperacionesCombinadasPage() {
 
   const [data, setData] = useState<OperacionesCombinadasData | null>(null);
 
-  const [gameObjects, setGameObjects] = useState<GameObject[]>([]);
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [gameObjects, setGameObjects] = useState<GameObject[]>(() => [
+    createGameObject({
+      id: GRID_ID,
+      name: "Grid",
+      transform: {
+        position: { ...GRID_CONFIG.containerPosition },
+        size: { ...GRID_PIXEL_SIZE },
+        pivot: { x: 0.5, y: 0.5 },
+      },
+    }),
+  ]);
+  const [selectedId, setSelectedId] = useState<string | null>(GRID_ID);
   const [editMode, setEditMode] = useState(false);
 
   const stageRef = useRef<HTMLDivElement>(null);
   const selected = gameObjects.find((go) => go.id === selectedId) ?? null;
+
+  const dnd = useGridDragDrop(stageRef, INITIAL_TRAY);
 
   const buildNode = (go: GameObject): TreeNode => {
     const children = gameObjects
@@ -212,22 +234,38 @@ export default function OperacionesCombinadasPage() {
     });
   }, [setHeader, handleLoad]);
 
-  const renderContent = (go: GameObject) =>
-    editMode && go.id === selectedId ? (
-      <>
-        <div
-          onPointerDown={(e) => beginGesture("move", e)}
-          className="absolute inset-0 cursor-move touch-none select-none"
+  const renderContent = (go: GameObject) => (
+    <>
+      {go.id === GRID_ID && (
+        <GridCells
+          cols={GRID_CONFIG.gridSize.x}
+          rows={GRID_CONFIG.gridSize.y}
+          gapPercent={GRID_GAP_PERCENT}
+          cells={dnd.cells}
+          drag={dnd.drag}
+          hoveredCell={dnd.hoveredCell}
+          beginDrag={dnd.beginDrag}
+          cellEnter={dnd.cellEnter}
+          cellLeave={dnd.cellLeave}
         />
-        {HANDLES.map((hd) => (
+      )}
+      {editMode && go.id === selectedId && (
+        <>
           <div
-            key={hd.h}
-            onPointerDown={(e) => beginGesture(hd.h, e)}
-            className={`absolute ${hd.pos} ${hd.cursor} h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border border-slate-700 bg-white touch-none`}
+            onPointerDown={(e) => beginGesture("move", e)}
+            className="absolute inset-0 cursor-move touch-none select-none"
           />
-        ))}
-      </>
-    ) : null;
+          {HANDLES.map((hd) => (
+            <div
+              key={hd.h}
+              onPointerDown={(e) => beginGesture(hd.h, e)}
+              className={`absolute ${hd.pos} ${hd.cursor} h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border border-slate-700 bg-white touch-none`}
+            />
+          ))}
+        </>
+      )}
+    </>
+  );
 
   return (
     <main className="flex-1 p-3 overflow-auto flex flex-col gap-3">
@@ -243,7 +281,11 @@ export default function OperacionesCombinadasPage() {
         </SidePanel>
         <div className="flex min-w-0 flex-1 flex-col">
           <Scene hideCursorOnFullscreen>
-            <div ref={stageRef} className="absolute inset-0">
+            <div
+              ref={stageRef}
+              className="absolute inset-0"
+              style={{ cursor: dnd.drag ? "none" : "default" }}
+            >
               {gameObjects
                 .filter((go) => !go.parentId && go.active)
                 .map((go) => (
@@ -257,6 +299,12 @@ export default function OperacionesCombinadasPage() {
                   />
                 ))}
             </div>
+            <TrayPanel
+              tray={dnd.tray}
+              drag={dnd.drag}
+              beginDrag={dnd.beginDrag}
+            />
+            {dnd.drag && <DragGhost drag={dnd.drag} pointer={dnd.pointer} />}
           </Scene>
         </div>
         <SidePanel title="Inspector" className="w-72 shrink-0">

@@ -3,7 +3,6 @@ import {
   TextAlignH,
   TextAlignV,
   TextComponent,
-  TextOverflow,
 } from "@engine/components/text/textComponent";
 
 const JUSTIFY: Record<TextAlignH, CSSProperties["justifyContent"]> = {
@@ -24,23 +23,15 @@ const TEXT_ALIGN: Record<TextAlignH, CSSProperties["textAlign"]> = {
   right: "right",
 };
 
-function overflowStyle(overflow: TextOverflow): CSSProperties {
-  if (overflow === "wrap") {
-    return { whiteSpace: "pre-wrap", overflowWrap: "break-word", overflow: "hidden" };
-  }
-  if (overflow === "clip") {
-    return { whiteSpace: "pre", overflow: "hidden" };
-  }
-  return { whiteSpace: "pre", overflow: "visible" };
-}
-
 export function TextView({ component }: { component: TextComponent }) {
+  const wrap = component.overflow === "wrap";
   return (
     <div
       className="flex h-full w-full"
       style={{
         justifyContent: JUSTIFY[component.alignH],
         alignItems: ALIGN[component.alignV],
+        overflow: component.overflow === "overflow" ? "visible" : "hidden",
       }}
     >
       <div
@@ -50,7 +41,8 @@ export function TextView({ component }: { component: TextComponent }) {
           fontSize: `${component.fontSize}cqh`,
           lineHeight: 1.1,
           textAlign: TEXT_ALIGN[component.alignH],
-          ...overflowStyle(component.overflow),
+          whiteSpace: wrap ? "pre-wrap" : "pre",
+          overflowWrap: wrap ? "break-word" : undefined,
         }}
       >
         {component.text}

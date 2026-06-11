@@ -153,7 +153,7 @@ export function TextInspector({
             Fuente:
           </span>
           <span className="min-w-0 flex-1 truncate text-xs text-foreground">
-            {component.fontFileName ?? "Ninguna"}
+            {component.fontFileName ?? "Geist Sans"}
           </span>
           <label
             title="Cargar fuente desde equipo"

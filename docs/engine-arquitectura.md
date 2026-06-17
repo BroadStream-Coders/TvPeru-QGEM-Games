@@ -350,6 +350,12 @@ con helpers casi idénticos (createNewGameObject, addComponent, removeComponent,
 patchComponent, setGameObjectSize, setAxis…). Candidato fuerte a un store `useScene`,
 mismo patrón que `useWorkspaceHeader`.
 
+**E — ¿Cómo registra un juego sus componentes propios?** → **Decidido (RM-003):**
+registro **componible + React context**, no global mutable. El engine exporta las
+nativas y el builder; cada juego arma su registro (`createComponentRegistry`) y lo
+provee por `ComponentRegistryProvider` (espeja `SceneViewMode`). Los componentes
+propios de un juego viven en `workspaces/<juego>/components/<tipo>/`, no en el engine.
+
 **D — Nombre `Scene` vs choques.**
 Existe la pestaña "Scene" de `ViewModeTabs` (ahora dentro del propio componente
 `Scene`) y antes la ruta `/escena`. El componente `Scene` no rompe nada; se deja
@@ -366,5 +372,8 @@ así salvo que moleste el nombre repetido.
 5. ✅ Inspector genérico que recorre `components[]` + `AddComponentButton` + eliminar.
 6. ✅ Segundo componente (**Color**) sumado solo con su carpeta + entrada del registro.
    6b. ✅ Tercer componente (**Video**) sumado igual (carpeta + entrada del registro).
-7. ⏳ (Según **Decisión C**) levantar el grafo duplicado a un store `useScene`.
-8. ⏳ Componente **Text** (pausado, ver §9 y la memoria del proyecto).
+7. ✅ Registro componible + tipado por juego (**RM-003**): `defineComponent<C>`,
+   `NATIVE_COMPONENTS`, `createComponentRegistry` + context; demo `Border` en sandbox.
+   Cerró **TD-004**.
+8. ⏳ (Según **Decisión C**) levantar el grafo duplicado a un store `useScene`.
+9. ⏳ Componente **Text** (pausado, ver §9 y la memoria del proyecto).

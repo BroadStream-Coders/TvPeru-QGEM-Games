@@ -36,6 +36,8 @@ QGEM Games is a **fullscreen game display** system for TV Perú's show "Que Gane
 - A workspace `page.tsx` (client component) calls `setHeader({ title, icon, onLoad })` inside a `useEffect`, and **must** call `resetHeader()` on unmount.
 - `WorkspaceHeader` renders nothing until `title` is set; it shows the load button (`FileActions`) only when `onLoad` is provided.
 
+**No data persistence (design philosophy).** This project does **not** persist data — not in `localStorage`, not in a database, not anywhere. Nothing is meant to survive a page reload. Files loaded from the user's machine via blob URLs (`URL.createObjectURL`) intentionally die on reload; that is by design, **not** technical debt. Do not propose adding `localStorage`, IndexedDB, a DB, or a save/export flow unless the user explicitly asks. A future Supabase integration may serve remote read-only assets (images/video for backgrounds), but **not** as a storage backend for app data.
+
 **Load-only persistence.** `src/helpers/persistence.ts` exposes `loadJsonFile<T>(file, validator?)` and `loadZipFile(file)`. Save/export was intentionally removed — this app consumes session files, it does not produce them. Workspaces validate the parsed JSON with a type-guard passed to `loadJsonFile` (see `deletreo/page.tsx`).
 
 **`FullScreen` is the display primitive** (`src/components/shared/FullScreen.tsx`). It renders a 16:9 "stage" that a workspace fills with its game UI. Two things are essential and non-obvious:
@@ -63,3 +65,6 @@ QGEM Games is a **fullscreen game display** system for TV Perú's show "Que Gane
 - `@/` maps to `src/` (`tsconfig.json`).
 - No code comments unless explicitly requested; record tech debt in `docs/logbook/technical-debt.md` instead.
 - UI copy is in Spanish.
+- **Target is Chrome only** (the studio machine). Don't spend effort on cross-browser compatibility; recent Chromium is the assumed runtime.
+- **Default background is black** (`#000000`, the `FullScreen` default). New workspaces don't assume a chroma background.
+- **Session file format is per-game.** Games that carry images use a **ZIP bundle** (`loadZipFile` — JSON + embedded assets, so there are no loose folders/paths to manage); simpler games use plain **JSON** (`loadJsonFile`). This will likely change once Supabase storage lands, but that is a **distant** future, not a current concern.

@@ -21,9 +21,16 @@ import {
   reorderGameObjects,
 } from "@engine/gameObject";
 import {
-  COMPONENT_REGISTRY,
-  COMPONENT_OPTIONS,
+  createComponentRegistry,
+  NATIVE_COMPONENTS,
+  ComponentRegistryProvider,
 } from "@engine/componentRegistry";
+import { borderDefinition } from "./components/border";
+
+const registry = createComponentRegistry([
+  ...NATIVE_COMPONENTS,
+  borderDefinition,
+]);
 
 export default function SandboxPage() {
   const setHeader = useWorkspaceHeader((s) => s.setHeader);
@@ -84,7 +91,7 @@ export default function SandboxPage() {
     );
 
   const addComponent = (goId: string, type: string) => {
-    const def = COMPONENT_REGISTRY[type];
+    const def = registry.get(type);
     if (!def) return;
     setGameObjects((prev) =>
       prev.map((go) =>
@@ -221,20 +228,22 @@ export default function SandboxPage() {
         </SidePanel>
         <div className="flex min-w-0 flex-1 flex-col">
           <Scene hideCursorOnFullscreen>
-            <div ref={stageRef} className="absolute inset-0">
-              {gameObjects
-                .filter((go) => !go.parentId && go.active)
-                .map((go) => (
-                  <GameObjectView
-                    key={go.id}
-                    gameObject={go}
-                    allGameObjects={gameObjects}
-                    selectedId={selectedId}
-                    editMode={editMode}
-                    renderContent={renderContent}
-                  />
-                ))}
-            </div>
+            <ComponentRegistryProvider value={registry}>
+              <div ref={stageRef} className="absolute inset-0">
+                {gameObjects
+                  .filter((go) => !go.parentId && go.active)
+                  .map((go) => (
+                    <GameObjectView
+                      key={go.id}
+                      gameObject={go}
+                      allGameObjects={gameObjects}
+                      selectedId={selectedId}
+                      editMode={editMode}
+                      renderContent={renderContent}
+                    />
+                  ))}
+              </div>
+            </ComponentRegistryProvider>
           </Scene>
         </div>
         <SidePanel title="Inspector" className="w-72 shrink-0">
@@ -255,7 +264,7 @@ export default function SandboxPage() {
                 onToggleEdit={() => setEditMode((v) => !v)}
               />
               {selected.components.map((component, index) => {
-                const Editor = COMPONENT_REGISTRY[component.type]?.editor;
+                const Editor = registry.get(component.type)?.editor;
                 return Editor ? (
                   <Editor
                     key={index}
@@ -269,7 +278,7 @@ export default function SandboxPage() {
                 ) : null;
               })}
               <AddComponentButton
-                options={COMPONENT_OPTIONS}
+                options={registry.options}
                 onAdd={(type) => addComponent(selected.id, type)}
               />
             </>

@@ -1,57 +1,62 @@
-import { ComponentType } from "react";
-import { GameObjectComponent } from "@engine/gameObject";
-import { ImageView } from "@engine/components/image/ImageView";
-import { ImageInspector } from "@engine/components/image/ImageInspector";
-import { createImageComponent } from "@engine/components/image/imageComponent";
-import { ColorView } from "@engine/components/color/ColorView";
-import { ColorInspector } from "@engine/components/color/ColorInspector";
-import { createColorComponent } from "@engine/components/color/colorComponent";
-import { VideoView } from "@engine/components/video/VideoView";
-import { VideoInspector } from "@engine/components/video/VideoInspector";
-import { createVideoComponent } from "@engine/components/video/videoComponent";
-import { TextView } from "@engine/components/text/TextView";
-import { TextInspector } from "@engine/components/text/TextInspector";
-import { createTextComponent } from "@engine/components/text/textComponent";
+"use client";
 
-export interface ComponentDefinition {
+import { ComponentType, createContext, useContext } from "react";
+import { GameObjectComponent } from "@engine/gameObject";
+import { Vec2 } from "@engine/RectTransform";
+import { imageDefinition } from "@engine/components/image";
+import { colorDefinition } from "@engine/components/color";
+import { videoDefinition } from "@engine/components/video";
+import { textDefinition } from "@engine/components/text";
+
+export interface ComponentDefinition<
+  C extends GameObjectComponent = GameObjectComponent,
+> {
+  type: C["type"];
   label: string;
-  create: () => GameObjectComponent;
-  view: ComponentType<{ component: GameObjectComponent }>;
+  create: () => C;
+  view: ComponentType<{ component: C }>;
   editor: ComponentType<{
-    component: GameObjectComponent;
-    onChange: (next: GameObjectComponent) => void;
+    component: C;
+    onChange: (next: C) => void;
     onRemove: () => void;
-    onResize: (size: { x: number; y: number }) => void;
+    onResize: (size: Vec2) => void;
   }>;
 }
 
-export const COMPONENT_REGISTRY: Record<string, ComponentDefinition> = {
-  image: {
-    label: "Image",
-    create: () => createImageComponent(),
-    view: ImageView as unknown as ComponentDefinition["view"],
-    editor: ImageInspector as unknown as ComponentDefinition["editor"],
-  },
-  color: {
-    label: "Color",
-    create: () => createColorComponent(),
-    view: ColorView as unknown as ComponentDefinition["view"],
-    editor: ColorInspector as unknown as ComponentDefinition["editor"],
-  },
-  video: {
-    label: "Video",
-    create: () => createVideoComponent(),
-    view: VideoView as unknown as ComponentDefinition["view"],
-    editor: VideoInspector as unknown as ComponentDefinition["editor"],
-  },
-  text: {
-    label: "Text",
-    create: () => createTextComponent(),
-    view: TextView as unknown as ComponentDefinition["view"],
-    editor: TextInspector as unknown as ComponentDefinition["editor"],
-  },
-};
+export function defineComponent<C extends GameObjectComponent>(
+  def: ComponentDefinition<C>,
+): ComponentDefinition {
+  return def as unknown as ComponentDefinition;
+}
 
-export const COMPONENT_OPTIONS = Object.entries(COMPONENT_REGISTRY).map(
-  ([type, def]) => ({ type, label: def.label }),
+export interface ComponentRegistry {
+  get: (type: string) => ComponentDefinition | undefined;
+  options: { type: string; label: string }[];
+}
+
+export function createComponentRegistry(
+  defs: ComponentDefinition[],
+): ComponentRegistry {
+  const byType = new Map(defs.map((def) => [def.type, def]));
+  return {
+    get: (type) => byType.get(type),
+    options: defs.map((def) => ({ type: def.type, label: def.label })),
+  };
+}
+
+export const NATIVE_COMPONENTS: ComponentDefinition[] = [
+  imageDefinition,
+  colorDefinition,
+  videoDefinition,
+  textDefinition,
+];
+
+const ComponentRegistryContext = createContext<ComponentRegistry>(
+  createComponentRegistry(NATIVE_COMPONENTS),
 );
+
+export const ComponentRegistryProvider = ComponentRegistryContext.Provider;
+
+export function useComponentRegistry() {
+  return useContext(ComponentRegistryContext);
+}

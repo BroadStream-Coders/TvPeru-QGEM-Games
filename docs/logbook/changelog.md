@@ -12,6 +12,14 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-003] Componentes personalizados por juego (2026-06-16 21:05)
+
+El registro de componentes pasó de un `COMPONENT_REGISTRY` global a un sistema componible: el engine exporta `NATIVE_COMPONENTS` + `createComponentRegistry`/`ComponentRegistryProvider`/`useComponentRegistry`, y cada juego arma su registro local (nativas + las suyas). Demostrado con un componente custom `Border` registrado solo en sandbox, fuera del core.
+
+## [TD-004] Tipado fuerte del registro de componentes (2026-06-16 21:05)
+
+`defineComponent<C>` ata vista y editor al modelo `C` (type-check en compilación), eliminando los `as unknown as` por entrada; el único ensanchado a la base ocurre una vez dentro del helper. Resuelto como parte de RM-003.
+
 ## [RM-002] Componente Text (2026-06-11)
 
 Nueva tripleta Text (modelo + `TextView` + `TextInspector`) registrada en `componentRegistry.ts`: texto, tamaño en unidades container-query (`cqh`), color, alineación horizontal y vertical, y modo de ajuste (contener/desbordar/recortar). La fuente se carga desde el equipo vía `FontFace` + blob URL (por diseño no persiste al recargar).

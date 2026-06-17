@@ -73,24 +73,38 @@ Un tipo de componente (RectTransform, Image, Text…) se define con **tres pieza
 
 El Modelo no sabe dibujarse ni editarse; el Editor no sabe de render; la Vista no
 sabe de edición. Los tres se pegan con un **registro indexado por `type`** que ya
-existe y funciona: `engine/componentRegistry.ts`.
+existe y funciona: `engine/componentRegistry.ts`. El registro es **componible y
+tipado**: el engine no expone un objeto global mutable, sino las piezas para que
+**cada juego arme el suyo** (nativas + las propias).
 
 ```ts
 // engine/componentRegistry.ts (forma real, simplificada)
-export interface ComponentDefinition {
+export interface ComponentDefinition<C extends GameObjectComponent = GameObjectComponent> {
+  type: C["type"];
   label: string; // nombre visible en el dropdown "Agregar componente"
-  create: () => GameObjectComponent; // fábrica del modelo por defecto
-  view: ComponentType<{ component }>; // la Vista (Scene)
-  editor: ComponentType<{ component; onChange; onRemove; onResize }>; // el Editor (Inspector)
+  create: () => C; // fábrica del modelo por defecto
+  view: ComponentType<{ component: C }>; // la Vista (Scene)
+  editor: ComponentType<{ component: C; onChange; onRemove; onResize }>; // el Editor (Inspector)
 }
 
-export const COMPONENT_REGISTRY: Record<string, ComponentDefinition> = {
-  image: { label: "Image", create: createImageComponent, view: ImageView, editor: ImageInspector },
-  color: { label: "Color", create: createColorComponent, view: ColorView, editor: ColorInspector },
-  video: { label: "Video", create: createVideoComponent, view: VideoView, editor: VideoInspector },
-};
-export const COMPONENT_OPTIONS = Object.entries(...); // {type,label}[] para el dropdown
+// Helper tipado: ata vista/editor al modelo C en compilación (cierra TD-004).
+export function defineComponent<C>(def: ComponentDefinition<C>): ComponentDefinition { … }
+
+// Cada carpeta de componente exporta su definición desde su index.ts:
+//   image/index.ts → export const imageDefinition = defineComponent<ImageComponent>({ … })
+export const NATIVE_COMPONENTS = [imageDefinition, colorDefinition, videoDefinition, textDefinition];
+
+export function createComponentRegistry(defs): { get(type): ComponentDefinition | undefined; options: {type,label}[] };
+export const ComponentRegistryProvider; // context: el juego provee su registro
+export function useComponentRegistry();  // GameObjectView lo lee (igual que useSceneViewMode)
 ```
+
+**Registro por juego (RM-003):** cada workspace hace
+`const registry = createComponentRegistry([...NATIVE_COMPONENTS, miCustom])`, envuelve
+su árbol de `GameObjectView` con `<ComponentRegistryProvider value={registry}>` y usa
+`registry.get/options` en el Inspector y el `AddComponentButton`. Así un juego suma un
+componente propio **sin tocar el core** (los custom viven en
+`workspaces/<juego>/components/<tipo>/`; ej. `sandbox/components/border/`).
 
 Contrato de cada pieza:
 
@@ -110,10 +124,13 @@ Cómo lo consumen las dos UIs (idéntico en deletreo y sandbox):
 
 **Agregar un componente nuevo = crear su tripleta y registrar una entrada. No se
 toca ni el Inspector ni la Scene.** Ese es el objetivo de todo el diseño, y ya se
-cumple: Image y Color se sumaron solo tocando su carpeta + el registro.
+cumple: Image y Color se sumaron solo tocando su carpeta + el registro. Si el
+componente es **propio de un juego**, ni siquiera toca el engine: se registra en el
+`createComponentRegistry` de ese workspace (ver §3, RM-003).
 
-> Nota de tipos: las entradas del registro castean con `as unknown as` porque el
-> tipo genérico usa el `GameObjectComponent` base. Es la deuda menor **TD-004**.
+> Nota de tipos: `defineComponent<C>` ata vista y editor al modelo `C` en
+> compilación, así que un emparejamiento mal hecho es error de build. **TD-004
+> resuelto** (el único `as` queda dentro del helper, no por entrada).
 
 ---
 
@@ -293,6 +310,11 @@ pestañas viajan con la `Scene`: aparecen en deletreo, sandbox y cualquier juego
 - **El registro por `type` está vivo** (`componentRegistry.ts`): `GameObjectView`
   dibuja las Vistas de `components[]` y el Inspector recorre sus Editores, ambos
   desde el registro. Agregar un tipo no toca Inspector ni Scene.
+- **Registro componible y tipado por juego (RM-003):** el engine expone
+  `NATIVE_COMPONENTS` + `createComponentRegistry`/`ComponentRegistryProvider`/
+  `useComponentRegistry` y el helper tipado `defineComponent<C>`. Cada juego arma su
+  registro local; un componente propio de un juego se registra sin tocar el core
+  (demostrado con `Border` en `sandbox/components/border/`). Cerró **TD-004**.
 - **Tres componentes reales** con su tripleta: **Image** (cargar desde equipo —no URL—,
   ajuste contain/cover/fill, "Ajustar al tamaño de la imagen", eliminar), **Color**
   (color picker + hex que rellena el rect, eliminar) y **Video** (dos modos: Equipo
@@ -311,7 +333,6 @@ pestañas viajan con la `Scene`: aparecen en deletreo, sandbox y cualquier juego
   (posiciona el rectTransform). Ver memoria `engine-text-component-direction`.
 - El estado del grafo vive en `deletreo/page.tsx` y `sandbox/page.tsx` (duplicado);
   aún no se levantó a un store `useScene` (ver Decisión C).
-- Tipado laxo del registro (**TD-004**).
 
 ---
 

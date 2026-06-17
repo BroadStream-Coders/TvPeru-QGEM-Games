@@ -14,14 +14,6 @@ changelog y se borra de aquí.
 
 ---
 
-## [TD-004] Tipado laxo del registro de componentes
-
-- **Ubicación:** `src/components/shared/engine/componentRegistry.ts`
-- **Riesgo:** 3/10
-- **Problema:** `COMPONENT_REGISTRY` tipa `view`/`editor` sobre el `GameObjectComponent` base y castea las entradas concretas (`ImageView`/`ImageInspector`) con `as`. No hay garantía en compilación de que el `view`/`editor` registrado bajo una clave `type` coincida con el modelo de ese `type`.
-- **Impacto futuro:** Al sumar más componentes (Text, Video…) un registro mal emparejado (vista de un tipo con el modelo de otro) no lo detecta el compilador y se cae en runtime. Conviene un registro genérico parametrizado por la unión discriminada de componentes.
-- **Fecha:** 2026-06-04 · **Estado:** Abierto
-
 ## [TD-006] Video desde la PC usa blob URL que no persiste
 
 - **Ubicación:** `src/components/shared/engine/components/video/VideoInspector.tsx`

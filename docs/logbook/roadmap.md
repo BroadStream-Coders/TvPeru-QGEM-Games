@@ -11,12 +11,6 @@ Al terminar una tarea se mueve al changelog y se borra de aquí.
 
 ---
 
-## [RM-003] Componentes personalizados por juego
-
-- **Objetivo:** Estructurar el sistema de componentes para que cada juego pueda crear y registrar sus propios componentes personalizados, sin tocar el core del engine.
-- **Hecho cuando:** un juego puede definir un componente propio (modelo + view + editor) y registrarlo localmente, y el engine lo renderiza y edita como a los nativos.
-- **Fecha:** 2026-06-11 · **Estado:** Abierto
-
 ## [RM-004] Juego "Operaciones Combinadas"
 
 - **Objetivo:** Generar el juego Operaciones Combinadas, aunque no use el sistema Engine.

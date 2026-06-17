@@ -36,8 +36,9 @@ import {
   reorderGameObjects,
 } from "@engine/gameObject";
 import {
-  COMPONENT_REGISTRY,
-  COMPONENT_OPTIONS,
+  createComponentRegistry,
+  NATIVE_COMPONENTS,
+  ComponentRegistryProvider,
 } from "@engine/componentRegistry";
 import { AddComponentButton } from "@engine/AddComponentButton";
 import {
@@ -65,6 +66,8 @@ const SHOWN_POS = { x: 25, y: -358 };
 
 const FRAME_ID = "main-frame";
 const TEXT_ID = "text";
+
+const registry = createComponentRegistry(NATIVE_COMPONENTS);
 
 export default function DeletreoPage() {
   const setHeader = useWorkspaceHeader((s) => s.setHeader);
@@ -189,7 +192,7 @@ export default function DeletreoPage() {
     );
 
   const addComponent = (goId: string, type: string) => {
-    const def = COMPONENT_REGISTRY[type];
+    const def = registry.get(type);
     if (!def) return;
     setGameObjects((prev) =>
       prev.map((go) =>
@@ -451,21 +454,25 @@ export default function DeletreoPage() {
         </SidePanel>
         <div className="flex min-w-0 flex-1 flex-col">
           <Scene hideCursorOnFullscreen>
-            <div ref={stageRef} className="absolute inset-0">
-              {gameObjects
-                .filter((go) => !go.parentId && go.active)
-                .map((go) => (
-                  <GameObjectView
-                    key={go.id}
-                    gameObject={go}
-                    allGameObjects={gameObjects}
-                    selectedId={selectedId}
-                    editMode={editMode}
-                    renderContent={renderContent}
-                    contentRef={(g) => (g.id === FRAME_ID ? frameRef : undefined)}
-                  />
-                ))}
-            </div>
+            <ComponentRegistryProvider value={registry}>
+              <div ref={stageRef} className="absolute inset-0">
+                {gameObjects
+                  .filter((go) => !go.parentId && go.active)
+                  .map((go) => (
+                    <GameObjectView
+                      key={go.id}
+                      gameObject={go}
+                      allGameObjects={gameObjects}
+                      selectedId={selectedId}
+                      editMode={editMode}
+                      renderContent={renderContent}
+                      contentRef={(g) =>
+                        g.id === FRAME_ID ? frameRef : undefined
+                      }
+                    />
+                  ))}
+              </div>
+            </ComponentRegistryProvider>
           </Scene>
         </div>
         <SidePanel title="Inspector" className="w-72 shrink-0">
@@ -486,7 +493,7 @@ export default function DeletreoPage() {
                 onToggleEdit={() => setEditMode((v) => !v)}
               />
               {selected.components.map((component, index) => {
-                const Editor = COMPONENT_REGISTRY[component.type]?.editor;
+                const Editor = registry.get(component.type)?.editor;
                 return Editor ? (
                   <Editor
                     key={index}
@@ -498,7 +505,7 @@ export default function DeletreoPage() {
                 ) : null;
               })}
               <AddComponentButton
-                options={COMPONENT_OPTIONS}
+                options={registry.options}
                 onAdd={(type) => addComponent(selected.id, type)}
               />
             </>

@@ -1,7 +1,7 @@
 import React from "react";
 import { RectTransform, Vec2 } from "@engine/RectTransform";
 import { GameObject } from "@engine/gameObject";
-import { COMPONENT_REGISTRY } from "@engine/componentRegistry";
+import { useComponentRegistry } from "@engine/componentRegistry";
 import { useSceneViewMode } from "@engine/SceneViewMode";
 
 interface GameObjectViewProps {
@@ -24,6 +24,7 @@ export function GameObjectView({
   contentRef,
 }: GameObjectViewProps) {
   const viewMode = useSceneViewMode();
+  const registry = useComponentRegistry();
   const selected = gameObject.id === selectedId;
   const showOutline = (editMode && selected) || viewMode === "scene";
 
@@ -40,7 +41,7 @@ export function GameObjectView({
     >
       <div ref={contentRef?.(gameObject)} className="absolute inset-0">
         {gameObject.components.map((component, index) => {
-          const View = COMPONENT_REGISTRY[component.type]?.view;
+          const View = registry.get(component.type)?.view;
           return View ? <View key={index} component={component} /> : null;
         })}
         {childObjects.map((child) =>

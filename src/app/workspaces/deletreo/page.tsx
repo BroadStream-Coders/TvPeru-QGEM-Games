@@ -4,13 +4,18 @@ import { useEffect, useCallback, useRef, useState } from "react";
 import { SpellCheck } from "lucide-react";
 import { loadJsonFile } from "@/helpers/persistence";
 import { useWorkspaceHeader } from "@/hooks/use-workspace-header";
+import { useAssetPreloader } from "@/hooks/use-asset-preloader";
+import type { AssetKind } from "@/helpers/asset-preloader";
+import { toManifest, type AssetCatalog } from "@/helpers/asset-source";
+import { SHARED_ASSETS } from "@/assets/shared";
+import { AssetLoaderCard } from "@/components/shared/AssetLoaderCard";
 import { useGameKeys } from "@/hooks/use-game-keys";
 import { useTransformGesture, HANDLES } from "@/hooks/use-transform-gesture";
 import { useShake } from "@/hooks/use-shake";
 import { usePop } from "@/hooks/use-pop";
 import { useBounceMove } from "@/hooks/use-bounce-move";
 import { useSlide } from "@/hooks/use-slide";
-import { SOUNDS, playSound } from "@/lib/audio";
+import { playSound } from "@/lib/audio";
 
 import { Scene } from "@engine/Scene";
 import {
@@ -47,11 +52,22 @@ import {
 } from "@engine/components/image/imageComponent";
 import { createColorComponent } from "@engine/components/color/colorComponent";
 
-import mainFrame from "./graphics/mainFrame.png";
-import errorFrame from "./graphics/errorFrame.png";
+const DELETREO_ASSETS = {
+  mainFrame: { kind: "image", path: "games/deletreo/mainFrame.png" },
+  errorFrame: { kind: "image", path: "games/deletreo/errorFrame.png" },
+} satisfies AssetCatalog;
 
-const NORMAL_SRC = mainFrame.src;
-const ERROR_SRC = errorFrame.src;
+const CATALOG: AssetCatalog = {
+  correct: SHARED_ASSETS.correctSound,
+  incorrect: SHARED_ASSETS.incorrectSound,
+  ...DELETREO_ASSETS,
+};
+
+const ASSETS = toManifest(CATALOG);
+
+const ASSET_KINDS: Record<string, AssetKind> = Object.fromEntries(
+  Object.entries(CATALOG).map(([key, entry]) => [key, entry.kind]),
+);
 
 interface DeletreoGroup {
   words: string[];
@@ -75,6 +91,12 @@ const registry = createComponentRegistry([
 export default function DeletreoPage() {
   const setHeader = useWorkspaceHeader((s) => s.setHeader);
   const resetHeader = useWorkspaceHeader((s) => s.resetHeader);
+
+  const { ready, assets, statuses, progress } = useAssetPreloader(ASSETS);
+  const normalUrl = assets.mainFrame?.url;
+  const errorUrl = assets.errorFrame?.url;
+  const correctUrl = assets.correct?.url;
+  const incorrectUrl = assets.incorrect?.url;
 
   const [groups, setGroups] = useState<string[][]>([]);
   const [groupIndex, setGroupIndex] = useState(0);
@@ -101,7 +123,7 @@ export default function DeletreoPage() {
         size: { x: 1170, y: 204 },
         pivot: { x: 0.5, y: 0.5 },
       },
-      components: [createImageComponent({ src: NORMAL_SRC, fit: "fill" })],
+      components: [createImageComponent({ src: "", fit: "fill" })],
     }),
     createGameObject({
       id: TEXT_ID,
@@ -118,7 +140,7 @@ export default function DeletreoPage() {
   const [selectedId, setSelectedId] = useState<string>(FRAME_ID);
 
   const [spellStep, setSpellStep] = useState(0);
-  const [normalSrc, setNormalSrc] = useState(NORMAL_SRC);
+  const [normalSrc, setNormalSrc] = useState("");
 
   const selected = gameObjects.find((go) => go.id === selectedId) ?? null;
   const mainFrame = gameObjects.find((go) => go.id === FRAME_ID)!;
@@ -236,7 +258,7 @@ export default function DeletreoPage() {
       patchComponent(goId, index, next);
       if (goId === FRAME_ID && next.type === "image") {
         const src = (next as ImageComponent).src;
-        if (src !== ERROR_SRC) setNormalSrc(src);
+        if (src && src !== errorUrl) setNormalSrc(src);
       }
     };
 
@@ -357,6 +379,12 @@ export default function DeletreoPage() {
     });
   }, [setHeader, handleLoad]);
 
+  useEffect(() => {
+    if (!ready || !normalUrl) return;
+    setNormalSrc(normalUrl);
+    setMainFrameImageSrc(normalUrl);
+  }, [ready, normalUrl]);
+
   const currentGroup = groups[groupIndex] ?? [];
   const word = currentGroup[slotIndex] ?? "";
 
@@ -410,12 +438,12 @@ export default function DeletreoPage() {
     onShowAnswer: () => {
       setSpellStep(word.length);
       setMainFrameImageSrc(normalSrc);
-      playSound(SOUNDS.correctAnswer);
+      if (correctUrl) playSound(correctUrl);
       pop();
     },
     onMarkError: () => {
-      setMainFrameImageSrc(ERROR_SRC);
-      playSound(SOUNDS.incorrectAnswer);
+      if (errorUrl) setMainFrameImageSrc(errorUrl);
+      if (incorrectUrl) playSound(incorrectUrl);
       shake();
     },
     onInteract: () => setSpellStep((s) => Math.min(s + 1, word.length)),
@@ -458,23 +486,29 @@ export default function DeletreoPage() {
         <div className="flex min-w-0 flex-1 flex-col">
           <Scene hideCursorOnFullscreen>
             <ComponentRegistryProvider value={registry}>
-              <div ref={stageRef} className="absolute inset-0">
-                {gameObjects
-                  .filter((go) => !go.parentId && go.active)
-                  .map((go) => (
-                    <GameObjectView
-                      key={go.id}
-                      gameObject={go}
-                      allGameObjects={gameObjects}
-                      selectedId={selectedId}
-                      editMode={editMode}
-                      renderContent={renderContent}
-                      contentRef={(g) =>
-                        g.id === FRAME_ID ? frameRef : undefined
-                      }
-                    />
-                  ))}
-              </div>
+              {ready ? (
+                <div ref={stageRef} className="absolute inset-0">
+                  {gameObjects
+                    .filter((go) => !go.parentId && go.active)
+                    .map((go) => (
+                      <GameObjectView
+                        key={go.id}
+                        gameObject={go}
+                        allGameObjects={gameObjects}
+                        selectedId={selectedId}
+                        editMode={editMode}
+                        renderContent={renderContent}
+                        contentRef={(g) =>
+                          g.id === FRAME_ID ? frameRef : undefined
+                        }
+                      />
+                    ))}
+                </div>
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center text-sm text-white/70">
+                  Cargando assets… {progress.loaded}/{progress.total}
+                </div>
+              )}
             </ComponentRegistryProvider>
           </Scene>
         </div>
@@ -526,6 +560,11 @@ export default function DeletreoPage() {
           groups={groups}
           groupIndex={groupIndex}
           slotIndex={slotIndex}
+        />
+        <AssetLoaderCard
+          statuses={statuses}
+          progress={progress}
+          kinds={ASSET_KINDS}
         />
         <LegendCard />
       </div>

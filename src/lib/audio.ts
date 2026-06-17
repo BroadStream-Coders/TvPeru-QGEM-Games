@@ -1,8 +1,3 @@
-export const SOUNDS = {
-  correctAnswer: "/audio/correct_answer.mp3",
-  incorrectAnswer: "/audio/incorrect_answer.mp3",
-} as const;
-
 const cache = new Map<string, HTMLAudioElement>();
 
 export function playSound(src: string) {

@@ -12,6 +12,12 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-017] Catálogo de assets compartidos/locales con resolver (2026-06-17 09:05)
+Separación de identidad lógica vs URL físico: `resolveAssetUrl`/`toManifest` (`asset-source.ts`) + catálogos tipados (`SHARED_ASSETS` global, `DELETREO_ASSETS` local). Los assets se movieron a `public/assets/{shared,games/<juego>}/` espejando el bucket; migrar a Supabase = setear `NEXT_PUBLIC_ASSET_BASE_URL`. Se eliminó `SOUNDS` de `audio.ts` (el catálogo es la fuente de rutas).
+
+## [RM-007] Preloader de assets headless (2026-06-17 08:39)
+Nuevos `preloadAssets` (helper) + `useAssetPreloader` (hook): bajan imágenes/video/audio/fuentes a blob local y decodifican (img.decode / canplaythrough / FontFace), resolviendo cuando todas están settled. Deletreo los consume (imagen + audio), espera `ready` antes de renderizar y muestra una `AssetLoaderCard` de progreso; la imagen de error ya no tiene delay en su primer render.
+
 ## [RM-006] SpellFrame como componente del engine (2026-06-16 22:37)
 El SpellFrame de deletreo es ahora una tripleta registrada (`spellframe`, local de deletreo): su edición vive en el Inspector con carga de tipografía propia; se eliminó la card inferior `TextCard`.
 

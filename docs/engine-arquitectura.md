@@ -318,7 +318,8 @@ pestañas viajan con la `Scene`: aparecen en deletreo, sandbox y cualquier juego
 - **Tres componentes reales** con su tripleta: **Image** (cargar desde equipo —no URL—,
   ajuste contain/cover/fill, "Ajustar al tamaño de la imagen", eliminar), **Color**
   (color picker + hex que rellena el rect, eliminar) y **Video** (dos modos: Equipo
-  —blob URL, no persiste, **TD-006**— y Link —URL de Supabase, el modo real—; siempre
+  —blob URL, efímero **por diseño**, preview local— y Link —URL de Supabase, el modo
+  persistente para broadcast—; siempre
   `muted`+`loop`, ajuste contain/cover/fill, "Ajustar al tamaño del video", eliminar).
   YouTube se evaluó y descartó como fuente (**TD-007**).
 - UI de composición genérica y compartida: **Hierarchy con "+"** (crear GameObject),

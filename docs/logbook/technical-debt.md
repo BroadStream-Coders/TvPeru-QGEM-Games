@@ -14,14 +14,6 @@ changelog y se borra de aquí.
 
 ---
 
-## [TD-006] Video desde la PC usa blob URL que no persiste
-
-- **Ubicación:** `src/components/shared/engine/components/video/VideoInspector.tsx`
-- **Riesgo:** 4/10
-- **Problema:** El modo "Equipo" del componente Video carga el archivo con `URL.createObjectURL` (blob URL). Se eligió frente al data URL para no inflar el estado/session file con un base64 enorme, pero el blob URL es una referencia en memoria: **no sobrevive a recargar la página ni a serializar la sesión**. Solo el modo "Link" (URL de Supabase) produce un `src` persistente.
-- **Impacto futuro:** Un video cargado desde el equipo se ve mientras dura la sesión de autoría, pero al recargar o reabrir el bundle el `src` blob queda muerto y el video desaparece. Para broadcast hay que usar siempre el modo Link, o resolver una estrategia de subida (Supabase) al elegir archivo.
-- **Fecha:** 2026-06-04 · **Estado:** Abierto
-
 ## [TD-007] YouTube descartado como fuente del componente Video
 
 - **Ubicación:** `src/components/shared/engine/components/video/` (decisión de diseño)
@@ -38,3 +30,19 @@ changelog y se borra de aquí.
 - **Objetivo del cambio:** Que las animaciones de error (tecla F) y correcto (tecla M) se apliquen a la imagen del marco y a sus hijos, no solo a las letras; el `contentRef` da acceso al único elemento del árbol del GameObject que se puede animar sin romper el posicionamiento.
 - **Impacto futuro:** Es un punto de extensión válido pero abre la puerta a que el engine acumule props ad-hoc por demanda de juegos. Revisar si conviene una API de animación/efectos más formal a nivel de GameObject (p. ej. un componente o hook del engine) antes de que aparezcan más casos así.
 - **Fecha:** 2026-06-11 · **Estado:** Abierto
+
+## [TD-009] `Vec2` (tipo nuclear) vive dentro de `RectTransform.tsx`
+
+- **Ubicación:** `src/components/shared/engine/RectTransform.tsx:7`
+- **Riesgo:** 1/10
+- **Problema:** `Vec2` y `RectTransformValues` —los tipos de datos más usados del engine, importados por `gameObject.ts`, `componentRegistry.ts`, los gestos y casi todo— se declaran dentro de un archivo de componente React (`.tsx`), junto al positioner y a las constantes `DESIGN_*`. Es el único sitio donde un tipo nuclear y un componente comparten archivo.
+- **Impacto futuro:** Ninguno funcional; solo acoplamiento conceptual (importar un tipo puro arrastra un `.tsx`). Si se limpia, `Vec2`/`RectTransformValues` pedirían un `geometry.ts`/`types.ts` propio.
+- **Fecha:** 2026-06-16 · **Estado:** Abierto
+
+## [TD-010] Raíz del engine plana: 13 archivos mezclando 4 roles
+
+- **Ubicación:** `src/components/shared/engine/` (raíz)
+- **Riesgo:** 1/10
+- **Problema:** La raíz tiene grupos latentes al mismo nivel sin separar: escena/render (`Scene`, `GameObjectView`, `RectTransform`, `ViewModeTabs`, `SceneViewMode`), paneles/edición (`GameObjectInspector`, `RectTransformInspector`, `AddComponentButton`, `Hierarchy`), primitivos UI (`SidePanel`, `NumberField`) y modelo/registro (`gameObject.ts`, `componentRegistry.ts`). El subárbol `components/` sí está bien ordenado.
+- **Impacto futuro:** Hoy navegable; empezará a dispersarse cuando entre el store `useScene` (Decisión C) y al retomar Text. Umbral para agrupar (`scene/`, `panels/`, `core/`): cuando entre `useScene`.
+- **Fecha:** 2026-06-16 · **Estado:** Abierto

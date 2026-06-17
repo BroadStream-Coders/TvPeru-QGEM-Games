@@ -12,6 +12,10 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [TD-006] Descartada — no es deuda (2026-06-16 21:18)
+
+Revisada contra la filosofía del proyecto y descartada (wontfix): que el blob URL del modo "Equipo" de Video no sobreviva al reload es **comportamiento por diseño** (nada persiste a propósito), y la app no serializa/produce session files. El modo Link/Supabase es el camino persistente para broadcast, por diseño. Código retirado (no se reusa).
+
 ## [RM-003] Componentes personalizados por juego (2026-06-16 21:05)
 
 El registro de componentes pasó de un `COMPONENT_REGISTRY` global a un sistema componible: el engine exporta `NATIVE_COMPONENTS` + `createComponentRegistry`/`ComponentRegistryProvider`/`useComponentRegistry`, y cada juego arma su registro local (nativas + las suyas). Demostrado con un componente custom `Border` registrado solo en sandbox, fuera del core.

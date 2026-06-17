@@ -31,7 +31,7 @@ Reglas del proyecto que SIEMPRE aplican:
 - Importa el engine con el alias `@engine/*` (no `@/components/shared/engine/`).
 - Valida con `pnpm build` (hace type-check); `pnpm lint` NO type-checkea.
 - Sin comentarios en el código salvo que se pidan; la deuda técnica va a
-  `docs/technical-debt.md`.
+  `docs/logbook/technical-debt.md`.
 - La UI va en español.
 
 Cuando termines la feature, actualiza su **Estado** en este documento y, si la

@@ -61,5 +61,5 @@ QGEM Games is a **fullscreen game display** system for TV Perú's show "Que Gane
 ## Conventions
 
 - `@/` maps to `src/` (`tsconfig.json`).
-- No code comments unless explicitly requested; record tech debt in `docs/technical-debt.md` instead.
+- No code comments unless explicitly requested; record tech debt in `docs/logbook/technical-debt.md` instead.
 - UI copy is in Spanish.

@@ -11,12 +11,6 @@ Al terminar una tarea se mueve al changelog y se borra de aquí.
 
 ---
 
-## [RM-006] SpellFrame como componente del engine
-
-- **Objetivo:** Convertir el "SpellFrame" de deletreo (el texto) en un componente reutilizable del engine, que además permita cargar otra tipografía distinta a la actual.
-- **Hecho cuando:** existe la tripleta del componente (modelo + view + inspector) registrada, deletreo lo usa en lugar de su implementación propia, y se puede asignar/cargar una tipografía distinta desde el inspector.
-- **Fecha:** 2026-06-16 · **Estado:** Abierto
-
 ## [RM-009] Componente controlador de video (teclas)
 
 - **Objetivo:** Componente para controlar la reproducción de un video mediante teclas asignables: reiniciar, pausar, dar play, adelantar/retroceder, etc.

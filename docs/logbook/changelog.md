@@ -12,6 +12,9 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-006] SpellFrame como componente del engine (2026-06-16 22:37)
+El SpellFrame de deletreo es ahora una tripleta registrada (`spellframe`, local de deletreo): su edición vive en el Inspector con carga de tipografía propia; se eliminó la card inferior `TextCard`.
+
 ## [RM-008] Quitar el footer del layout de juegos (2026-06-16 22:25)
 Se eliminó el `<footer>` del layout de workspaces; la zona inferior queda libre para el futuro panel de assets (RM-007).
 

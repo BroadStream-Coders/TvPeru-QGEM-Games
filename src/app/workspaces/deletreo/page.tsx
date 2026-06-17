@@ -20,10 +20,10 @@ import {
   DESIGN_HEIGHT,
 } from "@engine/RectTransform";
 import { GameObjectView } from "@engine/GameObjectView";
-import { SpellFrame } from "./components/SpellFrame";
 import { StatusCard } from "./components/StatusCard";
 import { LegendCard } from "./components/LegendCard";
-import { TextCard } from "./components/TextCard";
+import { spellframeDefinition } from "./components/spellframe";
+import { createSpellframeComponent } from "./components/spellframe/spellframeComponent";
 import { SidePanel } from "@engine/SidePanel";
 import { Hierarchy, TreeNode } from "@engine/Hierarchy";
 import { GameObjectInspector } from "@engine/GameObjectInspector";
@@ -67,7 +67,10 @@ const SHOWN_POS = { x: 25, y: -358 };
 const FRAME_ID = "main-frame";
 const TEXT_ID = "text";
 
-const registry = createComponentRegistry(NATIVE_COMPONENTS);
+const registry = createComponentRegistry([
+  ...NATIVE_COMPONENTS,
+  spellframeDefinition,
+]);
 
 export default function DeletreoPage() {
   const setHeader = useWorkspaceHeader((s) => s.setHeader);
@@ -109,24 +112,16 @@ export default function DeletreoPage() {
         size: { x: 900, y: 160 },
         pivot: { x: 0.5, y: 0.5 },
       },
+      components: [createSpellframeComponent()],
     }),
   ]);
   const [selectedId, setSelectedId] = useState<string>(FRAME_ID);
 
-  const [textConfig, setTextConfig] = useState({
-    fontSize: 80,
-    letterSpacing: 20,
-    underlineGap: 0,
-  });
-
   const [spellStep, setSpellStep] = useState(0);
   const [normalSrc, setNormalSrc] = useState(NORMAL_SRC);
-  const [manualText, setManualText] = useState("");
 
   const selected = gameObjects.find((go) => go.id === selectedId) ?? null;
   const mainFrame = gameObjects.find((go) => go.id === FRAME_ID)!;
-  const textVisible =
-    gameObjects.find((go) => go.id === TEXT_ID)?.active ?? true;
 
   const buildNode = (go: GameObject): TreeNode => {
     const children = gameObjects
@@ -363,7 +358,22 @@ export default function DeletreoPage() {
   }, [setHeader, handleLoad]);
 
   const currentGroup = groups[groupIndex] ?? [];
-  const word = manualText !== "" ? manualText : (currentGroup[slotIndex] ?? "");
+  const word = currentGroup[slotIndex] ?? "";
+
+  useEffect(() => {
+    setGameObjects((prev) =>
+      prev.map((go) =>
+        go.id === TEXT_ID
+          ? {
+              ...go,
+              components: go.components.map((c) =>
+                c.type === "spellframe" ? { ...c, word, spellStep } : c,
+              ),
+            }
+          : go,
+      ),
+    );
+  }, [word, spellStep]);
 
   const selectGroup = (n: number) => {
     if (n < 0 || n >= groups.length) return;
@@ -415,13 +425,6 @@ export default function DeletreoPage() {
 
   const renderContent = (go: GameObject) => (
     <>
-      {go.id === TEXT_ID && (
-        <SpellFrame
-          word={textVisible ? word : ""}
-          spellStep={spellStep}
-          textConfig={textConfig}
-        />
-      )}
       {editMode && go.id === selectedId && (
         <>
           <div
@@ -518,13 +521,7 @@ export default function DeletreoPage() {
       </div>
 
       {/* Config */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
-        <TextCard
-          textConfig={textConfig}
-          onChange={setTextConfig}
-          manualText={manualText}
-          onManualTextChange={setManualText}
-        />
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <StatusCard
           groups={groups}
           groupIndex={groupIndex}

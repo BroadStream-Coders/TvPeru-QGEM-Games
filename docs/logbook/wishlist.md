@@ -18,3 +18,7 @@ Solicitar a Claude Design una propuesta de diseño del engine a partir de estas 
 ## [WL-003] Sistema de anclajes estilo Unity Canvas
 
 Agregar el sistema de anclajes (anchors) del Canvas de Unity al rectTransform de los gameobjects.
+
+## [WL-004] Control de grosor de texto (font-weight)
+
+Exponer un control de grosor (font-weight) en el inspector, tanto del componente Spellframe como del componente Text. Hoy ambos fuerzan un peso fijo en la vista; debería ser ajustable.

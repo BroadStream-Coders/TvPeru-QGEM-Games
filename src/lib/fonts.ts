@@ -5,3 +5,9 @@ export const jetBrainsMono = localFont({
   variable: "--font-jetbrains",
   display: "swap",
 });
+
+export const geniusTechno = localFont({
+  src: "../assets/fonts/GeniusTechno-Regular.ttf",
+  variable: "--font-genius-techno",
+  display: "swap",
+});

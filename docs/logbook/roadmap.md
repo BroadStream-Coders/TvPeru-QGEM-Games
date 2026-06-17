@@ -11,12 +11,6 @@ Al terminar una tarea se mueve al changelog y se borra de aquí.
 
 ---
 
-## [RM-008] Quitar el footer del layout de juegos
-
-- **Objetivo:** Quitar el footer del layout de los juegos para liberar la zona inferior. Tarea simple y previa al panel de assets (RM-007); se puede hacer de inmediato.
-- **Hecho cuando:** el layout de workspaces ya no renderiza el footer y la zona inferior queda libre.
-- **Fecha:** 2026-06-16 · **Estado:** Abierto
-
 ## [RM-006] SpellFrame como componente del engine
 
 - **Objetivo:** Convertir el "SpellFrame" de deletreo (el texto) en un componente reutilizable del engine, que además permita cargar otra tipografía distinta a la actual.

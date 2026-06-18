@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { jetBrainsMono } from "@/lib/fonts";
+import { jetBrainsMono, poppinsSemiBold } from "@/lib/fonts";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -29,7 +29,7 @@ export default function RootLayout({
   return (
     <html lang="es" className="dark">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${jetBrainsMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${jetBrainsMono.variable} ${poppinsSemiBold.variable} antialiased`}
       >
         {children}
       </body>

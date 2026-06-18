@@ -11,3 +11,9 @@ export const geniusTechno = localFont({
   variable: "--font-genius-techno",
   display: "swap",
 });
+
+export const poppinsSemiBold = localFont({
+  src: "../assets/fonts/Poppins-SemiBold.ttf",
+  variable: "--font-poppins-semibold",
+  display: "swap",
+});

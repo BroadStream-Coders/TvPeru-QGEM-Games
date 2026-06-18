@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useCallback, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Calculator } from "lucide-react";
-import { loadJsonFile } from "@/helpers/persistence";
 import { useWorkspaceHeader } from "@/hooks/use-workspace-header";
+import { useGameKeys } from "@/hooks/use-game-keys";
 import { useAssetPreloader } from "@/hooks/use-asset-preloader";
 import type { AssetKind } from "@/helpers/asset-preloader";
 import { toManifest, type AssetCatalog } from "@/helpers/asset-source";
@@ -19,8 +19,6 @@ import {
   DESIGN_HEIGHT,
 } from "@engine/RectTransform";
 import { GameObjectView } from "@engine/GameObjectView";
-import { StatusCard } from "./components/StatusCard";
-import { LegendCard } from "./components/LegendCard";
 import { SidePanel } from "@engine/SidePanel";
 import { Hierarchy, TreeNode } from "@engine/Hierarchy";
 import { GameObjectInspector } from "@engine/GameObjectInspector";
@@ -39,10 +37,26 @@ import {
 } from "@engine/componentRegistry";
 import { AddComponentButton } from "@engine/AddComponentButton";
 import { createColorComponent } from "@engine/components/color/colorComponent";
+import { createImageComponent } from "@engine/components/image/imageComponent";
+import { createTextComponent } from "@engine/components/text/textComponent";
+import { controllerDefinition } from "./components/controller";
+import {
+  ControllerComponent,
+  createControllerComponent,
+} from "./components/controller/controllerComponent";
+
+const CALCULO_ASSETS = {
+  blueFrame: { kind: "image", path: "games/calculo-mental/blueFrame.png" },
+  purpleFrame: { kind: "image", path: "games/calculo-mental/purpleFrame.png" },
+  check: { kind: "image", path: "games/calculo-mental/check.png" },
+  x: { kind: "image", path: "games/calculo-mental/x.png" },
+  screenshot: { kind: "image", path: "games/calculo-mental/screenshot.png" },
+} satisfies AssetCatalog;
 
 const CATALOG: AssetCatalog = {
   correct: SHARED_ASSETS.correctSound,
   incorrect: SHARED_ASSETS.incorrectSound,
+  ...CALCULO_ASSETS,
 };
 
 const ASSETS = toManifest(CATALOG);
@@ -52,16 +66,33 @@ const ASSET_KINDS: Record<string, AssetKind> = Object.fromEntries(
 );
 
 const BACKGROUND_ID = "background";
+const REFERENCE_ID = "reference";
+const CUADRO_ID = "cuadro";
+const ANIMATOR_ID = "animator";
+const BLUE_FRAME_ID = "blue-frame";
+const PURPLE_FRAME_ID = "purple-frame";
+const QUESTION_TEXT_ID = "question-text";
+const ANSWER_TEXT_ID = "answer-text";
+const CHECK_ID = "check-badge";
+const X_ID = "x-badge";
+const CONTROLLER_ID = "controller";
 
-const registry = createComponentRegistry([...NATIVE_COMPONENTS]);
+const registry = createComponentRegistry([
+  ...NATIVE_COMPONENTS,
+  controllerDefinition,
+]);
 
 export default function CalculoMentalPage() {
   const setHeader = useWorkspaceHeader((s) => s.setHeader);
   const resetHeader = useWorkspaceHeader((s) => s.resetHeader);
 
-  const { ready, statuses, progress } = useAssetPreloader(ASSETS);
+  const { ready, assets, statuses, progress } = useAssetPreloader(ASSETS);
+  const blueUrl = assets.blueFrame?.url;
+  const purpleUrl = assets.purpleFrame?.url;
+  const checkUrl = assets.check?.url;
+  const xUrl = assets.x?.url;
+  const referenceUrl = assets.screenshot?.url;
 
-  const [loaded, setLoaded] = useState(false);
   const [editMode, setEditMode] = useState(false);
 
   const [gameObjects, setGameObjects] = useState<GameObject[]>(() => [
@@ -75,8 +106,135 @@ export default function CalculoMentalPage() {
       },
       components: [createColorComponent({ value: "#01FF02" })],
     }),
+    createGameObject({
+      id: REFERENCE_ID,
+      name: "Referencia",
+      transform: {
+        position: { x: 0, y: 0 },
+        size: { x: DESIGN_WIDTH, y: DESIGN_HEIGHT },
+        pivot: { x: 0.5, y: 0.5 },
+      },
+      components: [createImageComponent({ src: "", fit: "fill" })],
+    }),
+    createGameObject({
+      id: CUADRO_ID,
+      name: "Cuadro",
+      transform: {
+        position: { x: -675, y: -400 },
+        size: { x: 400, y: 200 },
+        pivot: { x: 0.5, y: 0.5 },
+      },
+    }),
+    createGameObject({
+      id: ANIMATOR_ID,
+      name: "Animator",
+      parentId: CUADRO_ID,
+      transform: {
+        position: { x: 0, y: 0 },
+        size: { x: 400, y: 200 },
+        pivot: { x: 0.5, y: 0.5 },
+      },
+    }),
+    createGameObject({
+      id: BLUE_FRAME_ID,
+      name: "BlueFrame",
+      parentId: ANIMATOR_ID,
+      transform: {
+        position: { x: -8, y: 30 },
+        size: { x: 346, y: 124 },
+        pivot: { x: 0.5, y: 0.5 },
+      },
+      components: [createImageComponent({ src: "", fit: "contain" })],
+    }),
+    createGameObject({
+      id: QUESTION_TEXT_ID,
+      name: "Pregunta",
+      parentId: BLUE_FRAME_ID,
+      transform: {
+        position: { x: 0, y: 0 },
+        size: { x: 300, y: 95 },
+        pivot: { x: 0.5, y: 0.5 },
+      },
+      components: [
+        createTextComponent({
+          text: "12 al cuadrado",
+          fontSize: 2.8,
+          color: "#ffffff",
+          fontFamily: "var(--font-poppins-semibold)",
+          alignH: "center",
+          alignV: "middle",
+          overflow: "clip",
+        }),
+      ],
+    }),
+    createGameObject({
+      id: PURPLE_FRAME_ID,
+      name: "PurpleFrame",
+      parentId: ANIMATOR_ID,
+      transform: {
+        position: { x: 69, y: -45 },
+        size: { x: 230, y: 87 },
+        pivot: { x: 0.5, y: 0.5 },
+      },
+      components: [createImageComponent({ src: "", fit: "contain" })],
+    }),
+    createGameObject({
+      id: ANSWER_TEXT_ID,
+      name: "Respuesta",
+      parentId: PURPLE_FRAME_ID,
+      transform: {
+        position: { x: 0, y: 0 },
+        size: { x: 190, y: 60 },
+        pivot: { x: 0.5, y: 0.5 },
+      },
+      components: [
+        createTextComponent({
+          text: "144",
+          fontSize: 3.6,
+          color: "#ffffff",
+          fontFamily: "var(--font-poppins-semibold)",
+          alignH: "center",
+          alignV: "middle",
+          overflow: "clip",
+        }),
+      ],
+    }),
+    createGameObject({
+      id: CHECK_ID,
+      name: "Check",
+      parentId: ANIMATOR_ID,
+      active: false,
+      transform: {
+        position: { x: 170, y: 85 },
+        size: { x: 92, y: 82 },
+        pivot: { x: 0.5, y: 0.5 },
+      },
+      components: [createImageComponent({ src: "", fit: "contain" })],
+    }),
+    createGameObject({
+      id: X_ID,
+      name: "X",
+      parentId: ANIMATOR_ID,
+      active: false,
+      transform: {
+        position: { x: 160, y: 85 },
+        size: { x: 76, y: 73 },
+        pivot: { x: 0.5, y: 0.5 },
+      },
+      components: [createImageComponent({ src: "", fit: "contain" })],
+    }),
+    createGameObject({
+      id: CONTROLLER_ID,
+      name: "Controller",
+      transform: {
+        position: { x: 0, y: 0 },
+        size: { x: 0, y: 0 },
+        pivot: { x: 0.5, y: 0.5 },
+      },
+      components: [createControllerComponent()],
+    }),
   ]);
-  const [selectedId, setSelectedId] = useState<string>(BACKGROUND_ID);
+  const [selectedId, setSelectedId] = useState<string>(CUADRO_ID);
 
   const selected = gameObjects.find((go) => go.id === selectedId) ?? null;
 
@@ -178,6 +336,20 @@ export default function CalculoMentalPage() {
     (goId: string, index: number) => (next: GameObjectComponent) =>
       patchComponent(goId, index, next);
 
+  const setImageSrc = (id: string, src: string) =>
+    setGameObjects((prev) =>
+      prev.map((go) =>
+        go.id === id
+          ? {
+              ...go,
+              components: go.components.map((c) =>
+                c.type === "image" ? { ...c, src } : c,
+              ),
+            }
+          : go,
+      ),
+    );
+
   const setAxis =
     (field: keyof RectTransformValues, axis: keyof Vec2) => (value: number) =>
       setGameObjects((prev) =>
@@ -228,15 +400,6 @@ export default function CalculoMentalPage() {
       ),
   });
 
-  const handleLoad = useCallback(async (file: File) => {
-    try {
-      await loadJsonFile(file);
-      setLoaded(true);
-    } catch {
-      console.error("Error al cargar el archivo JSON.");
-    }
-  }, []);
-
   useEffect(() => {
     return () => resetHeader();
   }, [resetHeader]);
@@ -245,9 +408,55 @@ export default function CalculoMentalPage() {
     setHeader({
       title: "Cálculo Mental",
       icon: <Calculator className="h-3 w-3" />,
-      onLoad: handleLoad,
     });
-  }, [setHeader, handleLoad]);
+  }, [setHeader]);
+
+  useEffect(() => {
+    if (!ready) return;
+    if (blueUrl) setImageSrc(BLUE_FRAME_ID, blueUrl);
+    if (purpleUrl) setImageSrc(PURPLE_FRAME_ID, purpleUrl);
+    if (checkUrl) setImageSrc(CHECK_ID, checkUrl);
+    if (xUrl) setImageSrc(X_ID, xUrl);
+    if (referenceUrl) setImageSrc(REFERENCE_ID, referenceUrl);
+  }, [ready, blueUrl, purpleUrl, checkUrl, xUrl, referenceUrl]);
+
+  const controller = gameObjects
+    .find((go) => go.id === CONTROLLER_ID)
+    ?.components.find((c) => c.type === "controller") as
+    | ControllerComponent
+    | undefined;
+  const groups = controller?.groups ?? [];
+  const groupIndex = controller?.groupIndex ?? 0;
+
+  const patchController = (patch: Partial<ControllerComponent>) =>
+    setGameObjects((prev) =>
+      prev.map((go) =>
+        go.id === CONTROLLER_ID
+          ? {
+              ...go,
+              components: go.components.map((c) =>
+                c.type === "controller" ? { ...c, ...patch } : c,
+              ),
+            }
+          : go,
+      ),
+    );
+
+  const selectGroup = (n: number) => {
+    if (n < 0 || n >= groups.length) return;
+    patchController({ groupIndex: n, boardIndex: 0 });
+  };
+
+  const selectBoard = (n: number) => {
+    const boards = groups[groupIndex]?.boards ?? [];
+    if (n < 0 || n >= boards.length) return;
+    patchController({ boardIndex: n });
+  };
+
+  useGameKeys({
+    onNavigate: selectGroup,
+    onNumber: selectBoard,
+  });
 
   const renderContent = (go: GameObject) => (
     <>
@@ -350,14 +559,12 @@ export default function CalculoMentalPage() {
       </div>
 
       {/* Config */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <StatusCard loaded={loaded} />
+      <div className="grid grid-cols-1 gap-4">
         <AssetLoaderCard
           statuses={statuses}
           progress={progress}
           kinds={ASSET_KINDS}
         />
-        <LegendCard />
       </div>
     </main>
   );

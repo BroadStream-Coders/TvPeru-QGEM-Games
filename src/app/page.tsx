@@ -5,6 +5,7 @@ import {
   Trophy,
   FlaskConical,
   Grid3x3,
+  Calculator,
 } from "lucide-react";
 
 const workspaces = [
@@ -13,6 +14,12 @@ const workspaces = [
     description: "Gestión de palabras por rondas",
     href: "/workspaces/deletreo",
     icon: SpellCheck,
+  },
+  {
+    name: "Cálculo Mental",
+    description: "Operaciones encadenadas por rondas",
+    href: "/workspaces/calculo-mental",
+    icon: Calculator,
   },
   {
     name: "Operaciones Combinadas",

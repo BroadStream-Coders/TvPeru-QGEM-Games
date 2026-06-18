@@ -35,7 +35,7 @@ su "Hecho cuando", pero no es el foco actual).
   de Operaciones Combinadas (RM-004).
 - **Hecho cuando:** existe su workspace, carga su session file y se muestra
   fullscreen listo para broadcast.
-- **Fecha:** 2026-06-16 · **Estado:** Abierto
+- **Fecha:** 2026-06-16 · **Estado:** En progreso (2026-06-17)
 
 ## [RM-014] Juego "Intruso"
 

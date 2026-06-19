@@ -27,10 +27,6 @@ Promovida al roadmap como RM-021 (estilo de letra normal/negrita/cursiva en el c
 
 Componente que ordena GameObjects hijos automáticamente, como los Layout Group de Unity. A decidir: **un único componente configurable** (eje horizontal/vertical/grid + spacing/padding/alineación) **vs. 3 separados** como Unity. Criterio inicial: **uno solo configurable** encaja mejor con nuestro registro de componentes y evita triplicar la lógica de medición/posicionado; Unity los separa por historia y por su inspector, no por una necesidad técnica real, y un Grid es básicamente Horizontal/Vertical con wrap. Diferencia a tener presente: Unity calcula layout contra un Canvas con anchors (que aún no tenemos, WL-003); habría que definir cómo mide el "ancho disponible" con nuestro RectTransform en unidades de diseño.
 
-## [WL-006] Click derecho en el Hierarchy con panel propio
-
-Menú contextual al hacer click derecho en el Hierarchy para crear/eliminar GameObjects, reemplazando el botón "+" actual. Se relaciona con RM-025 (eliminar GameObjects).
-
 ## [WL-007] localScale en el RectTransform
 
 Agregar `localScale` al RectTransform y que se propague a todos los hijos del subárbol, como el localScale de Unity.

@@ -21,12 +21,6 @@ su "Hecho cuando", pero no es el foco actual).
 
 ---
 
-# Fase 0 — Cimiento mínimo (foco ahora)
-
-> Fase cerrada por ahora. Ver changelog.
-
----
-
 # Fase 1 — Juegos a mano (la ventana de oportunidad)
 
 ## [RM-014] Juego "Intruso"
@@ -103,14 +97,6 @@ su "Hecho cuando", pero no es el foco actual).
   Relacionado con RM-022 y RM-023.
 - **Hecho cuando:** en Cálculo Mental se puede asignar una fuente cargada a los
   textos (vía el componente Text).
-- **Fecha:** 2026-06-19 · **Estado:** Abierto
-
-## [RM-025] Poder eliminar GameObjects
-
-- **Objetivo:** Poder eliminar GameObjects desde la UI; hoy solo se pueden crear.
-  Se relaciona con WL-006 (panel de click derecho en el Hierarchy).
-- **Hecho cuando:** existe una acción para borrar un GameObject y sus hijos, y el
-  árbol/escena se actualizan coherentemente.
 - **Fecha:** 2026-06-19 · **Estado:** Abierto
 
 ---

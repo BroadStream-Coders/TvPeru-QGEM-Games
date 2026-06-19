@@ -1,8 +1,15 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { ChevronRight, ChevronDown, Plus } from "lucide-react";
+import { ChevronRight, ChevronDown, Plus, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  ContextMenu,
+  ContextMenuTrigger,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuSeparator,
+} from "@/components/ui/context-menu";
 
 export interface TreeNode {
   id: string;
@@ -30,6 +37,11 @@ interface DndContext {
   onDragEnd: () => void;
 }
 
+interface MenuActions {
+  onCreate?: (parentId: string | null) => void;
+  onDelete?: (id: string) => void;
+}
+
 function collectSubtreeIds(node: TreeNode): string[] {
   return [node.id, ...(node.children?.flatMap(collectSubtreeIds) ?? [])];
 }
@@ -47,13 +59,15 @@ export function Hierarchy({
   nodes,
   selectedId,
   onSelect,
-  onAdd,
+  onCreate,
+  onDelete,
   onReorder,
 }: {
   nodes: TreeNode[];
   selectedId: string | null;
   onSelect: (id: string) => void;
-  onAdd?: () => void;
+  onCreate?: (parentId: string | null) => void;
+  onDelete?: (id: string) => void;
   onReorder?: (
     draggedId: string,
     targetId: string,
@@ -107,30 +121,34 @@ export function Hierarchy({
     onDragEnd: reset,
   };
 
+  const menu: MenuActions = { onCreate, onDelete };
+
   return (
-    <div className="flex flex-col">
-      {onAdd && (
-        <div className="mb-1 flex justify-end">
-          <button
-            onClick={onAdd}
-            title="Crear GameObject"
-            className="flex size-5 items-center justify-center rounded border border-border text-muted-foreground transition-colors hover:border-brand hover:text-foreground"
-          >
-            <Plus size={13} />
-          </button>
+    <ContextMenu>
+      <ContextMenuTrigger asChild>
+        <div className="flex min-h-full flex-col">
+          {nodes.map((node) => (
+            <TreeItem
+              key={node.id}
+              node={node}
+              depth={0}
+              selectedId={selectedId}
+              onSelect={onSelect}
+              dnd={dnd}
+              menu={menu}
+            />
+          ))}
         </div>
+      </ContextMenuTrigger>
+      {onCreate && (
+        <ContextMenuContent>
+          <ContextMenuItem onSelect={() => onCreate(null)}>
+            <Plus />
+            Crear GameObject
+          </ContextMenuItem>
+        </ContextMenuContent>
       )}
-      {nodes.map((node) => (
-        <TreeItem
-          key={node.id}
-          node={node}
-          depth={0}
-          selectedId={selectedId}
-          onSelect={onSelect}
-          dnd={dnd}
-        />
-      ))}
-    </div>
+    </ContextMenu>
   );
 }
 
@@ -153,12 +171,14 @@ function TreeItem({
   selectedId,
   onSelect,
   dnd,
+  menu,
 }: {
   node: TreeNode;
   depth: number;
   selectedId: string | null;
   onSelect: (id: string) => void;
   dnd: DndContext;
+  menu: MenuActions;
 }) {
   const [expanded, setExpanded] = useState(true);
   const hasChildren = !!node.children?.length;
@@ -188,46 +208,77 @@ function TreeItem({
     dnd.onDragOver(node.id, position);
   };
 
+  const hasMenu = !!menu.onCreate || !!menu.onDelete;
+
+  const row = (
+    <div
+      draggable={dnd.enabled}
+      onDragStart={(e) => dnd.onDragStart(e, node)}
+      onDragEnd={dnd.onDragEnd}
+      onDragOver={handleDragOver}
+      onDrop={(e) => {
+        if (blocked) return;
+        e.preventDefault();
+        dnd.onDrop();
+      }}
+      onClick={() => onSelect(node.id)}
+      onContextMenu={() => onSelect(node.id)}
+      style={{ paddingLeft: depth * 12 + 4 }}
+      className={cn(
+        "flex cursor-pointer select-none items-center gap-1 rounded py-1 pr-2 text-xs",
+        selected
+          ? "bg-brand text-brand-foreground"
+          : "text-foreground hover:bg-accent",
+        isInsideTarget && "ring-1 ring-brand ring-inset bg-brand/10",
+        node.active === false && "opacity-50",
+        isDragging && "opacity-40",
+      )}
+    >
+      {hasChildren ? (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            setExpanded((v) => !v);
+          }}
+          className="flex size-4 shrink-0 items-center justify-center opacity-70 hover:opacity-100"
+        >
+          {expanded ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
+        </button>
+      ) : (
+        <span className="size-4 shrink-0" />
+      )}
+      <span className="truncate">{node.name}</span>
+    </div>
+  );
+
   return (
     <div className="flex flex-col">
       {showBefore && <DropLine depth={depth} />}
-      <div
-        draggable={dnd.enabled}
-        onDragStart={(e) => dnd.onDragStart(e, node)}
-        onDragEnd={dnd.onDragEnd}
-        onDragOver={handleDragOver}
-        onDrop={(e) => {
-          if (blocked) return;
-          e.preventDefault();
-          dnd.onDrop();
-        }}
-        onClick={() => onSelect(node.id)}
-        style={{ paddingLeft: depth * 12 + 4 }}
-        className={cn(
-          "flex cursor-pointer select-none items-center gap-1 rounded py-1 pr-2 text-xs",
-          selected
-            ? "bg-brand text-brand-foreground"
-            : "text-foreground hover:bg-accent",
-          isInsideTarget && "ring-1 ring-brand ring-inset bg-brand/10",
-          node.active === false && "opacity-50",
-          isDragging && "opacity-40",
-        )}
-      >
-        {hasChildren ? (
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              setExpanded((v) => !v);
-            }}
-            className="flex size-4 shrink-0 items-center justify-center opacity-70 hover:opacity-100"
-          >
-            {expanded ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
-          </button>
-        ) : (
-          <span className="size-4 shrink-0" />
-        )}
-        <span className="truncate">{node.name}</span>
-      </div>
+      {hasMenu ? (
+        <ContextMenu>
+          <ContextMenuTrigger asChild>{row}</ContextMenuTrigger>
+          <ContextMenuContent>
+            {menu.onCreate && (
+              <ContextMenuItem onSelect={() => menu.onCreate!(node.id)}>
+                <Plus />
+                Crear hijo
+              </ContextMenuItem>
+            )}
+            {menu.onCreate && menu.onDelete && <ContextMenuSeparator />}
+            {menu.onDelete && (
+              <ContextMenuItem
+                variant="destructive"
+                onSelect={() => menu.onDelete!(node.id)}
+              >
+                <Trash2 />
+                Eliminar
+              </ContextMenuItem>
+            )}
+          </ContextMenuContent>
+        </ContextMenu>
+      ) : (
+        row
+      )}
 
       {showAfter && <DropLine depth={depth} />}
 
@@ -241,6 +292,7 @@ function TreeItem({
               selectedId={selectedId}
               onSelect={onSelect}
               dnd={dnd}
+              menu={menu}
             />
           ))}
         </div>

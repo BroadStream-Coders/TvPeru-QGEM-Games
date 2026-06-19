@@ -37,6 +37,7 @@ import {
   createGameObject,
   ancestorOffset,
   reorderGameObjects,
+  collectSubtreeIds,
 } from "@engine/gameObject";
 import {
   createComponentRegistry,
@@ -221,13 +222,14 @@ export default function DeletreoPage() {
       ),
     );
 
-  const createNewGameObject = () => {
+  const createNewGameObject = (parentId?: string) => {
     const id = crypto.randomUUID();
     setGameObjects((prev) => [
       ...prev,
       createGameObject({
         id,
         name: "GameObject",
+        parentId,
         transform: {
           position: { x: 0, y: 0 },
           size: { x: 100, y: 100 },
@@ -236,6 +238,12 @@ export default function DeletreoPage() {
       }),
     ]);
     setSelectedId(id);
+  };
+
+  const deleteGameObject = (id: string) => {
+    const ids = collectSubtreeIds(gameObjects, id);
+    setGameObjects((prev) => prev.filter((go) => !ids.has(go.id)));
+    if (selectedId && ids.has(selectedId)) setSelectedId("");
   };
 
   const handleReorder = (
@@ -474,7 +482,8 @@ export default function DeletreoPage() {
             nodes={hierarchyNodes}
             selectedId={selectedId}
             onSelect={setSelectedId}
-            onAdd={createNewGameObject}
+            onCreate={(parentId) => createNewGameObject(parentId ?? undefined)}
+            onDelete={deleteGameObject}
             onReorder={handleReorder}
           />
         </SidePanel>

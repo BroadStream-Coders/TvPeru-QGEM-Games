@@ -12,6 +12,12 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [WL-006] Menú contextual de click derecho en el Hierarchy (2026-06-19 11:28)
+Se reemplazó el botón "+" por un menú de click derecho: sobre un nodo "Crear hijo", sobre la zona vacía "Crear GameObject" (root). Nuevo primitivo `ui/context-menu.tsx` (radix). Realizada junto con RM-025.
+
+## [RM-025] Eliminar GameObjects (2026-06-19 11:28)
+Acción "Eliminar" en el menú contextual del Hierarchy que borra un GameObject y su subárbol (inmediato, sin confirmación); helpers `collectSubtreeIds`/`deleteGameObjectAndChildren` en `gameObject.ts`, cableado en los 4 workspaces.
+
 ## [RM-013] Juego "Cálculo Mental" (2026-06-19 11:14)
 Workspace propio: 4 slots (componente `slot` — frame azul+pregunta, morado+respuesta, badge check/X) hijos de un GameObject `Controller` que carga el JSON (grupos>tableros>slots) y los puebla de forma destructiva. Teclas: →/← revelar/retroceder pregunta, M respuesta+correcto, F error, C limpiar, ↑/↓ entrada/salida escalonada (0.1s) de los 4 slots, N/B navegar tableros.
 

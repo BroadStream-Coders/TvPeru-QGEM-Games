@@ -59,6 +59,29 @@ export function isDescendantOf(
   return false;
 }
 
+export function collectSubtreeIds(all: GameObject[], rootId: string): Set<string> {
+  const ids = new Set<string>([rootId]);
+  let grew = true;
+  while (grew) {
+    grew = false;
+    for (const go of all) {
+      if (go.parentId && ids.has(go.parentId) && !ids.has(go.id)) {
+        ids.add(go.id);
+        grew = true;
+      }
+    }
+  }
+  return ids;
+}
+
+export function deleteGameObjectAndChildren(
+  all: GameObject[],
+  idToDelete: string,
+): GameObject[] {
+  const ids = collectSubtreeIds(all, idToDelete);
+  return all.filter((go) => !ids.has(go.id));
+}
+
 export function reorderGameObjects(
   all: GameObject[],
   draggedId: string,

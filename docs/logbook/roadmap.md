@@ -54,14 +54,6 @@ su "Hecho cuando", pero no es el foco actual).
 > Patrones reales detectados al terminar Cálculo Mental. Varios obligan a cambiar
 > cómo funciona el Slot (RM-023), por eso se cerró antes un commit estable.
 
-## [RM-020] Auto-size en el componente Text
-
-- **Objetivo:** El componente Text gana auto-size: la fuente se ajusta sola entre
-  un mínimo y un máximo configurables, como el Auto Size de TextMeshPro en Unity.
-- **Hecho cuando:** en el inspector del Text se fijan fontSize mínimo y máximo y el
-  texto escala dentro de ese rango para caber en su RectTransform sin desbordar.
-- **Fecha:** 2026-06-19 · **Estado:** Abierto
-
 ## [RM-022] Una sola fuente en el build; el resto desde storage
 
 - **Objetivo:** El build de Next incluye una única fuente base; las demás se piensan

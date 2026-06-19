@@ -8,6 +8,9 @@ export interface TextComponent extends GameObjectComponent {
   type: "text";
   text: string;
   fontSize: number;
+  autoSize: boolean;
+  fontSizeMin: number;
+  fontSizeMax: number;
   color: string;
   fontFamily?: string;
   fontSrc?: string;
@@ -27,6 +30,9 @@ export function createTextComponent(
     type: "text",
     text: init?.text ?? "Texto",
     fontSize: init?.fontSize ?? 8,
+    autoSize: init?.autoSize ?? false,
+    fontSizeMin: init?.fontSizeMin ?? 1,
+    fontSizeMax: init?.fontSizeMax ?? 20,
     color: init?.color ?? "#ffffff",
     fontFamily: init?.fontFamily,
     fontSrc: init?.fontSrc,

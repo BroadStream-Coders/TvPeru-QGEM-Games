@@ -12,6 +12,11 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-020] Auto-size en el componente Text (2026-06-19 14:17)
+Text gana Auto Size estilo TextMeshPro: toggle + fontSize mín/máx que escala el
+texto vía búsqueda binaria para llenar su RectTransform (alto en modo wrap). Inspector
+reordenado (Font → Size) con labels en inglés; se extrajo `NumberInput` de `NumberField`.
+
 ## [RM-021] Modificador de estilo de letra en Text (2026-06-19 11:44)
 El componente Text expone negrita/cursiva/subrayado como tres toggles independientes y acumulables (booleanos `bold`/`italic`/`underline`, todos deseleccionables) en el inspector; el `TextView` los mapea a `font-weight`/`font-style`/`text-decoration`. Promovió y cerró WL-004.
 

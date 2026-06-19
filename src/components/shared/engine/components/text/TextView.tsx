@@ -1,4 +1,6 @@
-import { CSSProperties } from "react";
+"use client";
+
+import { CSSProperties, useLayoutEffect, useRef, useState } from "react";
 import {
   TextAlignH,
   TextAlignV,
@@ -25,8 +27,78 @@ const TEXT_ALIGN: Record<TextAlignH, CSSProperties["textAlign"]> = {
 
 export function TextView({ component }: { component: TextComponent }) {
   const wrap = component.overflow === "wrap";
+  const boxRef = useRef<HTMLDivElement>(null);
+  const textRef = useRef<HTMLDivElement>(null);
+  const [fittedSize, setFittedSize] = useState(component.fontSize);
+
+  const { autoSize, fontSizeMin, fontSizeMax, text, fontFamily, bold, italic } =
+    component;
+
+  useLayoutEffect(() => {
+    if (!autoSize) return;
+    const box = boxRef.current;
+    const el = textRef.current;
+    if (!box || !el) return;
+
+    const prev = el.style.fontSize;
+
+    const measure = () => {
+      const maxW = box.clientWidth;
+      const maxH = box.clientHeight;
+      if (maxW === 0 || maxH === 0) return;
+
+      const min = Math.max(0, Math.min(fontSizeMin, fontSizeMax));
+      const max = Math.max(fontSizeMin, fontSizeMax);
+
+      const fits = (size: number) => {
+        el.style.fontSize = `${size}cqh`;
+        const fitsH = el.scrollHeight <= maxH + 0.5;
+        const fitsW = wrap || el.scrollWidth <= maxW + 0.5;
+        return fitsH && fitsW;
+      };
+
+      let best = min;
+      if (fits(max)) {
+        best = max;
+      } else if (fits(min)) {
+        let lo = min;
+        let hi = max;
+        for (let i = 0; i < 12; i++) {
+          const mid = (lo + hi) / 2;
+          if (fits(mid)) {
+            best = mid;
+            lo = mid;
+          } else {
+            hi = mid;
+          }
+        }
+      }
+      el.style.fontSize = `${best}cqh`;
+      setFittedSize(best);
+    };
+
+    measure();
+
+    const ro = new ResizeObserver(measure);
+    ro.observe(box);
+
+    let cancelled = false;
+    document.fonts.ready.then(() => {
+      if (!cancelled) measure();
+    });
+
+    return () => {
+      cancelled = true;
+      ro.disconnect();
+      el.style.fontSize = prev;
+    };
+  }, [autoSize, fontSizeMin, fontSizeMax, text, fontFamily, bold, italic, wrap]);
+
+  const size = autoSize ? fittedSize : component.fontSize;
+
   return (
     <div
+      ref={boxRef}
       className="flex h-full w-full"
       style={{
         justifyContent: JUSTIFY[component.alignH],
@@ -35,10 +107,11 @@ export function TextView({ component }: { component: TextComponent }) {
       }}
     >
       <div
+        ref={textRef}
         style={{
           color: component.color,
           fontFamily: component.fontFamily,
-          fontSize: `${component.fontSize}cqh`,
+          fontSize: `${size}cqh`,
           fontWeight: component.bold ? "bold" : "normal",
           fontStyle: component.italic ? "italic" : "normal",
           textDecoration: component.underline ? "underline" : "none",

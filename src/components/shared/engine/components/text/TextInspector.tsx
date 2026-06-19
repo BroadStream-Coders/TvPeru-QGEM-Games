@@ -11,9 +11,10 @@ import {
   Bold,
   Italic,
   Underline,
+  Scaling,
   LucideIcon,
 } from "lucide-react";
-import { NumberField } from "@engine/NumberField";
+import { NumberField, NumberInput } from "@engine/NumberField";
 import {
   TextAlignH,
   TextAlignV,
@@ -137,15 +138,78 @@ export function TextInspector({
           className="w-full resize-y rounded-md border border-input bg-input/30 px-2 py-1 text-xs text-foreground outline-none focus:border-ring"
         />
 
-        <NumberField
-          label="Tamaño"
-          value={component.fontSize}
-          onChange={(fontSize) => onChange({ ...component, fontSize })}
-        />
+        <div className="flex items-center gap-2">
+          <span className="w-12 shrink-0 text-2xs font-mono uppercase tracking-wider text-muted-foreground">
+            Font
+          </span>
+          <span className="min-w-0 flex-1 truncate text-xs text-foreground">
+            {component.fontFileName ?? "Geist Sans"}
+          </span>
+          <label
+            title="Cargar fuente desde equipo"
+            className="flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-border text-muted-foreground transition-colors hover:border-brand hover:text-foreground"
+          >
+            <Upload size={13} />
+            <input
+              type="file"
+              accept=".ttf,.otf,.woff,.woff2,font/*"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) onPickFont(file);
+              }}
+              className="hidden"
+            />
+          </label>
+        </div>
 
         <div className="flex items-center gap-2">
           <span className="w-12 shrink-0 text-2xs font-mono uppercase tracking-wider text-muted-foreground">
-            Estilo
+            Size
+          </span>
+          <div className="flex flex-1 gap-1">
+            {component.autoSize ? (
+              <>
+                <NumberInput
+                  value={component.fontSizeMin}
+                  onChange={(fontSizeMin) =>
+                    onChange({ ...component, fontSizeMin })
+                  }
+                  title="Mínimo"
+                />
+                <NumberInput
+                  value={component.fontSizeMax}
+                  onChange={(fontSizeMax) =>
+                    onChange({ ...component, fontSizeMax })
+                  }
+                  title="Máximo"
+                />
+              </>
+            ) : (
+              <NumberInput
+                value={component.fontSize}
+                onChange={(fontSize) => onChange({ ...component, fontSize })}
+              />
+            )}
+          </div>
+          <button
+            type="button"
+            onClick={() =>
+              onChange({ ...component, autoSize: !component.autoSize })
+            }
+            title="Auto Size"
+            className={`flex size-7 shrink-0 items-center justify-center rounded-md border transition-colors ${
+              component.autoSize
+                ? "border-brand bg-brand/10 text-foreground"
+                : "border-border text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            <Scaling size={14} />
+          </button>
+        </div>
+
+        <div className="flex items-center gap-2">
+          <span className="w-12 shrink-0 text-2xs font-mono uppercase tracking-wider text-muted-foreground">
+            Style
           </span>
           <div className="flex flex-1 gap-1">
             {STYLE_TOGGLES.map(({ key, icon: Icon, title }) => (
@@ -184,30 +248,6 @@ export function TextInspector({
           />
         </label>
 
-        <div className="flex items-center gap-2">
-          <span className="shrink-0 text-2xs font-mono uppercase tracking-wider text-muted-foreground">
-            Fuente:
-          </span>
-          <span className="min-w-0 flex-1 truncate text-xs text-foreground">
-            {component.fontFileName ?? "Geist Sans"}
-          </span>
-          <label
-            title="Cargar fuente desde equipo"
-            className="flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-border text-muted-foreground transition-colors hover:border-brand hover:text-foreground"
-          >
-            <Upload size={13} />
-            <input
-              type="file"
-              accept=".ttf,.otf,.woff,.woff2,font/*"
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (file) onPickFont(file);
-              }}
-              className="hidden"
-            />
-          </label>
-        </div>
-
         <AlignGroup
           label="Horiz."
           value={component.alignH}
@@ -224,7 +264,7 @@ export function TextInspector({
 
         <label className="flex items-center gap-2">
           <span className="w-12 shrink-0 text-2xs font-mono uppercase tracking-wider text-muted-foreground">
-            Ajuste
+            Fit
           </span>
           <select
             value={component.overflow}
@@ -237,13 +277,13 @@ export function TextInspector({
             className="h-7 w-full min-w-0 rounded-md border border-input bg-input/30 px-2 text-xs text-foreground outline-none focus:border-ring"
           >
             <option value="wrap" className="bg-card text-foreground">
-              Contener
+              Wrap
             </option>
             <option value="overflow" className="bg-card text-foreground">
-              Desbordar
+              Overflow
             </option>
             <option value="clip" className="bg-card text-foreground">
-              Recortar
+              Clip
             </option>
           </select>
         </label>

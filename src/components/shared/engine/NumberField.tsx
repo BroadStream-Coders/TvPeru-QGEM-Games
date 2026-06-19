@@ -101,14 +101,14 @@ function evaluateExpression(input: string): number | null {
   return result;
 }
 
-export function NumberField({
-  label,
+export function NumberInput({
   value,
   onChange,
+  title,
 }: {
-  label: string;
   value: number;
   onChange: (value: number) => void;
+  title?: string;
 }) {
   const [draft, setDraft] = useState<string | null>(null);
 
@@ -122,28 +122,43 @@ export function NumberField({
   };
 
   return (
+    <input
+      type="text"
+      inputMode="decimal"
+      title={title}
+      value={draft ?? String(value)}
+      onFocus={() => setDraft(String(value))}
+      onChange={(e) => setDraft(e.target.value)}
+      onBlur={commit}
+      onKeyDown={(e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          commit();
+        } else if (e.key === "Escape") {
+          e.preventDefault();
+          setDraft(null);
+        }
+      }}
+      className="h-7 w-full min-w-0 rounded-md border border-input bg-input/30 px-2 py-1 text-xs font-mono text-foreground outline-none focus:border-ring"
+    />
+  );
+}
+
+export function NumberField({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: number;
+  onChange: (value: number) => void;
+}) {
+  return (
     <label className="flex items-center gap-2">
       <span className="w-12 shrink-0 text-2xs font-mono uppercase tracking-wider text-muted-foreground">
         {label}
       </span>
-      <input
-        type="text"
-        inputMode="decimal"
-        value={draft ?? String(value)}
-        onFocus={() => setDraft(String(value))}
-        onChange={(e) => setDraft(e.target.value)}
-        onBlur={commit}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            e.preventDefault();
-            commit();
-          } else if (e.key === "Escape") {
-            e.preventDefault();
-            setDraft(null);
-          }
-        }}
-        className="h-7 w-full min-w-0 rounded-md border border-input bg-input/30 px-2 py-1 text-xs font-mono text-foreground outline-none focus:border-ring"
-      />
+      <NumberInput value={value} onChange={onChange} />
     </label>
   );
 }

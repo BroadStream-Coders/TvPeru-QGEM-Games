@@ -12,6 +12,10 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [TD-013] El mensaje de error ya no llama "colector" a la app (2026-06-19 14:57)
+En `persistence.ts`, el error de validación pasa de "…para este colector." a
+"…para este juego.", acorde a que la app es de visualización, no un colector.
+
 ## [TD-012] Borrar el `NumberField` muerto en `shared/` (2026-06-19 14:50)
 Eliminado `src/components/shared/NumberField.tsx`, código muerto que nadie importaba
 (todo el repo usa `@engine/NumberField`). Build limpio tras el borrado.

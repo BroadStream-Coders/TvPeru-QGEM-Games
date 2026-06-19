@@ -13,7 +13,7 @@ export const loadJsonFile = <T>(
 
         if (validator && !validator(data)) {
           return reject(
-            new Error("Estructura de archivo no válida para este colector."),
+            new Error("Estructura de archivo no válida para este juego."),
           );
         }
 

@@ -61,15 +61,6 @@ su "Hecho cuando", pero no es el foco actual).
   fullscreen listo para broadcast.
 - **Fecha:** 2026-06-11 · **Estado:** En progreso (2026-06-11)
 
-## [RM-018] Panel Inspector con tamaño fijo y scroll
-
-- **Objetivo:** Que el panel "Inspector" mantenga un tamaño/altura estable y, cuando
-  un GameObject tenga muchos componentes, su contenido haga scroll interno en lugar
-  de crecer y empujar el layout.
-- **Hecho cuando:** el Inspector conserva su tamaño con cualquier cantidad de
-  componentes y muestra scroll vertical interno cuando el contenido excede su alto.
-- **Fecha:** 2026-06-19 · **Estado:** Abierto
-
 ## [RM-019] Controller de datos para Deletreo
 
 - **Objetivo:** Replicar en Deletreo el patrón de Cálculo Mental: un GameObject con

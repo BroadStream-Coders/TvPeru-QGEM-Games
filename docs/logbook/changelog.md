@@ -12,6 +12,9 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-018] Hierarchy e Inspector de tamaño fijo con scroll (2026-06-19 09:02)
+`SidePanel` saca su cuerpo del flujo (capa `absolute inset-0` con `overflow-y-auto`), así los paneles ya no empujan el alto de la fila: quedan fijos al alto de la escena y hacen scroll interno cuando el contenido excede. Aplica a Hierarchy e Inspector en todos los workspaces.
+
 ## [RM-011] Animaciones de deletreo como componentes (2026-06-19 08:51)
 Pop, Shake, Bounce y Slide son ahora componentes del engine (`NATIVE_COMPONENTS`) con disparo vía `useAnimations().trigger`; Pop/Shake animan el content-div y Bounce/Slide la posición del transform (canal `onAnimatePosition` en `GameObjectView`). Deletreo migrado: MainFrame cuelga de un `Anchor` fijo y arranca visible (Bounce sube, Slide baja).
 

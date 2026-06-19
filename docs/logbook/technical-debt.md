@@ -14,14 +14,6 @@ changelog y se borra de aquí.
 
 ---
 
-## [TD-007] YouTube descartado como fuente del componente Video
-
-- **Ubicación:** `src/components/shared/engine/components/video/` (decisión de diseño)
-- **Riesgo:** 2/10
-- **Problema:** Se evaluó un 3er modo "YouTube" y se descartó: YouTube no es reproducible en un `<video>` (no hay URL del archivo), solo vía `<iframe>` de la IFrame API. Eso rompe los contratos de la tripleta: camino de render distinto, `object-fit` no aplica (barras negras, "cubrir/estirar" exige hackear escala+recorte), "ajustar al tamaño original" imposible (la API no expone la resolución), branding/anuncios/relacionados de YouTube y riesgo de red para salida en vivo.
-- **Impacto futuro:** Si en el futuro se requiere YouTube, debe tratarse como un modo degradado explícitamente separado (iframe, looped+muted con `playlist=<id>`), sin ajuste real ni tamaño original, asumiendo el riesgo para broadcast.
-- **Fecha:** 2026-06-04 · **Estado:** Abierto
-
 ## [TD-008] `contentRef` añadido al `GameObjectView` genérico por una necesidad de un juego
 
 - **Ubicación:** `src/components/shared/engine/GameObjectView.tsx`
@@ -46,3 +38,27 @@ changelog y se borra de aquí.
 - **Problema:** La raíz tiene grupos latentes al mismo nivel sin separar: escena/render (`Scene`, `GameObjectView`, `RectTransform`, `ViewModeTabs`, `SceneViewMode`), paneles/edición (`GameObjectInspector`, `RectTransformInspector`, `AddComponentButton`, `Hierarchy`), primitivos UI (`SidePanel`, `NumberField`) y modelo/registro (`gameObject.ts`, `componentRegistry.ts`). El subárbol `components/` sí está bien ordenado.
 - **Impacto futuro:** Hoy navegable; empezará a dispersarse cuando entre el store `useScene` (Decisión C) y al retomar Text. Umbral para agrupar (`scene/`, `panels/`, `core/`): cuando entre `useScene`.
 - **Fecha:** 2026-06-16 · **Estado:** Abierto
+
+## [TD-011] La carga de sesión de Operaciones Combinadas es un stub que no renderiza nada
+
+- **Ubicación:** `src/app/workspaces/operaciones-combinadas/page.tsx:223`
+- **Riesgo:** 4/10
+- **Problema:** El `handleLoad` valida el JSON y lo guarda en `data`, pero nada lo consume: la grilla y la bandeja salen hardcodeadas de `gridConfig`/`INITIAL_TRAY`, no del archivo. Cargar una sesión "tiene éxito" sin cambiar nada en pantalla. Además queda un `console.log("Operaciones Combinadas cargado:", loaded)` (línea 229) de depuración en una herramienta de salida en vivo.
+- **Impacto futuro:** En cabina, un operador puede cargar el archivo, no ver cambios y creer que la app falló. Hay que cablear `data` al render (poblar celdas/bandeja desde la sesión) y quitar el `console.log`.
+- **Fecha:** 2026-06-19 · **Estado:** Abierto
+
+## [TD-012] `NumberField` duplicado: una versión muerta en `shared/`
+
+- **Ubicación:** `src/components/shared/NumberField.tsx`
+- **Riesgo:** 3/10
+- **Problema:** Este `NumberField` no lo importa nadie; todo el repo usa `@engine/NumberField` (la versión con `NumberInput` y evaluador de expresiones). Es código muerto que duplica un nombre vivo.
+- **Impacto futuro:** Invita a editar el archivo equivocado y a creer que el componente compartido es el que se usa. Borrarlo (git conserva historial).
+- **Fecha:** 2026-06-19 · **Estado:** Abierto
+
+## [TD-013] Mensaje de error llama "colector" a la app, que es de visualización
+
+- **Ubicación:** `src/helpers/persistence.ts:16`
+- **Riesgo:** 2/10
+- **Problema:** El error de validación dice *"Estructura de archivo no válida para este colector."*, pero el proyecto es explícitamente una herramienta de visualización fullscreen, no un colector de datos. Es copy heredado del proyecto base.
+- **Impacto futuro:** Confunde la identidad del proyecto en mensajes visibles al usuario. Reemplazar "colector" por un término acorde (p. ej. "juego"/"workspace").
+- **Fecha:** 2026-06-19 · **Estado:** Abierto

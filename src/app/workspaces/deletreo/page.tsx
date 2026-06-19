@@ -2,7 +2,6 @@
 
 import { useEffect, useCallback, useRef, useState } from "react";
 import { SpellCheck } from "lucide-react";
-import { loadJsonFile } from "@/helpers/persistence";
 import { useWorkspaceHeader } from "@/hooks/use-workspace-header";
 import { useAssetPreloader } from "@/hooks/use-asset-preloader";
 import type { AssetKind } from "@/helpers/asset-preloader";
@@ -21,10 +20,13 @@ import {
   DESIGN_HEIGHT,
 } from "@engine/RectTransform";
 import { GameObjectView } from "@engine/GameObjectView";
-import { StatusCard } from "./components/StatusCard";
-import { LegendCard } from "./components/LegendCard";
 import { spellframeDefinition } from "./components/spellframe";
 import { createSpellframeComponent } from "./components/spellframe/spellframeComponent";
+import { controllerDefinition } from "./components/controller";
+import {
+  ControllerComponent,
+  createControllerComponent,
+} from "./components/controller/controllerComponent";
 import { SidePanel } from "@engine/SidePanel";
 import { Hierarchy, TreeNode } from "@engine/Hierarchy";
 import { GameObjectInspector } from "@engine/GameObjectInspector";
@@ -70,21 +72,15 @@ const ASSET_KINDS: Record<string, AssetKind> = Object.fromEntries(
   Object.entries(CATALOG).map(([key, entry]) => [key, entry.kind]),
 );
 
-interface DeletreoGroup {
-  words: string[];
-}
-
-interface DeletreoData {
-  groups: DeletreoGroup[];
-}
-
 const ANCHOR_ID = "frame-anchor";
 const FRAME_ID = "main-frame";
 const TEXT_ID = "text";
+const CONTROLLER_ID = "controller";
 
 const registry = createComponentRegistry([
   ...NATIVE_COMPONENTS,
   spellframeDefinition,
+  controllerDefinition,
 ]);
 
 export default function DeletreoPage() {
@@ -96,10 +92,6 @@ export default function DeletreoPage() {
   const errorUrl = assets.errorFrame?.url;
   const correctUrl = assets.correct?.url;
   const incorrectUrl = assets.incorrect?.url;
-
-  const [groups, setGroups] = useState<string[][]>([]);
-  const [groupIndex, setGroupIndex] = useState(0);
-  const [slotIndex, setSlotIndex] = useState(0);
 
   const [editMode, setEditMode] = useState(false);
 
@@ -151,6 +143,16 @@ export default function DeletreoPage() {
       },
       components: [createSpellframeComponent()],
     }),
+    createGameObject({
+      id: CONTROLLER_ID,
+      name: "Controller",
+      transform: {
+        position: { x: 0, y: 0 },
+        size: { x: 0, y: 0 },
+        pivot: { x: 0.5, y: 0.5 },
+      },
+      components: [createControllerComponent()],
+    }),
   ]);
   const [selectedId, setSelectedId] = useState<string>(FRAME_ID);
 
@@ -158,6 +160,29 @@ export default function DeletreoPage() {
   const [normalSrc, setNormalSrc] = useState("");
 
   const selected = gameObjects.find((go) => go.id === selectedId) ?? null;
+
+  const controller = gameObjects
+    .find((go) => go.id === CONTROLLER_ID)
+    ?.components.find((c) => c.type === "controller") as
+    | ControllerComponent
+    | undefined;
+  const groups = controller?.groups ?? [];
+  const groupIndex = controller?.groupIndex ?? 0;
+  const slotIndex = controller?.slotIndex ?? 0;
+
+  const patchController = (patch: Partial<ControllerComponent>) =>
+    setGameObjects((prev) =>
+      prev.map((go) =>
+        go.id === CONTROLLER_ID
+          ? {
+              ...go,
+              components: go.components.map((c) =>
+                c.type === "controller" ? { ...c, ...patch } : c,
+              ),
+            }
+          : go,
+      ),
+    );
 
   const buildNode = (go: GameObject): TreeNode => {
     const children = gameObjects
@@ -340,29 +365,6 @@ export default function DeletreoPage() {
       ),
   });
 
-  const handleLoad = useCallback(
-    async (file: File) => {
-      try {
-        const isValid = (data: unknown): data is DeletreoData =>
-          typeof data === "object" &&
-          data !== null &&
-          "groups" in data &&
-          Array.isArray((data as DeletreoData).groups) &&
-          (data as DeletreoData).groups.every((g) => Array.isArray(g.words));
-
-        const data = await loadJsonFile<DeletreoData>(file, isValid);
-        setGroups(data.groups.map((g) => g.words));
-        setGroupIndex(0);
-        setSlotIndex(0);
-        setSpellStep(0);
-        setMainFrameImageSrc(normalSrc);
-      } catch {
-        console.error("Error al cargar el archivo JSON.");
-      }
-    },
-    [normalSrc],
-  );
-
   useEffect(() => {
     return () => resetHeader();
   }, [resetHeader]);
@@ -371,9 +373,8 @@ export default function DeletreoPage() {
     setHeader({
       title: "Deletreo",
       icon: <SpellCheck className="h-3 w-3" />,
-      onLoad: handleLoad,
     });
-  }, [setHeader, handleLoad]);
+  }, [setHeader]);
 
   useEffect(() => {
     if (!ready || !normalUrl) return;
@@ -381,8 +382,13 @@ export default function DeletreoPage() {
     setMainFrameImageSrc(normalUrl);
   }, [ready, normalUrl]);
 
-  const currentGroup = groups[groupIndex] ?? [];
+  const currentGroup = groups[groupIndex]?.words ?? [];
   const word = currentGroup[slotIndex] ?? "";
+
+  useEffect(() => {
+    setSpellStep(0);
+    setMainFrameImageSrc(normalSrc);
+  }, [groupIndex, slotIndex, controller?.fileName]);
 
   useEffect(() => {
     setGameObjects((prev) =>
@@ -401,29 +407,22 @@ export default function DeletreoPage() {
 
   const selectGroup = (n: number) => {
     if (n < 0 || n >= groups.length) return;
-    setGroupIndex(n);
-    setSlotIndex(0);
-    setSpellStep(0);
-    setMainFrameImageSrc(normalSrc);
+    patchController({ groupIndex: n, slotIndex: 0 });
   };
 
   const selectSlot = (n: number) => {
     if (n < 0 || n >= currentGroup.length) return;
-    setSlotIndex(n);
-    setSpellStep(0);
-    setMainFrameImageSrc(normalSrc);
+    patchController({ slotIndex: n });
   };
 
   const nextSlot = () => {
-    setSlotIndex((i) => Math.min(i + 1, currentGroup.length - 1));
-    setSpellStep(0);
-    setMainFrameImageSrc(normalSrc);
+    if (slotIndex >= currentGroup.length - 1) return;
+    patchController({ slotIndex: slotIndex + 1 });
   };
 
   const prevSlot = () => {
-    setSlotIndex((i) => Math.max(i - 1, 0));
-    setSpellStep(0);
-    setMainFrameImageSrc(normalSrc);
+    if (slotIndex <= 0) return;
+    patchController({ slotIndex: slotIndex - 1 });
   };
 
   useGameKeys({
@@ -549,18 +548,12 @@ export default function DeletreoPage() {
       </div>
 
       {/* Config */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <StatusCard
-          groups={groups}
-          groupIndex={groupIndex}
-          slotIndex={slotIndex}
-        />
+      <div className="grid grid-cols-1 gap-4">
         <AssetLoaderCard
           statuses={statuses}
           progress={progress}
           kinds={ASSET_KINDS}
         />
-        <LegendCard />
       </div>
     </main>
   );

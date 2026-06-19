@@ -22,6 +22,7 @@ export interface ControllerComponent extends GameObjectComponent {
   groups: CalcGroup[];
   groupIndex: number;
   boardIndex: number;
+  cursor: number;
   fileName?: string;
 }
 
@@ -33,6 +34,7 @@ export function createControllerComponent(
     groups: init?.groups ?? [],
     groupIndex: init?.groupIndex ?? 0,
     boardIndex: init?.boardIndex ?? 0,
+    cursor: init?.cursor ?? -1,
     fileName: init?.fileName,
   };
 }

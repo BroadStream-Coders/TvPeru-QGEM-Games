@@ -61,16 +61,6 @@ su "Hecho cuando", pero no es el foco actual).
   fullscreen listo para broadcast.
 - **Fecha:** 2026-06-11 · **Estado:** En progreso (2026-06-11)
 
-## [RM-019] Controller de datos para Deletreo
-
-- **Objetivo:** Replicar en Deletreo el patrón de Cálculo Mental: un GameObject con
-  un componente Controller que carga el JSON de datos y gestiona la navegación
-  (grupos/slots), sacando la carga del header.
-- **Hecho cuando:** Deletreo tiene un componente Controller que carga su session
-  file y expone la info referencial + navegación, igual que en calculo-mental; el
-  botón de carga del header se retira de Deletreo.
-- **Fecha:** 2026-06-19 · **Estado:** Abierto
-
 ---
 
 # Fase 2 — Engine genérico (diferido)

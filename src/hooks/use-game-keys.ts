@@ -37,6 +37,8 @@ export interface GameKeyHandlers {
   onMarkError?: () => void;
   /** Tecla E (interacción). */
   onInteract?: () => void;
+  /** Tecla C (limpiar). */
+  onClear?: () => void;
   /** Flecha arriba. */
   onArrowUp?: () => void;
   /** Flecha abajo. */
@@ -88,6 +90,7 @@ export function useGameKeys(handlers: GameKeyHandlers) {
         KeyM: "onShowAnswer",
         KeyF: "onMarkError",
         KeyE: "onInteract",
+        KeyC: "onClear",
         ArrowUp: "onArrowUp",
         ArrowDown: "onArrowDown",
         ArrowLeft: "onArrowLeft",

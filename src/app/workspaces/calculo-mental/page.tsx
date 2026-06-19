@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Calculator } from "lucide-react";
 import { useWorkspaceHeader } from "@/hooks/use-workspace-header";
 import { useGameKeys } from "@/hooks/use-game-keys";
@@ -10,6 +10,7 @@ import { toManifest, type AssetCatalog } from "@/helpers/asset-source";
 import { SHARED_ASSETS } from "@/assets/shared";
 import { AssetLoaderCard } from "@/components/shared/AssetLoaderCard";
 import { useTransformGesture, HANDLES } from "@/hooks/use-transform-gesture";
+import { playSound } from "@/lib/audio";
 
 import { Scene } from "@engine/Scene";
 import {
@@ -38,9 +39,16 @@ import {
 import { AddComponentButton } from "@engine/AddComponentButton";
 import { createColorComponent } from "@engine/components/color/colorComponent";
 import { createImageComponent } from "@engine/components/image/imageComponent";
-import { createTextComponent } from "@engine/components/text/textComponent";
 import { createPopComponent } from "@engine/components/pop/popComponent";
 import { createShakeComponent } from "@engine/components/shake/shakeComponent";
+import { createBounceComponent } from "@engine/components/bounce/bounceComponent";
+import { createSlideComponent } from "@engine/components/slide/slideComponent";
+import { useAnimations } from "@engine/animations/AnimationsContext";
+import { slotDefinition } from "./components/slot";
+import {
+  SlotComponent,
+  createSlotComponent,
+} from "./components/slot/slotComponent";
 import { controllerDefinition } from "./components/controller";
 import {
   ControllerComponent,
@@ -69,18 +77,20 @@ const ASSET_KINDS: Record<string, AssetKind> = Object.fromEntries(
 
 const BACKGROUND_ID = "background";
 const REFERENCE_ID = "reference";
-const CUADRO_ID = "cuadro";
-const ANIMATOR_ID = "animator";
-const BLUE_FRAME_ID = "blue-frame";
-const PURPLE_FRAME_ID = "purple-frame";
-const QUESTION_TEXT_ID = "question-text";
-const ANSWER_TEXT_ID = "answer-text";
-const CHECK_ID = "check-badge";
-const X_ID = "x-badge";
 const CONTROLLER_ID = "controller";
+
+const SLOT_COUNT = 4;
+const SLOT_IDS = Array.from({ length: SLOT_COUNT }, (_, i) => `slot-${i}`);
+const SLOT_POSITIONS: Vec2[] = [
+  { x: -675, y: 330 },
+  { x: -675, y: 110 },
+  { x: -675, y: -110 },
+  { x: -675, y: -330 },
+];
 
 const registry = createComponentRegistry([
   ...NATIVE_COMPONENTS,
+  slotDefinition,
   controllerDefinition,
 ]);
 
@@ -94,6 +104,8 @@ export default function CalculoMentalPage() {
   const checkUrl = assets.check?.url;
   const xUrl = assets.x?.url;
   const referenceUrl = assets.screenshot?.url;
+  const correctUrl = assets.correct?.url;
+  const incorrectUrl = assets.incorrect?.url;
 
   const [editMode, setEditMode] = useState(false);
 
@@ -118,114 +130,24 @@ export default function CalculoMentalPage() {
       },
       components: [createImageComponent({ src: "", fit: "fill" })],
     }),
-    createGameObject({
-      id: CUADRO_ID,
-      name: "Cuadro",
-      transform: {
-        position: { x: -675, y: -400 },
-        size: { x: 400, y: 200 },
-        pivot: { x: 0.5, y: 0.5 },
-      },
-    }),
-    createGameObject({
-      id: ANIMATOR_ID,
-      name: "Animator",
-      parentId: CUADRO_ID,
-      transform: {
-        position: { x: 0, y: 0 },
-        size: { x: 400, y: 200 },
-        pivot: { x: 0.5, y: 0.5 },
-      },
-      components: [createPopComponent(), createShakeComponent()],
-    }),
-    createGameObject({
-      id: BLUE_FRAME_ID,
-      name: "BlueFrame",
-      parentId: ANIMATOR_ID,
-      transform: {
-        position: { x: -8, y: 30 },
-        size: { x: 346, y: 124 },
-        pivot: { x: 0.5, y: 0.5 },
-      },
-      components: [createImageComponent({ src: "", fit: "contain" })],
-    }),
-    createGameObject({
-      id: QUESTION_TEXT_ID,
-      name: "Pregunta",
-      parentId: BLUE_FRAME_ID,
-      transform: {
-        position: { x: 0, y: 0 },
-        size: { x: 300, y: 95 },
-        pivot: { x: 0.5, y: 0.5 },
-      },
-      components: [
-        createTextComponent({
-          text: "12 al cuadrado",
-          fontSize: 2.8,
-          color: "#ffffff",
-          fontFamily: "var(--font-poppins-semibold)",
-          alignH: "center",
-          alignV: "middle",
-          overflow: "clip",
-        }),
-      ],
-    }),
-    createGameObject({
-      id: PURPLE_FRAME_ID,
-      name: "PurpleFrame",
-      parentId: ANIMATOR_ID,
-      transform: {
-        position: { x: 69, y: -45 },
-        size: { x: 230, y: 87 },
-        pivot: { x: 0.5, y: 0.5 },
-      },
-      components: [createImageComponent({ src: "", fit: "contain" })],
-    }),
-    createGameObject({
-      id: ANSWER_TEXT_ID,
-      name: "Respuesta",
-      parentId: PURPLE_FRAME_ID,
-      transform: {
-        position: { x: 0, y: 0 },
-        size: { x: 190, y: 60 },
-        pivot: { x: 0.5, y: 0.5 },
-      },
-      components: [
-        createTextComponent({
-          text: "144",
-          fontSize: 3.6,
-          color: "#ffffff",
-          fontFamily: "var(--font-poppins-semibold)",
-          alignH: "center",
-          alignV: "middle",
-          overflow: "clip",
-        }),
-      ],
-    }),
-    createGameObject({
-      id: CHECK_ID,
-      name: "Check",
-      parentId: ANIMATOR_ID,
-      active: false,
-      transform: {
-        position: { x: 170, y: 85 },
-        size: { x: 92, y: 82 },
-        pivot: { x: 0.5, y: 0.5 },
-      },
-      components: [createImageComponent({ src: "", fit: "contain" })],
-    }),
-    createGameObject({
-      id: X_ID,
-      name: "X",
-      parentId: ANIMATOR_ID,
-      active: false,
-      transform: {
-        position: { x: 160, y: 85 },
-        size: { x: 76, y: 73 },
-        pivot: { x: 0.5, y: 0.5 },
-      },
-      components: [createImageComponent({ src: "", fit: "contain" })],
-    }),
+    ...SLOT_IDS.map((id, i) =>
+      createGameObject({
+        id,
+        name: `Slot ${i + 1}`,
+        transform: {
+          position: SLOT_POSITIONS[i],
+          size: { x: 400, y: 200 },
+          pivot: { x: 0.5, y: 0.5 },
+        },
+        components: [
+          createSlotComponent(),
+          createPopComponent(),
+          createShakeComponent(),
+          createBounceComponent(),
+          createSlideComponent(),
+        ],
+      }),
+    ),
     createGameObject({
       id: CONTROLLER_ID,
       name: "Controller",
@@ -237,7 +159,7 @@ export default function CalculoMentalPage() {
       components: [createControllerComponent()],
     }),
   ]);
-  const [selectedId, setSelectedId] = useState<string>(CUADRO_ID);
+  const [selectedId, setSelectedId] = useState<string>(SLOT_IDS[0]);
 
   const selected = gameObjects.find((go) => go.id === selectedId) ?? null;
 
@@ -353,6 +275,20 @@ export default function CalculoMentalPage() {
       ),
     );
 
+  const patchSlot = (id: string, patch: Partial<SlotComponent>) =>
+    setGameObjects((prev) =>
+      prev.map((go) =>
+        go.id === id
+          ? {
+              ...go,
+              components: go.components.map((c) =>
+                c.type === "slot" ? { ...c, ...patch } : c,
+              ),
+            }
+          : go,
+      ),
+    );
+
   const setAxis =
     (field: keyof RectTransformValues, axis: keyof Vec2) => (value: number) =>
       setGameObjects((prev) =>
@@ -368,6 +304,20 @@ export default function CalculoMentalPage() {
             : go,
         ),
       );
+
+  const { trigger } = useAnimations();
+
+  const animatePosition = useCallback(
+    (id: string, position: Vec2) =>
+      setGameObjects((prev) =>
+        prev.map((go) =>
+          go.id === id
+            ? { ...go, transform: { ...go.transform, position } }
+            : go,
+        ),
+      ),
+    [],
+  );
 
   const stageRef = useRef<HTMLDivElement>(null);
   const { beginGesture } = useTransformGesture({
@@ -416,11 +366,27 @@ export default function CalculoMentalPage() {
 
   useEffect(() => {
     if (!ready) return;
-    if (blueUrl) setImageSrc(BLUE_FRAME_ID, blueUrl);
-    if (purpleUrl) setImageSrc(PURPLE_FRAME_ID, purpleUrl);
-    if (checkUrl) setImageSrc(CHECK_ID, checkUrl);
-    if (xUrl) setImageSrc(X_ID, xUrl);
     if (referenceUrl) setImageSrc(REFERENCE_ID, referenceUrl);
+    setGameObjects((prev) =>
+      prev.map((go) =>
+        SLOT_IDS.includes(go.id)
+          ? {
+              ...go,
+              components: go.components.map((c) => {
+                if (c.type !== "slot") return c;
+                const slot = c as SlotComponent;
+                return {
+                  ...slot,
+                  blueSrc: blueUrl ?? slot.blueSrc,
+                  purpleSrc: purpleUrl ?? slot.purpleSrc,
+                  checkSrc: checkUrl ?? slot.checkSrc,
+                  xSrc: xUrl ?? slot.xSrc,
+                };
+              }),
+            }
+          : go,
+      ),
+    );
   }, [ready, blueUrl, purpleUrl, checkUrl, xUrl, referenceUrl]);
 
   const controller = gameObjects
@@ -430,6 +396,9 @@ export default function CalculoMentalPage() {
     | undefined;
   const groups = controller?.groups ?? [];
   const groupIndex = controller?.groupIndex ?? 0;
+  const boardIndex = controller?.boardIndex ?? 0;
+  const cursor = controller?.cursor ?? -1;
+  const fileName = controller?.fileName;
 
   const patchController = (patch: Partial<ControllerComponent>) =>
     setGameObjects((prev) =>
@@ -445,6 +414,42 @@ export default function CalculoMentalPage() {
       ),
     );
 
+  const boardSlots = groups[groupIndex]?.boards[boardIndex]?.slots ?? [];
+
+  useEffect(() => {
+    const slots = groups[groupIndex]?.boards[boardIndex]?.slots ?? [];
+    setGameObjects((prev) =>
+      prev.map((go) => {
+        if (go.id === CONTROLLER_ID) {
+          return {
+            ...go,
+            components: go.components.map((c) =>
+              c.type === "controller" ? { ...c, cursor: -1 } : c,
+            ),
+          };
+        }
+        const slotIndex = SLOT_IDS.indexOf(go.id);
+        if (slotIndex === -1) return go;
+        const data = slots[slotIndex];
+        return {
+          ...go,
+          components: go.components.map((c) =>
+            c.type === "slot"
+              ? {
+                  ...c,
+                  question: data?.question ?? "",
+                  answer: data?.answer ?? "",
+                  showQuestion: false,
+                  showAnswer: false,
+                  status: "none",
+                }
+              : c,
+          ),
+        };
+      }),
+    );
+  }, [groupIndex, boardIndex, fileName]);
+
   const selectGroup = (n: number) => {
     if (n < 0 || n >= groups.length) return;
     patchController({ groupIndex: n, boardIndex: 0 });
@@ -456,9 +461,45 @@ export default function CalculoMentalPage() {
     patchController({ boardIndex: n });
   };
 
+  const revealNextQuestion = () => {
+    const next = cursor + 1;
+    if (next >= SLOT_COUNT || next >= boardSlots.length) return;
+    patchSlot(SLOT_IDS[next], { showQuestion: true });
+    patchController({ cursor: next });
+  };
+
+  const showCurrentAnswer = () => {
+    if (cursor < 0) return;
+    patchSlot(SLOT_IDS[cursor], { showAnswer: true, status: "correct" });
+    if (correctUrl) playSound(correctUrl);
+    trigger(SLOT_IDS[cursor], "pop");
+  };
+
+  const markCurrentError = () => {
+    if (cursor < 0) return;
+    patchSlot(SLOT_IDS[cursor], { status: "incorrect" });
+    if (incorrectUrl) playSound(incorrectUrl);
+    trigger(SLOT_IDS[cursor], "shake");
+  };
+
+  const clearCurrent = () => {
+    if (cursor < 0) return;
+    patchSlot(SLOT_IDS[cursor], { status: "none" });
+  };
+
   useGameKeys({
     onNavigate: selectGroup,
     onNumber: selectBoard,
+    onArrowRight: revealNextQuestion,
+    onShowAnswer: showCurrentAnswer,
+    onMarkError: markCurrentError,
+    onClear: clearCurrent,
+    onArrowUp: () => {
+      if (cursor >= 0) trigger(SLOT_IDS[cursor], "bounce");
+    },
+    onArrowDown: () => {
+      if (cursor >= 0) trigger(SLOT_IDS[cursor], "slide");
+    },
   });
 
   const renderContent = (go: GameObject) => (
@@ -508,6 +549,7 @@ export default function CalculoMentalPage() {
                         selectedId={selectedId}
                         editMode={editMode}
                         renderContent={renderContent}
+                        onAnimatePosition={animatePosition}
                       />
                     ))}
                 </div>

@@ -2,18 +2,18 @@ import { Gamepad2, Upload, Trash2, Keyboard } from "lucide-react";
 import { loadJsonFile } from "@/helpers/persistence";
 import {
   ControllerComponent,
-  CalcData,
-  isCalcData,
+  DeletreoData,
+  isDeletreoData,
 } from "./controllerComponent";
 
 const KEY_LEGEND: { keys: string; label: string }[] = [
   { keys: "Numpad 0-9", label: "Elegir grupo" },
-  { keys: "0-9", label: "Elegir tablero (Shift +10 · Alt +20)" },
-  { keys: "→", label: "Revelar siguiente pregunta" },
-  { keys: "M", label: "Mostrar respuesta (correcto)" },
+  { keys: "0-9", label: "Elegir slot (Shift +10 · Alt +20)" },
+  { keys: "N / B", label: "Slot siguiente / anterior" },
+  { keys: "M", label: "Mostrar respuesta" },
   { keys: "F", label: "Marcar error" },
-  { keys: "C", label: "Limpiar marca" },
-  { keys: "↑ / ↓", label: "Bounce / Slide del slot actual" },
+  { keys: "E", label: "Interacción" },
+  { keys: "↑ / ↓", label: "Mostrar / ocultar cuadro" },
 ];
 
 export function ControllerInspector({
@@ -28,28 +28,22 @@ export function ControllerInspector({
 }) {
   const onPick = async (file: File) => {
     try {
-      const data = await loadJsonFile<CalcData>(file, isCalcData);
+      const data = await loadJsonFile<DeletreoData>(file, isDeletreoData);
       onChange({
         ...component,
         groups: data.groups,
         groupIndex: 0,
-        boardIndex: 0,
-        cursor: -1,
+        slotIndex: 0,
         fileName: file.name,
       });
     } catch {
-      console.error("JSON inválido para Cálculo Mental.");
+      console.error("JSON inválido para Deletreo.");
     }
   };
 
   const groupCount = component.groups.length;
-  const boardCount = component.groups.reduce((n, g) => n + g.boards.length, 0);
-  const slotCount = component.groups.reduce(
-    (n, g) => n + g.boards.reduce((m, b) => m + b.slots.length, 0),
-    0,
-  );
-  const boardsInGroup =
-    component.groups[component.groupIndex]?.boards.length ?? 0;
+  const slotCount = component.groups.reduce((n, g) => n + g.words.length, 0);
+  const slotsInGroup = component.groups[component.groupIndex]?.words.length ?? 0;
 
   return (
     <div className="rounded-md border border-border">
@@ -88,12 +82,10 @@ export function ControllerInspector({
               {component.fileName}
             </span>
             <span>Grupos: {groupCount}</span>
-            <span>Tableros: {boardCount}</span>
             <span>Slots: {slotCount}</span>
             <span className="mt-1 text-foreground">
               Grupo {groupCount ? component.groupIndex + 1 : 0}/{groupCount} ·
-              Tablero {boardsInGroup ? component.boardIndex + 1 : 0}/
-              {boardsInGroup}
+              Slot {slotsInGroup ? component.slotIndex + 1 : 0}/{slotsInGroup}
             </span>
           </div>
         ) : (

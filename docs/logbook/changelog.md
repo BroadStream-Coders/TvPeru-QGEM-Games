@@ -12,6 +12,9 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-019] Controller de datos para Deletreo (2026-06-19 09:10)
+Deletreo replica el patrón de Cálculo Mental: GameObject `Controller` con componente que carga el JSON (`isDeletreoData`) y gestiona navegación grupos/slots; el `onLoad` del header se retiró. La info referencial + leyenda de teclas viven en el inspector del Controller, eliminando `StatusCard` y `LegendCard`.
+
 ## [RM-018] Hierarchy e Inspector de tamaño fijo con scroll (2026-06-19 09:02)
 `SidePanel` saca su cuerpo del flujo (capa `absolute inset-0` con `overflow-y-auto`), así los paneles ya no empujan el alto de la fila: quedan fijos al alto de la escena y hacen scroll interno cuando el contenido excede. Aplica a Hierarchy e Inspector en todos los workspaces.
 

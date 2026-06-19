@@ -39,6 +39,8 @@ import { AddComponentButton } from "@engine/AddComponentButton";
 import { createColorComponent } from "@engine/components/color/colorComponent";
 import { createImageComponent } from "@engine/components/image/imageComponent";
 import { createTextComponent } from "@engine/components/text/textComponent";
+import { createPopComponent } from "@engine/components/pop/popComponent";
+import { createShakeComponent } from "@engine/components/shake/shakeComponent";
 import { controllerDefinition } from "./components/controller";
 import {
   ControllerComponent,
@@ -134,6 +136,7 @@ export default function CalculoMentalPage() {
         size: { x: 400, y: 200 },
         pivot: { x: 0.5, y: 0.5 },
       },
+      components: [createPopComponent(), createShakeComponent()],
     }),
     createGameObject({
       id: BLUE_FRAME_ID,

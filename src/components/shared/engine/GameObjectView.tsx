@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { RectTransform, Vec2 } from "@engine/RectTransform";
 import { GameObject } from "@engine/gameObject";
 import { useComponentRegistry } from "@engine/componentRegistry";
 import { useSceneViewMode } from "@engine/SceneViewMode";
+import { useGameObjectAnimations } from "@engine/animations/useGameObjectAnimations";
+import { mergeRefs } from "@engine/refs";
 
 interface GameObjectViewProps {
   gameObject: GameObject;
@@ -12,6 +14,7 @@ interface GameObjectViewProps {
   editMode?: boolean;
   renderContent?: (go: GameObject) => React.ReactNode;
   contentRef?: (go: GameObject) => React.Ref<HTMLDivElement> | undefined;
+  onAnimatePosition?: (goId: string, position: Vec2) => void;
 }
 
 export function GameObjectView({
@@ -22,6 +25,7 @@ export function GameObjectView({
   editMode,
   renderContent,
   contentRef,
+  onAnimatePosition,
 }: GameObjectViewProps) {
   const viewMode = useSceneViewMode();
   const registry = useComponentRegistry();
@@ -32,6 +36,13 @@ export function GameObjectView({
     (go) => go.parentId === gameObject.id,
   );
 
+  const animationRef = useGameObjectAnimations(gameObject, onAnimatePosition);
+  const externalRef = contentRef?.(gameObject);
+  const mergedContentRef = useMemo(
+    () => mergeRefs(animationRef, externalRef),
+    [animationRef, externalRef],
+  );
+
   return (
     <RectTransform
       position={gameObject.transform.position}
@@ -39,7 +50,7 @@ export function GameObjectView({
       pivot={gameObject.transform.pivot}
       parentSize={parentSize}
     >
-      <div ref={contentRef?.(gameObject)} className="absolute inset-0">
+      <div ref={mergedContentRef} className="absolute inset-0">
         {gameObject.components.map((component, index) => {
           const View = registry.get(component.type)?.view;
           return View ? <View key={index} component={component} /> : null;
@@ -55,6 +66,7 @@ export function GameObjectView({
               editMode={editMode}
               renderContent={renderContent}
               contentRef={contentRef}
+              onAnimatePosition={onAnimatePosition}
             />
           ) : null,
         )}

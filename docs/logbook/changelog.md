@@ -12,6 +12,9 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-011] Animaciones de deletreo como componentes (2026-06-19 08:51)
+Pop, Shake, Bounce y Slide son ahora componentes del engine (`NATIVE_COMPONENTS`) con disparo vía `useAnimations().trigger`; Pop/Shake animan el content-div y Bounce/Slide la posición del transform (canal `onAnimatePosition` en `GameObjectView`). Deletreo migrado: MainFrame cuelga de un `Anchor` fijo y arranca visible (Bounce sube, Slide baja).
+
 ## [RM-017] Catálogo de assets compartidos/locales con resolver (2026-06-17 09:05)
 Separación de identidad lógica vs URL físico: `resolveAssetUrl`/`toManifest` (`asset-source.ts`) + catálogos tipados (`SHARED_ASSETS` global, `DELETREO_ASSETS` local). Los assets se movieron a `public/assets/{shared,games/<juego>}/` espejando el bucket; migrar a Supabase = setear `NEXT_PUBLIC_ASSET_BASE_URL`. Se eliminó `SOUNDS` de `audio.ts` (el catálogo es la fuente de rutas).
 

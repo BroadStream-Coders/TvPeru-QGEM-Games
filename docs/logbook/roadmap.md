@@ -61,6 +61,25 @@ su "Hecho cuando", pero no es el foco actual).
   fullscreen listo para broadcast.
 - **Fecha:** 2026-06-11 · **Estado:** En progreso (2026-06-11)
 
+## [RM-018] Panel Inspector con tamaño fijo y scroll
+
+- **Objetivo:** Que el panel "Inspector" mantenga un tamaño/altura estable y, cuando
+  un GameObject tenga muchos componentes, su contenido haga scroll interno en lugar
+  de crecer y empujar el layout.
+- **Hecho cuando:** el Inspector conserva su tamaño con cualquier cantidad de
+  componentes y muestra scroll vertical interno cuando el contenido excede su alto.
+- **Fecha:** 2026-06-19 · **Estado:** Abierto
+
+## [RM-019] Controller de datos para Deletreo
+
+- **Objetivo:** Replicar en Deletreo el patrón de Cálculo Mental: un GameObject con
+  un componente Controller que carga el JSON de datos y gestiona la navegación
+  (grupos/slots), sacando la carga del header.
+- **Hecho cuando:** Deletreo tiene un componente Controller que carga su session
+  file y expone la info referencial + navegación, igual que en calculo-mental; el
+  botón de carga del header se retira de Deletreo.
+- **Fecha:** 2026-06-19 · **Estado:** Abierto
+
 ---
 
 # Fase 2 — Engine genérico (diferido)
@@ -104,14 +123,6 @@ su "Hecho cuando", pero no es el foco actual).
   corre el juego.
 - **Hecho cuando:** se puede activar un overlay que muestra FPS/rendimiento en vivo
   dentro de un workspace.
-- **Fecha:** 2026-06-16 · **Estado:** Diferido (2026-06-17)
-
-## [RM-011] Animaciones de deletreo como componentes
-
-- **Objetivo:** Convertir las animaciones hechas para deletreo en componentes
-  reutilizables del engine.
-- **Hecho cuando:** las animaciones de deletreo existen como componentes registrados
-  y deletreo las usa desde el engine en lugar de su implementación propia.
 - **Fecha:** 2026-06-16 · **Estado:** Diferido (2026-06-17)
 
 ## [RM-012] Máscara general estilo Unity

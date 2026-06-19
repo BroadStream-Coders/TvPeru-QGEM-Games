@@ -11,10 +11,6 @@ import { SHARED_ASSETS } from "@/assets/shared";
 import { AssetLoaderCard } from "@/components/shared/AssetLoaderCard";
 import { useGameKeys } from "@/hooks/use-game-keys";
 import { useTransformGesture, HANDLES } from "@/hooks/use-transform-gesture";
-import { useShake } from "@/hooks/use-shake";
-import { usePop } from "@/hooks/use-pop";
-import { useBounceMove } from "@/hooks/use-bounce-move";
-import { useSlide } from "@/hooks/use-slide";
 import { playSound } from "@/lib/audio";
 
 import { Scene } from "@engine/Scene";
@@ -51,6 +47,11 @@ import {
   createImageComponent,
 } from "@engine/components/image/imageComponent";
 import { createColorComponent } from "@engine/components/color/colorComponent";
+import { createPopComponent } from "@engine/components/pop/popComponent";
+import { createShakeComponent } from "@engine/components/shake/shakeComponent";
+import { createBounceComponent } from "@engine/components/bounce/bounceComponent";
+import { createSlideComponent } from "@engine/components/slide/slideComponent";
+import { useAnimations } from "@engine/animations/AnimationsContext";
 
 const DELETREO_ASSETS = {
   mainFrame: { kind: "image", path: "games/deletreo/mainFrame.png" },
@@ -77,9 +78,7 @@ interface DeletreoData {
   groups: DeletreoGroup[];
 }
 
-const HIDDEN_POS = { x: 25, y: -688 };
-const SHOWN_POS = { x: 25, y: -358 };
-
+const ANCHOR_ID = "frame-anchor";
 const FRAME_ID = "main-frame";
 const TEXT_ID = "text";
 
@@ -116,14 +115,30 @@ export default function DeletreoPage() {
       components: [createColorComponent({ value: "#01FF02" })],
     }),
     createGameObject({
-      id: FRAME_ID,
-      name: "MainFrame",
+      id: ANCHOR_ID,
+      name: "Anchor",
       transform: {
-        position: { ...HIDDEN_POS },
+        position: { x: 25, y: -358 },
         size: { x: 1170, y: 204 },
         pivot: { x: 0.5, y: 0.5 },
       },
-      components: [createImageComponent({ src: "", fit: "fill" })],
+    }),
+    createGameObject({
+      id: FRAME_ID,
+      name: "MainFrame",
+      parentId: ANCHOR_ID,
+      transform: {
+        position: { x: 0, y: 0 },
+        size: { x: 1170, y: 204 },
+        pivot: { x: 0.5, y: 0.5 },
+      },
+      components: [
+        createImageComponent({ src: "", fit: "fill" }),
+        createPopComponent(),
+        createShakeComponent(),
+        createBounceComponent(),
+        createSlideComponent(),
+      ],
     }),
     createGameObject({
       id: TEXT_ID,
@@ -143,7 +158,6 @@ export default function DeletreoPage() {
   const [normalSrc, setNormalSrc] = useState("");
 
   const selected = gameObjects.find((go) => go.id === selectedId) ?? null;
-  const mainFrame = gameObjects.find((go) => go.id === FRAME_ID)!;
 
   const buildNode = (go: GameObject): TreeNode => {
     const children = gameObjects
@@ -278,36 +292,18 @@ export default function DeletreoPage() {
         ),
       );
 
-  const { ref: shakeRef, shake } = useShake<HTMLDivElement>();
-  const { ref: popRef, pop } = usePop<HTMLDivElement>();
-  const bounce = useBounceMove();
-  const slide = useSlide();
+  const { trigger } = useAnimations();
 
-  const setFramePosition = (position: Vec2) =>
-    setGameObjects((prev) =>
-      prev.map((go) =>
-        go.id === FRAME_ID
-          ? { ...go, transform: { ...go.transform, position } }
-          : go,
+  const animatePosition = useCallback(
+    (id: string, position: Vec2) =>
+      setGameObjects((prev) =>
+        prev.map((go) =>
+          go.id === id
+            ? { ...go, transform: { ...go.transform, position } }
+            : go,
+        ),
       ),
-    );
-
-  const showFrame = () => {
-    slide.cancel();
-    bounce.moveTo(mainFrame.transform.position, SHOWN_POS, setFramePosition);
-  };
-
-  const hideFrame = () => {
-    bounce.cancel();
-    slide.moveTo(mainFrame.transform.position, HIDDEN_POS, setFramePosition);
-  };
-
-  const frameRef = useCallback(
-    (node: HTMLDivElement | null) => {
-      shakeRef.current = node;
-      popRef.current = node;
-    },
-    [shakeRef, popRef],
+    [],
   );
 
   const stageRef = useRef<HTMLDivElement>(null);
@@ -439,16 +435,16 @@ export default function DeletreoPage() {
       setSpellStep(word.length);
       setMainFrameImageSrc(normalSrc);
       if (correctUrl) playSound(correctUrl);
-      pop();
+      trigger(FRAME_ID, "pop");
     },
     onMarkError: () => {
       if (errorUrl) setMainFrameImageSrc(errorUrl);
       if (incorrectUrl) playSound(incorrectUrl);
-      shake();
+      trigger(FRAME_ID, "shake");
     },
     onInteract: () => setSpellStep((s) => Math.min(s + 1, word.length)),
-    onArrowUp: showFrame,
-    onArrowDown: hideFrame,
+    onArrowUp: () => trigger(FRAME_ID, "bounce"),
+    onArrowDown: () => trigger(FRAME_ID, "slide"),
   });
 
   const renderContent = (go: GameObject) => (
@@ -498,9 +494,7 @@ export default function DeletreoPage() {
                         selectedId={selectedId}
                         editMode={editMode}
                         renderContent={renderContent}
-                        contentRef={(g) =>
-                          g.id === FRAME_ID ? frameRef : undefined
-                        }
+                        onAnimatePosition={animatePosition}
                       />
                     ))}
                 </div>

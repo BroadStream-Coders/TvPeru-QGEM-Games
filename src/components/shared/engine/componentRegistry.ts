@@ -7,6 +7,10 @@ import { imageDefinition } from "@engine/components/image";
 import { colorDefinition } from "@engine/components/color";
 import { videoDefinition } from "@engine/components/video";
 import { textDefinition } from "@engine/components/text";
+import { popDefinition } from "@engine/components/pop";
+import { shakeDefinition } from "@engine/components/shake";
+import { bounceDefinition } from "@engine/components/bounce";
+import { slideDefinition } from "@engine/components/slide";
 
 export interface ComponentDefinition<
   C extends GameObjectComponent = GameObjectComponent,
@@ -49,6 +53,10 @@ export const NATIVE_COMPONENTS: ComponentDefinition[] = [
   colorDefinition,
   videoDefinition,
   textDefinition,
+  popDefinition,
+  shakeDefinition,
+  bounceDefinition,
+  slideDefinition,
 ];
 
 const ComponentRegistryContext = createContext<ComponentRegistry>(

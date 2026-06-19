@@ -29,14 +29,6 @@ su "Hecho cuando", pero no es el foco actual).
 
 # Fase 1 — Juegos a mano (la ventana de oportunidad)
 
-## [RM-013] Juego "Cálculo Mental"
-
-- **Objetivo:** Crear el juego "Cálculo Mental" como workspace propio. Va **antes**
-  de Operaciones Combinadas (RM-004).
-- **Hecho cuando:** existe su workspace, carga su session file y se muestra
-  fullscreen listo para broadcast.
-- **Fecha:** 2026-06-16 · **Estado:** En progreso (2026-06-17)
-
 ## [RM-014] Juego "Intruso"
 
 - **Objetivo:** Crear el juego "Intruso" como workspace propio. Va **antes** de
@@ -60,6 +52,66 @@ su "Hecho cuando", pero no es el foco actual).
 - **Hecho cuando:** existe su workspace, carga su session file y se muestra
   fullscreen listo para broadcast.
 - **Fecha:** 2026-06-11 · **Estado:** En progreso (2026-06-11)
+
+---
+
+# Mejoras comprometidas surgidas al cerrar Cálculo Mental (RM-013)
+
+> Patrones reales detectados al terminar Cálculo Mental. Varios obligan a cambiar
+> cómo funciona el Slot (RM-023), por eso se cerró antes un commit estable.
+
+## [RM-020] Auto-size en el componente Text
+
+- **Objetivo:** El componente Text gana auto-size: la fuente se ajusta sola entre
+  un mínimo y un máximo configurables, como el Auto Size de TextMeshPro en Unity.
+- **Hecho cuando:** en el inspector del Text se fijan fontSize mínimo y máximo y el
+  texto escala dentro de ese rango para caber en su RectTransform sin desbordar.
+- **Fecha:** 2026-06-19 · **Estado:** Abierto
+
+## [RM-021] Modificador de estilo de letra en Text (promueve WL-004)
+
+- **Objetivo:** El componente Text expone estilo normal/negrita/cursiva
+  (`font-weight` + `font-style`) ajustable desde el inspector. Promueve WL-004: hoy
+  Text y Spellframe fuerzan un peso fijo en la vista.
+- **Hecho cuando:** desde el inspector del Text se elige normal/negrita/cursiva y la
+  vista lo refleja.
+- **Fecha:** 2026-06-19 · **Estado:** Abierto
+
+## [RM-022] Una sola fuente en el build; el resto desde storage
+
+- **Objetivo:** El build de Next incluye una única fuente base; las demás se piensan
+  como provenientes del storage (Supabase futuro), no empaquetadas. Alinea con la
+  filosofía de assets (catálogo + resolver, RM-017).
+- **Hecho cuando:** el bundle solo trae una fuente; cargar otras se hace en runtime
+  (storage/archivo), no por import estático.
+- **Fecha:** 2026-06-19 · **Estado:** Abierto
+
+## [RM-023] Slot de Cálculo Mental con 2 hijos Text para delimitar el texto
+
+- **Objetivo:** El Slot pasa a tener 2 GameObjects hijos con componente Text
+  (pregunta y respuesta) para delimitar manualmente el área del texto con el
+  RectTransform existente, en vez de dibujarlo internamente. Cambia cómo funciona el
+  Slot; depende de RM-020 y RM-021.
+- **Hecho cuando:** cada Slot renderiza pregunta y respuesta vía hijos con Text,
+  posicionables/redimensionables con RectTransform, y el reveal sigue funcionando.
+- **Fecha:** 2026-06-19 · **Estado:** Abierto
+
+## [RM-024] Cargar nuevas fuentes en Cálculo Mental
+
+- **Objetivo:** Tener una forma de cargar nuevas fuentes en Cálculo Mental. Si se
+  usa el componente Text (que ya carga fuentes vía FontFace), queda resuelto.
+  Relacionado con RM-022 y RM-023.
+- **Hecho cuando:** en Cálculo Mental se puede asignar una fuente cargada a los
+  textos (vía el componente Text).
+- **Fecha:** 2026-06-19 · **Estado:** Abierto
+
+## [RM-025] Poder eliminar GameObjects
+
+- **Objetivo:** Poder eliminar GameObjects desde la UI; hoy solo se pueden crear.
+  Se relaciona con WL-006 (panel de click derecho en el Hierarchy).
+- **Hecho cuando:** existe una acción para borrar un GameObject y sus hijos, y el
+  árbol/escena se actualizan coherentemente.
+- **Fecha:** 2026-06-19 · **Estado:** Abierto
 
 ---
 

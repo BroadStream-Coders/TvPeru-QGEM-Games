@@ -9,11 +9,13 @@ import {
 const KEY_LEGEND: { keys: string; label: string }[] = [
   { keys: "Numpad 0-9", label: "Elegir grupo" },
   { keys: "0-9", label: "Elegir tablero (Shift +10 · Alt +20)" },
+  { keys: "N / B", label: "Tablero siguiente / anterior" },
   { keys: "→", label: "Revelar siguiente pregunta" },
+  { keys: "←", label: "Retroceder slot" },
   { keys: "M", label: "Mostrar respuesta (correcto)" },
   { keys: "F", label: "Marcar error" },
   { keys: "C", label: "Limpiar marca" },
-  { keys: "↑ / ↓", label: "Bounce / Slide del slot actual" },
+  { keys: "↑ / ↓", label: "Entrada / Salida de todos los slots" },
 ];
 
 export function ControllerInspector({
@@ -43,11 +45,6 @@ export function ControllerInspector({
   };
 
   const groupCount = component.groups.length;
-  const boardCount = component.groups.reduce((n, g) => n + g.boards.length, 0);
-  const slotCount = component.groups.reduce(
-    (n, g) => n + g.boards.reduce((m, b) => m + b.slots.length, 0),
-    0,
-  );
   const boardsInGroup =
     component.groups[component.groupIndex]?.boards.length ?? 0;
 
@@ -87,9 +84,6 @@ export function ControllerInspector({
             <span className="truncate text-foreground">
               {component.fileName}
             </span>
-            <span>Grupos: {groupCount}</span>
-            <span>Tableros: {boardCount}</span>
-            <span>Slots: {slotCount}</span>
             <span className="mt-1 text-foreground">
               Grupo {groupCount ? component.groupIndex + 1 : 0}/{groupCount} ·
               Tablero {boardsInGroup ? component.boardIndex + 1 : 0}/

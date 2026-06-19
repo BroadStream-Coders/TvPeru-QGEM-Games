@@ -12,6 +12,9 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-013] Juego "Cálculo Mental" (2026-06-19 11:14)
+Workspace propio: 4 slots (componente `slot` — frame azul+pregunta, morado+respuesta, badge check/X) hijos de un GameObject `Controller` que carga el JSON (grupos>tableros>slots) y los puebla de forma destructiva. Teclas: →/← revelar/retroceder pregunta, M respuesta+correcto, F error, C limpiar, ↑/↓ entrada/salida escalonada (0.1s) de los 4 slots, N/B navegar tableros.
+
 ## [RM-019] Controller de datos para Deletreo (2026-06-19 09:10)
 Deletreo replica el patrón de Cálculo Mental: GameObject `Controller` con componente que carga el JSON (`isDeletreoData`) y gestiona navegación grupos/slots; el `onLoad` del header se retiró. La info referencial + leyenda de teclas viven en el inspector del Controller, eliminando `StatusCard` y `LegendCard`.
 

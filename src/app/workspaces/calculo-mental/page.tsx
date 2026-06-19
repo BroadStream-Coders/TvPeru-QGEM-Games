@@ -38,7 +38,6 @@ import {
 } from "@engine/componentRegistry";
 import { AddComponentButton } from "@engine/AddComponentButton";
 import { createColorComponent } from "@engine/components/color/colorComponent";
-import { createImageComponent } from "@engine/components/image/imageComponent";
 import { createPopComponent } from "@engine/components/pop/popComponent";
 import { createShakeComponent } from "@engine/components/shake/shakeComponent";
 import { createBounceComponent } from "@engine/components/bounce/bounceComponent";
@@ -60,7 +59,6 @@ const CALCULO_ASSETS = {
   purpleFrame: { kind: "image", path: "games/calculo-mental/purpleFrame.png" },
   check: { kind: "image", path: "games/calculo-mental/check.png" },
   x: { kind: "image", path: "games/calculo-mental/x.png" },
-  screenshot: { kind: "image", path: "games/calculo-mental/screenshot.png" },
 } satisfies AssetCatalog;
 
 const CATALOG: AssetCatalog = {
@@ -76,16 +74,15 @@ const ASSET_KINDS: Record<string, AssetKind> = Object.fromEntries(
 );
 
 const BACKGROUND_ID = "background";
-const REFERENCE_ID = "reference";
 const CONTROLLER_ID = "controller";
 
 const SLOT_COUNT = 4;
 const SLOT_IDS = Array.from({ length: SLOT_COUNT }, (_, i) => `slot-${i}`);
 const SLOT_POSITIONS: Vec2[] = [
-  { x: -675, y: 330 },
-  { x: -675, y: 110 },
-  { x: -675, y: -110 },
-  { x: -675, y: -330 },
+  { x: -675, y: -400 },
+  { x: -280, y: -400 },
+  { x: 115, y: -400 },
+  { x: 510, y: -400 },
 ];
 
 const registry = createComponentRegistry([
@@ -103,7 +100,6 @@ export default function CalculoMentalPage() {
   const purpleUrl = assets.purpleFrame?.url;
   const checkUrl = assets.check?.url;
   const xUrl = assets.x?.url;
-  const referenceUrl = assets.screenshot?.url;
   const correctUrl = assets.correct?.url;
   const incorrectUrl = assets.incorrect?.url;
 
@@ -121,19 +117,20 @@ export default function CalculoMentalPage() {
       components: [createColorComponent({ value: "#01FF02" })],
     }),
     createGameObject({
-      id: REFERENCE_ID,
-      name: "Referencia",
+      id: CONTROLLER_ID,
+      name: "Controller",
       transform: {
         position: { x: 0, y: 0 },
         size: { x: DESIGN_WIDTH, y: DESIGN_HEIGHT },
         pivot: { x: 0.5, y: 0.5 },
       },
-      components: [createImageComponent({ src: "", fit: "fill" })],
+      components: [createControllerComponent()],
     }),
     ...SLOT_IDS.map((id, i) =>
       createGameObject({
         id,
         name: `Slot ${i + 1}`,
+        parentId: CONTROLLER_ID,
         transform: {
           position: SLOT_POSITIONS[i],
           size: { x: 400, y: 200 },
@@ -148,16 +145,6 @@ export default function CalculoMentalPage() {
         ],
       }),
     ),
-    createGameObject({
-      id: CONTROLLER_ID,
-      name: "Controller",
-      transform: {
-        position: { x: 0, y: 0 },
-        size: { x: 0, y: 0 },
-        pivot: { x: 0.5, y: 0.5 },
-      },
-      components: [createControllerComponent()],
-    }),
   ]);
   const [selectedId, setSelectedId] = useState<string>(SLOT_IDS[0]);
 
@@ -261,20 +248,6 @@ export default function CalculoMentalPage() {
     (goId: string, index: number) => (next: GameObjectComponent) =>
       patchComponent(goId, index, next);
 
-  const setImageSrc = (id: string, src: string) =>
-    setGameObjects((prev) =>
-      prev.map((go) =>
-        go.id === id
-          ? {
-              ...go,
-              components: go.components.map((c) =>
-                c.type === "image" ? { ...c, src } : c,
-              ),
-            }
-          : go,
-      ),
-    );
-
   const patchSlot = (id: string, patch: Partial<SlotComponent>) =>
     setGameObjects((prev) =>
       prev.map((go) =>
@@ -366,7 +339,6 @@ export default function CalculoMentalPage() {
 
   useEffect(() => {
     if (!ready) return;
-    if (referenceUrl) setImageSrc(REFERENCE_ID, referenceUrl);
     setGameObjects((prev) =>
       prev.map((go) =>
         SLOT_IDS.includes(go.id)
@@ -387,7 +359,7 @@ export default function CalculoMentalPage() {
           : go,
       ),
     );
-  }, [ready, blueUrl, purpleUrl, checkUrl, xUrl, referenceUrl]);
+  }, [ready, blueUrl, purpleUrl, checkUrl, xUrl]);
 
   const controller = gameObjects
     .find((go) => go.id === CONTROLLER_ID)
@@ -461,12 +433,38 @@ export default function CalculoMentalPage() {
     patchController({ boardIndex: n });
   };
 
+  const nextBoard = () => {
+    const boards = groups[groupIndex]?.boards ?? [];
+    if (boardIndex >= boards.length - 1) return;
+    patchController({ boardIndex: boardIndex + 1 });
+  };
+
+  const prevBoard = () => {
+    if (boardIndex <= 0) return;
+    patchController({ boardIndex: boardIndex - 1 });
+  };
+
   const revealNextQuestion = () => {
     const next = cursor + 1;
     if (next >= SLOT_COUNT || next >= boardSlots.length) return;
     patchSlot(SLOT_IDS[next], { showQuestion: true });
     patchController({ cursor: next });
   };
+
+  const selectBackSlot = () => {
+    if (cursor < 0) return;
+    patchSlot(SLOT_IDS[cursor], {
+      showQuestion: false,
+      showAnswer: false,
+      status: "none",
+    });
+    patchController({ cursor: cursor - 1 });
+  };
+
+  const playSequence = (anim: "bounce" | "slide", delayMs = 100) =>
+    SLOT_IDS.forEach((id, i) =>
+      setTimeout(() => trigger(id, anim), i * delayMs),
+    );
 
   const showCurrentAnswer = () => {
     if (cursor < 0) return;
@@ -490,16 +488,15 @@ export default function CalculoMentalPage() {
   useGameKeys({
     onNavigate: selectGroup,
     onNumber: selectBoard,
+    onNext: nextBoard,
+    onBack: prevBoard,
     onArrowRight: revealNextQuestion,
+    onArrowLeft: selectBackSlot,
     onShowAnswer: showCurrentAnswer,
     onMarkError: markCurrentError,
     onClear: clearCurrent,
-    onArrowUp: () => {
-      if (cursor >= 0) trigger(SLOT_IDS[cursor], "bounce");
-    },
-    onArrowDown: () => {
-      if (cursor >= 0) trigger(SLOT_IDS[cursor], "slide");
-    },
+    onArrowUp: () => playSequence("bounce"),
+    onArrowDown: () => playSequence("slide"),
   });
 
   const renderContent = (go: GameObject) => (

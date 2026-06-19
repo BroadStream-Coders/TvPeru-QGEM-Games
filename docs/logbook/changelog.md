@@ -12,6 +12,10 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [TD-012] Borrar el `NumberField` muerto en `shared/` (2026-06-19 14:50)
+Eliminado `src/components/shared/NumberField.tsx`, código muerto que nadie importaba
+(todo el repo usa `@engine/NumberField`). Build limpio tras el borrado.
+
 ## [RM-020] Auto-size en el componente Text (2026-06-19 14:17)
 Text gana Auto Size estilo TextMeshPro: toggle + fontSize mín/máx que escala el
 texto vía búsqueda binaria para llenar su RectTransform (alto en modo wrap). Inspector

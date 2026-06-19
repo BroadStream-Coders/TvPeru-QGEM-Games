@@ -47,14 +47,6 @@ changelog y se borra de aquí.
 - **Impacto futuro:** En cabina, un operador puede cargar el archivo, no ver cambios y creer que la app falló. Hay que cablear `data` al render (poblar celdas/bandeja desde la sesión) y quitar el `console.log`.
 - **Fecha:** 2026-06-19 · **Estado:** Abierto
 
-## [TD-012] `NumberField` duplicado: una versión muerta en `shared/`
-
-- **Ubicación:** `src/components/shared/NumberField.tsx`
-- **Riesgo:** 3/10
-- **Problema:** Este `NumberField` no lo importa nadie; todo el repo usa `@engine/NumberField` (la versión con `NumberInput` y evaluador de expresiones). Es código muerto que duplica un nombre vivo.
-- **Impacto futuro:** Invita a editar el archivo equivocado y a creer que el componente compartido es el que se usa. Borrarlo (git conserva historial).
-- **Fecha:** 2026-06-19 · **Estado:** Abierto
-
 ## [TD-013] Mensaje de error llama "colector" a la app, que es de visualización
 
 - **Ubicación:** `src/helpers/persistence.ts:16`

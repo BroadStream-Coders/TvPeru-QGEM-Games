@@ -62,15 +62,6 @@ su "Hecho cuando", pero no es el foco actual).
   texto escala dentro de ese rango para caber en su RectTransform sin desbordar.
 - **Fecha:** 2026-06-19 · **Estado:** Abierto
 
-## [RM-021] Modificador de estilo de letra en Text (promueve WL-004)
-
-- **Objetivo:** El componente Text expone estilo normal/negrita/cursiva
-  (`font-weight` + `font-style`) ajustable desde el inspector. Promueve WL-004: hoy
-  Text y Spellframe fuerzan un peso fijo en la vista.
-- **Hecho cuando:** desde el inspector del Text se elige normal/negrita/cursiva y la
-  vista lo refleja.
-- **Fecha:** 2026-06-19 · **Estado:** Abierto
-
 ## [RM-022] Una sola fuente en el build; el resto desde storage
 
 - **Objetivo:** El build de Next incluye una única fuente base; las demás se piensan

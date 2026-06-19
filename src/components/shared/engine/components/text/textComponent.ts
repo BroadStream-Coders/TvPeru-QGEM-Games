@@ -12,6 +12,9 @@ export interface TextComponent extends GameObjectComponent {
   fontFamily?: string;
   fontSrc?: string;
   fontFileName?: string;
+  bold: boolean;
+  italic: boolean;
+  underline: boolean;
   alignH: TextAlignH;
   alignV: TextAlignV;
   overflow: TextOverflow;
@@ -28,6 +31,9 @@ export function createTextComponent(
     fontFamily: init?.fontFamily,
     fontSrc: init?.fontSrc,
     fontFileName: init?.fontFileName,
+    bold: init?.bold ?? false,
+    italic: init?.italic ?? false,
+    underline: init?.underline ?? false,
     alignH: init?.alignH ?? "center",
     alignV: init?.alignV ?? "middle",
     overflow: init?.overflow ?? "wrap",

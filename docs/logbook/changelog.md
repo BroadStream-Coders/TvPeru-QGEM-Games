@@ -12,6 +12,12 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-021] Modificador de estilo de letra en Text (2026-06-19 11:44)
+El componente Text expone negrita/cursiva/subrayado como tres toggles independientes y acumulables (booleanos `bold`/`italic`/`underline`, todos deseleccionables) en el inspector; el `TextView` los mapea a `font-weight`/`font-style`/`text-decoration`. Promovió y cerró WL-004.
+
+## [WL-004] Control de grosor de texto (font-weight) (2026-06-19 11:40)
+Cerrada al implementarse como RM-021.
+
 ## [WL-006] Menú contextual de click derecho en el Hierarchy (2026-06-19 11:28)
 Se reemplazó el botón "+" por un menú de click derecho: sobre un nodo "Crear hijo", sobre la zona vacía "Crear GameObject" (root). Nuevo primitivo `ui/context-menu.tsx` (radix). Realizada junto con RM-025.
 

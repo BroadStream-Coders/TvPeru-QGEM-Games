@@ -8,6 +8,9 @@ import {
   AlignStartHorizontal,
   AlignCenterHorizontal,
   AlignEndHorizontal,
+  Bold,
+  Italic,
+  Underline,
   LucideIcon,
 } from "lucide-react";
 import { NumberField } from "@engine/NumberField";
@@ -31,6 +34,16 @@ const ALIGN_V_OPTIONS: { value: TextAlignV; icon: LucideIcon; title: string }[] 
     { value: "middle", icon: AlignCenterHorizontal, title: "Medio" },
     { value: "bottom", icon: AlignEndHorizontal, title: "Abajo" },
   ];
+
+const STYLE_TOGGLES: {
+  key: "bold" | "italic" | "underline";
+  icon: LucideIcon;
+  title: string;
+}[] = [
+  { key: "bold", icon: Bold, title: "Negrita" },
+  { key: "italic", icon: Italic, title: "Cursiva" },
+  { key: "underline", icon: Underline, title: "Subrayado" },
+];
 
 function AlignGroup<T extends string>({
   label,
@@ -129,6 +142,29 @@ export function TextInspector({
           value={component.fontSize}
           onChange={(fontSize) => onChange({ ...component, fontSize })}
         />
+
+        <div className="flex items-center gap-2">
+          <span className="w-12 shrink-0 text-2xs font-mono uppercase tracking-wider text-muted-foreground">
+            Estilo
+          </span>
+          <div className="flex flex-1 gap-1">
+            {STYLE_TOGGLES.map(({ key, icon: Icon, title }) => (
+              <button
+                key={key}
+                type="button"
+                onClick={() => onChange({ ...component, [key]: !component[key] })}
+                title={title}
+                className={`flex h-7 flex-1 items-center justify-center rounded-md border transition-colors ${
+                  component[key]
+                    ? "border-brand bg-brand/10 text-foreground"
+                    : "border-border text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                <Icon size={14} />
+              </button>
+            ))}
+          </div>
+        </div>
 
         <label className="flex items-center gap-2">
           <span className="w-12 shrink-0 text-2xs font-mono uppercase tracking-wider text-muted-foreground">

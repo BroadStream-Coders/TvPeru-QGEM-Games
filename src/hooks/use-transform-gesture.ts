@@ -106,6 +106,30 @@ export function useTransformGesture({
             if (g.handle.includes("n")) top = bottom - MIN_SIZE;
             else bottom = top + MIN_SIZE;
           }
+
+          if (ev.shiftKey) {
+            const aspect = (g.right - g.left) / (g.bottom - g.top);
+            if (g.handle.length === 2) {
+              let cw = right - left;
+              let ch = bottom - top;
+              if (cw / aspect >= ch) ch = cw / aspect;
+              else cw = ch * aspect;
+              if (g.handle.includes("w")) left = right - cw;
+              else right = left + cw;
+              if (g.handle.includes("n")) top = bottom - ch;
+              else bottom = top + ch;
+            } else if (g.handle === "e" || g.handle === "w") {
+              const ch = (right - left) / aspect;
+              const midY = (top + bottom) / 2;
+              top = midY - ch / 2;
+              bottom = midY + ch / 2;
+            } else {
+              const cw = (bottom - top) * aspect;
+              const midX = (left + right) / 2;
+              left = midX - cw / 2;
+              right = midX + cw / 2;
+            }
+          }
         }
 
         const w = right - left;

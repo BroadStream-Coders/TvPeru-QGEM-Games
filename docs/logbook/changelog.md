@@ -12,6 +12,15 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-009] Componente Control de video por teclas (2026-06-25 13:33)
+Nueva tripleta `videoControl` (nativa, registrada): controla el `<video>` hermano de
+su GameObject con dos teclas asignables —pausa/play toggle (K) y reinicio (J) por
+defecto; reinicio deja el video pausado en 0—. Su View ata un listener global sin UI;
+el inspector captura las teclas. El inspector de Video gana un botón "Agregar control
+de video" (un click) vía el nuevo prop opcional `onAddComponent` del editor, cableado
+en los 4 workspaces, y dos checkboxes Sonido/Loop (`muted`/`loop` al modelo, mute y
+loop activos por defecto). Resto de controles → WL-009.
+
 ## [TD-013] El mensaje de error ya no llama "colector" a la app (2026-06-19 14:57)
 En `persistence.ts`, el error de validación pasa de "…para este colector." a
 "…para este juego.", acorde a que la app es de visualización, no un colector.

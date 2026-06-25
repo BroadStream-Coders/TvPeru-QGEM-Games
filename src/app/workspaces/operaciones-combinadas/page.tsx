@@ -349,6 +349,7 @@ export default function OperacionesCombinadasPage() {
                     }
                     onRemove={() => removeComponent(selected.id, index)}
                     onResize={(size) => setGameObjectSize(selected.id, size)}
+                    onAddComponent={(type) => addComponent(selected.id, type)}
                   />
                 ) : null;
               })}

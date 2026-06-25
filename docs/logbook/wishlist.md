@@ -27,6 +27,10 @@ Componente que ordena GameObjects hijos automáticamente, como los Layout Group 
 
 Agregar `localScale` al RectTransform y que se propague a todos los hijos del subárbol, como el localScale de Unity.
 
+## [WL-009] Más controles para el componente Control de video
+
+El Control de video arrancó (RM-009) sólo con pausa (K) y reinicio (J). Extras posibles, sin compromiso: play/stop como teclas separadas, adelantar/retroceder (seek ±n segundos), saltar a un tiempo fijo, velocidad de reproducción, y elegir a qué video apunta cuando hay varios (hoy controla el `<video>` hermano de su GameObject).
+
 ## [WL-008] Revisar la creación de componentes y el nombre de la clase base
 
 La tripleta de un componente genera bastantes archivos; evaluar simplificarlo. Además, valorar renombrar la clase base `GameObjectComponent` a solo `Component`. A decidir al momento de tocarlo.

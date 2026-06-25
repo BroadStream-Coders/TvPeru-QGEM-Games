@@ -109,15 +109,6 @@ su "Hecho cuando", pero no es el foco actual).
   engine respeta su jerarquía/transform y el especial aporta su comportamiento extra.
 - **Fecha:** 2026-06-11 · **Estado:** Diferido (2026-06-17)
 
-## [RM-009] Componente controlador de video (teclas)
-
-- **Objetivo:** Componente para controlar la reproducción de un video mediante
-  teclas asignables: reiniciar, pausar, dar play, adelantar/retroceder, etc.
-- **Hecho cuando:** existe la tripleta del componente registrada; al asignar teclas
-  desde el inspector, presionarlas controla el video (play/pausa/reinicio/seek) en
-  tiempo real.
-- **Fecha:** 2026-06-16 · **Estado:** Diferido (2026-06-17)
-
 ## [RM-010] Diagnóstico de FPS y rendimiento
 
 - **Objetivo:** Herramienta de diagnóstico (componente o GameObject especial, a

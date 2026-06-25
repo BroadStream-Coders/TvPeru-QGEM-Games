@@ -5,6 +5,7 @@ import {
   Trash2,
   Maximize2,
   Link,
+  Keyboard,
 } from "lucide-react";
 import {
   VideoComponent,
@@ -17,11 +18,13 @@ export function VideoInspector({
   onChange,
   onRemove,
   onResize,
+  onAddComponent,
 }: {
   component: VideoComponent;
   onChange: (next: VideoComponent) => void;
   onRemove: () => void;
   onResize: (size: { x: number; y: number }) => void;
+  onAddComponent?: (type: string) => void;
 }) {
   const [urlDraft, setUrlDraft] = useState(
     component.source === "url" ? component.src : "",
@@ -188,6 +191,45 @@ export function VideoInspector({
             </option>
           </select>
         </label>
+
+        <div className="flex items-center gap-4">
+          <label className="flex cursor-pointer items-center gap-1.5">
+            <input
+              type="checkbox"
+              checked={!component.muted}
+              onChange={(e) =>
+                onChange({ ...component, muted: !e.target.checked })
+              }
+              className="size-4 shrink-0 cursor-pointer accent-brand"
+            />
+            <span className="text-2xs font-semibold uppercase tracking-wider text-muted-foreground">
+              Sonido
+            </span>
+          </label>
+          <label className="flex cursor-pointer items-center gap-1.5">
+            <input
+              type="checkbox"
+              checked={component.loop}
+              onChange={(e) =>
+                onChange({ ...component, loop: e.target.checked })
+              }
+              className="size-4 shrink-0 cursor-pointer accent-brand"
+            />
+            <span className="text-2xs font-semibold uppercase tracking-wider text-muted-foreground">
+              Loop
+            </span>
+          </label>
+        </div>
+
+        {onAddComponent && (
+          <button
+            onClick={() => onAddComponent("videoControl")}
+            className="inline-flex w-fit items-center gap-1.5 rounded-md border border-border px-2.5 py-1 text-2xs font-semibold uppercase tracking-wider text-muted-foreground transition-colors hover:border-brand hover:text-foreground"
+          >
+            <Keyboard size={13} />
+            Agregar control de video
+          </button>
+        )}
       </div>
     </div>
   );

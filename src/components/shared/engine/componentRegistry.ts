@@ -6,6 +6,7 @@ import { Vec2 } from "@engine/RectTransform";
 import { imageDefinition } from "@engine/components/image";
 import { colorDefinition } from "@engine/components/color";
 import { videoDefinition } from "@engine/components/video";
+import { videoControlDefinition } from "@engine/components/videoControl";
 import { textDefinition } from "@engine/components/text";
 import { popDefinition } from "@engine/components/pop";
 import { shakeDefinition } from "@engine/components/shake";
@@ -24,6 +25,7 @@ export interface ComponentDefinition<
     onChange: (next: C) => void;
     onRemove: () => void;
     onResize: (size: Vec2) => void;
+    onAddComponent?: (type: string) => void;
   }>;
 }
 
@@ -52,6 +54,7 @@ export const NATIVE_COMPONENTS: ComponentDefinition[] = [
   imageDefinition,
   colorDefinition,
   videoDefinition,
+  videoControlDefinition,
   textDefinition,
   popDefinition,
   shakeDefinition,

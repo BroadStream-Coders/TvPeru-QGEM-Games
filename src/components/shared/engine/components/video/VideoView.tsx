@@ -6,8 +6,8 @@ export function VideoView({ component }: { component: VideoComponent }) {
     <video
       src={component.src}
       autoPlay
-      loop
-      muted
+      loop={component.loop}
+      muted={component.muted}
       playsInline
       className="h-full w-full"
       style={{ objectFit: component.fit }}

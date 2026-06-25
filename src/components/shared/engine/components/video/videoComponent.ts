@@ -8,6 +8,8 @@ export interface VideoComponent extends GameObjectComponent {
   src: string;
   fit: VideoFit;
   source: VideoSource;
+  muted: boolean;
+  loop: boolean;
   fileName?: string;
 }
 
@@ -19,6 +21,8 @@ export function createVideoComponent(
     src: init?.src ?? "",
     fit: init?.fit ?? "fill",
     source: init?.source ?? "url",
+    muted: init?.muted ?? true,
+    loop: init?.loop ?? true,
     fileName: init?.fileName,
   };
 }

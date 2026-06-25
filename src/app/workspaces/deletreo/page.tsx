@@ -540,6 +540,7 @@ export default function DeletreoPage() {
                     onChange={onComponentChange(selected.id, index)}
                     onRemove={() => removeComponent(selected.id, index)}
                     onResize={(size) => setGameObjectSize(selected.id, size)}
+                    onAddComponent={(type) => addComponent(selected.id, type)}
                   />
                 ) : null;
               })}

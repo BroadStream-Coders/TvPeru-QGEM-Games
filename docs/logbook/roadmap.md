@@ -98,17 +98,6 @@ su "Hecho cuando", pero no es el foco actual).
 > workspaces. La top bar del diseño mapea al `WorkspaceHeader` compartido y queda
 > **fuera** de este restyle.
 
-## [RM-026] Tokens de diseño + fuentes IBM Plex + scrollbars
-
-- **Objetivo:** Sentar la base visual: agregar la paleta del diseño como tokens
-  CSS en `globals.css` (bg/panel/head/elev/line/txt/dim/faint + acento azul y
-  acentos por tipo verde/ámbar/violeta), cargar **IBM Plex Sans** (UI) e **IBM
-  Plex Mono** (números) vía `next/font`, y el estilo de scrollbar custom (`.scrl`).
-- **Hecho cuando:** los tokens existen y son consumibles desde Tailwind/CSS, las
-  dos fuentes Plex están disponibles, y los scrollbars de los paneles usan el
-  estilo nuevo. Build limpio.
-- **Fecha:** 2026-06-25 · **Estado:** Abierto
-
 ## [RM-027] Chrome de `SidePanel` (header HEAD + búsqueda + acción)
 
 - **Objetivo:** Rediseñar `SidePanel`: cabecera tipo barra `--head` con título en

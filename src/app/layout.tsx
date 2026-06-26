@@ -1,17 +1,11 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import { jetBrainsMono, poppinsSemiBold } from "@/lib/fonts";
+import {
+  ibmPlexSans,
+  ibmPlexMono,
+  jetBrainsMono,
+  poppinsSemiBold,
+} from "@/lib/fonts";
 import "./globals.css";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   title: {
@@ -29,7 +23,7 @@ export default function RootLayout({
   return (
     <html lang="es" className="dark">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${jetBrainsMono.variable} ${poppinsSemiBold.variable} antialiased`}
+        className={`${ibmPlexSans.variable} ${ibmPlexMono.variable} ${jetBrainsMono.variable} ${poppinsSemiBold.variable} antialiased`}
       >
         {children}
       </body>

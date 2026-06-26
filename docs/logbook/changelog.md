@@ -12,6 +12,13 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-026] Tokens de diseño + fuentes IBM Plex + scrollbars (2026-06-25 22:30)
+Base del restyle del sandbox: paleta del editor como tokens (`--editor-*` crudos +
+utilidades Tailwind `panel/head/elev/line/ink/dim/faint/acc/type-*/anim` vía `@theme`)
+en `globals.css`, **IBM Plex Sans** (UI) e **IBM Plex Mono** (números) vía
+`next/font/google` reemplazando a Geist como base, scrollbar `.scrl` y `::selection`
+de acento. Build limpio; aún sin aplicar a los paneles (eso va en RM-027+).
+
 ## [RM-009] Componente Control de video por teclas (2026-06-25 13:33)
 Nueva tripleta `videoControl` (nativa, registrada): controla el `<video>` hermano de
 su GameObject con dos teclas asignables —pausa/play toggle (K) y reinicio (J) por

@@ -7,8 +7,8 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-ibm-plex-sans);
+  --font-mono: var(--font-ibm-plex-mono);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -49,6 +49,28 @@
   --color-brand: var(--brand);
   --color-brand-foreground: var(--brand-foreground);
   --color-success: var(--success);
+
+  /* Editor palette (RM-026) — chrome del sandbox estilo editor */
+  --color-bg: var(--editor-bg);
+  --color-stage: var(--editor-stage);
+  --color-panel: var(--editor-panel);
+  --color-panel-2: var(--editor-panel-2);
+  --color-head: var(--editor-head);
+  --color-elev: var(--editor-elev);
+  --color-elev-2: var(--editor-elev-2);
+  --color-line: var(--editor-line);
+  --color-line-2: var(--editor-line-2);
+  --color-edge: var(--editor-edge);
+  --color-ink: var(--editor-ink);
+  --color-dim: var(--editor-dim);
+  --color-faint: var(--editor-faint);
+  --color-acc: var(--editor-acc);
+  --color-acc-bg: var(--editor-acc-bg);
+  --color-acc-bg2: var(--editor-acc-bg2);
+  --color-type-text: var(--editor-type-text);
+  --color-type-image: var(--editor-type-image);
+  --color-type-video: var(--editor-type-video);
+  --color-anim: var(--editor-anim);
 
   --text-3xs: 9px;
   --text-2xs: 10px;
@@ -95,6 +117,28 @@
   --brand: oklch(0.637 0.237 25.331);
   --brand-foreground: oklch(0.985 0 0);
   --success: oklch(0.627 0.194 149.214);
+
+  /* Editor palette raw values (RM-026) — theme-independent */
+  --editor-bg: #15171a;
+  --editor-stage: #0f1113;
+  --editor-panel: #1d2024;
+  --editor-panel-2: #23272c;
+  --editor-head: #26292f;
+  --editor-elev: #2b2f36;
+  --editor-elev-2: #32373f;
+  --editor-line: #303640;
+  --editor-line-2: #3b424c;
+  --editor-edge: #0d0f11;
+  --editor-ink: #d6d9de;
+  --editor-dim: #9aa1ab;
+  --editor-faint: #6b727c;
+  --editor-acc: #4c8dff;
+  --editor-acc-bg: rgba(76, 141, 255, 0.16);
+  --editor-acc-bg2: rgba(76, 141, 255, 0.28);
+  --editor-type-text: #7fb0ff;
+  --editor-type-image: #46c98b;
+  --editor-type-video: #e0a83a;
+  --editor-anim: #a779f0;
 }
 
 /* Dark is the same as root — dark theme by default */
@@ -144,5 +188,29 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-family: var(--font-ibm-plex-sans), system-ui, sans-serif;
   }
+}
+
+/* Editor scrollbars (RM-026) — opt-in via `.scrl`, Chrome target */
+.scrl::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+.scrl::-webkit-scrollbar-thumb {
+  background: #3a3f47;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  border-radius: 6px;
+}
+.scrl::-webkit-scrollbar-thumb:hover {
+  background: #4b515a;
+  background-clip: padding-box;
+}
+.scrl::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+::selection {
+  background: rgba(76, 141, 255, 0.35);
 }

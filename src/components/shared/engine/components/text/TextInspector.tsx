@@ -13,8 +13,10 @@ import {
   Scaling,
   LucideIcon,
 } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { ComponentSection } from "@engine/ComponentSection";
-import { NumberField, NumberInput } from "@engine/NumberField";
+import { ColorField, SelectField, FieldRow } from "@engine/InspectorFields";
+import { NumberInput } from "@engine/NumberField";
 import {
   TextAlignH,
   TextAlignV,
@@ -58,28 +60,24 @@ function AlignGroup<T extends string>({
   onChange: (value: T) => void;
 }) {
   return (
-    <label className="flex items-center gap-2">
-      <span className="w-12 shrink-0 text-2xs font-mono uppercase tracking-wider text-muted-foreground">
-        {label}
-      </span>
-      <div className="flex flex-1 gap-1">
-        {options.map(({ value: v, icon: Icon, title }) => (
-          <button
-            key={v}
-            type="button"
-            onClick={() => onChange(v)}
-            title={title}
-            className={`flex h-7 flex-1 items-center justify-center rounded-md border transition-colors ${
-              value === v
-                ? "border-brand bg-brand/10 text-foreground"
-                : "border-border text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            <Icon size={14} />
-          </button>
-        ))}
-      </div>
-    </label>
+    <FieldRow label={label}>
+      {options.map(({ value: v, icon: Icon, title }) => (
+        <button
+          key={v}
+          type="button"
+          onClick={() => onChange(v)}
+          title={title}
+          className={cn(
+            "flex h-7 flex-1 items-center justify-center rounded-[5px] border transition-colors",
+            value === v
+              ? "border-acc bg-acc-bg text-ink"
+              : "border-line text-dim hover:text-ink",
+          )}
+        >
+          <Icon size={14} />
+        </button>
+      ))}
+    </FieldRow>
   );
 }
 
@@ -121,163 +119,119 @@ export function TextInspector({
       accent="text"
       onRemove={onRemove}
     >
-        <textarea
-          value={component.text}
-          onChange={(e) => onChange({ ...component, text: e.target.value })}
-          rows={2}
-          placeholder="Escribe el texto…"
-          className="w-full resize-y rounded-md border border-input bg-input/30 px-2 py-1 text-xs text-foreground outline-none focus:border-ring"
-        />
+      <textarea
+        value={component.text}
+        onChange={(e) => onChange({ ...component, text: e.target.value })}
+        rows={2}
+        placeholder="Escribe el texto…"
+        className="w-full resize-y rounded-[5px] border border-line bg-bg px-2 py-1 text-xs text-ink outline-none focus:border-acc"
+      />
 
-        <div className="flex items-center gap-2">
-          <span className="w-12 shrink-0 text-2xs font-mono uppercase tracking-wider text-muted-foreground">
-            Font
-          </span>
-          <span className="min-w-0 flex-1 truncate text-xs text-foreground">
-            {component.fontFileName ?? "Geist Sans"}
-          </span>
-          <label
-            title="Cargar fuente desde equipo"
-            className="flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-border text-muted-foreground transition-colors hover:border-brand hover:text-foreground"
-          >
-            <Upload size={13} />
-            <input
-              type="file"
-              accept=".ttf,.otf,.woff,.woff2,font/*"
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (file) onPickFont(file);
-              }}
-              className="hidden"
+      <FieldRow label="Font">
+        <span className="min-w-0 flex-1 truncate text-xs text-ink">
+          {component.fontFileName ?? "IBM Plex Sans"}
+        </span>
+        <label
+          title="Cargar fuente desde equipo"
+          className="flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-[5px] border border-line text-dim transition-colors hover:border-acc hover:text-ink"
+        >
+          <Upload size={13} />
+          <input
+            type="file"
+            accept=".ttf,.otf,.woff,.woff2,font/*"
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) onPickFont(file);
+            }}
+            className="hidden"
+          />
+        </label>
+      </FieldRow>
+
+      <FieldRow label="Size">
+        {component.autoSize ? (
+          <>
+            <NumberInput
+              value={component.fontSizeMin}
+              onChange={(fontSizeMin) => onChange({ ...component, fontSizeMin })}
+              title="Mínimo"
             />
-          </label>
-        </div>
+            <NumberInput
+              value={component.fontSizeMax}
+              onChange={(fontSizeMax) => onChange({ ...component, fontSizeMax })}
+              title="Máximo"
+            />
+          </>
+        ) : (
+          <NumberInput
+            value={component.fontSize}
+            onChange={(fontSize) => onChange({ ...component, fontSize })}
+          />
+        )}
+        <button
+          type="button"
+          onClick={() => onChange({ ...component, autoSize: !component.autoSize })}
+          title="Auto Size"
+          className={cn(
+            "flex size-7 shrink-0 items-center justify-center rounded-[5px] border transition-colors",
+            component.autoSize
+              ? "border-acc bg-acc-bg text-ink"
+              : "border-line text-dim hover:text-ink",
+          )}
+        >
+          <Scaling size={14} />
+        </button>
+      </FieldRow>
 
-        <div className="flex items-center gap-2">
-          <span className="w-12 shrink-0 text-2xs font-mono uppercase tracking-wider text-muted-foreground">
-            Size
-          </span>
-          <div className="flex flex-1 gap-1">
-            {component.autoSize ? (
-              <>
-                <NumberInput
-                  value={component.fontSizeMin}
-                  onChange={(fontSizeMin) =>
-                    onChange({ ...component, fontSizeMin })
-                  }
-                  title="Mínimo"
-                />
-                <NumberInput
-                  value={component.fontSizeMax}
-                  onChange={(fontSizeMax) =>
-                    onChange({ ...component, fontSizeMax })
-                  }
-                  title="Máximo"
-                />
-              </>
-            ) : (
-              <NumberInput
-                value={component.fontSize}
-                onChange={(fontSize) => onChange({ ...component, fontSize })}
-              />
-            )}
-          </div>
+      <FieldRow label="Style">
+        {STYLE_TOGGLES.map(({ key, icon: Icon, title }) => (
           <button
+            key={key}
             type="button"
-            onClick={() =>
-              onChange({ ...component, autoSize: !component.autoSize })
-            }
-            title="Auto Size"
-            className={`flex size-7 shrink-0 items-center justify-center rounded-md border transition-colors ${
-              component.autoSize
-                ? "border-brand bg-brand/10 text-foreground"
-                : "border-border text-muted-foreground hover:text-foreground"
-            }`}
+            onClick={() => onChange({ ...component, [key]: !component[key] })}
+            title={title}
+            className={cn(
+              "flex h-7 flex-1 items-center justify-center rounded-[5px] border transition-colors",
+              component[key]
+                ? "border-acc bg-acc-bg text-ink"
+                : "border-line text-dim hover:text-ink",
+            )}
           >
-            <Scaling size={14} />
+            <Icon size={14} />
           </button>
-        </div>
+        ))}
+      </FieldRow>
 
-        <div className="flex items-center gap-2">
-          <span className="w-12 shrink-0 text-2xs font-mono uppercase tracking-wider text-muted-foreground">
-            Style
-          </span>
-          <div className="flex flex-1 gap-1">
-            {STYLE_TOGGLES.map(({ key, icon: Icon, title }) => (
-              <button
-                key={key}
-                type="button"
-                onClick={() => onChange({ ...component, [key]: !component[key] })}
-                title={title}
-                className={`flex h-7 flex-1 items-center justify-center rounded-md border transition-colors ${
-                  component[key]
-                    ? "border-brand bg-brand/10 text-foreground"
-                    : "border-border text-muted-foreground hover:text-foreground"
-                }`}
-              >
-                <Icon size={14} />
-              </button>
-            ))}
-          </div>
-        </div>
+      <ColorField
+        label="Color"
+        value={component.color}
+        onChange={(color) => onChange({ ...component, color })}
+      />
 
-        <label className="flex items-center gap-2">
-          <span className="w-12 shrink-0 text-2xs font-mono uppercase tracking-wider text-muted-foreground">
-            Color
-          </span>
-          <input
-            type="color"
-            value={component.color}
-            onChange={(e) => onChange({ ...component, color: e.target.value })}
-            className="h-7 w-10 shrink-0 cursor-pointer rounded-md border border-input bg-input/30 p-0.5"
-          />
-          <input
-            type="text"
-            value={component.color}
-            onChange={(e) => onChange({ ...component, color: e.target.value })}
-            className="h-7 w-full min-w-0 rounded-md border border-input bg-input/30 px-2 text-xs font-mono text-foreground outline-none focus:border-ring"
-          />
-        </label>
+      <AlignGroup
+        label="Horiz."
+        value={component.alignH}
+        options={ALIGN_H_OPTIONS}
+        onChange={(alignH) => onChange({ ...component, alignH })}
+      />
 
-        <AlignGroup
-          label="Horiz."
-          value={component.alignH}
-          options={ALIGN_H_OPTIONS}
-          onChange={(alignH) => onChange({ ...component, alignH })}
-        />
+      <AlignGroup
+        label="Vert."
+        value={component.alignV}
+        options={ALIGN_V_OPTIONS}
+        onChange={(alignV) => onChange({ ...component, alignV })}
+      />
 
-        <AlignGroup
-          label="Vert."
-          value={component.alignV}
-          options={ALIGN_V_OPTIONS}
-          onChange={(alignV) => onChange({ ...component, alignV })}
-        />
-
-        <label className="flex items-center gap-2">
-          <span className="w-12 shrink-0 text-2xs font-mono uppercase tracking-wider text-muted-foreground">
-            Fit
-          </span>
-          <select
-            value={component.overflow}
-            onChange={(e) =>
-              onChange({
-                ...component,
-                overflow: e.target.value as TextOverflow,
-              })
-            }
-            className="h-7 w-full min-w-0 rounded-md border border-input bg-input/30 px-2 text-xs text-foreground outline-none focus:border-ring"
-          >
-            <option value="wrap" className="bg-card text-foreground">
-              Wrap
-            </option>
-            <option value="overflow" className="bg-card text-foreground">
-              Overflow
-            </option>
-            <option value="clip" className="bg-card text-foreground">
-              Clip
-            </option>
-          </select>
-        </label>
+      <SelectField
+        label="Fit"
+        value={component.overflow}
+        onChange={(overflow) => onChange({ ...component, overflow })}
+        options={[
+          { value: "wrap" as TextOverflow, label: "Wrap" },
+          { value: "overflow" as TextOverflow, label: "Overflow" },
+          { value: "clip" as TextOverflow, label: "Clip" },
+        ]}
+      />
     </ComponentSection>
   );
 }

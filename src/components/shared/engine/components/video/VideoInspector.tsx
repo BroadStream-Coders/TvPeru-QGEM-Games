@@ -1,12 +1,8 @@
 import { useState } from "react";
-import {
-  Video as VideoIcon,
-  Upload,
-  Maximize2,
-  Link,
-  Keyboard,
-} from "lucide-react";
+import { Video as VideoIcon, Upload, Maximize2, Link, Keyboard } from "lucide-react";
 import { ComponentSection } from "@engine/ComponentSection";
+import { SelectField, ToggleField } from "@engine/InspectorFields";
+import { cn } from "@/lib/utils";
 import {
   VideoComponent,
   VideoFit,
@@ -73,154 +69,118 @@ export function VideoInspector({
       accent="video"
       onRemove={onRemove}
     >
-        <div className="aspect-video w-full overflow-hidden rounded-md border border-border bg-[repeating-conic-gradient(#e5e7eb_0_25%,transparent_0_50%)] bg-[length:16px_16px]">
-          {component.src && (
-            <video
-              src={component.src}
-              autoPlay
-              loop
-              muted
-              playsInline
-              className="h-full w-full object-contain"
-            />
-          )}
-        </div>
+      <div className="aspect-video w-full overflow-hidden rounded-md border border-line bg-[repeating-conic-gradient(#2b2f36_0_25%,transparent_0_50%)] bg-[length:16px_16px]">
+        {component.src && (
+          <video
+            src={component.src}
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="h-full w-full object-contain"
+          />
+        )}
+      </div>
 
-        <div className="flex gap-1">
+      <div className="flex gap-1">
+        {(["file", "url"] as const).map((src) => (
           <button
-            onClick={() => setSource("file")}
-            className={`flex-1 rounded-md border px-2 py-1 text-2xs font-semibold uppercase tracking-wider transition-colors ${
-              component.source === "file"
-                ? "border-brand bg-brand/10 text-foreground"
-                : "border-border text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            Equipo
-          </button>
-          <button
-            onClick={() => setSource("url")}
-            className={`flex-1 rounded-md border px-2 py-1 text-2xs font-semibold uppercase tracking-wider transition-colors ${
-              component.source === "url"
-                ? "border-brand bg-brand/10 text-foreground"
-                : "border-border text-muted-foreground hover:text-foreground"
-            }`}
-          >
-            Link
-          </button>
-        </div>
-
-        {component.source === "file" ? (
-          <>
-            <label className="inline-flex w-fit cursor-pointer items-center gap-1.5 rounded-md bg-brand px-2.5 py-1 text-2xs font-semibold uppercase tracking-wider text-brand-foreground transition-colors hover:opacity-90">
-              <Upload size={13} />
-              Cargar desde equipo
-              <input
-                type="file"
-                accept="video/*"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file) onPickFile(file);
-                }}
-                className="hidden"
-              />
-            </label>
-            {component.fileName && (
-              <span className="truncate text-2xs text-muted-foreground">
-                {component.fileName}
-              </span>
+            key={src}
+            onClick={() => setSource(src)}
+            className={cn(
+              "flex-1 rounded-[5px] border px-2 py-1 text-2xs font-semibold uppercase tracking-wider transition-colors",
+              component.source === src
+                ? "border-acc bg-acc-bg text-ink"
+                : "border-line text-dim hover:text-ink",
             )}
-          </>
-        ) : (
-          <div className="flex gap-1">
-            <input
-              type="url"
-              value={urlDraft}
-              onChange={(e) => setUrlDraft(e.target.value)}
-              onBlur={applyUrl}
-              onKeyDown={(e) => e.key === "Enter" && applyUrl()}
-              placeholder="https://…"
-              className="h-7 w-full min-w-0 rounded-md border border-input bg-input/30 px-2 text-xs text-foreground outline-none focus:border-ring"
-            />
-            <button
-              onClick={applyUrl}
-              title="Aplicar URL"
-              className="flex size-7 shrink-0 items-center justify-center rounded-md border border-border text-muted-foreground transition-colors hover:border-brand hover:text-foreground"
-            >
-              <Link size={13} />
-            </button>
-          </div>
-        )}
-
-        <button
-          onClick={fitToVideo}
-          disabled={!component.src}
-          className="inline-flex w-fit items-center gap-1.5 rounded-md border border-border px-2.5 py-1 text-2xs font-semibold uppercase tracking-wider text-muted-foreground transition-colors hover:border-brand hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          <Maximize2 size={13} />
-          Ajustar al tamaño del video
-        </button>
-
-        <label className="flex items-center gap-2">
-          <span className="w-12 shrink-0 text-2xs font-mono uppercase tracking-wider text-muted-foreground">
-            Ajuste
-          </span>
-          <select
-            value={component.fit}
-            onChange={(e) =>
-              onChange({ ...component, fit: e.target.value as VideoFit })
-            }
-            className="h-7 w-full min-w-0 rounded-md border border-input bg-input/30 px-2 text-xs text-foreground outline-none focus:border-ring"
           >
-            <option value="contain" className="bg-card text-foreground">
-              Contener
-            </option>
-            <option value="cover" className="bg-card text-foreground">
-              Cubrir
-            </option>
-            <option value="fill" className="bg-card text-foreground">
-              Estirar
-            </option>
-          </select>
-        </label>
-
-        <div className="flex items-center gap-4">
-          <label className="flex cursor-pointer items-center gap-1.5">
-            <input
-              type="checkbox"
-              checked={!component.muted}
-              onChange={(e) =>
-                onChange({ ...component, muted: !e.target.checked })
-              }
-              className="size-4 shrink-0 cursor-pointer accent-brand"
-            />
-            <span className="text-2xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Sonido
-            </span>
-          </label>
-          <label className="flex cursor-pointer items-center gap-1.5">
-            <input
-              type="checkbox"
-              checked={component.loop}
-              onChange={(e) =>
-                onChange({ ...component, loop: e.target.checked })
-              }
-              className="size-4 shrink-0 cursor-pointer accent-brand"
-            />
-            <span className="text-2xs font-semibold uppercase tracking-wider text-muted-foreground">
-              Loop
-            </span>
-          </label>
-        </div>
-
-        {onAddComponent && (
-          <button
-            onClick={() => onAddComponent("videoControl")}
-            className="inline-flex w-fit items-center gap-1.5 rounded-md border border-border px-2.5 py-1 text-2xs font-semibold uppercase tracking-wider text-muted-foreground transition-colors hover:border-brand hover:text-foreground"
-          >
-            <Keyboard size={13} />
-            Agregar control de video
+            {src === "file" ? "Equipo" : "Link"}
           </button>
-        )}
+        ))}
+      </div>
+
+      {component.source === "file" ? (
+        <>
+          <label className="inline-flex w-fit cursor-pointer items-center gap-1.5 rounded-md bg-acc px-2.5 py-1 text-2xs font-semibold text-white transition-colors hover:bg-[#5d99ff]">
+            <Upload size={13} />
+            Cargar desde equipo
+            <input
+              type="file"
+              accept="video/*"
+              onChange={(e) => {
+                const file = e.target.files?.[0];
+                if (file) onPickFile(file);
+              }}
+              className="hidden"
+            />
+          </label>
+          {component.fileName && (
+            <span className="truncate text-2xs text-faint">
+              {component.fileName}
+            </span>
+          )}
+        </>
+      ) : (
+        <div className="flex gap-1">
+          <input
+            type="url"
+            value={urlDraft}
+            onChange={(e) => setUrlDraft(e.target.value)}
+            onBlur={applyUrl}
+            onKeyDown={(e) => e.key === "Enter" && applyUrl()}
+            placeholder="https://…"
+            className="h-7 w-full min-w-0 rounded-[5px] border border-line bg-bg px-2 text-xs text-ink outline-none focus:border-acc"
+          />
+          <button
+            onClick={applyUrl}
+            title="Aplicar URL"
+            className="flex size-7 shrink-0 items-center justify-center rounded-[5px] border border-line text-dim transition-colors hover:border-acc hover:text-ink"
+          >
+            <Link size={13} />
+          </button>
+        </div>
+      )}
+
+      <button
+        onClick={fitToVideo}
+        disabled={!component.src}
+        className="inline-flex w-fit items-center gap-1.5 rounded-md border border-line px-2.5 py-1 text-2xs font-semibold text-dim transition-colors hover:border-acc hover:text-ink disabled:cursor-not-allowed disabled:opacity-50"
+      >
+        <Maximize2 size={13} />
+        Ajustar al tamaño del video
+      </button>
+
+      <SelectField
+        label="Ajuste"
+        value={component.fit}
+        onChange={(fit) => onChange({ ...component, fit })}
+        options={[
+          { value: "contain" as VideoFit, label: "Contener" },
+          { value: "cover" as VideoFit, label: "Cubrir" },
+          { value: "fill" as VideoFit, label: "Estirar" },
+        ]}
+      />
+
+      <ToggleField
+        label="Sonido"
+        checked={!component.muted}
+        onChange={(on) => onChange({ ...component, muted: !on })}
+      />
+      <ToggleField
+        label="Loop"
+        checked={component.loop}
+        onChange={(loop) => onChange({ ...component, loop })}
+      />
+
+      {onAddComponent && (
+        <button
+          onClick={() => onAddComponent("videoControl")}
+          className="inline-flex w-fit items-center gap-1.5 rounded-md border border-line px-2.5 py-1 text-2xs font-semibold text-dim transition-colors hover:border-acc hover:text-ink"
+        >
+          <Keyboard size={13} />
+          Agregar control de video
+        </button>
+      )}
     </ComponentSection>
   );
 }

@@ -18,7 +18,7 @@ function KeyField({
 
   return (
     <label className="flex items-center gap-2">
-      <span className="w-16 shrink-0 text-2xs font-mono uppercase tracking-wider text-muted-foreground">
+      <span className="w-[54px] shrink-0 text-2xs font-medium text-dim">
         {label}
       </span>
       <button
@@ -35,10 +35,10 @@ function KeyField({
           onChange(e.key.toLowerCase());
           setListening(false);
         }}
-        className={`h-7 flex-1 rounded-md border px-2 text-xs font-semibold outline-none transition-colors ${
+        className={`h-7 flex-1 rounded-[5px] border px-2 text-xs font-semibold outline-none transition-colors ${
           listening
-            ? "border-brand bg-brand/10 text-foreground"
-            : "border-input bg-input/30 text-foreground hover:border-ring"
+            ? "border-acc bg-acc-bg text-ink"
+            : "border-line bg-bg text-ink hover:border-line-2"
         }`}
       >
         {listening ? "Presiona una tecla…" : value.toUpperCase()}

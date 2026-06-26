@@ -1,5 +1,6 @@
 import { SquareDashed } from "lucide-react";
 import { ComponentSection } from "@engine/ComponentSection";
+import { ColorField, FieldRow } from "@engine/InspectorFields";
 import { BorderComponent } from "./borderComponent";
 
 export function BorderInspector({
@@ -18,52 +19,37 @@ export function BorderInspector({
       icon={<SquareDashed size={13} />}
       onRemove={onRemove}
     >
-        <div className="flex items-center gap-2">
-          <input
-            type="color"
-            value={component.color}
-            onChange={(e) => onChange({ ...component, color: e.target.value })}
-            className="h-8 w-12 shrink-0 cursor-pointer rounded-md border border-input bg-input/30"
-          />
-          <input
-            type="text"
-            value={component.color}
-            onChange={(e) => onChange({ ...component, color: e.target.value })}
-            className="h-7 w-full min-w-0 rounded-md border border-input bg-input/30 px-2 text-xs font-mono text-foreground outline-none focus:border-ring"
-          />
-        </div>
+      <ColorField
+        label="Color"
+        value={component.color}
+        onChange={(color) => onChange({ ...component, color })}
+      />
 
-        <label className="flex items-center gap-2">
-          <span className="w-16 shrink-0 text-2xs font-mono uppercase tracking-wider text-muted-foreground">
-            Grosor
-          </span>
-          <input
-            type="number"
-            min={0}
-            step={0.1}
-            value={component.width}
-            onChange={(e) =>
-              onChange({ ...component, width: Number(e.target.value) })
-            }
-            className="h-7 w-full min-w-0 rounded-md border border-input bg-input/30 px-2 text-xs font-mono text-foreground outline-none focus:border-ring"
-          />
-        </label>
+      <FieldRow label="Grosor">
+        <input
+          type="number"
+          min={0}
+          step={0.1}
+          value={component.width}
+          onChange={(e) =>
+            onChange({ ...component, width: Number(e.target.value) })
+          }
+          className="h-7 w-full min-w-0 rounded-[5px] border border-line bg-bg px-2 text-right text-xs font-mono text-ink outline-none focus:border-acc"
+        />
+      </FieldRow>
 
-        <label className="flex items-center gap-2">
-          <span className="w-16 shrink-0 text-2xs font-mono uppercase tracking-wider text-muted-foreground">
-            Radio
-          </span>
-          <input
-            type="number"
-            min={0}
-            step={0.1}
-            value={component.radius}
-            onChange={(e) =>
-              onChange({ ...component, radius: Number(e.target.value) })
-            }
-            className="h-7 w-full min-w-0 rounded-md border border-input bg-input/30 px-2 text-xs font-mono text-foreground outline-none focus:border-ring"
-          />
-        </label>
+      <FieldRow label="Radio">
+        <input
+          type="number"
+          min={0}
+          step={0.1}
+          value={component.radius}
+          onChange={(e) =>
+            onChange({ ...component, radius: Number(e.target.value) })
+          }
+          className="h-7 w-full min-w-0 rounded-[5px] border border-line bg-bg px-2 text-right text-xs font-mono text-ink outline-none focus:border-acc"
+        />
+      </FieldRow>
     </ComponentSection>
   );
 }

@@ -98,18 +98,6 @@ su "Hecho cuando", pero no es el foco actual).
 > workspaces. La top bar del diseño mapea al `WorkspaceHeader` compartido y queda
 > **fuera** de este restyle.
 
-## [RM-030] Campos tipados del Inspector (num/select/color/slider/toggle/asset)
-
-- **Objetivo:** Crear primitivos de campo con el estilo del diseño: fila con label,
-  input numérico mono con prefijo de eje (X/Y) sobre `--elev`, select, color
-  (swatch + hex), slider, toggle y campo de asset. Aplicarlos a `RectTransform­Inspector`
-  y migrar los inputs de los inspectores de componentes (text/color/image/video/
-  videoControl/border/animaciones) a estos primitivos. Restyle del botón
-  **Add Component**.
-- **Hecho cuando:** Rect Transform y al menos los inspectores nativos usan los
-  campos nuevos; el botón Add Component coincide con la maqueta. Build limpio.
-- **Fecha:** 2026-06-25 · **Estado:** Abierto
-
 ## [RM-031] Toolbar y viewport de la Scene
 
 - **Objetivo:** Barra superior de la Scene (tabs / resolución / zoom / botón

@@ -2,7 +2,7 @@ import { Move } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ComponentSection } from "@engine/ComponentSection";
 import { RectTransformValues, Vec2 } from "@engine/RectTransform";
-import { NumberField } from "@engine/NumberField";
+import { AxisField } from "@engine/InspectorFields";
 
 export function RectTransformInspector({
   transform,
@@ -37,26 +37,28 @@ export function RectTransformInspector({
         </button>
       }
     >
-        <NumberField
-          label="Pos X"
-          value={transform.position.x}
-          onChange={setAxis("position", "x")}
-        />
-        <NumberField
-          label="Pos Y"
-          value={transform.position.y}
-          onChange={setAxis("position", "y")}
-        />
-        <NumberField
-          label="Width"
-          value={transform.size.x}
-          onChange={setAxis("size", "x")}
-        />
-        <NumberField
-          label="Height"
-          value={transform.size.y}
-          onChange={setAxis("size", "y")}
-        />
+      <AxisField
+        label="Position"
+        axes={[
+          {
+            axis: "X",
+            value: transform.position.x,
+            onChange: setAxis("position", "x"),
+          },
+          {
+            axis: "Y",
+            value: transform.position.y,
+            onChange: setAxis("position", "y"),
+          },
+        ]}
+      />
+      <AxisField
+        label="Size"
+        axes={[
+          { axis: "W", value: transform.size.x, onChange: setAxis("size", "x") },
+          { axis: "H", value: transform.size.y, onChange: setAxis("size", "y") },
+        ]}
+      />
     </ComponentSection>
   );
 }

@@ -105,10 +105,12 @@ export function NumberInput({
   value,
   onChange,
   title,
+  className,
 }: {
   value: number;
   onChange: (value: number) => void;
   title?: string;
+  className?: string;
 }) {
   const [draft, setDraft] = useState<string | null>(null);
 
@@ -139,7 +141,10 @@ export function NumberInput({
           setDraft(null);
         }
       }}
-      className="h-7 w-full min-w-0 rounded-md border border-input bg-input/30 px-2 py-1 text-xs font-mono text-foreground outline-none focus:border-ring"
+      className={
+        className ??
+        "h-7 w-full min-w-0 rounded-[5px] border border-line bg-bg px-2 py-1 text-right text-xs font-mono text-ink outline-none focus:border-acc"
+      }
     />
   );
 }
@@ -155,7 +160,7 @@ export function NumberField({
 }) {
   return (
     <label className="flex items-center gap-2">
-      <span className="w-12 shrink-0 text-2xs font-mono uppercase tracking-wider text-muted-foreground">
+      <span className="w-[54px] shrink-0 text-2xs font-medium text-dim">
         {label}
       </span>
       <NumberInput value={value} onChange={onChange} />

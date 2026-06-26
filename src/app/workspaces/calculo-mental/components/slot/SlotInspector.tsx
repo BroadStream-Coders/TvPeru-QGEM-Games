@@ -23,22 +23,20 @@ export function SlotInspector({
       icon={<Square size={13} />}
       onRemove={onRemove}
     >
-      <div className="flex flex-col gap-1 text-2xs text-muted-foreground">
+      <div className="flex flex-col gap-1 text-2xs text-dim">
         <span>
           Pregunta:{" "}
-          <span className="text-foreground">{component.question || "—"}</span>
+          <span className="text-ink">{component.question || "—"}</span>
           {component.showQuestion ? "" : " (oculta)"}
         </span>
         <span>
           Respuesta:{" "}
-          <span className="text-foreground">{component.answer || "—"}</span>
+          <span className="text-ink">{component.answer || "—"}</span>
           {component.showAnswer ? "" : " (oculta)"}
         </span>
         <span>
           Estado:{" "}
-          <span className="text-foreground">
-            {STATUS_LABEL[component.status]}
-          </span>
+          <span className="text-ink">{STATUS_LABEL[component.status]}</span>
         </span>
       </div>
     </ComponentSection>

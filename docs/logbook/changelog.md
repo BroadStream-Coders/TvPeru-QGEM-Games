@@ -12,6 +12,18 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-030] Campos tipados del Inspector + Add Component (2026-06-26 00:25)
+Nuevo `InspectorFields` con primitivos del diseño: `FieldRow`, `AxisInput`/`AxisField`
+(num mono con prefijo de eje X/Y/W/H sobre `--elev`), `SelectField` (caja `--bg` + ▾),
+`ColorField` (swatch 22px + hex mono) y `ToggleField` (pill `--acc`). `NumberInput`/
+`NumberField` repintados (`--bg`/`--line`, alineado a la derecha, label `--dim`) y
+`NumberInput` acepta `className`. Migrados: RectTransform (Position/Size con ejes),
+los inspectores nativos (color/image/video/text/videoControl + animaciones por NumberField)
+y los locales (border/spellframe/2×controller/slot), con sus controles inline repintados
+del brand rojo/shadcn al acento azul `--acc` y paleta del editor. `AddComponentButton`
+estilo pill `--elev`/`+` azul. Slider y campo asset de la maqueta se omiten (sin consumidor
+hoy; serían código muerto). Build limpio.
+
 ## [RM-029] Chrome del Inspector: cabecera de objeto + secciones colapsables (2026-06-25 23:55)
 Nuevo `ComponentSection` (marco compartido: header `--panel2` con caret colapsable,
 badge de glyph coloreado por acento text/image/video/anim, título y remove). Los 14

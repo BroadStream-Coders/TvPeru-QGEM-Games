@@ -59,15 +59,15 @@ export function SpellframeInspector({
         />
 
         <div className="flex items-center gap-2">
-          <span className="shrink-0 text-2xs font-mono uppercase tracking-wider text-muted-foreground">
-            Font:
+          <span className="w-[54px] shrink-0 text-2xs font-medium text-dim">
+            Font
           </span>
-          <span className="min-w-0 flex-1 truncate text-xs text-foreground">
+          <span className="min-w-0 flex-1 truncate text-xs text-ink">
             {component.fontFileName ?? DEFAULT_FONT.label}
           </span>
           <label
             title="Cargar fuente desde equipo"
-            className="flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-md border border-border text-muted-foreground transition-colors hover:border-brand hover:text-foreground"
+            className="flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-[5px] border border-line text-dim transition-colors hover:border-acc hover:text-ink"
           >
             <Upload size={13} />
             <input

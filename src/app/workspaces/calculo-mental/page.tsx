@@ -1,14 +1,14 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Calculator } from "lucide-react";
+import { Calculator, FileJson } from "lucide-react";
+import { AssetsBar, AssetTile, AssetLoaderTiles } from "@engine/AssetsBar";
 import { useWorkspaceHeader } from "@/hooks/use-workspace-header";
 import { useGameKeys } from "@/hooks/use-game-keys";
 import { useAssetPreloader } from "@/hooks/use-asset-preloader";
 import type { AssetKind } from "@/helpers/asset-preloader";
 import { toManifest, type AssetCatalog } from "@/helpers/asset-source";
 import { SHARED_ASSETS } from "@/assets/shared";
-import { AssetLoaderCard } from "@/components/shared/AssetLoaderCard";
 import { useTransformGesture, HANDLES } from "@/hooks/use-transform-gesture";
 import { playSound } from "@/lib/audio";
 
@@ -532,7 +532,7 @@ export default function CalculoMentalPage() {
   );
 
   return (
-    <main className="flex min-h-0 flex-1">
+    <main className="flex min-h-0 flex-1 flex-col">
       <div className="flex min-h-0 w-full flex-1">
         <SidePanel
           title="Hierarchy"
@@ -623,14 +623,16 @@ export default function CalculoMentalPage() {
         </SidePanel>
       </div>
 
-      {/* Config */}
-      <div className="grid grid-cols-1 gap-4">
-        <AssetLoaderCard
-          statuses={statuses}
-          progress={progress}
-          kinds={ASSET_KINDS}
-        />
-      </div>
+      <AssetsBar count={`${progress.loaded}/${progress.total}`}>
+        {fileName && (
+          <AssetTile
+            icon={<FileJson size={22} />}
+            name={fileName}
+            meta={`${groups.length} grupos`}
+          />
+        )}
+        <AssetLoaderTiles statuses={statuses} kinds={ASSET_KINDS} />
+      </AssetsBar>
     </main>
   );
 }

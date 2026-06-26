@@ -10,6 +10,7 @@ import { RectTransformValues, Vec2 } from "@engine/RectTransform";
 import { GameObjectView } from "@engine/GameObjectView";
 import { Hierarchy, TreeNode } from "@engine/Hierarchy";
 import { SidePanel } from "@engine/SidePanel";
+import { AssetsBar } from "@engine/AssetsBar";
 import { GameObjectInspector } from "@engine/GameObjectInspector";
 import { RectTransformInspector } from "@engine/RectTransformInspector";
 import { AddComponentButton } from "@engine/AddComponentButton";
@@ -227,7 +228,7 @@ export default function SandboxPage() {
     ) : null;
 
   return (
-    <main className="flex min-h-0 flex-1">
+    <main className="flex min-h-0 flex-1 flex-col">
       <div className="flex min-h-0 w-full flex-1">
         <SidePanel
           title="Hierarchy"
@@ -312,6 +313,7 @@ export default function SandboxPage() {
           )}
         </SidePanel>
       </div>
+      <AssetsBar />
     </main>
   );
 }

@@ -1,13 +1,13 @@
 "use client";
 
 import { useEffect, useCallback, useRef, useState } from "react";
-import { SpellCheck } from "lucide-react";
+import { SpellCheck, FileJson } from "lucide-react";
+import { AssetsBar, AssetTile, AssetLoaderTiles } from "@engine/AssetsBar";
 import { useWorkspaceHeader } from "@/hooks/use-workspace-header";
 import { useAssetPreloader } from "@/hooks/use-asset-preloader";
 import type { AssetKind } from "@/helpers/asset-preloader";
 import { toManifest, type AssetCatalog } from "@/helpers/asset-source";
 import { SHARED_ASSETS } from "@/assets/shared";
-import { AssetLoaderCard } from "@/components/shared/AssetLoaderCard";
 import { useGameKeys } from "@/hooks/use-game-keys";
 import { useTransformGesture, HANDLES } from "@/hooks/use-transform-gesture";
 import { playSound } from "@/lib/audio";
@@ -479,7 +479,7 @@ export default function DeletreoPage() {
   );
 
   return (
-    <main className="flex min-h-0 flex-1">
+    <main className="flex min-h-0 flex-1 flex-col">
       <div className="flex min-h-0 w-full flex-1">
         <SidePanel
           title="Hierarchy"
@@ -570,14 +570,16 @@ export default function DeletreoPage() {
         </SidePanel>
       </div>
 
-      {/* Config */}
-      <div className="grid grid-cols-1 gap-4">
-        <AssetLoaderCard
-          statuses={statuses}
-          progress={progress}
-          kinds={ASSET_KINDS}
-        />
-      </div>
+      <AssetsBar count={`${progress.loaded}/${progress.total}`}>
+        {controller?.fileName && (
+          <AssetTile
+            icon={<FileJson size={22} />}
+            name={controller.fileName}
+            meta={`${groups.length} grupos`}
+          />
+        )}
+        <AssetLoaderTiles statuses={statuses} kinds={ASSET_KINDS} />
+      </AssetsBar>
     </main>
   );
 }

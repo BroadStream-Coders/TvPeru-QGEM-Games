@@ -12,6 +12,15 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-033] Barra inferior de Assets (shell + estados) (2026-06-26 02:05)
+Nueva `AssetsBar` (+ `AssetTile`/`AssetLoaderTiles`) en el layout de los 4 workspaces:
+barra full-width bajo las 3 columnas, header `--head` "ASSETS" + cuerpo en fila de tiles.
+Estado vacío "Ninguno cargado" en sandbox/operaciones; en deletreo/cálculo muestra el tile
+de la sesión JSON del controller + los tiles de los assets del preloader con su estado
+(ready/loading/error) y el progreso en el header. Se eliminó la card blanca `AssetLoaderCard`
+(`bg-slate-50`), cuya info se movió a la barra. `main` pasa a `flex-col`. No es el sistema de
+gestión de assets (RM-016, diferido); es su shell con estados. Build limpio.
+
 ## [RM-032] Layout flush de 3 columnas (no card) (2026-06-26 01:20)
 El layout de los 4 workspaces deja de ser cards flotantes: `main` pierde `p-3`/`gap`,
 las 3 columnas van pegadas a sangre y a altura completa, separadas por divisores

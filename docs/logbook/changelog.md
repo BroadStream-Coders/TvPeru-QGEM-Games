@@ -12,6 +12,12 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-027] Chrome de `SidePanel` estilo editor (2026-06-25 23:05)
+`SidePanel` pasa de la "pestaña" shadcn a una caja `--panel` con borde `--line` y
+barra de header `--head` (30px): título en mayúsculas con tracking + color `--dim`,
+contador y zona de acciones opcionales (props `count`/`actions`, retrocompatibles),
+cuerpo con scrollbar `.scrl`. Repinta Hierarchy/Inspector en los 4 workspaces. Build limpio.
+
 ## [RM-026] Tokens de diseño + fuentes IBM Plex + scrollbars (2026-06-25 22:30)
 Base del restyle del sandbox: paleta del editor como tokens (`--editor-*` crudos +
 utilidades Tailwind `panel/head/elev/line/ink/dim/faint/acc/type-*/anim` vía `@theme`)

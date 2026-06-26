@@ -98,16 +98,6 @@ su "Hecho cuando", pero no es el foco actual).
 > workspaces. La top bar del diseño mapea al `WorkspaceHeader` compartido y queda
 > **fuera** de este restyle.
 
-## [RM-027] Chrome de `SidePanel` (header HEAD + búsqueda + acción)
-
-- **Objetivo:** Rediseñar `SidePanel`: cabecera tipo barra `--head` con título en
-  mayúsculas y tracking, contador opcional, y zona de acciones (search / botón
-  `+`) configurable; fondo `--panel`, borde `--line`. Reemplaza la "pestaña"
-  shadcn actual.
-- **Hecho cuando:** `SidePanel` muestra el nuevo header en Hierarchy e Inspector
-  del sandbox con la paleta de RM-026; los demás workspaces siguen funcionando.
-- **Fecha:** 2026-06-25 · **Estado:** Abierto
-
 ## [RM-028] Filas del Hierarchy estilo editor
 
 - **Objetivo:** Repintar las filas de `Hierarchy`: barra lateral de selección/

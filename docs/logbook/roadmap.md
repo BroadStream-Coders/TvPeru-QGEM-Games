@@ -84,32 +84,6 @@ su "Hecho cuando", pero no es el foco actual).
 
 ---
 
-# Restyle visual del sandbox (estilo editor Unity oscuro)
-
-> Origen: maqueta `Sandbox Editor (standalone).html` (Claude design). Alcance
-> elegido: **restyle del editor actual** (Hierarchy / Scene / Inspector), sin
-> agregar paneles nuevos vacíos (el panel Assets queda en RM-016, diferido).
-> Paleta objetivo `--bg #15171a / --panel #1d2024 / --head #26292f / --line
-> #303640`, acento azul `#4c8dff` + verde/ámbar/violeta por tipo, fuentes **IBM
-> Plex Sans** (UI) e **IBM Plex Mono** (números/códigos). Pasos en orden de
-> dependencia: 026 es la base de todos. **Nota:** tokens (026) y `SidePanel`
-> (027) son compartidos → repintan también deletreo, cálculo mental y
-> operaciones; es deseado ("nuevo estilo visual de la app"), pero validar los 4
-> workspaces. La top bar del diseño mapea al `WorkspaceHeader` compartido y queda
-> **fuera** de este restyle.
-
-## [RM-031] Toolbar y viewport de la Scene
-
-- **Objetivo:** Barra superior de la Scene (tabs / resolución / zoom / botón
-  **Fullscreen** azul) y fondo de viewport tipo tablero de ajedrez detrás del
-  stage 16:9, con la paleta de RM-026. Sin romper `FullScreen`, container-query ni
-  el gizmo de edición.
-- **Hecho cuando:** la zona central del sandbox muestra la toolbar y el fondo
-  ajedrezado de la maqueta; fullscreen y la edición en canvas siguen intactos.
-- **Fecha:** 2026-06-25 · **Estado:** Abierto
-
----
-
 # Fase 2 — Engine genérico (diferido)
 
 > Diferido a propósito hasta cerrar la Fase 1. Se retoma promoviendo patrones que

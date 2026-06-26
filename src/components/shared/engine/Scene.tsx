@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useRef, useState, useEffect } from "react";
-import { Maximize } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ViewModeTabs } from "@engine/ViewModeTabs";
 import { SceneViewModeProvider, ViewMode } from "@engine/SceneViewMode";
@@ -15,6 +14,11 @@ interface SceneProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const STAGE_BACKGROUND_CLASS = "bg-muted";
+
+const VIEWPORT_CHECKER: React.CSSProperties = {
+  background:
+    "repeating-conic-gradient(#101214 0 25%, #0c0e10 0 50%) 0 / 22px 22px",
+};
 
 const GRID_CELL = "5.208333cqw";
 const STAGE_GRID_STYLE: React.CSSProperties = {
@@ -68,16 +72,23 @@ export function Scene({
     // 'group' nos sirve para mostrar el botón de maximizar solo cuando pasamos el mouse
     <div className="relative group w-full flex flex-col items-center">
       {!isFullscreen && (
-        <div className="w-full max-w-[1280px]">
-          <ViewModeTabs mode={viewMode} onChange={setViewMode} />
+        <div className="w-full">
+          <ViewModeTabs
+            mode={viewMode}
+            onChange={setViewMode}
+            onFullscreen={toggleFullscreen}
+          />
         </div>
       )}
       <div
         ref={containerRef}
         tabIndex={0}
+        style={isFullscreen ? undefined : VIEWPORT_CHECKER}
         className={cn(
           "relative focus:outline-none flex items-center justify-center transition-all duration-300",
-          isFullscreen ? "w-screen h-screen bg-black" : "w-full",
+          isFullscreen
+            ? "w-screen h-screen bg-black"
+            : "w-full rounded-b-md border border-line p-3",
           isFullscreen && hideCursorOnFullscreen && "cursor-none",
         )}
       >
@@ -88,7 +99,7 @@ export function Scene({
             aspectRatioClass,
             isFullscreen
               ? "h-full w-auto max-w-full"
-              : "w-full max-w-[1280px] shadow-lg border border-slate-800",
+              : "w-full max-w-[1280px] shadow-lg border border-edge",
             className,
           )}
           {...props}
@@ -100,19 +111,6 @@ export function Scene({
               {children}
             </SceneViewModeProvider>
           </div>
-
-          {!isFullscreen && (
-            <button
-              onClick={toggleFullscreen}
-              className={cn(
-                "absolute bottom-4 right-4 p-2 bg-black/60 hover:bg-black/80 text-white rounded-lg transition-opacity z-50 backdrop-blur-sm",
-                "opacity-0 group-hover:opacity-100",
-              )}
-              title="Pantalla completa"
-            >
-              <Maximize size={24} />
-            </button>
-          )}
         </div>
       </div>
     </div>

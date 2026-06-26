@@ -12,6 +12,14 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-031] Toolbar y viewport ajedrezado de la Scene (2026-06-26 00:45)
+`ViewModeTabs` pasa a ser la toolbar `--head` (30px): tabs Scene/Game con borde inferior
+de acento en la activa, separador, resolución `1920 × 1080` + `16:9` en mono `--faint`, y
+botón **Fullscreen** azul `--acc` (movido aquí desde el botón flotante, que se eliminó). El
+viewport gana fondo ajedrezado (`repeating-conic-gradient` 22px) con marco `--line` detrás
+del stage 16:9 (borde `--edge` + sombra). No se tocó `FullScreen`, container-query ni el
+grid/gizmo de edición. Zoom de la maqueta omitido (no hay zoom real). Build limpio.
+
 ## [RM-030] Campos tipados del Inspector + Add Component (2026-06-26 00:25)
 Nuevo `InspectorFields` con primitivos del diseño: `FieldRow`, `AxisInput`/`AxisField`
 (num mono con prefijo de eje X/Y/W/H sobre `--elev`), `SelectField` (caja `--bg` + ▾),

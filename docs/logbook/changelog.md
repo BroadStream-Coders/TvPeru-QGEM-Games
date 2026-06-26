@@ -12,6 +12,16 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-032] Layout flush de 3 columnas (no card) (2026-06-26 01:20)
+El layout de los 4 workspaces deja de ser cards flotantes: `main` pierde `p-3`/`gap`,
+las 3 columnas van pegadas a sangre y a altura completa, separadas por divisores
+`--edge` (Hierarchy 262px · Scene 1fr · Inspector 336px, más ancho). `SidePanel` deja
+de ser tarjeta redondeada (columna `bg-panel` full-height) y gana `bodyClassName`. La
+Scene/toolbar pierden el marco redondeado y la Scene llena su columna (viewport ajedrezado
+a altura completa). Las secciones del Inspector (`ComponentSection`, cabecera de objeto)
+pasan a flush con borde inferior `--line` en vez de cards; el cuerpo del Inspector va sin
+padding/gap. Build limpio.
+
 ## [RM-031] Toolbar y viewport ajedrezado de la Scene (2026-06-26 00:45)
 `ViewModeTabs` pasa a ser la toolbar `--head` (30px): tabs Scene/Game con borde inferior
 de acento en la activa, separador, resolución `1920 × 1080` + `16:9` en mono `--faint`, y

@@ -266,6 +266,7 @@ export default function SandboxPage() {
         <SidePanel
           title="Inspector"
           className="w-[336px] shrink-0 border-l border-edge"
+          bodyClassName="flex flex-col"
         >
           {selected ? (
             <>
@@ -305,7 +306,7 @@ export default function SandboxPage() {
               />
             </>
           ) : (
-            <p className="px-1 py-2 text-2xs text-muted-foreground">
+            <p className="p-3 text-2xs text-dim">
               Crea un objeto con click derecho en Hierarchy.
             </p>
           )}

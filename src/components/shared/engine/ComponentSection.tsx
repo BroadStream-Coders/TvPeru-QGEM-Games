@@ -34,8 +34,8 @@ export function ComponentSection({
   const [open, setOpen] = useState(defaultOpen);
 
   return (
-    <div className="overflow-hidden rounded-md border border-line">
-      <div className="flex items-center gap-2 border-b border-line bg-panel-2 px-2 py-1.5">
+    <div className="border-b border-line">
+      <div className="flex items-center gap-2 border-b border-line bg-panel-2 px-3 py-1.5">
         <button
           onClick={() => setOpen((v) => !v)}
           className="flex size-3.5 shrink-0 items-center justify-center text-faint hover:text-ink"
@@ -64,7 +64,7 @@ export function ComponentSection({
           </button>
         )}
       </div>
-      {open && <div className="flex flex-col gap-2 p-2.5">{children}</div>}
+      {open && <div className="flex flex-col gap-2 px-3 py-2.5">{children}</div>}
     </div>
   );
 }

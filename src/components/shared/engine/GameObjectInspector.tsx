@@ -17,7 +17,7 @@ export function GameObjectInspector({
   kind?: GameObjectKind;
 }) {
   return (
-    <div className="flex items-center gap-2 rounded-md border border-line bg-panel-2 p-2">
+    <div className="flex items-center gap-2 border-b border-line bg-panel-2 px-3 py-2">
       <button
         onClick={() => onActiveChange(!active)}
         title={active ? "Objeto activo" : "Objeto apagado"}

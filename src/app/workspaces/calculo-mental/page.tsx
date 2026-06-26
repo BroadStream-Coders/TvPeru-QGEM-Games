@@ -578,6 +578,7 @@ export default function CalculoMentalPage() {
         <SidePanel
           title="Inspector"
           className="w-[336px] shrink-0 border-l border-edge"
+          bodyClassName="flex flex-col"
         >
           {selected ? (
             <>
@@ -615,7 +616,7 @@ export default function CalculoMentalPage() {
               />
             </>
           ) : (
-            <p className="px-1 py-2 text-2xs text-muted-foreground">
+            <p className="p-3 text-2xs text-dim">
               Selecciona un objeto en Hierarchy.
             </p>
           )}

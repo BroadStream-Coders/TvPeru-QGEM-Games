@@ -11,19 +11,6 @@ Al terminar una tarea se mueve al changelog y se borra de aquí.
 
 ---
 
-## [RM-032] Layout flush de 3 columnas del editor (no card)
-
-- **Objetivo:** El layout de los workspaces deja de usar "cards" flotantes con
-  padding/gaps y pasa a 3 columnas pegadas a sangre, a altura completa, separadas
-  por divisores `--edge`, como la maqueta: Hierarchy 262px · Scene 1fr · Inspector
-  336px (más ancho). `SidePanel` deja de ser tarjeta redondeada y la Scene/toolbar
-  dejan de tener marco redondeado.
-- **Hecho cuando:** los 4 workspaces muestran las 3 columnas pegadas sin
-  padding/gap exterior ni bordes de card, con el Inspector más ancho; build limpio.
-- **Fecha:** 2026-06-26 · **Estado:** En progreso (2026-06-26)
-
----
-
 ## Estrategia (2026-06-17): juegos a mano primero, engine después
 
 Decisión: sacar los juegos a mano para no perder la ventana de oportunidad, e

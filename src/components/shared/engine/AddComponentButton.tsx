@@ -13,7 +13,7 @@ export function AddComponentButton({
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="relative mx-auto w-4/5">
+    <div className="relative mx-auto my-3 w-4/5">
       <button
         onClick={() => setOpen((v) => !v)}
         className="flex w-full items-center justify-center gap-1.5 rounded-md border border-line-2 bg-elev px-2.5 py-1.5 text-2xs font-semibold text-dim transition-colors hover:border-acc hover:bg-elev-2 hover:text-ink"

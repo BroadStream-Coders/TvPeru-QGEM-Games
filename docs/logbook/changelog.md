@@ -12,6 +12,14 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-028] Filas del Hierarchy estilo editor (2026-06-25 23:30)
+Las filas del árbol pasan a estilo editor: barra de selección `--acc` a la izquierda,
+caret de expansión, glyph mono coloreado por tipo (group/text/image/video/color vía
+`gameObjectKind`), nombre con ellipsis, marca de animación ✦ (`gameObjectHasAnimation`)
+y ojo de visibilidad que togglea `active`. Nuevos helpers en `gameObject.ts`, `TreeNode`
+gana `kind`/`hasAnimation`, `Hierarchy` gana `onToggleActive`; cableado en los 4
+workspaces. Conserva select/create/delete/reorder. Build limpio.
+
 ## [RM-027] Chrome de `SidePanel` estilo editor (2026-06-25 23:05)
 `SidePanel` pasa de la "pestaña" shadcn a una caja `--panel` con borde `--line` y
 barra de header `--head` (30px): título en mayúsculas con tracking + color `--dim`,

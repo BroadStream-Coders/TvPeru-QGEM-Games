@@ -1,8 +1,16 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { ChevronRight, ChevronDown, Plus, Trash2 } from "lucide-react";
+import {
+  ChevronRight,
+  ChevronDown,
+  Plus,
+  Trash2,
+  Eye,
+  EyeOff,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
+import type { GameObjectKind } from "@engine/gameObject";
 import {
   ContextMenu,
   ContextMenuTrigger,
@@ -15,8 +23,26 @@ export interface TreeNode {
   id: string;
   name: string;
   active?: boolean;
+  kind?: GameObjectKind;
+  hasAnimation?: boolean;
   children?: TreeNode[];
 }
+
+const KIND_GLYPH: Record<GameObjectKind, string> = {
+  group: "▸",
+  text: "T",
+  image: "▢",
+  video: "▶",
+  color: "■",
+};
+
+const KIND_COLOR: Record<GameObjectKind, string> = {
+  group: "text-ink",
+  text: "text-type-text",
+  image: "text-type-image",
+  video: "text-type-video",
+  color: "text-dim",
+};
 
 type DropPosition = "before" | "after" | "inside";
 
@@ -62,6 +88,7 @@ export function Hierarchy({
   onCreate,
   onDelete,
   onReorder,
+  onToggleActive,
 }: {
   nodes: TreeNode[];
   selectedId: string | null;
@@ -73,6 +100,7 @@ export function Hierarchy({
     targetId: string,
     position: DropPosition,
   ) => void;
+  onToggleActive?: (id: string, active: boolean) => void;
 }) {
   const [draggingId, setDraggingId] = useState<string | null>(null);
   const [dropTarget, setDropTarget] = useState<DropTarget | null>(null);
@@ -99,7 +127,7 @@ export function Hierarchy({
       const chip = document.createElement("div");
       chip.textContent = node.name;
       chip.style.cssText =
-        "position:fixed;top:-1000px;left:-1000px;padding:2px 10px;border-radius:9999px;background:var(--brand);color:var(--brand-foreground);font-size:11px;font-weight:500;white-space:nowrap;pointer-events:none;z-index:9999";
+        "position:fixed;top:-1000px;left:-1000px;padding:2px 10px;border-radius:9999px;background:var(--editor-acc);color:#fff;font-size:11px;font-weight:500;white-space:nowrap;pointer-events:none;z-index:9999";
       document.body.appendChild(chip);
       e.dataTransfer.setDragImage(chip, 0, 0);
       window.setTimeout(() => document.body.removeChild(chip), 0);
@@ -126,7 +154,7 @@ export function Hierarchy({
   return (
     <ContextMenu>
       <ContextMenuTrigger asChild>
-        <div className="flex min-h-full flex-col">
+        <div className="-m-3 flex min-h-full flex-col py-1">
           {nodes.map((node) => (
             <TreeItem
               key={node.id}
@@ -134,6 +162,7 @@ export function Hierarchy({
               depth={0}
               selectedId={selectedId}
               onSelect={onSelect}
+              onToggleActive={onToggleActive}
               dnd={dnd}
               menu={menu}
             />
@@ -155,11 +184,11 @@ export function Hierarchy({
 function DropLine({ depth }: { depth: number }) {
   return (
     <div
-      style={{ paddingLeft: depth * 12 + 4 }}
+      style={{ paddingLeft: depth * 12 + 8 }}
       className="pointer-events-none relative -my-px h-0.5"
     >
-      <div className="relative h-0.5 rounded-full bg-brand">
-        <span className="absolute -left-0.5 top-1/2 size-1.5 -translate-y-1/2 rounded-full bg-brand" />
+      <div className="relative h-0.5 rounded-full bg-acc">
+        <span className="absolute -left-0.5 top-1/2 size-1.5 -translate-y-1/2 rounded-full bg-acc" />
       </div>
     </div>
   );
@@ -170,6 +199,7 @@ function TreeItem({
   depth,
   selectedId,
   onSelect,
+  onToggleActive,
   dnd,
   menu,
 }: {
@@ -177,12 +207,15 @@ function TreeItem({
   depth: number;
   selectedId: string | null;
   onSelect: (id: string) => void;
+  onToggleActive?: (id: string, active: boolean) => void;
   dnd: DndContext;
   menu: MenuActions;
 }) {
   const [expanded, setExpanded] = useState(true);
   const hasChildren = !!node.children?.length;
   const selected = node.id === selectedId;
+  const isActive = node.active !== false;
+  const kind = node.kind ?? "group";
 
   const blocked = dnd.blockedIds.has(node.id);
   const isDragging = dnd.draggingId === node.id;
@@ -223,31 +256,59 @@ function TreeItem({
       }}
       onClick={() => onSelect(node.id)}
       onContextMenu={() => onSelect(node.id)}
-      style={{ paddingLeft: depth * 12 + 4 }}
+      style={{ paddingLeft: depth * 12 + 8 }}
       className={cn(
-        "flex cursor-pointer select-none items-center gap-1 rounded py-1 pr-2 text-xs",
-        selected
-          ? "bg-brand text-brand-foreground"
-          : "text-foreground hover:bg-accent",
-        isInsideTarget && "ring-1 ring-brand ring-inset bg-brand/10",
-        node.active === false && "opacity-50",
+        "group/row relative flex h-[23px] cursor-pointer select-none items-center gap-1.5 pr-1.5 text-xs",
+        selected ? "bg-acc-bg text-ink" : "text-ink hover:bg-elev",
+        isInsideTarget && "ring-1 ring-inset ring-acc",
+        !isActive && "opacity-50",
         isDragging && "opacity-40",
       )}
     >
+      {selected && (
+        <span className="absolute inset-y-0 left-0 w-0.5 bg-acc" />
+      )}
       {hasChildren ? (
         <button
           onClick={(e) => {
             e.stopPropagation();
             setExpanded((v) => !v);
           }}
-          className="flex size-4 shrink-0 items-center justify-center opacity-70 hover:opacity-100"
+          className="flex size-3.5 shrink-0 items-center justify-center text-faint hover:text-ink"
         >
           {expanded ? <ChevronDown size={12} /> : <ChevronRight size={12} />}
         </button>
       ) : (
-        <span className="size-4 shrink-0" />
+        <span className="size-3.5 shrink-0" />
       )}
-      <span className="truncate">{node.name}</span>
+      <span
+        className={cn(
+          "w-3.5 shrink-0 text-center font-mono text-[13px] font-semibold leading-none",
+          KIND_COLOR[kind],
+        )}
+      >
+        {KIND_GLYPH[kind]}
+      </span>
+      <span className={cn("flex-1 truncate", selected && "font-medium")}>
+        {node.name}
+      </span>
+      {node.hasAnimation && (
+        <span className="shrink-0 text-2xs leading-none text-anim">✦</span>
+      )}
+      {onToggleActive && (
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onToggleActive(node.id, !isActive);
+          }}
+          className={cn(
+            "flex size-4 shrink-0 items-center justify-center text-faint hover:text-ink",
+            isActive ? "opacity-0 group-hover/row:opacity-100" : "opacity-100",
+          )}
+        >
+          {isActive ? <Eye size={12} /> : <EyeOff size={12} />}
+        </button>
+      )}
     </div>
   );
 
@@ -291,6 +352,7 @@ function TreeItem({
               depth={depth + 1}
               selectedId={selectedId}
               onSelect={onSelect}
+              onToggleActive={onToggleActive}
               dnd={dnd}
               menu={menu}
             />

@@ -31,6 +31,26 @@ export function createGameObject(init: {
   };
 }
 
+export type GameObjectKind = "group" | "text" | "image" | "video" | "color";
+
+const KIND_PRIORITY: GameObjectKind[] = ["video", "image", "text", "color"];
+const ANIMATION_TYPES = new Set(["pop", "shake", "bounce", "slide"]);
+
+export function gameObjectKind(
+  components: GameObjectComponent[],
+): GameObjectKind {
+  for (const kind of KIND_PRIORITY) {
+    if (components.some((c) => c.type === kind)) return kind;
+  }
+  return "group";
+}
+
+export function gameObjectHasAnimation(
+  components: GameObjectComponent[],
+): boolean {
+  return components.some((c) => ANIMATION_TYPES.has(c.type));
+}
+
 export function ancestorOffset(go: GameObject, all: GameObject[]): Vec2 {
   let offset: Vec2 = { x: 0, y: 0 };
   let parent = go.parentId ? all.find((p) => p.id === go.parentId) : undefined;

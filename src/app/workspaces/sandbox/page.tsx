@@ -20,6 +20,8 @@ import {
   ancestorOffset,
   reorderGameObjects,
   collectSubtreeIds,
+  gameObjectKind,
+  gameObjectHasAnimation,
 } from "@engine/gameObject";
 import {
   createComponentRegistry,
@@ -52,6 +54,8 @@ export default function SandboxPage() {
       id: go.id,
       name: go.name,
       active: go.active,
+      kind: gameObjectKind(go.components),
+      hasAnimation: gameObjectHasAnimation(go.components),
       children: children.length ? children : undefined,
     };
   };
@@ -233,6 +237,7 @@ export default function SandboxPage() {
             onCreate={(parentId) => createNewGameObject(parentId ?? undefined)}
             onDelete={deleteGameObject}
             onReorder={handleReorder}
+            onToggleActive={(id, active) => patchGameObject(id, { active })}
           />
         </SidePanel>
         <div className="flex min-w-0 flex-1 flex-col">

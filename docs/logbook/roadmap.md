@@ -98,16 +98,6 @@ su "Hecho cuando", pero no es el foco actual).
 > workspaces. La top bar del diseño mapea al `WorkspaceHeader` compartido y queda
 > **fuera** de este restyle.
 
-## [RM-028] Filas del Hierarchy estilo editor
-
-- **Objetivo:** Repintar las filas de `Hierarchy`: barra lateral de selección/
-  activo, caret de expansión, glyph de tipo coloreado (group/text/image/video),
-  nombre con ellipsis, marca de animación (✦) y ojo de visibilidad; hover/
-  selección con `--elev`/`--accbg`.
-- **Hecho cuando:** el árbol del sandbox se ve como la maqueta (íconos por tipo,
-  barra de activo, eye toggle) conservando select/create/delete/reorder actuales.
-- **Fecha:** 2026-06-25 · **Estado:** Abierto
-
 ## [RM-029] Chrome del Inspector (header sticky + secciones colapsables)
 
 - **Objetivo:** Inspector con header sticky `--head`, cabecera de objeto (check de

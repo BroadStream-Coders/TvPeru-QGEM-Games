@@ -84,6 +84,86 @@ su "Hecho cuando", pero no es el foco actual).
 
 ---
 
+# Restyle visual del sandbox (estilo editor Unity oscuro)
+
+> Origen: maqueta `Sandbox Editor (standalone).html` (Claude design). Alcance
+> elegido: **restyle del editor actual** (Hierarchy / Scene / Inspector), sin
+> agregar paneles nuevos vacíos (el panel Assets queda en RM-016, diferido).
+> Paleta objetivo `--bg #15171a / --panel #1d2024 / --head #26292f / --line
+> #303640`, acento azul `#4c8dff` + verde/ámbar/violeta por tipo, fuentes **IBM
+> Plex Sans** (UI) e **IBM Plex Mono** (números/códigos). Pasos en orden de
+> dependencia: 026 es la base de todos. **Nota:** tokens (026) y `SidePanel`
+> (027) son compartidos → repintan también deletreo, cálculo mental y
+> operaciones; es deseado ("nuevo estilo visual de la app"), pero validar los 4
+> workspaces. La top bar del diseño mapea al `WorkspaceHeader` compartido y queda
+> **fuera** de este restyle.
+
+## [RM-026] Tokens de diseño + fuentes IBM Plex + scrollbars
+
+- **Objetivo:** Sentar la base visual: agregar la paleta del diseño como tokens
+  CSS en `globals.css` (bg/panel/head/elev/line/txt/dim/faint + acento azul y
+  acentos por tipo verde/ámbar/violeta), cargar **IBM Plex Sans** (UI) e **IBM
+  Plex Mono** (números) vía `next/font`, y el estilo de scrollbar custom (`.scrl`).
+- **Hecho cuando:** los tokens existen y son consumibles desde Tailwind/CSS, las
+  dos fuentes Plex están disponibles, y los scrollbars de los paneles usan el
+  estilo nuevo. Build limpio.
+- **Fecha:** 2026-06-25 · **Estado:** Abierto
+
+## [RM-027] Chrome de `SidePanel` (header HEAD + búsqueda + acción)
+
+- **Objetivo:** Rediseñar `SidePanel`: cabecera tipo barra `--head` con título en
+  mayúsculas y tracking, contador opcional, y zona de acciones (search / botón
+  `+`) configurable; fondo `--panel`, borde `--line`. Reemplaza la "pestaña"
+  shadcn actual.
+- **Hecho cuando:** `SidePanel` muestra el nuevo header en Hierarchy e Inspector
+  del sandbox con la paleta de RM-026; los demás workspaces siguen funcionando.
+- **Fecha:** 2026-06-25 · **Estado:** Abierto
+
+## [RM-028] Filas del Hierarchy estilo editor
+
+- **Objetivo:** Repintar las filas de `Hierarchy`: barra lateral de selección/
+  activo, caret de expansión, glyph de tipo coloreado (group/text/image/video),
+  nombre con ellipsis, marca de animación (✦) y ojo de visibilidad; hover/
+  selección con `--elev`/`--accbg`.
+- **Hecho cuando:** el árbol del sandbox se ve como la maqueta (íconos por tipo,
+  barra de activo, eye toggle) conservando select/create/delete/reorder actuales.
+- **Fecha:** 2026-06-25 · **Estado:** Abierto
+
+## [RM-029] Chrome del Inspector (header sticky + secciones colapsables)
+
+- **Objetivo:** Inspector con header sticky `--head`, cabecera de objeto (check de
+  activo + glyph de tipo + input de nombre) y secciones de componente colapsables
+  con badge de glyph, interruptor enable y menú `⋮`. Aplica a `GameObjectInspector`
+  y al marco de cada inspector de componente.
+- **Hecho cuando:** el Inspector del sandbox presenta cabecera de objeto y
+  secciones plegables estilizadas; los inspectores de componentes existentes
+  quedan envueltos en el nuevo marco sin perder edición.
+- **Fecha:** 2026-06-25 · **Estado:** Abierto
+
+## [RM-030] Campos tipados del Inspector (num/select/color/slider/toggle/asset)
+
+- **Objetivo:** Crear primitivos de campo con el estilo del diseño: fila con label,
+  input numérico mono con prefijo de eje (X/Y) sobre `--elev`, select, color
+  (swatch + hex), slider, toggle y campo de asset. Aplicarlos a `RectTransform­Inspector`
+  y migrar los inputs de los inspectores de componentes (text/color/image/video/
+  videoControl/border/animaciones) a estos primitivos. Restyle del botón
+  **Add Component**.
+- **Hecho cuando:** Rect Transform y al menos los inspectores nativos usan los
+  campos nuevos; el botón Add Component coincide con la maqueta. Build limpio.
+- **Fecha:** 2026-06-25 · **Estado:** Abierto
+
+## [RM-031] Toolbar y viewport de la Scene
+
+- **Objetivo:** Barra superior de la Scene (tabs / resolución / zoom / botón
+  **Fullscreen** azul) y fondo de viewport tipo tablero de ajedrez detrás del
+  stage 16:9, con la paleta de RM-026. Sin romper `FullScreen`, container-query ni
+  el gizmo de edición.
+- **Hecho cuando:** la zona central del sandbox muestra la toolbar y el fondo
+  ajedrezado de la maqueta; fullscreen y la edición en canvas siguen intactos.
+- **Fecha:** 2026-06-25 · **Estado:** Abierto
+
+---
+
 # Fase 2 — Engine genérico (diferido)
 
 > Diferido a propósito hasta cerrar la Fase 1. Se retoma promoviendo patrones que

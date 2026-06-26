@@ -70,9 +70,9 @@ export function Scene({
 
   return (
     // 'group' nos sirve para mostrar el botón de maximizar solo cuando pasamos el mouse
-    <div className="relative group w-full flex flex-col items-center">
+    <div className="relative group flex h-full w-full flex-col">
       {!isFullscreen && (
-        <div className="w-full">
+        <div className="w-full shrink-0">
           <ViewModeTabs
             mode={viewMode}
             onChange={setViewMode}
@@ -88,7 +88,7 @@ export function Scene({
           "relative focus:outline-none flex items-center justify-center transition-all duration-300",
           isFullscreen
             ? "w-screen h-screen bg-black"
-            : "w-full rounded-b-md border border-line p-3",
+            : "min-h-0 w-full flex-1 overflow-auto p-3",
           isFullscreen && hideCursorOnFullscreen && "cursor-none",
         )}
       >

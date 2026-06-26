@@ -7,17 +7,19 @@ export function SidePanel({
   actions,
   children,
   className,
+  bodyClassName = "flex flex-col gap-2 p-3",
 }: {
   title: string;
   count?: ReactNode;
   actions?: ReactNode;
   children?: ReactNode;
   className?: string;
+  bodyClassName?: string;
 }) {
   return (
     <div
       className={cn(
-        "relative flex flex-col overflow-hidden rounded-md border border-line bg-panel",
+        "relative flex h-full min-h-0 flex-col overflow-hidden bg-panel",
         className,
       )}
     >
@@ -33,7 +35,12 @@ export function SidePanel({
         )}
       </div>
       <div className="relative flex-1">
-        <div className="scrl absolute inset-0 flex flex-col gap-2 overflow-y-auto p-3">
+        <div
+          className={cn(
+            "scrl absolute inset-0 overflow-y-auto",
+            bodyClassName,
+          )}
+        >
           {children}
         </div>
       </div>

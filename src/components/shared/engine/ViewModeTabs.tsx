@@ -17,7 +17,7 @@ export function ViewModeTabs({
   onFullscreen?: () => void;
 }) {
   return (
-    <div className="flex h-[30px] items-stretch gap-1 rounded-t-md border border-b-0 border-line bg-head pl-1 pr-1.5">
+    <div className="flex h-[30px] items-stretch gap-1 border-b border-line bg-head pl-1 pr-1.5">
       {TABS.map(({ mode: m, label, icon: Icon }) => {
         const active = mode === m;
         return (

@@ -479,9 +479,12 @@ export default function DeletreoPage() {
   );
 
   return (
-    <main className="flex-1 p-3 overflow-auto flex flex-col gap-3">
-      <div className="flex gap-1.5">
-        <SidePanel title="Hierarchy" className="w-72 shrink-0">
+    <main className="flex min-h-0 flex-1">
+      <div className="flex min-h-0 w-full flex-1">
+        <SidePanel
+          title="Hierarchy"
+          className="w-[262px] shrink-0 border-r border-edge"
+        >
           <Hierarchy
             nodes={hierarchyNodes}
             selectedId={selectedId}
@@ -519,7 +522,10 @@ export default function DeletreoPage() {
             </ComponentRegistryProvider>
           </Scene>
         </div>
-        <SidePanel title="Inspector" className="w-72 shrink-0">
+        <SidePanel
+          title="Inspector"
+          className="w-[336px] shrink-0 border-l border-edge"
+        >
           {selected ? (
             <>
               <GameObjectInspector

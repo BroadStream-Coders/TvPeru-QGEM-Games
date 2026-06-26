@@ -12,6 +12,13 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-034] WorkspaceHeader repintado a la estética del editor (2026-06-26 02:20)
+El `WorkspaceHeader` y su `FileActions` adoptan la paleta del editor (`bg-head`/`border-edge`,
+"Volver" `--dim`→`--ink` con hover `--elev`, divisor `--line`, badge de icono `--acc-bg`/`--acc`,
+título `--ink`, botón de carga `--acc` con hover `#5d99ff`). Se conservan el alto `h-12`, el
+`h-7` del botón y todo el comportamiento (volver, icono+título por store, carga). Era lo único
+de la top bar que quedaba fuera del restyle. Build limpio.
+
 ## [RM-033] Barra inferior de Assets (shell + estados) (2026-06-26 02:05)
 Nueva `AssetsBar` (+ `AssetTile`/`AssetLoaderTiles`) en el layout de los 4 workspaces:
 barra full-width bajo las 3 columnas, header `--head` "ASSETS" + cuerpo en fila de tiles.

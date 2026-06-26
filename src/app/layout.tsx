@@ -9,10 +9,11 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    template: "%s | QGEM Studio",
-    default: "QGEM Studio — TV Perú",
+    template: "%s | QGEM Games",
+    default: "QGEM Games — TV Perú",
   },
-  description: "Colector de datos para el programa Que Gane el Mejor — TV Perú",
+  description:
+    "Visualizador de juegos a pantalla completa para el programa Que Gane el Mejor — TV Perú",
 };
 
 export default function RootLayout({

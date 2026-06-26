@@ -12,6 +12,18 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [TD-015] Copy desactualizado: "Studio"/"colector de datos" → Games (2026-06-26 02:45)
+La app se anunciaba como "QGEM Studio" y "Colector de datos": en `layout.tsx` (metadata
+title/description) y `page.tsx` (top bar + eyebrow). Corregido a **QGEM Games**, descripción
+"Visualizador de juegos a pantalla completa…" y eyebrow "Workspaces de juegos", acorde a que
+es una herramienta de visualización de juegos, no un colector. Build limpio.
+
+## [RM-035] Página root (launcher) repintada a la estética del editor (2026-06-26 02:35)
+`src/app/page.tsx` adopta la paleta del editor sin cambiar layout: top bar/footer `bg-head`+
+`border-edge`, badge del Trophy y hover de cards/iconos en `--acc`/`--acc-bg`, cards `bg-panel`
+borde `--line` (hover `bg-panel-2`), textos `--ink`/`--dim`/`--faint`, pill "TV Perú" en `--elev`.
+Se conserva el pill verde "Sistema activo" (indicador de estado). Build limpio.
+
 ## [RM-034] WorkspaceHeader repintado a la estética del editor (2026-06-26 02:20)
 El `WorkspaceHeader` y su `FileActions` adoptan la paleta del editor (`bg-head`/`border-edge`,
 "Volver" `--dim`→`--ink` con hover `--elev`, divisor `--line`, badge de icono `--acc-bg`/`--acc`,

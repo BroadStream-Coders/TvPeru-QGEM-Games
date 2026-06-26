@@ -577,6 +577,7 @@ export default function CalculoMentalPage() {
             <>
               <GameObjectInspector
                 name={selected.name}
+                kind={gameObjectKind(selected.components)}
                 onNameChange={(name) => patchGameObject(selected.id, { name })}
                 active={selected.active}
                 onActiveChange={(active) =>

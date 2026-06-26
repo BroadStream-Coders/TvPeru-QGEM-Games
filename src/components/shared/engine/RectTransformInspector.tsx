@@ -1,4 +1,6 @@
 import { Move } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { ComponentSection } from "@engine/ComponentSection";
 import { RectTransformValues, Vec2 } from "@engine/RectTransform";
 import { NumberField } from "@engine/NumberField";
 
@@ -17,25 +19,24 @@ export function RectTransformInspector({
   onToggleEdit: () => void;
 }) {
   return (
-    <div className="rounded-md border border-border">
-      <div className="flex items-center justify-between border-b border-border bg-background/40 px-2.5 py-1.5">
-        <span className="flex items-center gap-1.5 text-xs font-semibold text-foreground">
-          <Move size={13} className="text-muted-foreground" />
-          Rect Transform
-        </span>
+    <ComponentSection
+      title="Rect Transform"
+      icon={<Move size={13} />}
+      headerExtra={
         <button
           onClick={onToggleEdit}
           title={editMode ? "Desactivar edición en canvas" : "Editar en canvas"}
-          className={`rounded-md px-2 py-0.5 text-2xs font-semibold uppercase tracking-wider transition-colors ${
+          className={cn(
+            "rounded px-2 py-0.5 text-2xs font-semibold uppercase tracking-wider transition-colors",
             editMode
-              ? "bg-brand text-brand-foreground"
-              : "border border-border text-muted-foreground hover:bg-accent hover:text-foreground"
-          }`}
+              ? "bg-acc text-white"
+              : "border border-line text-dim hover:bg-elev hover:text-ink",
+          )}
         >
           Editar
         </button>
-      </div>
-      <div className="grid grid-cols-1 gap-2 p-2.5">
+      }
+    >
         <NumberField
           label="Pos X"
           value={transform.position.x}
@@ -56,7 +57,6 @@ export function RectTransformInspector({
           value={transform.size.y}
           onChange={setAxis("size", "y")}
         />
-      </div>
-    </div>
+    </ComponentSection>
   );
 }

@@ -98,17 +98,6 @@ su "Hecho cuando", pero no es el foco actual).
 > workspaces. La top bar del diseño mapea al `WorkspaceHeader` compartido y queda
 > **fuera** de este restyle.
 
-## [RM-029] Chrome del Inspector (header sticky + secciones colapsables)
-
-- **Objetivo:** Inspector con header sticky `--head`, cabecera de objeto (check de
-  activo + glyph de tipo + input de nombre) y secciones de componente colapsables
-  con badge de glyph, interruptor enable y menú `⋮`. Aplica a `GameObjectInspector`
-  y al marco de cada inspector de componente.
-- **Hecho cuando:** el Inspector del sandbox presenta cabecera de objeto y
-  secciones plegables estilizadas; los inspectores de componentes existentes
-  quedan envueltos en el nuevo marco sin perder edición.
-- **Fecha:** 2026-06-25 · **Estado:** Abierto
-
 ## [RM-030] Campos tipados del Inspector (num/select/color/slider/toggle/asset)
 
 - **Objetivo:** Crear primitivos de campo con el estilo del diseño: fila con label,

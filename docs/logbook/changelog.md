@@ -12,6 +12,15 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-029] Chrome del Inspector: cabecera de objeto + secciones colapsables (2026-06-25 23:55)
+Nuevo `ComponentSection` (marco compartido: header `--panel2` con caret colapsable,
+badge de glyph coloreado por acento text/image/video/anim, título y remove). Los 14
+inspectores (RectTransform, los 9 nativos y los 5 locales: border/spellframe/2×controller/
+slot) se envuelven en él. `GameObjectInspector` repintado: check de activo cuadrado `--acc`,
+glyph de tipo por `kind` (nuevo prop, cableado en los 4 workspaces) e input de nombre
+`--bg`. El header sticky `INSPECTOR` ya lo da el `SidePanel` (RM-027). Switch enable y
+menú `⋮` de la maqueta → WL-010 (sin modelo/primitivo). Campos internos → RM-030. Build limpio.
+
 ## [RM-028] Filas del Hierarchy estilo editor (2026-06-25 23:30)
 Las filas del árbol pasan a estilo editor: barra de selección `--acc` a la izquierda,
 caret de expansión, glyph mono coloreado por tipo (group/text/image/video/color vía

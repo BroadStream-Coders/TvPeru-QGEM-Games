@@ -1,4 +1,5 @@
-import { Image as ImageIcon, Upload, Trash2, Maximize2 } from "lucide-react";
+import { Image as ImageIcon, Upload, Maximize2 } from "lucide-react";
+import { ComponentSection } from "@engine/ComponentSection";
 import {
   ImageComponent,
   ImageFit,
@@ -34,21 +35,12 @@ export function ImageInspector({
   };
 
   return (
-    <div className="rounded-md border border-border">
-      <div className="flex items-center justify-between border-b border-border bg-background/40 px-2.5 py-1.5">
-        <span className="flex items-center gap-1.5 text-xs font-semibold text-foreground">
-          <ImageIcon size={13} className="text-muted-foreground" />
-          Image
-        </span>
-        <button
-          onClick={onRemove}
-          title="Eliminar componente"
-          className="flex size-5 items-center justify-center rounded text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
-        >
-          <Trash2 size={13} />
-        </button>
-      </div>
-      <div className="flex flex-col gap-2 p-2.5">
+    <ComponentSection
+      title="Image"
+      icon={<ImageIcon size={13} />}
+      accent="image"
+      onRemove={onRemove}
+    >
         <div
           className="aspect-video w-full rounded-md border border-border bg-[repeating-conic-gradient(#e5e7eb_0_25%,transparent_0_50%)] bg-[length:16px_16px] bg-center bg-no-repeat"
           style={
@@ -108,7 +100,6 @@ export function ImageInspector({
             </option>
           </select>
         </label>
-      </div>
-    </div>
+    </ComponentSection>
   );
 }

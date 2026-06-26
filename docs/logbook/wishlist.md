@@ -31,6 +31,15 @@ Agregar `localScale` al RectTransform y que se propague a todos los hijos del su
 
 El Control de video arrancó (RM-009) sólo con pausa (K) y reinicio (J). Extras posibles, sin compromiso: play/stop como teclas separadas, adelantar/retroceder (seek ±n segundos), saltar a un tiempo fijo, velocidad de reproducción, y elegir a qué video apunta cuando hay varios (hoy controla el `<video>` hermano de su GameObject).
 
+## [WL-010] Interruptor enable y menú ⋮ por componente en el Inspector
+
+La maqueta del editor (RM-029) muestra en cada sección de componente un interruptor
+de **enable** (habilitar/deshabilitar sin borrar) y un menú **⋮** (mover arriba/abajo,
+reset, copiar/pegar valores…). No se implementaron: `enabled` no existe en el modelo
+`GameObjectComponent` (lo necesitarían vista + serialización) y `⋮` requiere un
+primitivo dropdown-menu (hoy solo hay context-menu). Hoy `ComponentSection` solo trae
+remove directo. Promover si se quiere desactivar componentes sin eliminarlos.
+
 ## [WL-008] Revisar la creación de componentes y el nombre de la clase base
 
 La tripleta de un componente genera bastantes archivos; evaluar simplificarlo. Además, valorar renombrar la clase base `GameObjectComponent` a solo `Component`. A decidir al momento de tocarlo.

@@ -28,7 +28,7 @@ export interface TreeNode {
   children?: TreeNode[];
 }
 
-const KIND_GLYPH: Record<GameObjectKind, string> = {
+export const KIND_GLYPH: Record<GameObjectKind, string> = {
   group: "▸",
   text: "T",
   image: "▢",
@@ -36,7 +36,7 @@ const KIND_GLYPH: Record<GameObjectKind, string> = {
   color: "■",
 };
 
-const KIND_COLOR: Record<GameObjectKind, string> = {
+export const KIND_COLOR: Record<GameObjectKind, string> = {
   group: "text-ink",
   text: "text-type-text",
   image: "text-type-image",

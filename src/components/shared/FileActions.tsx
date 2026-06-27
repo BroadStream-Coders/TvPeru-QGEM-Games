@@ -29,7 +29,7 @@ export function FileActions({
       <Button
         size="sm"
         onClick={() => fileInputRef.current?.click()}
-        className="h-7 gap-1.5 bg-acc text-white hover:bg-[#5d99ff] active:scale-[0.98] text-xs shadow-sm transition-all font-semibold"
+        className="h-7 gap-1.5 bg-acc text-white hover:bg-acc-hover active:scale-[0.98] text-xs shadow-sm transition-all font-semibold"
       >
         <Upload className="h-3.5 w-3.5" />
         <span className="hidden sm:inline">{loadLabel}</span>

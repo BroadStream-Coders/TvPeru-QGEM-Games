@@ -12,6 +12,10 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-038] Token `acc-hover` para el hover del acento (2026-06-27 16:55)
+El hex mágico `#5d99ff` estaba hardcodeado en 5 archivos como hover del acento;
+ahora es token (`--editor-acc-hover` → `bg-acc-hover`). Reemplazados los 5 usos.
+
 ## [RM-037] Paleta editor como brand único: retematizar primitivos + podar tokens shadcn (2026-06-27 16:48)
 `button` y `context-menu` retematizados a tokens editor (`acc/elev/line/ink/panel`),
 `Scene` usa `bg-stage`. Eliminados de `globals.css` todos los tokens shadcn huérfanos

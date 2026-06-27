@@ -39,6 +39,7 @@
   --color-dim: var(--editor-dim);
   --color-faint: var(--editor-faint);
   --color-acc: var(--editor-acc);
+  --color-acc-hover: var(--editor-acc-hover);
   --color-acc-bg: var(--editor-acc-bg);
   --color-acc-bg2: var(--editor-acc-bg2);
   --color-type-text: var(--editor-type-text);
@@ -81,6 +82,7 @@
   --editor-dim: #9aa1ab;
   --editor-faint: #6b727c;
   --editor-acc: #4c8dff;
+  --editor-acc-hover: #5d99ff;
   --editor-acc-bg: rgba(76, 141, 255, 0.16);
   --editor-acc-bg2: rgba(76, 141, 255, 0.28);
   --editor-type-text: #7fb0ff;

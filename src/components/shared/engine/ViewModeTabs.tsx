@@ -43,7 +43,7 @@ export function ViewModeTabs({
       {onFullscreen && (
         <button
           onClick={onFullscreen}
-          className="my-auto flex items-center gap-1.5 rounded-[5px] bg-acc px-2.5 py-1 text-2xs font-semibold text-white transition-colors hover:bg-[#5d99ff]"
+          className="my-auto flex items-center gap-1.5 rounded-[5px] bg-acc px-2.5 py-1 text-2xs font-semibold text-white transition-colors hover:bg-acc-hover"
           title="Pantalla completa"
         >
           <Maximize size={12} />

@@ -53,7 +53,7 @@ export function ImageInspector({
             : undefined
         }
       />
-      <label className="inline-flex w-fit cursor-pointer items-center gap-1.5 rounded-md bg-acc px-2.5 py-1 text-2xs font-semibold text-white transition-colors hover:bg-[#5d99ff]">
+      <label className="inline-flex w-fit cursor-pointer items-center gap-1.5 rounded-md bg-acc px-2.5 py-1 text-2xs font-semibold text-white transition-colors hover:bg-acc-hover">
         <Upload size={13} />
         Cargar desde equipo
         <input

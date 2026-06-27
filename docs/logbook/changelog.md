@@ -12,6 +12,12 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-036] Limpieza shadcn: borrar primitivos muertos + podar tokens huérfanos (2026-06-27 16:40)
+Estandarización hacia la paleta editor (RM-026): eliminados 5 primitivos `ui/` sin
+uso (`card`, `select`, `scroll-area`, `input`, `badge`) y podados de `globals.css` los
+tokens shadcn huérfanos (`sidebar-*`, `chart-*`). Quedan `button` + `context-menu`
+(aún con tokens shadcn, su retematización va en el siguiente paso). Build limpio.
+
 ## [TD-015] Copy desactualizado: "Studio"/"colector de datos" → Games (2026-06-26 02:45)
 La app se anunciaba como "QGEM Studio" y "Colector de datos": en `layout.tsx` (metadata
 title/description) y `page.tsx` (top bar + eyebrow). Corregido a **QGEM Games**, descripción

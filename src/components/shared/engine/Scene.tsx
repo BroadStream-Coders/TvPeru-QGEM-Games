@@ -13,7 +13,7 @@ interface SceneProps extends React.HTMLAttributes<HTMLDivElement> {
   hideCursorOnFullscreen?: boolean;
 }
 
-const STAGE_BACKGROUND_CLASS = "bg-muted";
+const STAGE_BACKGROUND_CLASS = "bg-stage";
 
 const VIEWPORT_CHECKER: React.CSSProperties = {
   background:

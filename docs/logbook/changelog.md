@@ -12,6 +12,13 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-037] Paleta editor como brand único: retematizar primitivos + podar tokens shadcn (2026-06-27 16:48)
+`button` y `context-menu` retematizados a tokens editor (`acc/elev/line/ink/panel`),
+`Scene` usa `bg-stage`. Eliminados de `globals.css` todos los tokens shadcn huérfanos
+(`primary/secondary/muted/accent/popover/card/input` + `-foreground`); quedan como
+semánticos del brand `background/foreground/border/ring/destructive/brand/success` +
+la paleta editor. Sin tokens nuevos: el único rol faltante (peligro) ya era `destructive`.
+
 ## [RM-036] Limpieza shadcn: borrar primitivos muertos + podar tokens huérfanos (2026-06-27 16:40)
 Estandarización hacia la paleta editor (RM-026): eliminados 5 primitivos `ui/` sin
 uso (`card`, `select`, `scroll-area`, `input`, `badge`) y podados de `globals.css` los

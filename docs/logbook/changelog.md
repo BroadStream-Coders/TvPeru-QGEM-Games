@@ -12,6 +12,19 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-023] Slot de Cálculo Mental con 2 hijos Text para delimitar el texto (2026-06-27 17:41)
+El Slot ya no dibuja el texto internamente: cada Slot tiene 2 GameObjects hijos con
+componente Text (pregunta/respuesta, autoSize) posicionables vía RectTransform. El
+board-sync vuelca el texto en los hijos, el reveal hace toggle de su `active`;
+SlotComponent adelgazó a marcos + estado correcto/incorrecto.
+
+## [RM-039] Campo `AssetField` + `FieldIconButton`; ImageInspector como piloto (2026-06-27 17:20)
+Nuevos primitivos en `InspectorFields.tsx`: `AssetField` (fila label + badge de tipo
++ nombre + picker desacoplado vía `onPick` + slot `actions`) y `FieldIconButton`
+(botón icono cuadrado consistente). `ImageInspector` migrado: fuera preview, botón de
+texto largo y span de filename; ahora fila Source (badge PNG derivado de la extensión,
+loader y ajustador como íconos) + Ajuste. Resto de inspectores pendientes.
+
 ## [RM-038] Token `acc-hover` para el hover del acento (2026-06-27 16:55)
 El hex mágico `#5d99ff` estaba hardcodeado en 5 archivos como hover del acento;
 ahora es token (`--editor-acc-hover` → `bg-acc-hover`). Reemplazados los 5 usos.

@@ -1,6 +1,10 @@
-import { Image as ImageIcon, Upload, Maximize2 } from "lucide-react";
+import { Image as ImageIcon, Maximize2 } from "lucide-react";
 import { ComponentSection } from "@engine/ComponentSection";
-import { SelectField } from "@engine/InspectorFields";
+import {
+  SelectField,
+  AssetField,
+  FieldIconButton,
+} from "@engine/InspectorFields";
 import {
   ImageComponent,
   ImageFit,
@@ -42,43 +46,22 @@ export function ImageInspector({
       accent="image"
       onRemove={onRemove}
     >
-      <div
-        className="aspect-video w-full rounded-md border border-line bg-[repeating-conic-gradient(#2b2f36_0_25%,transparent_0_50%)] bg-[length:16px_16px] bg-center bg-no-repeat"
-        style={
-          component.src
-            ? {
-                backgroundImage: `url(${component.src})`,
-                backgroundSize: "contain",
-              }
-            : undefined
+      <AssetField
+        label="Source"
+        name={component.fileName}
+        kind={component.fileName?.split(".").pop()?.toUpperCase()}
+        accent="image"
+        accept="image/*"
+        onPick={onPickFile}
+        actions={
+          <FieldIconButton
+            icon={<Maximize2 size={13} />}
+            title="Ajustar al tamaño de la imagen"
+            onClick={fitToImage}
+            disabled={!component.src}
+          />
         }
       />
-      <label className="inline-flex w-fit cursor-pointer items-center gap-1.5 rounded-md bg-acc px-2.5 py-1 text-2xs font-semibold text-white transition-colors hover:bg-acc-hover">
-        <Upload size={13} />
-        Cargar desde equipo
-        <input
-          type="file"
-          accept="image/*"
-          onChange={(e) => {
-            const file = e.target.files?.[0];
-            if (file) onPickFile(file);
-          }}
-          className="hidden"
-        />
-      </label>
-      {component.fileName && (
-        <span className="truncate text-2xs text-faint">
-          {component.fileName}
-        </span>
-      )}
-      <button
-        onClick={fitToImage}
-        disabled={!component.src}
-        className="inline-flex w-fit items-center gap-1.5 rounded-md border border-line px-2.5 py-1 text-2xs font-semibold text-dim transition-colors hover:border-acc hover:text-ink disabled:cursor-not-allowed disabled:opacity-50"
-      >
-        <Maximize2 size={13} />
-        Ajustar al tamaño de la imagen
-      </button>
       <SelectField
         label="Ajuste"
         value={component.fit}

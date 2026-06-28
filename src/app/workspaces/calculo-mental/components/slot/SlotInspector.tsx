@@ -25,16 +25,6 @@ export function SlotInspector({
     >
       <div className="flex flex-col gap-1 text-2xs text-dim">
         <span>
-          Pregunta:{" "}
-          <span className="text-ink">{component.question || "—"}</span>
-          {component.showQuestion ? "" : " (oculta)"}
-        </span>
-        <span>
-          Respuesta:{" "}
-          <span className="text-ink">{component.answer || "—"}</span>
-          {component.showAnswer ? "" : " (oculta)"}
-        </span>
-        <span>
           Estado:{" "}
           <span className="text-ink">{STATUS_LABEL[component.status]}</span>
         </span>

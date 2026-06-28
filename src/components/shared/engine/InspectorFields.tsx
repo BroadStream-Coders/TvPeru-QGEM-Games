@@ -1,9 +1,17 @@
 "use client";
 
 import { ReactNode } from "react";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Upload } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { NumberInput } from "@engine/NumberField";
+
+const ICON_BTN =
+  "flex size-7 shrink-0 items-center justify-center rounded-[5px] border border-line text-dim transition-colors hover:border-acc hover:text-ink disabled:cursor-not-allowed disabled:opacity-50";
+
+const ASSET_BADGE: Record<string, string> = {
+  image: "bg-type-image",
+  video: "bg-type-video",
+};
 
 export function FieldRow({
   label,
@@ -129,6 +137,85 @@ export function ColorField({
         onChange={(e) => onChange(e.target.value)}
         className="h-7 w-full min-w-0 rounded-[5px] border border-line bg-bg px-2 text-xs font-mono uppercase text-ink outline-none focus:border-acc"
       />
+    </FieldRow>
+  );
+}
+
+export function FieldIconButton({
+  icon,
+  title,
+  onClick,
+  disabled,
+}: {
+  icon: ReactNode;
+  title: string;
+  onClick: () => void;
+  disabled?: boolean;
+}) {
+  return (
+    <button
+      type="button"
+      title={title}
+      onClick={onClick}
+      disabled={disabled}
+      className={ICON_BTN}
+    >
+      {icon}
+    </button>
+  );
+}
+
+export function AssetField({
+  label,
+  name,
+  kind,
+  accent,
+  accept,
+  onPick,
+  actions,
+}: {
+  label?: string;
+  name?: string;
+  kind?: string;
+  accent: "image" | "video";
+  accept?: string;
+  onPick: (file: File) => void;
+  actions?: ReactNode;
+}) {
+  return (
+    <FieldRow label={label}>
+      <div className="flex h-7 min-w-0 flex-1 items-center gap-2 rounded-[5px] border border-line bg-bg px-1.5">
+        <span
+          className={cn(
+            "flex h-[18px] min-w-[18px] shrink-0 items-center justify-center rounded px-1 text-3xs font-bold text-white",
+            ASSET_BADGE[accent],
+          )}
+        >
+          {kind || "—"}
+        </span>
+        <span
+          className={cn(
+            "min-w-0 flex-1 truncate text-2xs",
+            name ? "text-ink" : "text-faint",
+          )}
+        >
+          {name ?? "Ninguno"}
+        </span>
+      </div>
+      <label className={cn(ICON_BTN, "cursor-pointer")} title="Cargar desde equipo">
+        <Upload size={13} />
+        <input
+          type="file"
+          accept={accept}
+          onChange={(e) => {
+            const file = e.target.files?.[0];
+            if (file) onPick(file);
+            e.target.value = "";
+          }}
+          className="hidden"
+        />
+      </label>
+      {actions}
     </FieldRow>
   );
 }

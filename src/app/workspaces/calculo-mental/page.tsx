@@ -45,6 +45,7 @@ import { createPopComponent } from "@engine/components/pop/popComponent";
 import { createShakeComponent } from "@engine/components/shake/shakeComponent";
 import { createBounceComponent } from "@engine/components/bounce/bounceComponent";
 import { createSlideComponent } from "@engine/components/slide/slideComponent";
+import { createTextComponent } from "@engine/components/text/textComponent";
 import { useAnimations } from "@engine/animations/AnimationsContext";
 import { slotDefinition } from "./components/slot";
 import {
@@ -81,12 +82,35 @@ const CONTROLLER_ID = "controller";
 
 const SLOT_COUNT = 4;
 const SLOT_IDS = Array.from({ length: SLOT_COUNT }, (_, i) => `slot-${i}`);
+const QUESTION_IDS = SLOT_IDS.map((id) => `${id}-question`);
+const ANSWER_IDS = SLOT_IDS.map((id) => `${id}-answer`);
 const SLOT_POSITIONS: Vec2[] = [
   { x: -675, y: -400 },
   { x: -280, y: -400 },
   { x: 115, y: -400 },
   { x: 510, y: -400 },
 ];
+
+const QUESTION_TRANSFORM: RectTransformValues = {
+  position: { x: -8, y: 30 },
+  size: { x: 346, y: 124 },
+  pivot: { x: 0.5, y: 0.5 },
+};
+const ANSWER_TRANSFORM: RectTransformValues = {
+  position: { x: 69, y: -45 },
+  size: { x: 230, y: 87 },
+  pivot: { x: 0.5, y: 0.5 },
+};
+
+const createSlotTextComponent = () =>
+  createTextComponent({
+    text: "",
+    autoSize: true,
+    fontSizeMin: 1,
+    fontSizeMax: 6,
+    color: "#ffffff",
+    fontFamily: "var(--font-poppins-semibold)",
+  });
 
 const registry = createComponentRegistry([
   ...NATIVE_COMPONENTS,
@@ -129,7 +153,7 @@ export default function CalculoMentalPage() {
       },
       components: [createControllerComponent()],
     }),
-    ...SLOT_IDS.map((id, i) =>
+    ...SLOT_IDS.flatMap((id, i) => [
       createGameObject({
         id,
         name: `Slot ${i + 1}`,
@@ -147,7 +171,23 @@ export default function CalculoMentalPage() {
           createSlideComponent(),
         ],
       }),
-    ),
+      createGameObject({
+        id: QUESTION_IDS[i],
+        name: "Pregunta",
+        parentId: id,
+        active: false,
+        transform: QUESTION_TRANSFORM,
+        components: [createSlotTextComponent()],
+      }),
+      createGameObject({
+        id: ANSWER_IDS[i],
+        name: "Respuesta",
+        parentId: id,
+        active: false,
+        transform: ANSWER_TRANSFORM,
+        components: [createSlotTextComponent()],
+      }),
+    ]),
   ]);
   const [selectedId, setSelectedId] = useState<string>(SLOT_IDS[0]);
 
@@ -412,24 +452,37 @@ export default function CalculoMentalPage() {
             ),
           };
         }
-        const slotIndex = SLOT_IDS.indexOf(go.id);
-        if (slotIndex === -1) return go;
-        const data = slots[slotIndex];
-        return {
-          ...go,
-          components: go.components.map((c) =>
-            c.type === "slot"
-              ? {
-                  ...c,
-                  question: data?.question ?? "",
-                  answer: data?.answer ?? "",
-                  showQuestion: false,
-                  showAnswer: false,
-                  status: "none",
-                }
-              : c,
-          ),
-        };
+        if (SLOT_IDS.includes(go.id)) {
+          return {
+            ...go,
+            components: go.components.map((c) =>
+              c.type === "slot" ? { ...c, status: "none" } : c,
+            ),
+          };
+        }
+        const qIndex = QUESTION_IDS.indexOf(go.id);
+        if (qIndex !== -1) {
+          const text = slots[qIndex]?.question ?? "";
+          return {
+            ...go,
+            active: false,
+            components: go.components.map((c) =>
+              c.type === "text" ? { ...c, text } : c,
+            ),
+          };
+        }
+        const aIndex = ANSWER_IDS.indexOf(go.id);
+        if (aIndex !== -1) {
+          const text = slots[aIndex]?.answer ?? "";
+          return {
+            ...go,
+            active: false,
+            components: go.components.map((c) =>
+              c.type === "text" ? { ...c, text } : c,
+            ),
+          };
+        }
+        return go;
       }),
     );
   }, [groupIndex, boardIndex, fileName]);
@@ -459,17 +512,15 @@ export default function CalculoMentalPage() {
   const revealNextQuestion = () => {
     const next = cursor + 1;
     if (next >= SLOT_COUNT || next >= boardSlots.length) return;
-    patchSlot(SLOT_IDS[next], { showQuestion: true });
+    patchGameObject(QUESTION_IDS[next], { active: true });
     patchController({ cursor: next });
   };
 
   const selectBackSlot = () => {
     if (cursor < 0) return;
-    patchSlot(SLOT_IDS[cursor], {
-      showQuestion: false,
-      showAnswer: false,
-      status: "none",
-    });
+    patchGameObject(QUESTION_IDS[cursor], { active: false });
+    patchGameObject(ANSWER_IDS[cursor], { active: false });
+    patchSlot(SLOT_IDS[cursor], { status: "none" });
     patchController({ cursor: cursor - 1 });
   };
 
@@ -480,7 +531,8 @@ export default function CalculoMentalPage() {
 
   const showCurrentAnswer = () => {
     if (cursor < 0) return;
-    patchSlot(SLOT_IDS[cursor], { showAnswer: true, status: "correct" });
+    patchGameObject(ANSWER_IDS[cursor], { active: true });
+    patchSlot(SLOT_IDS[cursor], { status: "correct" });
     if (correctUrl) playSound(correctUrl);
     trigger(SLOT_IDS[cursor], "pop");
   };

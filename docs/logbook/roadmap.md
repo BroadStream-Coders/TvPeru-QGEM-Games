@@ -63,16 +63,6 @@ su "Hecho cuando", pero no es el foco actual).
   (storage/archivo), no por import estático.
 - **Fecha:** 2026-06-19 · **Estado:** Abierto
 
-## [RM-023] Slot de Cálculo Mental con 2 hijos Text para delimitar el texto
-
-- **Objetivo:** El Slot pasa a tener 2 GameObjects hijos con componente Text
-  (pregunta y respuesta) para delimitar manualmente el área del texto con el
-  RectTransform existente, en vez de dibujarlo internamente. Cambia cómo funciona el
-  Slot; depende de RM-020 y RM-021.
-- **Hecho cuando:** cada Slot renderiza pregunta y respuesta vía hijos con Text,
-  posicionables/redimensionables con RectTransform, y el reveal sigue funcionando.
-- **Fecha:** 2026-06-19 · **Estado:** Abierto
-
 ## [RM-024] Cargar nuevas fuentes en Cálculo Mental
 
 - **Objetivo:** Tener una forma de cargar nuevas fuentes en Cálculo Mental. Si se

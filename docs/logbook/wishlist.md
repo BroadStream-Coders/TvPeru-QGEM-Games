@@ -43,3 +43,7 @@ remove directo. Promover si se quiere desactivar componentes sin eliminarlos.
 ## [WL-008] Revisar la creación de componentes y el nombre de la clase base
 
 La tripleta de un componente genera bastantes archivos; evaluar simplificarlo. Además, valorar renombrar la clase base `GameObjectComponent` a solo `Component`. A decidir al momento de tocarlo.
+
+## [WL-011] Login con Google One Tap / FedCM (prompt en la esquina)
+
+Reemplazar el botón de redirect actual (`signInWithOAuth`) por el prompt One Tap de Google que aparece en la esquina, sin salir de la app. Es otro mecanismo: Google Identity Services (`gsi/client`) + `supabase.auth.signInWithIdToken` (no `signInWithOAuth`), requiere `NEXT_PUBLIC_GOOGLE_CLIENT_ID` y generar un nonce; corre sobre FedCM (encaja bien con target solo-Chrome). Las piezas actuales (`useAuth`, cliente Supabase, sesión) se reutilizan; solo cambia el disparador del login.

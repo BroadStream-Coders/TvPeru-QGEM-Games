@@ -7,6 +7,7 @@ import {
   Grid3x3,
   Calculator,
 } from "lucide-react";
+import { AuthButton } from "@/components/shared/AuthButton";
 
 const workspaces = [
   {
@@ -48,10 +49,11 @@ export default function Home() {
             QGEM Games
           </span>
         </div>
-        <div className="ml-auto">
+        <div className="ml-auto flex items-center gap-3">
           <span className="rounded-full border border-line bg-elev px-2.5 py-0.5 text-2xs font-bold text-dim uppercase tracking-widest">
             TV Perú
           </span>
+          <AuthButton />
         </div>
       </header>
 

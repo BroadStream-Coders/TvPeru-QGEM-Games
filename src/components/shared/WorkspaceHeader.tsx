@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { FileActions } from "./FileActions";
+import { AuthButton } from "./AuthButton";
 
 import { useWorkspaceHeader } from "@/hooks/use-workspace-header";
 
@@ -38,6 +39,7 @@ export function WorkspaceHeader() {
 
       <div className="flex items-center gap-2">
         {onLoad && <FileActions onLoad={onLoad} />}
+        <AuthButton />
       </div>
     </header>
   );

@@ -8,6 +8,7 @@ import { colorDefinition } from "@engine/components/color";
 import { videoDefinition } from "@engine/components/video";
 import { videoControlDefinition } from "@engine/components/videoControl";
 import { textDefinition } from "@engine/components/text";
+import { maskDefinition } from "@engine/components/mask";
 import { popDefinition } from "@engine/components/pop";
 import { shakeDefinition } from "@engine/components/shake";
 import { bounceDefinition } from "@engine/components/bounce";
@@ -19,7 +20,7 @@ export interface ComponentDefinition<
   type: C["type"];
   label: string;
   create: () => C;
-  view: ComponentType<{ component: C }>;
+  view?: ComponentType<{ component: C }>;
   editor: ComponentType<{
     component: C;
     onChange: (next: C) => void;
@@ -56,6 +57,7 @@ export const NATIVE_COMPONENTS: ComponentDefinition[] = [
   videoDefinition,
   videoControlDefinition,
   textDefinition,
+  maskDefinition,
   popDefinition,
   shakeDefinition,
   bounceDefinition,

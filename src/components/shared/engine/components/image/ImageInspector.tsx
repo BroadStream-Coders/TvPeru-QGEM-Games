@@ -63,13 +63,12 @@ export function ImageInspector({
         }
       />
       <SelectField
-        label="Ajuste"
+        label="Fit"
         value={component.fit}
         onChange={(fit) => onChange({ ...component, fit })}
         options={[
-          { value: "contain" as ImageFit, label: "Contener" },
-          { value: "cover" as ImageFit, label: "Cubrir" },
-          { value: "fill" as ImageFit, label: "Estirar" },
+          { value: "contain" as ImageFit, label: "Contain" },
+          { value: "fill" as ImageFit, label: "Stretch" },
         ]}
       />
     </ComponentSection>

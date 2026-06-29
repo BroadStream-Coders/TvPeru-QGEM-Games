@@ -5,6 +5,11 @@ import { useComponentRegistry } from "@engine/componentRegistry";
 import { useSceneViewMode } from "@engine/SceneViewMode";
 import { useGameObjectAnimations } from "@engine/animations/useGameObjectAnimations";
 import { mergeRefs } from "@engine/refs";
+import {
+  MaskComponent,
+  maskStyle,
+} from "@engine/components/mask/maskComponent";
+import { ImageComponent } from "@engine/components/image/imageComponent";
 
 interface GameObjectViewProps {
   gameObject: GameObject;
@@ -36,6 +41,15 @@ export function GameObjectView({
     (go) => go.parentId === gameObject.id,
   );
 
+  const mask = gameObject.components.find(
+    (c): c is MaskComponent => c.type === "mask",
+  );
+  const maskImage = gameObject.components.find(
+    (c): c is ImageComponent => c.type === "image",
+  );
+  const wrapperStyle =
+    mask && maskImage?.src ? maskStyle(maskImage.src, maskImage.fit) : undefined;
+
   const animationRef = useGameObjectAnimations(gameObject, onAnimatePosition);
   const externalRef = contentRef?.(gameObject);
   const mergedContentRef = useMemo(
@@ -50,8 +64,13 @@ export function GameObjectView({
       pivot={gameObject.transform.pivot}
       parentSize={parentSize}
     >
-      <div ref={mergedContentRef} className="absolute inset-0">
+      <div
+        ref={mergedContentRef}
+        className="absolute inset-0"
+        style={wrapperStyle}
+      >
         {gameObject.components.map((component, index) => {
+          if (mask && component === maskImage && !mask.showImage) return null;
           const View = registry.get(component.type)?.view;
           return View ? <View key={index} component={component} /> : null;
         })}

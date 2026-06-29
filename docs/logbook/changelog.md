@@ -12,6 +12,12 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-012] Máscara general estilo Unity (2026-06-29 18:26)
+Nuevo componente `Mask` que NO es standalone: usa la `Image` hermana del mismo
+GameObject como fuente (estilo Unity) y `GameObjectView` la aplica como CSS mask al
+wrapper, recortando componentes e hijos. Su única propiedad es `Show image` (ocultar
+el gráfico, útil en dev). Color volvió a ser relleno plano.
+
 ## [RM-023] Slot de Cálculo Mental con 2 hijos Text para delimitar el texto (2026-06-27 17:41)
 El Slot ya no dibuja el texto internamente: cada Slot tiene 2 GameObjects hijos con
 componente Text (pregunta/respuesta, autoSize) posicionables vía RectTransform. El

@@ -108,12 +108,3 @@ su "Hecho cuando", pero no es el foco actual).
   dentro de un workspace.
 - **Fecha:** 2026-06-16 · **Estado:** Diferido (2026-06-17)
 
-## [RM-012] Máscara general estilo Unity
-
-- **Objetivo:** Revisar el "shape" del componente Color y rediseñar la máscara como
-  un mecanismo general estilo Unity, que pueda enmascarar no solo color sino también
-  imágenes y videos.
-- **Hecho cuando:** la máscara funciona como recurso general aplicable a
-  color/imagen/video; el caso actual de Color + shape queda cubierto por el nuevo
-  mecanismo.
-- **Fecha:** 2026-06-16 · **Estado:** Diferido (2026-06-17)

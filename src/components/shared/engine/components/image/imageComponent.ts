@@ -1,6 +1,6 @@
 import { GameObjectComponent } from "@engine/gameObject";
 
-export type ImageFit = "contain" | "cover" | "fill";
+export type ImageFit = "contain" | "fill";
 
 export interface ImageComponent extends GameObjectComponent {
   type: "image";

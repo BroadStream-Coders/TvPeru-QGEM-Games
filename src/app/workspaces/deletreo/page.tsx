@@ -8,6 +8,7 @@ import { useAssetPreloader } from "@/hooks/use-asset-preloader";
 import type { AssetKind } from "@/helpers/asset-preloader";
 import { toManifest, type AssetCatalog } from "@/helpers/asset-source";
 import { SHARED_ASSETS } from "@/assets/shared";
+import { DELETREO_ASSETS } from "./assets";
 import { useGameKeys } from "@/hooks/use-game-keys";
 import { useTransformGesture, HANDLES } from "@/hooks/use-transform-gesture";
 import { playSound } from "@/lib/audio";
@@ -57,11 +58,6 @@ import { createShakeComponent } from "@engine/components/shake/shakeComponent";
 import { createBounceComponent } from "@engine/components/bounce/bounceComponent";
 import { createSlideComponent } from "@engine/components/slide/slideComponent";
 import { useAnimations } from "@engine/animations/AnimationsContext";
-
-const DELETREO_ASSETS = {
-  mainFrame: { kind: "image", path: "games/deletreo/mainFrame.png" },
-  errorFrame: { kind: "image", path: "games/deletreo/errorFrame.png" },
-} satisfies AssetCatalog;
 
 const CATALOG: AssetCatalog = {
   correct: SHARED_ASSETS.correctSound,

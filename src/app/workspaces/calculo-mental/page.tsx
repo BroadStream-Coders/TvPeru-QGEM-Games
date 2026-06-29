@@ -9,6 +9,7 @@ import { useAssetPreloader } from "@/hooks/use-asset-preloader";
 import type { AssetKind } from "@/helpers/asset-preloader";
 import { toManifest, type AssetCatalog } from "@/helpers/asset-source";
 import { SHARED_ASSETS } from "@/assets/shared";
+import { CALCULO_ASSETS } from "./assets";
 import { useTransformGesture, HANDLES } from "@/hooks/use-transform-gesture";
 import { playSound } from "@/lib/audio";
 
@@ -57,13 +58,6 @@ import {
   ControllerComponent,
   createControllerComponent,
 } from "./components/controller/controllerComponent";
-
-const CALCULO_ASSETS = {
-  blueFrame: { kind: "image", path: "games/calculo-mental/blueFrame.png" },
-  purpleFrame: { kind: "image", path: "games/calculo-mental/purpleFrame.png" },
-  check: { kind: "image", path: "games/calculo-mental/check.png" },
-  x: { kind: "image", path: "games/calculo-mental/x.png" },
-} satisfies AssetCatalog;
 
 const CATALOG: AssetCatalog = {
   correct: SHARED_ASSETS.correctSound,

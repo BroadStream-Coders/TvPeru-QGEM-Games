@@ -6,9 +6,10 @@ export type CatalogEntry =
 
 export type AssetCatalog = Record<string, CatalogEntry>;
 
-const BASE = (
-  process.env.NEXT_PUBLIC_ASSET_BASE_URL ?? "/assets"
-).replace(/\/$/, "");
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL?.replace(/\/$/, "");
+const BASE = SUPABASE_URL
+  ? `${SUPABASE_URL}/storage/v1/object/public/assets`
+  : "/assets";
 
 export const resolveAssetUrl = (path: string): string =>
   `${BASE}/${path.replace(/^\//, "")}`;

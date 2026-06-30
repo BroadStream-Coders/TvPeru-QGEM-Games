@@ -10,7 +10,7 @@ import { toManifest, type AssetCatalog } from "@/helpers/asset-source";
 import { SHARED_ASSETS } from "@/assets/shared";
 import { DELETREO_ASSETS } from "./assets";
 import { useGameKeys } from "@/hooks/use-game-keys";
-import { useTransformGesture, HANDLES } from "@/hooks/use-transform-gesture";
+import { useTransformGesture } from "@/hooks/use-transform-gesture";
 import { playSound } from "@/lib/audio";
 
 import { Scene } from "@engine/Scene";
@@ -21,6 +21,7 @@ import {
   DESIGN_HEIGHT,
 } from "@engine/RectTransform";
 import { GameObjectView } from "@engine/GameObjectView";
+import { SelectionOverlay } from "@engine/SelectionOverlay";
 import { spellframeDefinition } from "./components/spellframe";
 import { createSpellframeComponent } from "./components/spellframe/spellframeComponent";
 import { controllerDefinition } from "./components/controller";
@@ -454,25 +455,6 @@ export default function DeletreoPage() {
     onArrowDown: () => trigger(FRAME_ID, "slide"),
   });
 
-  const renderContent = (go: GameObject) => (
-    <>
-      {editMode && go.id === selectedId && (
-        <>
-          <div
-            onPointerDown={(e) => beginGesture("move", e)}
-            className="absolute inset-0 cursor-move touch-none select-none"
-          />
-          {HANDLES.map((hd) => (
-            <div
-              key={hd.h}
-              onPointerDown={(e) => beginGesture(hd.h, e)}
-              className={`absolute ${hd.pos} ${hd.cursor} h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border border-slate-700 bg-white touch-none`}
-            />
-          ))}
-        </>
-      )}
-    </>
-  );
 
   return (
     <main className="flex min-h-0 flex-1 flex-col">
@@ -504,11 +486,16 @@ export default function DeletreoPage() {
                         gameObject={go}
                         allGameObjects={gameObjects}
                         selectedId={selectedId}
-                        editMode={editMode}
-                        renderContent={renderContent}
                         onAnimatePosition={animatePosition}
                       />
                     ))}
+                  {editMode && (
+                    <SelectionOverlay
+                      selected={selected}
+                      allGameObjects={gameObjects}
+                      onGesture={beginGesture}
+                    />
+                  )}
                 </div>
               ) : (
                 <div className="absolute inset-0 flex items-center justify-center text-sm text-white/70">

@@ -3,11 +3,12 @@
 import { useEffect, useRef, useState } from "react";
 import { FlaskConical } from "lucide-react";
 import { useWorkspaceHeader } from "@/hooks/use-workspace-header";
-import { useTransformGesture, HANDLES } from "@/hooks/use-transform-gesture";
+import { useTransformGesture } from "@/hooks/use-transform-gesture";
 
 import { Scene } from "@engine/Scene";
 import { RectTransformValues, Vec2 } from "@engine/RectTransform";
 import { GameObjectView } from "@engine/GameObjectView";
+import { SelectionOverlay } from "@engine/SelectionOverlay";
 import { Hierarchy, TreeNode } from "@engine/Hierarchy";
 import { SidePanel } from "@engine/SidePanel";
 import { AssetsBar } from "@engine/AssetsBar";
@@ -210,23 +211,6 @@ export default function SandboxPage() {
     });
   }, [setHeader]);
 
-  const renderContent = (go: GameObject) =>
-    editMode && go.id === selectedId ? (
-      <>
-        <div
-          onPointerDown={(e) => beginGesture("move", e)}
-          className="absolute inset-0 cursor-move touch-none select-none"
-        />
-        {HANDLES.map((hd) => (
-          <div
-            key={hd.h}
-            onPointerDown={(e) => beginGesture(hd.h, e)}
-            className={`absolute ${hd.pos} ${hd.cursor} h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border border-slate-700 bg-white touch-none`}
-          />
-        ))}
-      </>
-    ) : null;
-
   return (
     <main className="flex min-h-0 flex-1 flex-col">
       <div className="flex min-h-0 w-full flex-1">
@@ -256,11 +240,16 @@ export default function SandboxPage() {
                       gameObject={go}
                       allGameObjects={gameObjects}
                       selectedId={selectedId}
-                      editMode={editMode}
-                      renderContent={renderContent}
                     />
                   ))}
               </div>
+              {editMode && (
+                <SelectionOverlay
+                  selected={selected}
+                  allGameObjects={gameObjects}
+                  onGesture={beginGesture}
+                />
+              )}
             </ComponentRegistryProvider>
           </Scene>
         </div>

@@ -4,11 +4,12 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Grid3x3 } from "lucide-react";
 import { loadJsonFile } from "@/helpers/persistence";
 import { useWorkspaceHeader } from "@/hooks/use-workspace-header";
-import { useTransformGesture, HANDLES } from "@/hooks/use-transform-gesture";
+import { useTransformGesture } from "@/hooks/use-transform-gesture";
 
 import { Scene } from "@engine/Scene";
 import { RectTransformValues, Vec2 } from "@engine/RectTransform";
 import { GameObjectView } from "@engine/GameObjectView";
+import { SelectionOverlay } from "@engine/SelectionOverlay";
 import { Hierarchy, TreeNode } from "@engine/Hierarchy";
 import { SidePanel } from "@engine/SidePanel";
 import { AssetsBar } from "@engine/AssetsBar";
@@ -265,21 +266,6 @@ export default function OperacionesCombinadasPage() {
           cellLeave={dnd.cellLeave}
         />
       )}
-      {editMode && go.id === selectedId && (
-        <>
-          <div
-            onPointerDown={(e) => beginGesture("move", e)}
-            className="absolute inset-0 cursor-move touch-none select-none"
-          />
-          {HANDLES.map((hd) => (
-            <div
-              key={hd.h}
-              onPointerDown={(e) => beginGesture(hd.h, e)}
-              className={`absolute ${hd.pos} ${hd.cursor} h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full border border-slate-700 bg-white touch-none`}
-            />
-          ))}
-        </>
-      )}
     </>
   );
 
@@ -316,10 +302,16 @@ export default function OperacionesCombinadasPage() {
                       gameObject={go}
                       allGameObjects={gameObjects}
                       selectedId={selectedId}
-                      editMode={editMode}
                       renderContent={renderContent}
                     />
                   ))}
+                {editMode && (
+                  <SelectionOverlay
+                    selected={selected}
+                    allGameObjects={gameObjects}
+                    onGesture={beginGesture}
+                  />
+                )}
               </div>
             </ComponentRegistryProvider>
             <TrayPanel

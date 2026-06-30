@@ -16,7 +16,6 @@ interface GameObjectViewProps {
   allGameObjects: GameObject[];
   parentSize?: Vec2;
   selectedId?: string | null;
-  editMode?: boolean;
   renderContent?: (go: GameObject) => React.ReactNode;
   contentRef?: (go: GameObject) => React.Ref<HTMLDivElement> | undefined;
   onAnimatePosition?: (goId: string, position: Vec2) => void;
@@ -27,7 +26,6 @@ export function GameObjectView({
   allGameObjects,
   parentSize,
   selectedId,
-  editMode,
   renderContent,
   contentRef,
   onAnimatePosition,
@@ -35,7 +33,7 @@ export function GameObjectView({
   const viewMode = useSceneViewMode();
   const registry = useComponentRegistry();
   const selected = gameObject.id === selectedId;
-  const showOutline = (editMode && selected) || viewMode === "scene";
+  const showOutline = viewMode === "scene";
 
   const childObjects = allGameObjects.filter(
     (go) => go.parentId === gameObject.id,
@@ -82,7 +80,6 @@ export function GameObjectView({
               allGameObjects={allGameObjects}
               parentSize={gameObject.transform.size}
               selectedId={selectedId}
-              editMode={editMode}
               renderContent={renderContent}
               contentRef={contentRef}
               onAnimatePosition={onAnimatePosition}

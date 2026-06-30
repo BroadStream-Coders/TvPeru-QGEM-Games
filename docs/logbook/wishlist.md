@@ -47,3 +47,7 @@ La tripleta de un componente genera bastantes archivos; evaluar simplificarlo. A
 ## [WL-011] Login con Google One Tap / FedCM (prompt en la esquina)
 
 Reemplazar el botón de redirect actual (`signInWithOAuth`) por el prompt One Tap de Google que aparece en la esquina, sin salir de la app. Es otro mecanismo: Google Identity Services (`gsi/client`) + `supabase.auth.signInWithIdToken` (no `signInWithOAuth`), requiere `NEXT_PUBLIC_GOOGLE_CLIENT_ID` y generar un nonce; corre sobre FedCM (encaja bien con target solo-Chrome). Las piezas actuales (`useAuth`, cliente Supabase, sesión) se reutilizan; solo cambia el disparador del login.
+
+## [WL-012] Cámara navegable en la vista Scene
+
+En Scene poder hacer pan (arrastrar la cámara) y zoom (acercar/alejar), con un marco de referencia que muestre el recorte real del Game dentro del lienzo, estilo editor 2D (Unity/Figma).

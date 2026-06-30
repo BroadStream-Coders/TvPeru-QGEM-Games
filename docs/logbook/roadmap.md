@@ -74,6 +74,28 @@ su "Hecho cuando", pero no es el foco actual).
 
 ---
 
+# Mejoras de editor / engine comprometidas
+
+## [RM-040] En la vista Game nada es seleccionable
+
+- **Objetivo:** Que en la vista **Game** el contenido no se pueda seleccionar ni
+  arrastrar por el usuario: ni seleccionar/copiar texto, ni la selección accidental
+  de un div que termina marcando todo. (Se revisará con más detalle en Operaciones
+  Combinadas.)
+- **Hecho cuando:** en Game no se puede seleccionar texto ni marcar/arrastrar
+  contenido; la selección del navegador queda anulada en el área de display.
+- **Fecha:** 2026-06-29 · **Estado:** Abierto
+
+## [RM-041] Rotación en el RectTransform
+
+- **Objetivo:** Agregar rotación al RectTransform para que los GameObjects puedan
+  rotarse. Relacionado con `localScale` (WL-007) y anclajes (WL-003).
+- **Hecho cuando:** el RectTransform admite un ángulo de rotación que se aplica al
+  render y es editable desde el inspector.
+- **Fecha:** 2026-06-29 · **Estado:** Abierto
+
+---
+
 # Fase 2 — Engine genérico (diferido)
 
 > Diferido a propósito hasta cerrar la Fase 1. Se retoma promoviendo patrones que

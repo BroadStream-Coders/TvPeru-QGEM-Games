@@ -12,6 +12,15 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [TD-016] Chrome de edición separado del árbol enmascarado + restyle (2026-06-29 19:08)
+El overlay de edición (borde + handles + área de move) estaba duplicado en los 4
+workspaces dentro del `renderContent`, metido en el wrapper enmascarado/animado de
+`GameObjectView`, así que cualquier máscara (propia o de un ancestro) recortaba los
+controles. Se extrajo a `SelectionOverlay` compartido, montado a nivel del stage
+(coordenadas absolutas vía `ancestorOffset`), fuera de toda máscara. `GameObjectView`
+quedó como render puro (sin chrome de edición). Restyle: borde punteado rojo →
+accent azul sólido (`#4c8dff`) con handles cuadrados rellenos estilo Figma.
+
 ## [RM-012] Máscara general estilo Unity (2026-06-29 18:26)
 Nuevo componente `Mask` que NO es standalone: usa la `Image` hermana del mismo
 GameObject como fuente (estilo Unity) y `GameObjectView` la aplica como CSS mask al

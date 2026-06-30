@@ -7,7 +7,7 @@ import { useWorkspaceHeader } from "@/hooks/use-workspace-header";
 import { useTransformGesture } from "@/hooks/use-transform-gesture";
 
 import { Scene } from "@engine/Scene";
-import { RectTransformValues, Vec2 } from "@engine/RectTransform";
+import { Vec2, Vec2Field } from "@engine/RectTransform";
 import { GameObjectView } from "@engine/GameObjectView";
 import { SelectionOverlay } from "@engine/SelectionOverlay";
 import { Hierarchy, TreeNode } from "@engine/Hierarchy";
@@ -178,7 +178,7 @@ export default function OperacionesCombinadasPage() {
     );
 
   const setAxis =
-    (field: keyof RectTransformValues, axis: keyof Vec2) => (value: number) =>
+    (field: Vec2Field, axis: keyof Vec2) => (value: number) =>
       setGameObjects((prev) =>
         prev.map((go) =>
           go.id === selectedId
@@ -192,6 +192,15 @@ export default function OperacionesCombinadasPage() {
             : go,
         ),
       );
+
+  const setRotation = (value: number) =>
+    setGameObjects((prev) =>
+      prev.map((go) =>
+        go.id === selectedId
+          ? { ...go, transform: { ...go.transform, rotation: value } }
+          : go,
+      ),
+    );
 
   const { beginGesture } = useTransformGesture({
     stageRef,
@@ -341,6 +350,7 @@ export default function OperacionesCombinadasPage() {
               <RectTransformInspector
                 transform={selected.transform}
                 setAxis={setAxis}
+                setRotation={setRotation}
                 editMode={editMode}
                 onToggleEdit={() => setEditMode((v) => !v)}
               />

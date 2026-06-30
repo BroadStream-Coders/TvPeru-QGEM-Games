@@ -60,6 +60,7 @@ export function GameObjectView({
       position={gameObject.transform.position}
       size={gameObject.transform.size}
       pivot={gameObject.transform.pivot}
+      rotation={gameObject.transform.rotation}
       parentSize={parentSize}
     >
       <div

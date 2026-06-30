@@ -12,6 +12,12 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-041] Rotación en el RectTransform (2026-06-30 13:58)
+`RectTransform` admite `rotation?` (grados, eje Z) aplicado al render rotando
+alrededor del pivot (`transform-origin`), editable con un campo "Rotation Z" en
+el inspector. Alcance solo-inspector; el overlay de canvas sigue axis-aligned (ver
+WL-013).
+
 ## [TD-016] Chrome de edición separado del árbol enmascarado + restyle (2026-06-29 19:08)
 El overlay de edición (borde + handles + área de move) estaba duplicado en los 4
 workspaces dentro del `renderContent`, metido en el wrapper enmascarado/animado de

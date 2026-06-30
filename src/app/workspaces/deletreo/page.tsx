@@ -15,8 +15,8 @@ import { playSound } from "@/lib/audio";
 
 import { Scene } from "@engine/Scene";
 import {
-  RectTransformValues,
   Vec2,
+  Vec2Field,
   DESIGN_WIDTH,
   DESIGN_HEIGHT,
 } from "@engine/RectTransform";
@@ -311,7 +311,7 @@ export default function DeletreoPage() {
     };
 
   const setAxis =
-    (field: keyof RectTransformValues, axis: keyof Vec2) => (value: number) =>
+    (field: Vec2Field, axis: keyof Vec2) => (value: number) =>
       setGameObjects((prev) =>
         prev.map((go) =>
           go.id === selectedId
@@ -325,6 +325,15 @@ export default function DeletreoPage() {
             : go,
         ),
       );
+
+  const setRotation = (value: number) =>
+    setGameObjects((prev) =>
+      prev.map((go) =>
+        go.id === selectedId
+          ? { ...go, transform: { ...go.transform, rotation: value } }
+          : go,
+      ),
+    );
 
   const { trigger } = useAnimations();
 
@@ -524,6 +533,7 @@ export default function DeletreoPage() {
               <RectTransformInspector
                 transform={selected.transform}
                 setAxis={setAxis}
+                setRotation={setRotation}
                 editMode={editMode}
                 onToggleEdit={() => setEditMode((v) => !v)}
               />

@@ -1,20 +1,19 @@
 import { Move } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ComponentSection } from "@engine/ComponentSection";
-import { RectTransformValues, Vec2 } from "@engine/RectTransform";
-import { AxisField } from "@engine/InspectorFields";
+import { RectTransformValues, Vec2, Vec2Field } from "@engine/RectTransform";
+import { AxisField, FieldRow, AxisInput } from "@engine/InspectorFields";
 
 export function RectTransformInspector({
   transform,
   setAxis,
+  setRotation,
   editMode,
   onToggleEdit,
 }: {
   transform: RectTransformValues;
-  setAxis: (
-    field: keyof RectTransformValues,
-    axis: keyof Vec2,
-  ) => (value: number) => void;
+  setAxis: (field: Vec2Field, axis: keyof Vec2) => (value: number) => void;
+  setRotation: (value: number) => void;
   editMode: boolean;
   onToggleEdit: () => void;
 }) {
@@ -59,6 +58,13 @@ export function RectTransformInspector({
           { axis: "H", value: transform.size.y, onChange: setAxis("size", "y") },
         ]}
       />
+      <FieldRow label="Rotation">
+        <AxisInput
+          axis="Z"
+          value={transform.rotation ?? 0}
+          onChange={setRotation}
+        />
+      </FieldRow>
     </ComponentSection>
   );
 }

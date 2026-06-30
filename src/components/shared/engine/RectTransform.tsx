@@ -13,12 +13,16 @@ export interface RectTransformValues {
   position: Vec2;
   size: Vec2;
   pivot: Vec2;
+  rotation?: number;
 }
+
+export type Vec2Field = "position" | "size" | "pivot";
 
 interface RectTransformProps {
   position?: Vec2;
   size?: Vec2;
   pivot?: Vec2;
+  rotation?: number;
   parentSize?: Vec2;
   children?: React.ReactNode;
   className?: string;
@@ -34,6 +38,7 @@ export function RectTransform({
   position = DEFAULT_POSITION,
   size = DEFAULT_SIZE,
   pivot = DEFAULT_PIVOT,
+  rotation = 0,
   parentSize = DEFAULT_PARENT_SIZE,
   className,
   style,
@@ -47,7 +52,10 @@ export function RectTransform({
         top: `${(0.5 - position.y / parentSize.y) * 100}%`,
         width: `${(size.x / parentSize.x) * 100}%`,
         height: `${(size.y / parentSize.y) * 100}%`,
-        transform: `translate(${-pivot.x * 100}%, ${-pivot.y * 100}%)`,
+        transformOrigin: `${pivot.x * 100}% ${pivot.y * 100}%`,
+        transform: `translate(${-pivot.x * 100}%, ${-pivot.y * 100}%)${
+          rotation ? ` rotate(${rotation}deg)` : ""
+        }`,
         ...style,
       }}
     >

@@ -86,14 +86,6 @@ su "Hecho cuando", pero no es el foco actual).
   contenido; la selección del navegador queda anulada en el área de display.
 - **Fecha:** 2026-06-29 · **Estado:** Abierto
 
-## [RM-041] Rotación en el RectTransform
-
-- **Objetivo:** Agregar rotación al RectTransform para que los GameObjects puedan
-  rotarse. Relacionado con `localScale` (WL-007) y anclajes (WL-003).
-- **Hecho cuando:** el RectTransform admite un ángulo de rotación que se aplica al
-  render y es editable desde el inspector.
-- **Fecha:** 2026-06-29 · **Estado:** Abierto
-
 ---
 
 # Fase 2 — Engine genérico (diferido)

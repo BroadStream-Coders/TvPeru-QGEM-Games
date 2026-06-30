@@ -51,3 +51,7 @@ Reemplazar el botón de redirect actual (`signInWithOAuth`) por el prompt One Ta
 ## [WL-012] Cámara navegable en la vista Scene
 
 En Scene poder hacer pan (arrastrar la cámara) y zoom (acercar/alejar), con un marco de referencia que muestre el recorte real del Game dentro del lienzo, estilo editor 2D (Unity/Figma).
+
+## [WL-013] Rotación editable desde el canvas
+
+La rotación (RM-041) hoy solo se edita por el campo numérico del inspector; el `SelectionOverlay` y `useTransformGesture` siguen siendo axis-aligned, así que con un objeto rotado los handles se ven desalineados. Promover para: rotar el overlay junto al objeto, agregar un handle de arrastre para rotar y hacer que el resize funcione en espacio rotado (matemática de rotación en el gesto).

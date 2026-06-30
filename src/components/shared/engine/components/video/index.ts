@@ -1,5 +1,8 @@
 import { defineComponent } from "@engine/componentRegistry";
-import { VideoComponent, createVideoComponent } from "@engine/components/video/videoComponent";
+import {
+  VideoComponent,
+  createVideoComponent,
+} from "@engine/components/video/videoComponent";
 import { VideoView } from "@engine/components/video/VideoView";
 import { VideoInspector } from "@engine/components/video/VideoInspector";
 

@@ -59,6 +59,72 @@ clásico ni retained-mode de Unity).**
   - **Estado runtime** = gameplay efímero (animaciones, paso del deletreo, sonidos)
     que maneja la lógica del juego y **no** se serializa.
 
+### Quién es dueño del dato: el controlador (`useSceneEditor`)
+
+El modelo de arriba dice que "el dato es la única verdad", pero falta lo más
+práctico: **¿dónde vive ese dato y quién lo muta?** Esa pieza es el **controlador
+de escena**, el hook `useSceneEditor` (`src/hooks/use-scene-editor.ts`).
+
+Hay que distinguir **dos familias** de piezas en el engine:
+
+- **Piezas presentacionales (controladas):** `RectTransform`, `GameObjectView`,
+  `SelectionOverlay`, `useTransformGesture`, `RectTransformInspector`, los editores
+  de cada componente. **No tienen estado propio.** Reciben datos por props y avisan
+  de los cambios por callbacks. El `RectTransformInspector` no sabe qué es un
+  GameObject ni dónde vive: recibe `transform={…}` y, cuando el usuario escribe 45,
+  llama `setRotation(45)`. Qué hacer con ese 45 **no es asunto suyo**.
+- **El controlador (`useSceneEditor`):** es el cerebro. Es el **único dueño** del
+  estado autorado de la escena (`gameObjects[]` + `selectedId`) y el **único** que lo
+  muta. Traduce "el usuario escribió 45" → "busca el GameObject seleccionado y
+  reemplázalo por uno nuevo con `rotation: 45`".
+
+```
+useSceneEditor({ registry, initialGameObjects, initialSelectedId })
+   │
+   ├─ posee:   useState(gameObjects), useState(selectedId)
+   ├─ deriva:  selected, hierarchyNodes (el árbol para Hierarchy)
+   ├─ monta:   el gesto de arrastre de la Scene (stageRef, beginGesture)
+   └─ devuelve: las operaciones ya armadas (setAxis, setRotation, addComponent,
+                removeComponent, patchComponent, createNewGameObject,
+                deleteGameObject, handleReorder, setGameObjectSize, animatePosition…)
+```
+
+El **ciclo completo** de una edición (sigue el "45 en Rotation"):
+
+```
+1. RectTransformInspector  → llama setRotation(45)                 (pieza controlada)
+2. useSceneEditor          → setGameObjects(prev => …rotation:45…)  (el controlador muta)
+3. React re-renderiza con el nuevo gameObjects[]
+4. GameObjectView          → lee gameObject.transform.rotation
+5. RectTransform           → aplica rotate(45deg) alrededor del pivot  (render)
+```
+
+Es el flujo unidireccional puro del diagrama de arriba: el estado vive en un solo
+sitio, baja como props y los componentes mandan eventos de vuelta. Por eso podés
+cambiar el render (paso 5) sin tocar el Inspector, y cambiar el controlador
+(paso 2) sin tocar los juegos.
+
+**Qué pone cada juego y qué hereda.** El controlador es genérico; lo único propio
+de un juego es **con qué arranca** y su lógica de show:
+
+```tsx
+const { selected, setAxis, setRotation, beginGesture, … } = useSceneEditor({
+  registry,                       // el registro de componentes de ESTE juego (§3)
+  initialSelectedId: FRAME_ID,
+  initialGameObjects: () => [ /* los GameObjects de partida de este juego */ ],
+});
+```
+
+Todo el aparato de editarlos y mostrarlos (inspector, jerarquía, gesto, render) lo
+hereda y no lo ve. Esto vale para **los 5 juegos** (sandbox, intruso, deletreo,
+calculo-mental, operaciones-combinadas).
+
+> **La regla práctica:** una propiedad nueva del transform o de la escena (rotación,
+> `localScale` WL-007, anclajes WL-003) se agrega **una sola vez** en `useSceneEditor`
+> + el render, y los juegos la heredan. **Antes** no era así: cada `page.tsx`
+> reimplementaba el controlador a mano (las mismas ~9 funciones duplicadas), así que
+> un cambio de engine se multiplicaba por juego. Cerrarlo fue la **Decisión C / TD-017**.
+
 ---
 
 ## 3. Cada tipo de componente es una "tripleta"
@@ -283,6 +349,10 @@ pestañas viajan con la `Scene`: aparecen en deletreo, sandbox y cualquier juego
 
 ## 8. Quién usa el engine hoy
 
+Hoy lo usan **5 workspaces** (sandbox, intruso, deletreo, calculo-mental,
+operaciones-combinadas), todos a través del controlador `useSceneEditor` (§2). Los
+dos de abajo son los ejemplos de referencia:
+
 - **`workspaces/deletreo`** → el juego de referencia. Usa el engine completo:
   `Scene` + `Hierarchy` (con "+") + `GameObjectInspector` + `RectTransformInspector`
   - editores de `components[]` por el registro + `AddComponentButton`. Arranca con
@@ -326,14 +396,16 @@ pestañas viajan con la `Scene`: aparecen en deletreo, sandbox y cualquier juego
   **`AddComponentButton`** (dropdown que lista el registro), botón **eliminar** por
   componente, **`SidePanel`** como marco. La usan deletreo y sandbox igual.
 - Convención de nombres `…Inspector` / `…View` / `…Component.ts` aplicada.
+- **Controlador de escena compartido (`useSceneEditor`, TD-017):** el estado del
+  grafo (`gameObjects[]` + `selectedId`) y todas sus mutaciones, antes duplicados en
+  cada `page.tsx`, viven en un hook único; los 5 juegos lo desestructuran. Ver §2 y
+  Decisión C.
 
 **Pendiente / lo que sigue:**
 
 - Componente **Text** (pausado): el subrayado es un `div` aparte y cada letra sería
   su propio GameObject con su Text; el modelo lleva los datos de la card menos Offset
   (posiciona el rectTransform). Ver memoria `engine-text-component-direction`.
-- El estado del grafo vive en `deletreo/page.tsx` y `sandbox/page.tsx` (duplicado);
-  aún no se levantó a un store `useScene` (ver Decisión C).
 
 ---
 
@@ -345,11 +417,15 @@ pestañas viajan con la `Scene`: aparecen en deletreo, sandbox y cualquier juego
 **B — Forma de la carpeta de componentes.** → **Decidido:** `engine/components/<tipo>/`
 con **modelo + editor + vista juntos** por tipo (ver §7). Image y Color ya siguen esto.
 
-**C — ¿Levantar el estado a un store `useScene` ahora o después?** → **Abierta, ahora
-empieza a doler:** el grafo está duplicado en `deletreo/page.tsx` y `sandbox/page.tsx`
-con helpers casi idénticos (createNewGameObject, addComponent, removeComponent,
-patchComponent, setGameObjectSize, setAxis…). Candidato fuerte a un store `useScene`,
-mismo patrón que `useWorkspaceHeader`.
+**C — ¿Levantar el estado a un controlador compartido?** → **Decidido y hecho
+(TD-017).** El grafo estaba duplicado en los 5 `page.tsx` con helpers idénticos
+(createNewGameObject, addComponent, removeComponent, patchComponent,
+setGameObjectSize, setAxis…). Se extrajo al hook **`useSceneEditor`**
+(`src/hooks/use-scene-editor.ts`), dueño único de `gameObjects[]` + `selectedId` y de
+todas las mutaciones (ver §2, "Quién es dueño del dato"). Cada juego solo lo
+desestructura pasando `initialGameObjects`/`initialSelectedId`. Quedó como **hook**
+(no un store Zustand) porque el estado es **por-escena/por-página**, no global como
+`useWorkspaceHeader`.
 
 **E — ¿Cómo registra un juego sus componentes propios?** → **Decidido (RM-003):**
 registro **componible + React context**, no global mutable. El engine exporta las
@@ -376,5 +452,6 @@ así salvo que moleste el nombre repetido.
 7. ✅ Registro componible + tipado por juego (**RM-003**): `defineComponent<C>`,
    `NATIVE_COMPONENTS`, `createComponentRegistry` + context; demo `Border` en sandbox.
    Cerró **TD-004**.
-8. ⏳ (Según **Decisión C**) levantar el grafo duplicado a un store `useScene`.
+8. ✅ (**Decisión C / TD-017**) controlador compartido `useSceneEditor`: el grafo
+   duplicado se levantó a un hook dueño del estado; los 5 juegos lo desestructuran.
 9. ⏳ Componente **Text** (pausado, ver §9 y la memoria del proyecto).

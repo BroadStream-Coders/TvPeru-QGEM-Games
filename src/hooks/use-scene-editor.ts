@@ -1,0 +1,226 @@
+import { useCallback, useRef, useState } from "react";
+import { Vec2, Vec2Field } from "@engine/RectTransform";
+import { TreeNode } from "@engine/Hierarchy";
+import { ComponentRegistry } from "@engine/componentRegistry";
+import {
+  GameObject,
+  GameObjectComponent,
+  createGameObject,
+  ancestorOffset,
+  reorderGameObjects,
+  collectSubtreeIds,
+  gameObjectKind,
+  gameObjectHasAnimation,
+} from "@engine/gameObject";
+import { useTransformGesture } from "@/hooks/use-transform-gesture";
+
+export function useSceneEditor({
+  registry,
+  initialGameObjects,
+  initialSelectedId = null,
+}: {
+  registry: ComponentRegistry;
+  initialGameObjects?: GameObject[] | (() => GameObject[]);
+  initialSelectedId?: string | null;
+}) {
+  const [gameObjects, setGameObjects] = useState<GameObject[]>(
+    initialGameObjects ?? [],
+  );
+  const [selectedId, setSelectedId] = useState<string | null>(
+    initialSelectedId,
+  );
+
+  const stageRef = useRef<HTMLDivElement>(null);
+  const selected = gameObjects.find((go) => go.id === selectedId) ?? null;
+
+  const buildNode = (go: GameObject): TreeNode => {
+    const children = gameObjects
+      .filter((c) => c.parentId === go.id)
+      .map(buildNode);
+    return {
+      id: go.id,
+      name: go.name,
+      active: go.active,
+      kind: gameObjectKind(go.components),
+      hasAnimation: gameObjectHasAnimation(go.components),
+      children: children.length ? children : undefined,
+    };
+  };
+
+  const hierarchyNodes: TreeNode[] = gameObjects
+    .filter((go) => !go.parentId)
+    .map(buildNode);
+
+  const patchGameObject = (id: string, patch: Partial<GameObject>) =>
+    setGameObjects((prev) =>
+      prev.map((go) => (go.id === id ? { ...go, ...patch } : go)),
+    );
+
+  const createNewGameObject = (parentId?: string) => {
+    const id = crypto.randomUUID();
+    setGameObjects((prev) => [
+      ...prev,
+      createGameObject({
+        id,
+        name: "GameObject",
+        parentId,
+        transform: {
+          position: { x: 0, y: 0 },
+          size: { x: 100, y: 100 },
+          pivot: { x: 0.5, y: 0.5 },
+        },
+      }),
+    ]);
+    setSelectedId(id);
+  };
+
+  const deleteGameObject = (id: string) => {
+    const ids = collectSubtreeIds(gameObjects, id);
+    setGameObjects((prev) => prev.filter((go) => !ids.has(go.id)));
+    if (selectedId && ids.has(selectedId)) setSelectedId(null);
+  };
+
+  const handleReorder = (
+    draggedId: string,
+    targetId: string,
+    position: "before" | "after" | "inside",
+  ) =>
+    setGameObjects((prev) =>
+      reorderGameObjects(prev, draggedId, targetId, position),
+    );
+
+  const addComponent = (goId: string, type: string) => {
+    const def = registry.get(type);
+    if (!def) return;
+    setGameObjects((prev) =>
+      prev.map((go) =>
+        go.id === goId
+          ? { ...go, components: [...go.components, def.create()] }
+          : go,
+      ),
+    );
+  };
+
+  const removeComponent = (goId: string, index: number) =>
+    setGameObjects((prev) =>
+      prev.map((go) =>
+        go.id === goId
+          ? { ...go, components: go.components.filter((_, i) => i !== index) }
+          : go,
+      ),
+    );
+
+  const patchComponent = (
+    goId: string,
+    index: number,
+    next: GameObjectComponent,
+  ) =>
+    setGameObjects((prev) =>
+      prev.map((go) =>
+        go.id === goId
+          ? {
+              ...go,
+              components: go.components.map((c, i) => (i === index ? next : c)),
+            }
+          : go,
+      ),
+    );
+
+  const setGameObjectSize = (goId: string, size: Vec2) =>
+    setGameObjects((prev) =>
+      prev.map((go) =>
+        go.id === goId ? { ...go, transform: { ...go.transform, size } } : go,
+      ),
+    );
+
+  const setAxis = (field: Vec2Field, axis: keyof Vec2) => (value: number) =>
+    setGameObjects((prev) =>
+      prev.map((go) =>
+        go.id === selectedId
+          ? {
+              ...go,
+              transform: {
+                ...go.transform,
+                [field]: { ...go.transform[field], [axis]: value },
+              },
+            }
+          : go,
+      ),
+    );
+
+  const setRotation = (value: number) =>
+    setGameObjects((prev) =>
+      prev.map((go) =>
+        go.id === selectedId
+          ? { ...go, transform: { ...go.transform, rotation: value } }
+          : go,
+      ),
+    );
+
+  const animatePosition = useCallback(
+    (id: string, position: Vec2) =>
+      setGameObjects((prev) =>
+        prev.map((go) =>
+          go.id === id
+            ? { ...go, transform: { ...go.transform, position } }
+            : go,
+        ),
+      ),
+    [],
+  );
+
+  const { beginGesture } = useTransformGesture({
+    stageRef,
+    getTransform: () => {
+      if (!selected) return null;
+      const origin = ancestorOffset(selected, gameObjects);
+      return {
+        ...selected.transform,
+        position: {
+          x: selected.transform.position.x + origin.x,
+          y: selected.transform.position.y + origin.y,
+        },
+      };
+    },
+    onChange: ({ position, size }) =>
+      setGameObjects((prev) =>
+        prev.map((go) => {
+          if (go.id !== selectedId) return go;
+          const origin = ancestorOffset(go, gameObjects);
+          return {
+            ...go,
+            transform: {
+              ...go.transform,
+              position: {
+                x: position.x - origin.x,
+                y: position.y - origin.y,
+              },
+              size,
+            },
+          };
+        }),
+      ),
+  });
+
+  return {
+    gameObjects,
+    setGameObjects,
+    selectedId,
+    setSelectedId,
+    selected,
+    hierarchyNodes,
+    stageRef,
+    beginGesture,
+    patchGameObject,
+    createNewGameObject,
+    deleteGameObject,
+    handleReorder,
+    addComponent,
+    removeComponent,
+    patchComponent,
+    setGameObjectSize,
+    setAxis,
+    setRotation,
+    animatePosition,
+  };
+}

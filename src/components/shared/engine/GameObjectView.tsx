@@ -46,7 +46,9 @@ export function GameObjectView({
     (c): c is ImageComponent => c.type === "image",
   );
   const wrapperStyle =
-    mask && maskImage?.src ? maskStyle(maskImage.src, maskImage.fit) : undefined;
+    mask && maskImage?.src
+      ? maskStyle(maskImage.src, maskImage.fit)
+      : undefined;
 
   const animationRef = useGameObjectAnimations(gameObject, onAnimatePosition);
   const externalRef = contentRef?.(gameObject);

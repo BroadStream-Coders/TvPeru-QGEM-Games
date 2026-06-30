@@ -21,7 +21,9 @@ export interface PreloadResult {
 const fetchObjectUrl = async (src: string): Promise<string> => {
   const response = await fetch(src);
   if (!response.ok) {
-    throw new Error(`No se pudo descargar el asset (${response.status}): ${src}`);
+    throw new Error(
+      `No se pudo descargar el asset (${response.status}): ${src}`,
+    );
   }
   const blob = await response.blob();
   return URL.createObjectURL(blob);

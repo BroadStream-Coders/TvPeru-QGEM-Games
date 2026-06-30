@@ -20,21 +20,21 @@ export function ShakeInspector({
       accent="anim"
       onRemove={onRemove}
     >
-        <NumberField
-          label="Amplitude"
-          value={component.amplitude}
-          onChange={(amplitude) => onChange({ ...component, amplitude })}
-        />
-        <NumberField
-          label="Shakes"
-          value={component.shakes}
-          onChange={(shakes) => onChange({ ...component, shakes })}
-        />
-        <NumberField
-          label="Duration"
-          value={component.duration}
-          onChange={(duration) => onChange({ ...component, duration })}
-        />
+      <NumberField
+        label="Amplitude"
+        value={component.amplitude}
+        onChange={(amplitude) => onChange({ ...component, amplitude })}
+      />
+      <NumberField
+        label="Shakes"
+        value={component.shakes}
+        onChange={(shakes) => onChange({ ...component, shakes })}
+      />
+      <NumberField
+        label="Duration"
+        value={component.duration}
+        onChange={(duration) => onChange({ ...component, duration })}
+      />
     </ComponentSection>
   );
 }

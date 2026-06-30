@@ -141,7 +141,12 @@ export function Hierarchy({
     },
     onClearTarget: () => setDropTarget(null),
     onDrop: () => {
-      if (onReorder && draggingId && dropTarget && draggingId !== dropTarget.id) {
+      if (
+        onReorder &&
+        draggingId &&
+        dropTarget &&
+        draggingId !== dropTarget.id
+      ) {
         onReorder(draggingId, dropTarget.id, dropTarget.position);
       }
       reset();
@@ -265,9 +270,7 @@ function TreeItem({
         isDragging && "opacity-40",
       )}
     >
-      {selected && (
-        <span className="absolute inset-y-0 left-0 w-0.5 bg-acc" />
-      )}
+      {selected && <span className="absolute inset-y-0 left-0 w-0.5 bg-acc" />}
       {hasChildren ? (
         <button
           onClick={(e) => {

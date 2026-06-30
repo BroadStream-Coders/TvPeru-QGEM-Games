@@ -24,19 +24,25 @@ import {
   TextOverflow,
 } from "@engine/components/text/textComponent";
 
-const ALIGN_H_OPTIONS: { value: TextAlignH; icon: LucideIcon; title: string }[] =
-  [
-    { value: "left", icon: AlignLeft, title: "Izquierda" },
-    { value: "center", icon: AlignCenter, title: "Centro" },
-    { value: "right", icon: AlignRight, title: "Derecha" },
-  ];
+const ALIGN_H_OPTIONS: {
+  value: TextAlignH;
+  icon: LucideIcon;
+  title: string;
+}[] = [
+  { value: "left", icon: AlignLeft, title: "Izquierda" },
+  { value: "center", icon: AlignCenter, title: "Centro" },
+  { value: "right", icon: AlignRight, title: "Derecha" },
+];
 
-const ALIGN_V_OPTIONS: { value: TextAlignV; icon: LucideIcon; title: string }[] =
-  [
-    { value: "top", icon: AlignStartHorizontal, title: "Arriba" },
-    { value: "middle", icon: AlignCenterHorizontal, title: "Medio" },
-    { value: "bottom", icon: AlignEndHorizontal, title: "Abajo" },
-  ];
+const ALIGN_V_OPTIONS: {
+  value: TextAlignV;
+  icon: LucideIcon;
+  title: string;
+}[] = [
+  { value: "top", icon: AlignStartHorizontal, title: "Arriba" },
+  { value: "middle", icon: AlignCenterHorizontal, title: "Medio" },
+  { value: "bottom", icon: AlignEndHorizontal, title: "Abajo" },
+];
 
 const STYLE_TOGGLES: {
   key: "bold" | "italic" | "underline";
@@ -153,12 +159,16 @@ export function TextInspector({
           <>
             <NumberInput
               value={component.fontSizeMin}
-              onChange={(fontSizeMin) => onChange({ ...component, fontSizeMin })}
+              onChange={(fontSizeMin) =>
+                onChange({ ...component, fontSizeMin })
+              }
               title="Mínimo"
             />
             <NumberInput
               value={component.fontSizeMax}
-              onChange={(fontSizeMax) => onChange({ ...component, fontSizeMax })}
+              onChange={(fontSizeMax) =>
+                onChange({ ...component, fontSizeMax })
+              }
               title="Máximo"
             />
           </>
@@ -170,7 +180,9 @@ export function TextInspector({
         )}
         <button
           type="button"
-          onClick={() => onChange({ ...component, autoSize: !component.autoSize })}
+          onClick={() =>
+            onChange({ ...component, autoSize: !component.autoSize })
+          }
           title="Auto Size"
           className={cn(
             "flex size-7 shrink-0 items-center justify-center rounded-[5px] border transition-colors",

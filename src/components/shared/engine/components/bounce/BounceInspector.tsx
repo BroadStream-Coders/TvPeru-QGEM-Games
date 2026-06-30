@@ -20,25 +20,25 @@ export function BounceInspector({
       accent="anim"
       onRemove={onRemove}
     >
-        <NumberField
-          label="Speed"
-          value={component.travelSpeed}
-          onChange={(travelSpeed) => onChange({ ...component, travelSpeed })}
-        />
-        <NumberField
-          label="Amplitude"
-          value={component.bounceAmplitude}
-          onChange={(bounceAmplitude) =>
-            onChange({ ...component, bounceAmplitude })
-          }
-        />
-        <NumberField
-          label="Duration"
-          value={component.bounceDuration}
-          onChange={(bounceDuration) =>
-            onChange({ ...component, bounceDuration })
-          }
-        />
+      <NumberField
+        label="Speed"
+        value={component.travelSpeed}
+        onChange={(travelSpeed) => onChange({ ...component, travelSpeed })}
+      />
+      <NumberField
+        label="Amplitude"
+        value={component.bounceAmplitude}
+        onChange={(bounceAmplitude) =>
+          onChange({ ...component, bounceAmplitude })
+        }
+      />
+      <NumberField
+        label="Duration"
+        value={component.bounceDuration}
+        onChange={(bounceDuration) =>
+          onChange({ ...component, bounceDuration })
+        }
+      />
     </ComponentSection>
   );
 }

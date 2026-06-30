@@ -44,7 +44,8 @@ export function ControllerInspector({
 
   const groupCount = component.groups.length;
   const slotCount = component.groups.reduce((n, g) => n + g.words.length, 0);
-  const slotsInGroup = component.groups[component.groupIndex]?.words.length ?? 0;
+  const slotsInGroup =
+    component.groups[component.groupIndex]?.words.length ?? 0;
 
   return (
     <ComponentSection
@@ -73,8 +74,8 @@ export function ControllerInspector({
           <span>Grupos: {groupCount}</span>
           <span>Slots: {slotCount}</span>
           <span className="mt-1 text-ink">
-            Grupo {groupCount ? component.groupIndex + 1 : 0}/{groupCount} · Slot{" "}
-            {slotsInGroup ? component.slotIndex + 1 : 0}/{slotsInGroup}
+            Grupo {groupCount ? component.groupIndex + 1 : 0}/{groupCount} ·
+            Slot {slotsInGroup ? component.slotIndex + 1 : 0}/{slotsInGroup}
           </span>
         </div>
       ) : (

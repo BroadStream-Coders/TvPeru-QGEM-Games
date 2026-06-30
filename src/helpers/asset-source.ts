@@ -19,7 +19,11 @@ export function toManifest(catalog: AssetCatalog): AssetManifest {
     Object.entries(catalog).map(([key, entry]) => [
       key,
       entry.kind === "font"
-        ? { kind: "font", src: resolveAssetUrl(entry.path), family: entry.family }
+        ? {
+            kind: "font",
+            src: resolveAssetUrl(entry.path),
+            family: entry.family,
+          }
         : { kind: entry.kind, src: resolveAssetUrl(entry.path) },
     ]),
   );

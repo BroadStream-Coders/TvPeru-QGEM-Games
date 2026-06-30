@@ -1,31 +1,21 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Grid3x3 } from "lucide-react";
 import { loadJsonFile } from "@/helpers/persistence";
 import { useWorkspaceHeader } from "@/hooks/use-workspace-header";
-import { useTransformGesture } from "@/hooks/use-transform-gesture";
+import { useSceneEditor } from "@/hooks/use-scene-editor";
 
 import { Scene } from "@engine/Scene";
-import { Vec2, Vec2Field } from "@engine/RectTransform";
 import { GameObjectView } from "@engine/GameObjectView";
 import { SelectionOverlay } from "@engine/SelectionOverlay";
-import { Hierarchy, TreeNode } from "@engine/Hierarchy";
+import { Hierarchy } from "@engine/Hierarchy";
 import { SidePanel } from "@engine/SidePanel";
 import { AssetsBar } from "@engine/AssetsBar";
 import { GameObjectInspector } from "@engine/GameObjectInspector";
 import { RectTransformInspector } from "@engine/RectTransformInspector";
 import { AddComponentButton } from "@engine/AddComponentButton";
-import {
-  GameObject,
-  GameObjectComponent,
-  createGameObject,
-  ancestorOffset,
-  reorderGameObjects,
-  collectSubtreeIds,
-  gameObjectKind,
-  gameObjectHasAnimation,
-} from "@engine/gameObject";
+import { GameObject, createGameObject, gameObjectKind } from "@engine/gameObject";
 import {
   createComponentRegistry,
   NATIVE_COMPONENTS,
@@ -55,185 +45,43 @@ export default function OperacionesCombinadasPage() {
 
   const [data, setData] = useState<OperacionesCombinadasData | null>(null);
 
-  const [gameObjects, setGameObjects] = useState<GameObject[]>(() => [
-    createGameObject({
-      id: GRID_ID,
-      name: "Grid",
-      transform: {
-        position: { ...GRID_CONFIG.containerPosition },
-        size: { ...GRID_PIXEL_SIZE },
-        pivot: { x: 0.5, y: 0.5 },
-      },
-    }),
-  ]);
-  const [selectedId, setSelectedId] = useState<string | null>(GRID_ID);
   const [editMode, setEditMode] = useState(false);
 
-  const stageRef = useRef<HTMLDivElement>(null);
-  const selected = gameObjects.find((go) => go.id === selectedId) ?? null;
-
-  const dnd = useGridDragDrop(stageRef, INITIAL_TRAY);
-
-  const buildNode = (go: GameObject): TreeNode => {
-    const children = gameObjects
-      .filter((c) => c.parentId === go.id)
-      .map(buildNode);
-    return {
-      id: go.id,
-      name: go.name,
-      active: go.active,
-      kind: gameObjectKind(go.components),
-      hasAnimation: gameObjectHasAnimation(go.components),
-      children: children.length ? children : undefined,
-    };
-  };
-
-  const hierarchyNodes: TreeNode[] = gameObjects
-    .filter((go) => !go.parentId)
-    .map(buildNode);
-
-  const patchGameObject = (id: string, patch: Partial<GameObject>) =>
-    setGameObjects((prev) =>
-      prev.map((go) => (go.id === id ? { ...go, ...patch } : go)),
-    );
-
-  const createNewGameObject = (parentId?: string) => {
-    const id = crypto.randomUUID();
-    setGameObjects((prev) => [
-      ...prev,
+  const {
+    gameObjects,
+    selectedId,
+    setSelectedId,
+    selected,
+    hierarchyNodes,
+    stageRef,
+    beginGesture,
+    patchGameObject,
+    createNewGameObject,
+    deleteGameObject,
+    handleReorder,
+    addComponent,
+    removeComponent,
+    patchComponent,
+    setGameObjectSize,
+    setAxis,
+    setRotation,
+  } = useSceneEditor({
+    registry,
+    initialSelectedId: GRID_ID,
+    initialGameObjects: () => [
       createGameObject({
-        id,
-        name: "GameObject",
-        parentId,
+        id: GRID_ID,
+        name: "Grid",
         transform: {
-          position: { x: 0, y: 0 },
-          size: { x: 100, y: 100 },
+          position: { ...GRID_CONFIG.containerPosition },
+          size: { ...GRID_PIXEL_SIZE },
           pivot: { x: 0.5, y: 0.5 },
         },
       }),
-    ]);
-    setSelectedId(id);
-  };
-
-  const deleteGameObject = (id: string) => {
-    const ids = collectSubtreeIds(gameObjects, id);
-    setGameObjects((prev) => prev.filter((go) => !ids.has(go.id)));
-    if (selectedId && ids.has(selectedId)) setSelectedId(null);
-  };
-
-  const handleReorder = (
-    draggedId: string,
-    targetId: string,
-    position: "before" | "after" | "inside",
-  ) =>
-    setGameObjects((prev) =>
-      reorderGameObjects(prev, draggedId, targetId, position),
-    );
-
-  const addComponent = (goId: string, type: string) => {
-    const def = registry.get(type);
-    if (!def) return;
-    setGameObjects((prev) =>
-      prev.map((go) =>
-        go.id === goId
-          ? { ...go, components: [...go.components, def.create()] }
-          : go,
-      ),
-    );
-  };
-
-  const removeComponent = (goId: string, index: number) =>
-    setGameObjects((prev) =>
-      prev.map((go) =>
-        go.id === goId
-          ? {
-              ...go,
-              components: go.components.filter((_, i) => i !== index),
-            }
-          : go,
-      ),
-    );
-
-  const patchComponent = (
-    goId: string,
-    index: number,
-    next: GameObjectComponent,
-  ) =>
-    setGameObjects((prev) =>
-      prev.map((go) =>
-        go.id === goId
-          ? {
-              ...go,
-              components: go.components.map((c, i) => (i === index ? next : c)),
-            }
-          : go,
-      ),
-    );
-
-  const setGameObjectSize = (goId: string, size: Vec2) =>
-    setGameObjects((prev) =>
-      prev.map((go) =>
-        go.id === goId ? { ...go, transform: { ...go.transform, size } } : go,
-      ),
-    );
-
-  const setAxis =
-    (field: Vec2Field, axis: keyof Vec2) => (value: number) =>
-      setGameObjects((prev) =>
-        prev.map((go) =>
-          go.id === selectedId
-            ? {
-                ...go,
-                transform: {
-                  ...go.transform,
-                  [field]: { ...go.transform[field], [axis]: value },
-                },
-              }
-            : go,
-        ),
-      );
-
-  const setRotation = (value: number) =>
-    setGameObjects((prev) =>
-      prev.map((go) =>
-        go.id === selectedId
-          ? { ...go, transform: { ...go.transform, rotation: value } }
-          : go,
-      ),
-    );
-
-  const { beginGesture } = useTransformGesture({
-    stageRef,
-    getTransform: () => {
-      if (!selected) return null;
-      const origin = ancestorOffset(selected, gameObjects);
-      return {
-        ...selected.transform,
-        position: {
-          x: selected.transform.position.x + origin.x,
-          y: selected.transform.position.y + origin.y,
-        },
-      };
-    },
-    onChange: ({ position, size }) =>
-      setGameObjects((prev) =>
-        prev.map((go) => {
-          if (go.id !== selectedId) return go;
-          const origin = ancestorOffset(go, gameObjects);
-          return {
-            ...go,
-            transform: {
-              ...go.transform,
-              position: {
-                x: position.x - origin.x,
-                y: position.y - origin.y,
-              },
-              size,
-            },
-          };
-        }),
-      ),
+    ],
   });
+
+  const dnd = useGridDragDrop(stageRef, INITIAL_TRAY);
 
   const handleLoad = useCallback(async (file: File) => {
     try {

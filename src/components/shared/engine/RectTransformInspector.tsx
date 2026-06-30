@@ -54,8 +54,16 @@ export function RectTransformInspector({
       <AxisField
         label="Size"
         axes={[
-          { axis: "W", value: transform.size.x, onChange: setAxis("size", "x") },
-          { axis: "H", value: transform.size.y, onChange: setAxis("size", "y") },
+          {
+            axis: "W",
+            value: transform.size.x,
+            onChange: setAxis("size", "x"),
+          },
+          {
+            axis: "H",
+            value: transform.size.y,
+            onChange: setAxis("size", "y"),
+          },
         ]}
       />
       <FieldRow label="Rotation">

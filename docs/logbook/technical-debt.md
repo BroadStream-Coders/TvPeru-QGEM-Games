@@ -14,14 +14,6 @@ changelog y se borra de aquí.
 
 ---
 
-## [TD-017] El glue de edición de GameObjects está duplicado en cada workspace
-
-- **Ubicación:** los 5 `src/app/workspaces/*/page.tsx` (sandbox, intruso, deletreo, calculo-mental, operaciones-combinadas)
-- **Riesgo:** 6/10
-- **Problema:** El engine aporta los componentes de edición (`RectTransformInspector`, `GameObjectView`, `SelectionOverlay`, `useTransformGesture`), pero **no** el controlador de estado que los conecta al array de `gameObjects` de cada página. Cada workspace redeclara las mismas 9 funciones genéricas (`setAxis`, `setRotation`, `setGameObjectSize`, `patchComponent`, `patchGameObject`, `removeComponent`, `createNewGameObject`, `handleReorder`, `deleteGameObject`), idénticas salvo nombre del setter de estado. No hay nada game-specific en ellas.
-- **Impacto futuro:** Cualquier cambio a nivel engine que toque ese glue se multiplica por la cantidad de juegos. Ya pasó con RM-041 (rotación): agregar una propiedad editable obligó a tocar las 5 páginas para aportar su `setRotation`. Lo mismo costará `localScale` (WL-007) y anclajes (WL-003). Fix: un hook compartido `useSceneEditor({ gameObjects, setGameObjects, selectedId })` que devuelva esas funciones ya armadas; cada página queda en una línea y hereda los cambios. Es el `useScene`/Decisión C que ya anticipa TD-010.
-- **Fecha:** 2026-06-30 · **Estado:** Abierto
-
 ## [TD-014] El preloader de assets no encaja con cómo el componente Video carga su `src`
 
 - **Ubicación:** `src/helpers/asset-preloader.ts` ↔ `src/components/shared/engine/components/video/videoComponent.ts`

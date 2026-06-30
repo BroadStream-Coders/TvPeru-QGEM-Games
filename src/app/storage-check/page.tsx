@@ -3,7 +3,10 @@
 import { useEffect, useState } from "react";
 import { resolveAssetUrl } from "@/helpers/asset-source";
 
-const SUPABASE_URL = (process.env.NEXT_PUBLIC_SUPABASE_URL || "").replace(/\/$/, "");
+const SUPABASE_URL = (process.env.NEXT_PUBLIC_SUPABASE_URL || "").replace(
+  /\/$/,
+  "",
+);
 const ANON = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
 const STORAGE_BASE = SUPABASE_URL ? `${SUPABASE_URL}/storage/v1` : "";
 const BUCKET = "assets";
@@ -51,7 +54,12 @@ async function listFolder(prefix: string): Promise<Node[]> {
         children: await listFolder(path + "/"),
       });
     } else {
-      nodes.push({ name: it.name, path, isFolder: false, size: it.metadata?.size });
+      nodes.push({
+        name: it.name,
+        path,
+        isFolder: false,
+        size: it.metadata?.size,
+      });
     }
   }
   return nodes;

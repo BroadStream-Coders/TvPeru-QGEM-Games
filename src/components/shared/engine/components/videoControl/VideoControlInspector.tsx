@@ -64,16 +64,16 @@ export function VideoControlInspector({
       accent="video"
       onRemove={onRemove}
     >
-        <KeyField
-          label="Pausa"
-          value={component.pauseKey}
-          onChange={(pauseKey) => onChange({ ...component, pauseKey })}
-        />
-        <KeyField
-          label="Reinicio"
-          value={component.restartKey}
-          onChange={(restartKey) => onChange({ ...component, restartKey })}
-        />
+      <KeyField
+        label="Pausa"
+        value={component.pauseKey}
+        onChange={(pauseKey) => onChange({ ...component, pauseKey })}
+      />
+      <KeyField
+        label="Reinicio"
+        value={component.restartKey}
+        onChange={(restartKey) => onChange({ ...component, restartKey })}
+      />
     </ComponentSection>
   );
 }

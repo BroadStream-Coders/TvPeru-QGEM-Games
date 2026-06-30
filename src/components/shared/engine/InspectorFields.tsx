@@ -202,7 +202,10 @@ export function AssetField({
           {name ?? "Ninguno"}
         </span>
       </div>
-      <label className={cn(ICON_BTN, "cursor-pointer")} title="Cargar desde equipo">
+      <label
+        className={cn(ICON_BTN, "cursor-pointer")}
+        title="Cargar desde equipo"
+      >
         <Upload size={13} />
         <input
           type="file"

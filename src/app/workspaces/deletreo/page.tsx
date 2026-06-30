@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useCallback, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { SpellCheck, FileJson } from "lucide-react";
 import { AssetsBar, AssetTile, AssetLoaderTiles } from "@engine/AssetsBar";
 import { useWorkspaceHeader } from "@/hooks/use-workspace-header";
@@ -10,16 +10,11 @@ import { toManifest, type AssetCatalog } from "@/helpers/asset-source";
 import { SHARED_ASSETS } from "@/assets/shared";
 import { DELETREO_ASSETS } from "./assets";
 import { useGameKeys } from "@/hooks/use-game-keys";
-import { useTransformGesture } from "@/hooks/use-transform-gesture";
+import { useSceneEditor } from "@/hooks/use-scene-editor";
 import { playSound } from "@/lib/audio";
 
 import { Scene } from "@engine/Scene";
-import {
-  Vec2,
-  Vec2Field,
-  DESIGN_WIDTH,
-  DESIGN_HEIGHT,
-} from "@engine/RectTransform";
+import { DESIGN_WIDTH, DESIGN_HEIGHT } from "@engine/RectTransform";
 import { GameObjectView } from "@engine/GameObjectView";
 import { SelectionOverlay } from "@engine/SelectionOverlay";
 import { spellframeDefinition } from "./components/spellframe";
@@ -30,18 +25,13 @@ import {
   createControllerComponent,
 } from "./components/controller/controllerComponent";
 import { SidePanel } from "@engine/SidePanel";
-import { Hierarchy, TreeNode } from "@engine/Hierarchy";
+import { Hierarchy } from "@engine/Hierarchy";
 import { GameObjectInspector } from "@engine/GameObjectInspector";
 import { RectTransformInspector } from "@engine/RectTransformInspector";
 import {
-  GameObject,
   GameObjectComponent,
   createGameObject,
-  ancestorOffset,
-  reorderGameObjects,
-  collectSubtreeIds,
   gameObjectKind,
-  gameObjectHasAnimation,
 } from "@engine/gameObject";
 import {
   createComponentRegistry,
@@ -95,77 +85,97 @@ export default function DeletreoPage() {
 
   const [editMode, setEditMode] = useState(false);
 
-  const [gameObjects, setGameObjects] = useState<GameObject[]>(() => [
-    createGameObject({
-      id: "background",
-      name: "Background",
-      transform: {
-        position: { x: 0, y: 0 },
-        size: { x: DESIGN_WIDTH, y: DESIGN_HEIGHT },
-        pivot: { x: 0.5, y: 0.5 },
-      },
-      components: [createColorComponent({ value: "#01FF02" })],
-    }),
-    createGameObject({
-      id: ANCHOR_ID,
-      name: "Anchor",
-      transform: {
-        position: { x: 25, y: -358 },
-        size: { x: 1170, y: 204 },
-        pivot: { x: 0.5, y: 0.5 },
-      },
-    }),
-    createGameObject({
-      id: FRAME_ID,
-      name: "MainFrame",
-      parentId: ANCHOR_ID,
-      transform: {
-        position: { x: 0, y: 0 },
-        size: { x: 1170, y: 204 },
-        pivot: { x: 0.5, y: 0.5 },
-      },
-      components: [
-        createImageComponent({ src: "", fit: "fill" }),
-        createPopComponent(),
-        createShakeComponent(),
-        createBounceComponent(),
-        createSlideComponent(),
-      ],
-    }),
-    createGameObject({
-      id: TEXT_ID,
-      name: "Text",
-      parentId: FRAME_ID,
-      transform: {
-        position: { x: 0, y: 0 },
-        size: { x: 900, y: 160 },
-        pivot: { x: 0.5, y: 0.5 },
-      },
-      components: [createSpellframeComponent()],
-    }),
-    createGameObject({
-      id: CONTROLLER_ID,
-      name: "Controller",
-      transform: {
-        position: { x: 0, y: 0 },
-        size: { x: 0, y: 0 },
-        pivot: { x: 0.5, y: 0.5 },
-      },
-      components: [createControllerComponent()],
-    }),
-  ]);
-  const [selectedId, setSelectedId] = useState<string>(FRAME_ID);
+  const {
+    gameObjects,
+    setGameObjects,
+    selectedId,
+    setSelectedId,
+    selected,
+    hierarchyNodes,
+    stageRef,
+    beginGesture,
+    patchGameObject,
+    createNewGameObject,
+    deleteGameObject,
+    handleReorder,
+    addComponent,
+    removeComponent,
+    patchComponent,
+    setGameObjectSize,
+    setAxis,
+    setRotation,
+    animatePosition,
+  } = useSceneEditor({
+    registry,
+    initialSelectedId: FRAME_ID,
+    initialGameObjects: () => [
+      createGameObject({
+        id: "background",
+        name: "Background",
+        transform: {
+          position: { x: 0, y: 0 },
+          size: { x: DESIGN_WIDTH, y: DESIGN_HEIGHT },
+          pivot: { x: 0.5, y: 0.5 },
+        },
+        components: [createColorComponent({ value: "#01FF02" })],
+      }),
+      createGameObject({
+        id: ANCHOR_ID,
+        name: "Anchor",
+        transform: {
+          position: { x: 25, y: -358 },
+          size: { x: 1170, y: 204 },
+          pivot: { x: 0.5, y: 0.5 },
+        },
+      }),
+      createGameObject({
+        id: FRAME_ID,
+        name: "MainFrame",
+        parentId: ANCHOR_ID,
+        transform: {
+          position: { x: 0, y: 0 },
+          size: { x: 1170, y: 204 },
+          pivot: { x: 0.5, y: 0.5 },
+        },
+        components: [
+          createImageComponent({ src: "", fit: "fill" }),
+          createPopComponent(),
+          createShakeComponent(),
+          createBounceComponent(),
+          createSlideComponent(),
+        ],
+      }),
+      createGameObject({
+        id: TEXT_ID,
+        name: "Text",
+        parentId: FRAME_ID,
+        transform: {
+          position: { x: 0, y: 0 },
+          size: { x: 900, y: 160 },
+          pivot: { x: 0.5, y: 0.5 },
+        },
+        components: [createSpellframeComponent()],
+      }),
+      createGameObject({
+        id: CONTROLLER_ID,
+        name: "Controller",
+        transform: {
+          position: { x: 0, y: 0 },
+          size: { x: 0, y: 0 },
+          pivot: { x: 0.5, y: 0.5 },
+        },
+        components: [createControllerComponent()],
+      }),
+    ],
+  });
 
   const [spellStep, setSpellStep] = useState(0);
   const [normalSrc, setNormalSrc] = useState("");
 
-  const selected = gameObjects.find((go) => go.id === selectedId) ?? null;
-
   const controller = gameObjects
     .find((go) => go.id === CONTROLLER_ID)
     ?.components.find((c) => c.type === "controller") as
-    | ControllerComponent
-    | undefined;
+    ControllerComponent | undefined;
   const groups = controller?.groups ?? [];
   const groupIndex = controller?.groupIndex ?? 0;
   const slotIndex = controller?.slotIndex ?? 0;
@@ -179,109 +189,6 @@ export default function DeletreoPage() {
               components: go.components.map((c) =>
                 c.type === "controller" ? { ...c, ...patch } : c,
               ),
-            }
-          : go,
-      ),
-    );
-
-  const buildNode = (go: GameObject): TreeNode => {
-    const children = gameObjects
-      .filter((c) => c.parentId === go.id)
-      .map(buildNode);
-    return {
-      id: go.id,
-      name: go.name,
-      active: go.active,
-      kind: gameObjectKind(go.components),
-      hasAnimation: gameObjectHasAnimation(go.components),
-      children: children.length ? children : undefined,
-    };
-  };
-
-  const hierarchyNodes: TreeNode[] = gameObjects
-    .filter((go) => !go.parentId)
-    .map(buildNode);
-
-  const patchGameObject = (id: string, patch: Partial<GameObject>) =>
-    setGameObjects((prev) =>
-      prev.map((go) => (go.id === id ? { ...go, ...patch } : go)),
-    );
-
-  const patchComponent = (
-    goId: string,
-    index: number,
-    next: GameObjectComponent,
-  ) =>
-    setGameObjects((prev) =>
-      prev.map((go) =>
-        go.id === goId
-          ? {
-              ...go,
-              components: go.components.map((c, i) => (i === index ? next : c)),
-            }
-          : go,
-      ),
-    );
-
-  const createNewGameObject = (parentId?: string) => {
-    const id = crypto.randomUUID();
-    setGameObjects((prev) => [
-      ...prev,
-      createGameObject({
-        id,
-        name: "GameObject",
-        parentId,
-        transform: {
-          position: { x: 0, y: 0 },
-          size: { x: 100, y: 100 },
-          pivot: { x: 0.5, y: 0.5 },
-        },
-      }),
-    ]);
-    setSelectedId(id);
-  };
-
-  const deleteGameObject = (id: string) => {
-    const ids = collectSubtreeIds(gameObjects, id);
-    setGameObjects((prev) => prev.filter((go) => !ids.has(go.id)));
-    if (selectedId && ids.has(selectedId)) setSelectedId("");
-  };
-
-  const handleReorder = (
-    draggedId: string,
-    targetId: string,
-    position: "before" | "after" | "inside",
-  ) =>
-    setGameObjects((prev) =>
-      reorderGameObjects(prev, draggedId, targetId, position),
-    );
-
-  const addComponent = (goId: string, type: string) => {
-    const def = registry.get(type);
-    if (!def) return;
-    setGameObjects((prev) =>
-      prev.map((go) =>
-        go.id === goId
-          ? { ...go, components: [...go.components, def.create()] }
-          : go,
-      ),
-    );
-  };
-
-  const setGameObjectSize = (goId: string, size: Vec2) =>
-    setGameObjects((prev) =>
-      prev.map((go) =>
-        go.id === goId ? { ...go, transform: { ...go.transform, size } } : go,
-      ),
-    );
-
-  const removeComponent = (goId: string, index: number) =>
-    setGameObjects((prev) =>
-      prev.map((go) =>
-        go.id === goId
-          ? {
-              ...go,
-              components: go.components.filter((_, i) => i !== index),
             }
           : go,
       ),
@@ -310,78 +217,7 @@ export default function DeletreoPage() {
       }
     };
 
-  const setAxis =
-    (field: Vec2Field, axis: keyof Vec2) => (value: number) =>
-      setGameObjects((prev) =>
-        prev.map((go) =>
-          go.id === selectedId
-            ? {
-                ...go,
-                transform: {
-                  ...go.transform,
-                  [field]: { ...go.transform[field], [axis]: value },
-                },
-              }
-            : go,
-        ),
-      );
-
-  const setRotation = (value: number) =>
-    setGameObjects((prev) =>
-      prev.map((go) =>
-        go.id === selectedId
-          ? { ...go, transform: { ...go.transform, rotation: value } }
-          : go,
-      ),
-    );
-
   const { trigger } = useAnimations();
-
-  const animatePosition = useCallback(
-    (id: string, position: Vec2) =>
-      setGameObjects((prev) =>
-        prev.map((go) =>
-          go.id === id
-            ? { ...go, transform: { ...go.transform, position } }
-            : go,
-        ),
-      ),
-    [],
-  );
-
-  const stageRef = useRef<HTMLDivElement>(null);
-  const { beginGesture } = useTransformGesture({
-    stageRef,
-    getTransform: () => {
-      if (!selected) return null;
-      const origin = ancestorOffset(selected, gameObjects);
-      return {
-        ...selected.transform,
-        position: {
-          x: selected.transform.position.x + origin.x,
-          y: selected.transform.position.y + origin.y,
-        },
-      };
-    },
-    onChange: ({ position, size }) =>
-      setGameObjects((prev) =>
-        prev.map((go) => {
-          if (go.id !== selectedId) return go;
-          const origin = ancestorOffset(go, gameObjects);
-          return {
-            ...go,
-            transform: {
-              ...go.transform,
-              position: {
-                x: position.x - origin.x,
-                y: position.y - origin.y,
-              },
-              size,
-            },
-          };
-        }),
-      ),
-  });
 
   useEffect(() => {
     return () => resetHeader();
@@ -421,7 +257,7 @@ export default function DeletreoPage() {
           : go,
       ),
     );
-  }, [word, spellStep]);
+  }, [word, spellStep, setGameObjects]);
 
   const selectGroup = (n: number) => {
     if (n < 0 || n >= groups.length) return;
@@ -463,7 +299,6 @@ export default function DeletreoPage() {
     onArrowUp: () => trigger(FRAME_ID, "bounce"),
     onArrowDown: () => trigger(FRAME_ID, "slide"),
   });
-
 
   return (
     <main className="flex min-h-0 flex-1 flex-col">

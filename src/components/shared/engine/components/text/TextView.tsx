@@ -92,7 +92,16 @@ export function TextView({ component }: { component: TextComponent }) {
       ro.disconnect();
       el.style.fontSize = prev;
     };
-  }, [autoSize, fontSizeMin, fontSizeMax, text, fontFamily, bold, italic, wrap]);
+  }, [
+    autoSize,
+    fontSizeMin,
+    fontSizeMax,
+    text,
+    fontFamily,
+    bold,
+    italic,
+    wrap,
+  ]);
 
   const size = autoSize ? fittedSize : component.fontSize;
 

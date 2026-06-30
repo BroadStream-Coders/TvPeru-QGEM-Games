@@ -121,4 +121,3 @@ su "Hecho cuando", pero no es el foco actual).
 - **Hecho cuando:** se puede activar un overlay que muestra FPS/rendimiento en vivo
   dentro de un workspace.
 - **Fecha:** 2026-06-16 · **Estado:** Diferido (2026-06-17)
-

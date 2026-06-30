@@ -42,45 +42,45 @@ export function SpellframeInspector({
       accent="text"
       onRemove={onRemove}
     >
-        <NumberField
-          label="Size"
-          value={component.fontSize}
-          onChange={(fontSize) => onChange({ ...component, fontSize })}
-        />
-        <NumberField
-          label="Spacing"
-          value={component.letterSpacing}
-          onChange={(letterSpacing) => onChange({ ...component, letterSpacing })}
-        />
-        <NumberField
-          label="Underline ↕"
-          value={component.underlineGap}
-          onChange={(underlineGap) => onChange({ ...component, underlineGap })}
-        />
+      <NumberField
+        label="Size"
+        value={component.fontSize}
+        onChange={(fontSize) => onChange({ ...component, fontSize })}
+      />
+      <NumberField
+        label="Spacing"
+        value={component.letterSpacing}
+        onChange={(letterSpacing) => onChange({ ...component, letterSpacing })}
+      />
+      <NumberField
+        label="Underline ↕"
+        value={component.underlineGap}
+        onChange={(underlineGap) => onChange({ ...component, underlineGap })}
+      />
 
-        <div className="flex items-center gap-2">
-          <span className="w-[54px] shrink-0 text-2xs font-medium text-dim">
-            Font
-          </span>
-          <span className="min-w-0 flex-1 truncate text-xs text-ink">
-            {component.fontFileName ?? DEFAULT_FONT.label}
-          </span>
-          <label
-            title="Cargar fuente desde equipo"
-            className="flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-[5px] border border-line text-dim transition-colors hover:border-acc hover:text-ink"
-          >
-            <Upload size={13} />
-            <input
-              type="file"
-              accept=".ttf,.otf,.woff,.woff2,font/*"
-              onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (file) onPickFont(file);
-              }}
-              className="hidden"
-            />
-          </label>
-        </div>
+      <div className="flex items-center gap-2">
+        <span className="w-[54px] shrink-0 text-2xs font-medium text-dim">
+          Font
+        </span>
+        <span className="min-w-0 flex-1 truncate text-xs text-ink">
+          {component.fontFileName ?? DEFAULT_FONT.label}
+        </span>
+        <label
+          title="Cargar fuente desde equipo"
+          className="flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-[5px] border border-line text-dim transition-colors hover:border-acc hover:text-ink"
+        >
+          <Upload size={13} />
+          <input
+            type="file"
+            accept=".ttf,.otf,.woff,.woff2,font/*"
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) onPickFont(file);
+            }}
+            className="hidden"
+          />
+        </label>
+      </div>
     </ComponentSection>
   );
 }

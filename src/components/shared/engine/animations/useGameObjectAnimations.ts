@@ -24,17 +24,13 @@ export function useGameObjectAnimations(
   onAnimatePosition?: (goId: string, position: Vec2) => void,
 ): (node: HTMLDivElement | null) => void {
   const popComp = gameObject.components.find((c) => c.type === "pop") as
-    | PopComponent
-    | undefined;
+    PopComponent | undefined;
   const shakeComp = gameObject.components.find((c) => c.type === "shake") as
-    | ShakeComponent
-    | undefined;
+    ShakeComponent | undefined;
   const bounceComp = gameObject.components.find((c) => c.type === "bounce") as
-    | BounceComponent
-    | undefined;
+    BounceComponent | undefined;
   const slideComp = gameObject.components.find((c) => c.type === "slide") as
-    | SlideComponent
-    | undefined;
+    SlideComponent | undefined;
 
   const { ref: popRef, pop } = usePop<HTMLDivElement>({
     scale: popComp?.scale,

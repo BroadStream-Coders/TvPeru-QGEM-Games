@@ -12,8 +12,7 @@ const buttonVariants = cva(
         default: "bg-acc text-white hover:bg-acc/90",
         outline:
           "border-line bg-elev text-ink hover:bg-elev-2 aria-expanded:bg-elev-2",
-        secondary:
-          "bg-elev text-ink hover:bg-elev-2 aria-expanded:bg-elev-2",
+        secondary: "bg-elev text-ink hover:bg-elev-2 aria-expanded:bg-elev-2",
         ghost: "text-ink hover:bg-elev aria-expanded:bg-elev",
         destructive:
           "bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:border-destructive/40 focus-visible:ring-destructive/20",

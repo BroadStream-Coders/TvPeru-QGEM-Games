@@ -75,7 +75,8 @@ export function ControllerInspector({
           <span className="truncate text-ink">{component.fileName}</span>
           <span className="mt-1 text-ink">
             Grupo {groupCount ? component.groupIndex + 1 : 0}/{groupCount} ·
-            Tablero {boardsInGroup ? component.boardIndex + 1 : 0}/{boardsInGroup}
+            Tablero {boardsInGroup ? component.boardIndex + 1 : 0}/
+            {boardsInGroup}
           </span>
         </div>
       ) : (

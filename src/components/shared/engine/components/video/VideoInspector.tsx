@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { Video as VideoIcon, Upload, Maximize2, Link, Keyboard } from "lucide-react";
+import {
+  Video as VideoIcon,
+  Upload,
+  Maximize2,
+  Link,
+  Keyboard,
+} from "lucide-react";
 import { ComponentSection } from "@engine/ComponentSection";
 import { SelectField, ToggleField } from "@engine/InspectorFields";
 import { cn } from "@/lib/utils";

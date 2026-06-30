@@ -91,7 +91,9 @@ export function TrayPanel({ tray, drag, beginDrag }: TrayPanelProps) {
         value !== null ? (
           <div
             key={i}
-            onPointerDown={(e) => beginDrag(value, { type: "tray", index: i }, e)}
+            onPointerDown={(e) =>
+              beginDrag(value, { type: "tray", index: i }, e)
+            }
             className={`flex items-center justify-center rounded-[1cqw] font-bold text-white touch-none select-none ${
               drag ? "" : "cursor-grab"
             } ${pieceColor(value)}`}

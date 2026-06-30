@@ -79,7 +79,10 @@ export function isDescendantOf(
   return false;
 }
 
-export function collectSubtreeIds(all: GameObject[], rootId: string): Set<string> {
+export function collectSubtreeIds(
+  all: GameObject[],
+  rootId: string,
+): Set<string> {
   const ids = new Set<string>([rootId]);
   let grew = true;
   while (grew) {

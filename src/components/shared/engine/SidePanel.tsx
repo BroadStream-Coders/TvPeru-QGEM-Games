@@ -36,10 +36,7 @@ export function SidePanel({
       </div>
       <div className="relative flex-1">
         <div
-          className={cn(
-            "scrl absolute inset-0 overflow-y-auto",
-            bodyClassName,
-          )}
+          className={cn("scrl absolute inset-0 overflow-y-auto", bodyClassName)}
         >
           {children}
         </div>

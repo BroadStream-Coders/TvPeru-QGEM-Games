@@ -20,25 +20,31 @@ export function SlideInspector({
       accent="anim"
       onRemove={onRemove}
     >
-        <NumberField
-          label="Speed"
-          value={component.speed}
-          onChange={(speed) => onChange({ ...component, speed })}
-        />
-        <NumberField
-          label="Hide X"
-          value={component.hiddenOffset.x}
-          onChange={(x) =>
-            onChange({ ...component, hiddenOffset: { ...component.hiddenOffset, x } })
-          }
-        />
-        <NumberField
-          label="Hide Y"
-          value={component.hiddenOffset.y}
-          onChange={(y) =>
-            onChange({ ...component, hiddenOffset: { ...component.hiddenOffset, y } })
-          }
-        />
+      <NumberField
+        label="Speed"
+        value={component.speed}
+        onChange={(speed) => onChange({ ...component, speed })}
+      />
+      <NumberField
+        label="Hide X"
+        value={component.hiddenOffset.x}
+        onChange={(x) =>
+          onChange({
+            ...component,
+            hiddenOffset: { ...component.hiddenOffset, x },
+          })
+        }
+      />
+      <NumberField
+        label="Hide Y"
+        value={component.hiddenOffset.y}
+        onChange={(y) =>
+          onChange({
+            ...component,
+            hiddenOffset: { ...component.hiddenOffset, y },
+          })
+        }
+      />
     </ComponentSection>
   );
 }

@@ -20,16 +20,16 @@ export function PopInspector({
       accent="anim"
       onRemove={onRemove}
     >
-        <NumberField
-          label="Scale"
-          value={component.scale}
-          onChange={(scale) => onChange({ ...component, scale })}
-        />
-        <NumberField
-          label="Duration"
-          value={component.duration}
-          onChange={(duration) => onChange({ ...component, duration })}
-        />
+      <NumberField
+        label="Scale"
+        value={component.scale}
+        onChange={(scale) => onChange({ ...component, scale })}
+      />
+      <NumberField
+        label="Duration"
+        value={component.duration}
+        onChange={(duration) => onChange({ ...component, duration })}
+      />
     </ComponentSection>
   );
 }

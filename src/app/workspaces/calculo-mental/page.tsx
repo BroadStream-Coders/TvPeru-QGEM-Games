@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Calculator, FileJson } from "lucide-react";
 import { AssetsBar, AssetTile, AssetLoaderTiles } from "@engine/AssetsBar";
 import { useWorkspaceHeader } from "@/hooks/use-workspace-header";
@@ -10,32 +10,26 @@ import type { AssetKind } from "@/helpers/asset-preloader";
 import { toManifest, type AssetCatalog } from "@/helpers/asset-source";
 import { SHARED_ASSETS } from "@/assets/shared";
 import { CALCULO_ASSETS } from "./assets";
-import { useTransformGesture } from "@/hooks/use-transform-gesture";
+import { useSceneEditor } from "@/hooks/use-scene-editor";
 import { playSound } from "@/lib/audio";
 
 import { Scene } from "@engine/Scene";
 import {
   RectTransformValues,
   Vec2,
-  Vec2Field,
   DESIGN_WIDTH,
   DESIGN_HEIGHT,
 } from "@engine/RectTransform";
 import { GameObjectView } from "@engine/GameObjectView";
 import { SelectionOverlay } from "@engine/SelectionOverlay";
 import { SidePanel } from "@engine/SidePanel";
-import { Hierarchy, TreeNode } from "@engine/Hierarchy";
+import { Hierarchy } from "@engine/Hierarchy";
 import { GameObjectInspector } from "@engine/GameObjectInspector";
 import { RectTransformInspector } from "@engine/RectTransformInspector";
 import {
-  GameObject,
   GameObjectComponent,
   createGameObject,
-  ancestorOffset,
-  reorderGameObjects,
-  collectSubtreeIds,
   gameObjectKind,
-  gameObjectHasAnimation,
 } from "@engine/gameObject";
 import {
   createComponentRegistry,
@@ -128,169 +122,87 @@ export default function CalculoMentalPage() {
 
   const [editMode, setEditMode] = useState(false);
 
-  const [gameObjects, setGameObjects] = useState<GameObject[]>(() => [
-    createGameObject({
-      id: BACKGROUND_ID,
-      name: "Background",
-      transform: {
-        position: { x: 0, y: 0 },
-        size: { x: DESIGN_WIDTH, y: DESIGN_HEIGHT },
-        pivot: { x: 0.5, y: 0.5 },
-      },
-      components: [createColorComponent({ value: "#01FF02" })],
-    }),
-    createGameObject({
-      id: CONTROLLER_ID,
-      name: "Controller",
-      transform: {
-        position: { x: 0, y: 0 },
-        size: { x: DESIGN_WIDTH, y: DESIGN_HEIGHT },
-        pivot: { x: 0.5, y: 0.5 },
-      },
-      components: [createControllerComponent()],
-    }),
-    ...SLOT_IDS.flatMap((id, i) => [
+  const {
+    gameObjects,
+    setGameObjects,
+    selectedId,
+    setSelectedId,
+    selected,
+    hierarchyNodes,
+    stageRef,
+    beginGesture,
+    patchGameObject,
+    createNewGameObject,
+    deleteGameObject,
+    handleReorder,
+    addComponent,
+    removeComponent,
+    patchComponent,
+    setGameObjectSize,
+    setAxis,
+    setRotation,
+    animatePosition,
+  } = useSceneEditor({
+    registry,
+    initialSelectedId: SLOT_IDS[0],
+    initialGameObjects: () => [
       createGameObject({
-        id,
-        name: `Slot ${i + 1}`,
-        parentId: CONTROLLER_ID,
-        transform: {
-          position: SLOT_POSITIONS[i],
-          size: { x: 400, y: 200 },
-          pivot: { x: 0.5, y: 0.5 },
-        },
-        components: [
-          createSlotComponent(),
-          createPopComponent(),
-          createShakeComponent(),
-          createBounceComponent(),
-          createSlideComponent(),
-        ],
-      }),
-      createGameObject({
-        id: QUESTION_IDS[i],
-        name: "Pregunta",
-        parentId: id,
-        active: false,
-        transform: QUESTION_TRANSFORM,
-        components: [createSlotTextComponent()],
-      }),
-      createGameObject({
-        id: ANSWER_IDS[i],
-        name: "Respuesta",
-        parentId: id,
-        active: false,
-        transform: ANSWER_TRANSFORM,
-        components: [createSlotTextComponent()],
-      }),
-    ]),
-  ]);
-  const [selectedId, setSelectedId] = useState<string>(SLOT_IDS[0]);
-
-  const selected = gameObjects.find((go) => go.id === selectedId) ?? null;
-
-  const buildNode = (go: GameObject): TreeNode => {
-    const children = gameObjects
-      .filter((c) => c.parentId === go.id)
-      .map(buildNode);
-    return {
-      id: go.id,
-      name: go.name,
-      active: go.active,
-      kind: gameObjectKind(go.components),
-      hasAnimation: gameObjectHasAnimation(go.components),
-      children: children.length ? children : undefined,
-    };
-  };
-
-  const hierarchyNodes: TreeNode[] = gameObjects
-    .filter((go) => !go.parentId)
-    .map(buildNode);
-
-  const patchGameObject = (id: string, patch: Partial<GameObject>) =>
-    setGameObjects((prev) =>
-      prev.map((go) => (go.id === id ? { ...go, ...patch } : go)),
-    );
-
-  const patchComponent = (
-    goId: string,
-    index: number,
-    next: GameObjectComponent,
-  ) =>
-    setGameObjects((prev) =>
-      prev.map((go) =>
-        go.id === goId
-          ? {
-              ...go,
-              components: go.components.map((c, i) => (i === index ? next : c)),
-            }
-          : go,
-      ),
-    );
-
-  const createNewGameObject = (parentId?: string) => {
-    const id = crypto.randomUUID();
-    setGameObjects((prev) => [
-      ...prev,
-      createGameObject({
-        id,
-        name: "GameObject",
-        parentId,
+        id: BACKGROUND_ID,
+        name: "Background",
         transform: {
           position: { x: 0, y: 0 },
-          size: { x: 100, y: 100 },
+          size: { x: DESIGN_WIDTH, y: DESIGN_HEIGHT },
           pivot: { x: 0.5, y: 0.5 },
         },
+        components: [createColorComponent({ value: "#01FF02" })],
       }),
-    ]);
-    setSelectedId(id);
-  };
-
-  const deleteGameObject = (id: string) => {
-    const ids = collectSubtreeIds(gameObjects, id);
-    setGameObjects((prev) => prev.filter((go) => !ids.has(go.id)));
-    if (selectedId && ids.has(selectedId)) setSelectedId("");
-  };
-
-  const handleReorder = (
-    draggedId: string,
-    targetId: string,
-    position: "before" | "after" | "inside",
-  ) =>
-    setGameObjects((prev) =>
-      reorderGameObjects(prev, draggedId, targetId, position),
-    );
-
-  const addComponent = (goId: string, type: string) => {
-    const def = registry.get(type);
-    if (!def) return;
-    setGameObjects((prev) =>
-      prev.map((go) =>
-        go.id === goId
-          ? { ...go, components: [...go.components, def.create()] }
-          : go,
-      ),
-    );
-  };
-
-  const setGameObjectSize = (goId: string, size: Vec2) =>
-    setGameObjects((prev) =>
-      prev.map((go) =>
-        go.id === goId ? { ...go, transform: { ...go.transform, size } } : go,
-      ),
-    );
-
-  const removeComponent = (goId: string, index: number) =>
-    setGameObjects((prev) =>
-      prev.map((go) =>
-        go.id === goId
-          ? {
-              ...go,
-              components: go.components.filter((_, i) => i !== index),
-            }
-          : go,
-      ),
-    );
+      createGameObject({
+        id: CONTROLLER_ID,
+        name: "Controller",
+        transform: {
+          position: { x: 0, y: 0 },
+          size: { x: DESIGN_WIDTH, y: DESIGN_HEIGHT },
+          pivot: { x: 0.5, y: 0.5 },
+        },
+        components: [createControllerComponent()],
+      }),
+      ...SLOT_IDS.flatMap((id, i) => [
+        createGameObject({
+          id,
+          name: `Slot ${i + 1}`,
+          parentId: CONTROLLER_ID,
+          transform: {
+            position: SLOT_POSITIONS[i],
+            size: { x: 400, y: 200 },
+            pivot: { x: 0.5, y: 0.5 },
+          },
+          components: [
+            createSlotComponent(),
+            createPopComponent(),
+            createShakeComponent(),
+            createBounceComponent(),
+            createSlideComponent(),
+          ],
+        }),
+        createGameObject({
+          id: QUESTION_IDS[i],
+          name: "Pregunta",
+          parentId: id,
+          active: false,
+          transform: QUESTION_TRANSFORM,
+          components: [createSlotTextComponent()],
+        }),
+        createGameObject({
+          id: ANSWER_IDS[i],
+          name: "Respuesta",
+          parentId: id,
+          active: false,
+          transform: ANSWER_TRANSFORM,
+          components: [createSlotTextComponent()],
+        }),
+      ]),
+    ],
+  });
 
   const onComponentChange =
     (goId: string, index: number) => (next: GameObjectComponent) =>
@@ -310,78 +222,7 @@ export default function CalculoMentalPage() {
       ),
     );
 
-  const setAxis =
-    (field: Vec2Field, axis: keyof Vec2) => (value: number) =>
-      setGameObjects((prev) =>
-        prev.map((go) =>
-          go.id === selectedId
-            ? {
-                ...go,
-                transform: {
-                  ...go.transform,
-                  [field]: { ...go.transform[field], [axis]: value },
-                },
-              }
-            : go,
-        ),
-      );
-
-  const setRotation = (value: number) =>
-    setGameObjects((prev) =>
-      prev.map((go) =>
-        go.id === selectedId
-          ? { ...go, transform: { ...go.transform, rotation: value } }
-          : go,
-      ),
-    );
-
   const { trigger } = useAnimations();
-
-  const animatePosition = useCallback(
-    (id: string, position: Vec2) =>
-      setGameObjects((prev) =>
-        prev.map((go) =>
-          go.id === id
-            ? { ...go, transform: { ...go.transform, position } }
-            : go,
-        ),
-      ),
-    [],
-  );
-
-  const stageRef = useRef<HTMLDivElement>(null);
-  const { beginGesture } = useTransformGesture({
-    stageRef,
-    getTransform: () => {
-      if (!selected) return null;
-      const origin = ancestorOffset(selected, gameObjects);
-      return {
-        ...selected.transform,
-        position: {
-          x: selected.transform.position.x + origin.x,
-          y: selected.transform.position.y + origin.y,
-        },
-      };
-    },
-    onChange: ({ position, size }) =>
-      setGameObjects((prev) =>
-        prev.map((go) => {
-          if (go.id !== selectedId) return go;
-          const origin = ancestorOffset(go, gameObjects);
-          return {
-            ...go,
-            transform: {
-              ...go.transform,
-              position: {
-                x: position.x - origin.x,
-                y: position.y - origin.y,
-              },
-              size,
-            },
-          };
-        }),
-      ),
-  });
 
   useEffect(() => {
     return () => resetHeader();
@@ -416,13 +257,12 @@ export default function CalculoMentalPage() {
           : go,
       ),
     );
-  }, [ready, blueUrl, purpleUrl, checkUrl, xUrl]);
+  }, [ready, blueUrl, purpleUrl, checkUrl, xUrl, setGameObjects]);
 
   const controller = gameObjects
     .find((go) => go.id === CONTROLLER_ID)
     ?.components.find((c) => c.type === "controller") as
-    | ControllerComponent
-    | undefined;
+    ControllerComponent | undefined;
   const groups = controller?.groups ?? [];
   const groupIndex = controller?.groupIndex ?? 0;
   const boardIndex = controller?.boardIndex ?? 0;
@@ -490,7 +330,7 @@ export default function CalculoMentalPage() {
         return go;
       }),
     );
-  }, [groupIndex, boardIndex, fileName]);
+  }, [groupIndex, boardIndex, fileName, setGameObjects]);
 
   const selectGroup = (n: number) => {
     if (n < 0 || n >= groups.length) return;

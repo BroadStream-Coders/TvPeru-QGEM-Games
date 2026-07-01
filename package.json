@@ -13,6 +13,7 @@
     "@supabase/supabase-js": "^2.108.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "dockview-react": "^7.0.2",
     "jszip": "^3.10.1",
     "lucide-react": "^1.14.0",
     "next": "16.2.4",

@@ -86,6 +86,20 @@ su "Hecho cuando", pero no es el foco actual).
   contenido; la selección del navegador queda anulada en el área de display.
 - **Fecha:** 2026-06-29 · **Estado:** Abierto
 
+## [RM-042] Sistema de ventanas tipo Unity (dockview) en el editor
+
+- **Objetivo:** Dar al chrome de edición un sistema de paneles acoplables estilo
+  Unity/VS Code con `dockview-react` (ya instalado): Inspector, Scene, Game,
+  Hierarchy, etc. como ventanas con pestaña nombrada, redimensionables,
+  reubicables por drag, flotantes y con pop-out a otra ventana. Tema mapeado a los
+  tokens del editor (`.dv-qgem` sobre `dockview-theme-abyss`). **Solo editor**: no
+  toca el `<FullScreen>` de broadcast, que sigue viviendo dentro del panel Game.
+  Se empieza por el **Sandbox**. La viabilidad ya se validó con una demo (borrada).
+- **Hecho cuando:** el Sandbox usa dockview para su layout de edición, cableado a
+  `useSceneEditor`, con layout por defecto (Hierarchy / Scene+Game / Inspector /
+  Console) y estilos integrados a la paleta actual.
+- **Fecha:** 2026-06-30 · **Estado:** Abierto
+
 ---
 
 # Fase 2 — Engine genérico (diferido)

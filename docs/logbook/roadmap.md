@@ -118,7 +118,33 @@ su "Hecho cuando", pero no es el foco actual).
 - **Hecho cuando:** un juego con catálogo muestra sus assets cargados en el panel;
   un Image con `assetKey` renderiza el blob resuelto; los juegos actuales (con `src`
   crudo) siguen funcionando igual.
-- **Fecha:** 2026-06-30 · **Estado:** Abierto
+- **Fecha:** 2026-06-30 · **Estado:** En progreso (2026-07-01) — hecho el pipeline
+  + panel Assets + el mecanismo `assetKey` en Image (view resuelve por key, inspector
+  con selector). Falta demostrarlo con un juego real; deletreo resultó bloqueado (ver
+  hallazgo: necesita una 4ta pieza de "comportamiento" en el contrato).
+
+## [RM-047] Pieza de "comportamiento" en el contrato (behavior)
+
+- **Objetivo:** Agregar a `GameDefinition` un `behavior?` (un componente por juego
+  que `EditorLayout` monta bajo sus providers) para alojar la **lógica de runtime**
+  del juego —teclas, sonidos, animaciones, carga de sesión— con acceso al estado del
+  editor vía `useEditor()` / `useAssets()`. Para eso se extrae el `EditorContext` a
+  `@engine/editor/editorContext.ts`. Es la **4ta cosa** que aporta un juego, además de
+  assets/gameObjects/components. Habilita migrar deletreo (RM-048).
+- **Hecho cuando:** existe `GameDefinition.behavior`, `EditorLayout` lo monta, y
+  `useEditor` es importable desde un componente de juego; el Sandbox (sin behavior)
+  sigue funcionando igual.
+- **Fecha:** 2026-07-01 · **Estado:** En progreso (2026-07-01)
+
+## [RM-048] Migrar deletreo al `EditorLayout` (depende de RM-047)
+
+- **Objetivo:** Primer juego real migrado al layout genérico: su `game.tsx` entrega
+  assets (catálogo), gameObjects (escena inicial), components (spellframe/controller)
+  y su `behavior` (las ~200 líneas de teclas/sonidos/animaciones/sesión que hoy viven
+  sueltas en `page.tsx`). Su `page.tsx` queda fino. Valida de paso `assetKey` (RM-046).
+- **Hecho cuando:** `/workspaces/deletreo` corre sobre `EditorLayout` con su lógica en
+  `behavior`; el juego funciona igual que antes (teclas, animaciones, sonidos, sesión).
+- **Fecha:** 2026-07-01 · **Estado:** Abierto
 
 ---
 

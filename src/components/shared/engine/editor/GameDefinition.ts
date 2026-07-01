@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { ComponentType, ReactNode } from "react";
 import type { GameObject } from "@engine/gameObject";
 import type { ComponentDefinition } from "@engine/componentRegistry";
 import type { AssetCatalog } from "@/helpers/asset-source";
@@ -10,4 +10,5 @@ export interface GameDefinition {
   assets?: AssetCatalog;
   gameObjects?: GameObject[] | (() => GameObject[]);
   components?: ComponentDefinition[];
+  behavior?: ComponentType;
 }

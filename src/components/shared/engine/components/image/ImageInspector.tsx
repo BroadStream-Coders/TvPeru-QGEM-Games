@@ -9,6 +9,7 @@ import {
   ImageComponent,
   ImageFit,
 } from "@engine/components/image/imageComponent";
+import { useAssets } from "@engine/assetsContext";
 
 export function ImageInspector({
   component,
@@ -21,6 +22,9 @@ export function ImageInspector({
   onRemove: () => void;
   onResize: (size: { x: number; y: number }) => void;
 }) {
+  const { kinds } = useAssets();
+  const imageKeys = Object.keys(kinds).filter((k) => kinds[k] === "image");
+
   const onPickFile = (file: File) => {
     const reader = new FileReader();
     reader.onload = () =>
@@ -46,6 +50,19 @@ export function ImageInspector({
       accent="image"
       onRemove={onRemove}
     >
+      {imageKeys.length > 0 && (
+        <SelectField
+          label="Asset"
+          value={component.assetKey ?? ""}
+          onChange={(key) =>
+            onChange({ ...component, assetKey: key || undefined })
+          }
+          options={[
+            { value: "", label: "— archivo manual —" },
+            ...imageKeys.map((k) => ({ value: k, label: k })),
+          ]}
+        />
+      )}
       <AssetField
         label="Source"
         name={component.fileName}

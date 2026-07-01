@@ -1,14 +1,6 @@
 "use client";
 
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-  type Dispatch,
-  type SetStateAction,
-} from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   DockviewReact,
   type DockviewApi,
@@ -31,23 +23,23 @@ import {
   ComponentRegistryProvider,
   type ComponentRegistry,
 } from "@engine/componentRegistry";
+import {
+  EditorProvider,
+  useEditor,
+  type EditorApi,
+} from "@engine/editor/editorContext";
+import { AssetLoaderTiles } from "@engine/AssetsBar";
+import {
+  AssetsProvider,
+  useAssets,
+  type LoadedAssetsState,
+} from "@engine/assetsContext";
 import type { GameDefinition } from "@engine/editor/GameDefinition";
 import { useSceneEditor } from "@/hooks/use-scene-editor";
 import { useWorkspaceHeader } from "@/hooks/use-workspace-header";
-
-type Editor = ReturnType<typeof useSceneEditor> & {
-  editMode: boolean;
-  setEditMode: Dispatch<SetStateAction<boolean>>;
-  registry: ComponentRegistry;
-};
-
-const EditorContext = createContext<Editor | null>(null);
-
-function useEditor() {
-  const ctx = useContext(EditorContext);
-  if (!ctx) throw new Error("useEditor must be used inside EditorContext");
-  return ctx;
-}
+import { useAssetPreloader } from "@/hooks/use-asset-preloader";
+import { toManifest } from "@/helpers/asset-source";
+import type { AssetKind } from "@/helpers/asset-preloader";
 
 function HierarchyPanel() {
   const e = useEditor();
@@ -164,9 +156,24 @@ function GamePanel() {
 }
 
 function AssetsPanel() {
+  const { statuses, kinds, progress } = useAssets();
+  const keys = Object.keys(statuses);
   return (
-    <div className="scrl flex h-full items-center justify-center overflow-auto bg-panel p-3">
-      <p className="text-2xs text-faint">Ninguno cargado.</p>
+    <div className="scrl h-full overflow-auto bg-panel">
+      {keys.length === 0 ? (
+        <div className="flex h-full items-center justify-center p-3">
+          <p className="text-2xs text-faint">Ninguno cargado.</p>
+        </div>
+      ) : (
+        <div className="p-3">
+          <p className="mb-2 font-mono text-2xs text-faint">
+            {progress.loaded}/{progress.total} listos
+          </p>
+          <div className="flex flex-wrap gap-3">
+            <AssetLoaderTiles statuses={statuses} kinds={kinds} />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -230,7 +237,27 @@ export function EditorLayout({ game }: { game: GameDefinition }) {
   });
   const [editMode, setEditMode] = useState(false);
 
-  const value: Editor = { ...editor, editMode, setEditMode, registry };
+  const value: EditorApi = { ...editor, editMode, setEditMode, registry };
+  const Behavior = game.behavior;
+
+  const manifest = useMemo(() => toManifest(game.assets ?? {}), [game.assets]);
+  const kinds = useMemo<Record<string, AssetKind>>(
+    () =>
+      Object.fromEntries(
+        Object.entries(game.assets ?? {}).map(([key, entry]) => [
+          key,
+          entry.kind,
+        ]),
+      ),
+    [game.assets],
+  );
+  const preload = useAssetPreloader(manifest);
+  const assetsState: LoadedAssetsState = {
+    assets: preload.assets,
+    statuses: preload.statuses,
+    kinds,
+    progress: preload.progress,
+  };
 
   useEffect(() => () => resetHeader(), [resetHeader]);
   useEffect(() => {
@@ -243,15 +270,18 @@ export function EditorLayout({ game }: { game: GameDefinition }) {
 
   return (
     <ComponentRegistryProvider value={registry}>
-      <EditorContext.Provider value={value}>
-        <div className="min-h-0 flex-1">
-          <DockviewReact
-            className="dockview-theme-abyss dv-qgem"
-            components={components}
-            onReady={onReady}
-          />
-        </div>
-      </EditorContext.Provider>
+      <AssetsProvider value={assetsState}>
+        <EditorProvider value={value}>
+          {Behavior && <Behavior />}
+          <div className="min-h-0 flex-1">
+            <DockviewReact
+              className="dockview-theme-abyss dv-qgem"
+              components={components}
+              onReady={onReady}
+            />
+          </div>
+        </EditorProvider>
+      </AssetsProvider>
     </ComponentRegistryProvider>
   );
 }

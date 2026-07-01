@@ -25,27 +25,17 @@ su "Hecho cuando", pero no es el foco actual).
 
 ## [RM-014] Juego "Intruso"
 
-- **Objetivo:** Crear el juego "Intruso" como workspace propio. Va **antes** de
-  Operaciones Combinadas (RM-004).
+- **Objetivo:** Crear el juego "Intruso" como workspace propio.
 - **Hecho cuando:** existe su workspace, carga su session file y se muestra
   fullscreen listo para broadcast.
 - **Fecha:** 2026-06-16 · **Estado:** Abierto
 
 ## [RM-015] Juego "La sabes o No"
 
-- **Objetivo:** Crear el juego "La sabes o No" como workspace propio. Va **antes**
-  de Operaciones Combinadas (RM-004).
+- **Objetivo:** Crear el juego "La sabes o No" como workspace propio.
 - **Hecho cuando:** existe su workspace, carga su session file y se muestra
   fullscreen listo para broadcast.
 - **Fecha:** 2026-06-16 · **Estado:** Abierto
-
-## [RM-004] Juego "Operaciones Combinadas"
-
-- **Objetivo:** Generar el juego Operaciones Combinadas, aunque no use el sistema
-  Engine. (Dependencia: primero los juegos RM-013, RM-014 y RM-015.)
-- **Hecho cuando:** existe su workspace, carga su session file y se muestra
-  fullscreen listo para broadcast.
-- **Fecha:** 2026-06-11 · **Estado:** En progreso (2026-06-11)
 
 ---
 
@@ -80,8 +70,7 @@ su "Hecho cuando", pero no es el foco actual).
 
 - **Objetivo:** Que en la vista **Game** el contenido no se pueda seleccionar ni
   arrastrar por el usuario: ni seleccionar/copiar texto, ni la selección accidental
-  de un div que termina marcando todo. (Se revisará con más detalle en Operaciones
-  Combinadas.)
+  de un div que termina marcando todo.
 - **Hecho cuando:** en Game no se puede seleccionar texto ni marcar/arrastrar
   contenido; la selección del navegador queda anulada en el área de display.
 - **Fecha:** 2026-06-29 · **Estado:** Abierto

@@ -116,14 +116,78 @@ const { selected, setAxis, setRotation, beginGesture, … } = useSceneEditor({
 ```
 
 Todo el aparato de editarlos y mostrarlos (inspector, jerarquía, gesto, render) lo
-hereda y no lo ve. Esto vale para **los 5 juegos** (sandbox, intruso, deletreo,
-calculo-mental, operaciones-combinadas).
+hereda y no lo ve. Esto vale para **los 4 juegos** (sandbox, intruso, deletreo,
+calculo-mental).
 
 > **La regla práctica:** una propiedad nueva del transform o de la escena (rotación,
 > `localScale` WL-007, anclajes WL-003) se agrega **una sola vez** en `useSceneEditor`
 > + el render, y los juegos la heredan. **Antes** no era así: cada `page.tsx`
 > reimplementaba el controlador a mano (las mismas ~9 funciones duplicadas), así que
 > un cambio de engine se multiplicaba por juego. Cerrarlo fue la **Decisión C / TD-017**.
+
+---
+
+## 2.5 El shell del editor: `EditorLayout` + la ficha `GameDefinition`
+
+> Capa **posterior** a §2. Antes cada `page.tsx` cableaba a mano el layout
+> (Hierarchy + Scene + Inspector + AssetsBar con `SidePanel`) alrededor de
+> `useSceneEditor`. Hoy ese cableado vive **una sola vez** en un componente
+> reutilizable y cada juego solo entrega una **ficha** (RM-045/047).
+
+**El sistema de ventanas (dockview).** El chrome de edición es un sistema de paneles
+acoplables estilo Unity/VS Code (`dockview-react`): **Hierarchy, Inspector, Scene,
+Game y Assets** son ventanas con pestaña, redimensionables, reubicables y flotantes.
+Vive en `@engine/editor/EditorLayout.tsx`. El tema (`.dv-qgem`) mapea las variables de
+dockview a la paleta del editor (`@engine/dockview-theme.css`). dockview renderiza los
+paneles con `createPortal`, así que **React Context cruza a los paneles** (de ahí que
+el estado se comparta por contexto).
+
+**Scene vs Game.** El componente `Scene` (§7) admite `viewMode` controlado: la ventana
+**Scene** lo fija en `"scene"` (grid + overlay + gestos de edición) y la ventana
+**Game** en `"game"` (display limpio + botón de fullscreen para broadcast). Ambas
+renderizan los mismos GameObjects; solo Scene lleva el `SelectionOverlay`.
+
+**La ficha `GameDefinition`** (`@engine/editor/GameDefinition.ts`) es lo único que un
+juego declara. Aporta **cuatro cosas** (además de id/título/icono/`initialSelectedId`):
+
+```ts
+interface GameDefinition {
+  id; title; icon?; initialSelectedId?;
+  assets?: AssetCatalog;                  // 1. qué baja del storage
+  gameObjects?: GameObject[] | (() => …); // 2. su escena inicial
+  components?: ComponentDefinition[];     // 3. sus componentes propios (§3)
+  behavior?: ComponentType;               // 4. su lógica de runtime
+}
+```
+
+Cada `page.tsx` queda fino: `export default () => <EditorLayout game={miGame} />`.
+`EditorLayout` deriva de la ficha el registro (`NATIVE_COMPONENTS + components`), los
+`initialGameObjects`, el header y monta el `behavior`. El **sandbox** es la ficha vacía
+(juego de referencia). El resto de un juego vive en `workspaces/<juego>/`:
+`game.tsx` (la ficha), `<Juego>Behavior.tsx`, `constants.ts` y las carpetas de sus
+componentes propios.
+
+**La 4ta pieza — `behavior`.** El editor de GameObjects no basta: un juego también
+tiene **lógica que corre** (teclas, sonidos, animaciones, carga de sesión) — el
+"estado runtime" de §2. Eso vive en un componente que `EditorLayout` monta bajo sus
+providers (`{Behavior && <Behavior />}`); devuelve `null` y opera vía hooks:
+
+- `useEditor()` (`@engine/editor/editorContext.ts`) — el estado y las mutaciones de
+  `useSceneEditor` (gameObjects, setGameObjects, patchGameObject, animatePosition…),
+  importable desde cualquier componente de juego.
+- `useAssets()` (`@engine/assetsContext.ts`) — los assets ya cargados, por key.
+- `useAnimations()` — dispara pop/shake/bounce/slide que registran los GameObjects.
+
+Ej.: `deletreo/DeletreoBehavior.tsx` tiene el `useGameKeys`, el swap del marco
+normal↔error, los sonidos y el deletreo de letras.
+
+**Assets por key (el pipeline, RM-046).** `EditorLayout` toma `game.assets` (catálogo
+`{ key: { kind, path } }`), lo pasa por `toManifest` + `useAssetPreloader` (bajan a
+blob y decodifican) y lo provee por `useAssets()`. El panel **Assets** los muestra con
+progreso. Un componente puede referenciar un asset por **`assetKey`** (su "apodo") en
+vez de un `src` crudo: `ImageView` resuelve `assetKey → blob` vía `useAssets`, y si no
+hay key cae al `src` (**aditivo**, no rompe los juegos viejos). Cambiar de storage
+(local ↔ Supabase) = editar solo el catálogo, cero GameObjects.
 
 ---
 
@@ -170,7 +234,10 @@ export function useComponentRegistry();  // GameObjectView lo lee (igual que use
 su árbol de `GameObjectView` con `<ComponentRegistryProvider value={registry}>` y usa
 `registry.get/options` en el Inspector y el `AddComponentButton`. Así un juego suma un
 componente propio **sin tocar el core** (los custom viven en
-`workspaces/<juego>/components/<tipo>/`; ej. `sandbox/components/border/`).
+`workspaces/<juego>/components/<tipo>/`; ej. `deletreo/components/spellframe/`,
+`calculo-mental/components/slot/`). Hoy el juego los declara en `game.components`
+(§2.5) y `EditorLayout` arma el registro; ya no se hace `createComponentRegistry` a
+mano en cada `page.tsx`.
 
 Contrato de cada pieza:
 
@@ -289,7 +356,7 @@ Por cada tipo, el par es **`XxxInspector` (edita) / `XxxView` (dibuja)**:
 
 ```
 src/components/shared/engine/   →  alias @engine/
-├── Scene.tsx                  # el lienzo 16:9 (ex-FullScreen) + pestañas Game/Scene; fondo fijo bg-muted (sin prop background)
+├── Scene.tsx                  # el lienzo 16:9; tabs Game/Scene internos O `viewMode` controlado + `showFullscreenButton` (para las ventanas del shell, §2.5)
 ├── ViewModeTabs.tsx           # pestañas Game/Scene que renderiza la propia Scene
 ├── SceneViewMode.tsx          # contexto del viewMode (Scene lo provee, GameObjectView lo lee)
 ├── RectTransform.tsx          # posicionador (#2, unidades %, prop parentSize) + Vec2/RectTransformValues + DESIGN_*
@@ -301,7 +368,13 @@ src/components/shared/engine/   →  alias @engine/
 ├── Hierarchy.tsx              # árbol de GameObjects (TreeNode + Hierarchy); prop onAdd → "+"
 ├── AddComponentButton.tsx     # botón + dropdown "Agregar componente" (lee COMPONENT_OPTIONS)
 ├── SidePanel.tsx              # marco visual (pestaña + caja) para Hierarchy e Inspector
-├── componentRegistry.ts       # COMPONENT_REGISTRY + COMPONENT_OPTIONS (el pegamento por type)
+├── componentRegistry.ts       # NATIVE_COMPONENTS + createComponentRegistry + defineComponent (el pegamento por type)
+├── assetsContext.ts           # los assets cargados por key (useAssets); lo provee EditorLayout, lo leen paneles y componentes (§2.5)
+├── dockview-theme.css         # tema `.dv-qgem`: mapea las vars de dockview a la paleta del editor
+├── editor/                    # el shell del editor (§2.5)
+│   ├── EditorLayout.tsx       #   el componente grande reutilizable: dockview + 5 paneles + providers; recibe game
+│   ├── GameDefinition.ts      #   la ficha: { id, title, icon?, assets?, gameObjects?, components?, behavior?, initialSelectedId? }
+│   └── editorContext.ts       #   useEditor(): el estado de useSceneEditor, importable desde componentes de juego (cruza el portal)
 └── components/                # una carpeta por tipo, cada una con su tripleta
     ├── image/
     │   ├── imageComponent.ts  #   modelo (src, fit, fileName)
@@ -349,24 +422,20 @@ pestañas viajan con la `Scene`: aparecen en deletreo, sandbox y cualquier juego
 
 ## 8. Quién usa el engine hoy
 
-Hoy lo usan **5 workspaces** (sandbox, intruso, deletreo, calculo-mental,
-operaciones-combinadas), todos a través del controlador `useSceneEditor` (§2). Los
-dos de abajo son los ejemplos de referencia:
+Hoy lo usan **4 workspaces** (sandbox, intruso, deletreo, calculo-mental), todos
+sobre el shell `EditorLayout` (§2.5) — cada uno una `page.tsx` fina que pasa su
+`GameDefinition`. Ejemplos de referencia:
 
-- **`workspaces/deletreo`** → el juego de referencia. Usa el engine completo:
-  `Scene` + `Hierarchy` (con "+") + `GameObjectInspector` + `RectTransformInspector`
-  - editores de `components[]` por el registro + `AddComponentButton`. Arranca con
-    tres GameObjects: **Background** (un componente **Color** verde croma que llena el
-    stage, sin lógica especial), **MainFrame** (con un componente **Image**) y **Text**
-    (hijo). La tecla **F** muta el `src` de ese Image (marco normal ↔ error); es la fuente de
-    verdad del swap. Tiene además lógica propia de juego (gestos de edición,
-    animaciones bounce/slide, sonidos, el deletreo de letras) que es **del juego**, no
-    del engine.
-- **`workspaces/sandbox`** → banco de pruebas, ya **reescrito sobre el engine**:
-  mismo layout Hierarchy + Scene + Inspector que deletreo, sin GameObjects iniciales.
-  Sirve para crear objetos con "+" y agregarles componentes (Image, Color) libremente.
-  El fondo de la Scene es fijo (`bg-muted`); cualquier fondo real se compone como un
-  GameObject más.
+- **`workspaces/sandbox`** → el juego **vacío** de referencia. Su ficha solo trae
+  título/icono, sin assets/gameObjects/components/behavior. Sirve para probar el shell
+  pelado y crear objetos con "+" agregándoles componentes libremente.
+- **`workspaces/deletreo`** → el primer juego migrado (RM-048), la referencia de un
+  juego "completo". Su `game.tsx` arranca con **Background** (Color verde croma),
+  **MainFrame** (Image) y **Text** (hijo, spellframe). Su `DeletreoBehavior.tsx` tiene
+  la lógica de juego (teclas, swap normal↔error de la Image con la tecla **F**,
+  animaciones bounce/slide, sonidos, el deletreo de letras) — todo **del juego**, no
+  del engine.
+- **`calculo-mental`** e **`intruso`** también migrados (RM-049/050), mismo patrón.
 
 ---
 
@@ -382,9 +451,10 @@ dos de abajo son los ejemplos de referencia:
   desde el registro. Agregar un tipo no toca Inspector ni Scene.
 - **Registro componible y tipado por juego (RM-003):** el engine expone
   `NATIVE_COMPONENTS` + `createComponentRegistry`/`ComponentRegistryProvider`/
-  `useComponentRegistry` y el helper tipado `defineComponent<C>`. Cada juego arma su
-  registro local; un componente propio de un juego se registra sin tocar el core
-  (demostrado con `Border` en `sandbox/components/border/`). Cerró **TD-004**.
+  `useComponentRegistry` y el helper tipado `defineComponent<C>`. Cada juego declara
+  sus componentes en `game.components` (§2.5) y `EditorLayout` arma el registro; un
+  componente propio se registra sin tocar el core (spellframe/controller en deletreo,
+  slot en calculo-mental). Cerró **TD-004**.
 - **Tres componentes reales** con su tripleta: **Image** (cargar desde equipo —no URL—,
   ajuste contain/cover/fill, "Ajustar al tamaño de la imagen", eliminar), **Color**
   (color picker + hex que rellena el rect, eliminar) y **Video** (dos modos: Equipo
@@ -394,12 +464,22 @@ dos de abajo son los ejemplos de referencia:
   YouTube se evaluó y descartó como fuente (**TD-007**).
 - UI de composición genérica y compartida: **Hierarchy con "+"** (crear GameObject),
   **`AddComponentButton`** (dropdown que lista el registro), botón **eliminar** por
-  componente, **`SidePanel`** como marco. La usan deletreo y sandbox igual.
+  componente. Hoy la monta `EditorLayout` para todos los juegos.
 - Convención de nombres `…Inspector` / `…View` / `…Component.ts` aplicada.
 - **Controlador de escena compartido (`useSceneEditor`, TD-017):** el estado del
   grafo (`gameObjects[]` + `selectedId`) y todas sus mutaciones, antes duplicados en
-  cada `page.tsx`, viven en un hook único; los 5 juegos lo desestructuran. Ver §2 y
+  cada `page.tsx`, viven en un hook único que consume `EditorLayout`. Ver §2 y
   Decisión C.
+- **Shell del editor sobre dockview (`EditorLayout` + `GameDefinition`, RM-045/047):**
+  Hierarchy/Inspector/Scene/Game/Assets como ventanas acoplables; cada juego es una
+  `page.tsx` fina + su ficha. La 4ta pieza (`behavior`) aloja la lógica de runtime.
+  Ver §2.5.
+- **Pipeline de assets por key (RM-046):** `EditorLayout` baja `game.assets` y los
+  provee por `useAssets()`; el panel Assets muestra progreso; `Image` resuelve por
+  `assetKey`. Ver §2.5.
+- **4 juegos migrados al shell:** sandbox (vacío), deletreo (RM-048), calculo-mental
+  (RM-049), intruso (RM-050). Operaciones Combinadas se **eliminó** (no se usaba;
+  era un stub, ex-TD-011/RM-004).
 
 **Pendiente / lo que sigue:**
 
@@ -418,7 +498,7 @@ dos de abajo son los ejemplos de referencia:
 con **modelo + editor + vista juntos** por tipo (ver §7). Image y Color ya siguen esto.
 
 **C — ¿Levantar el estado a un controlador compartido?** → **Decidido y hecho
-(TD-017).** El grafo estaba duplicado en los 5 `page.tsx` con helpers idénticos
+(TD-017).** El grafo estaba duplicado en los `page.tsx` de cada juego con helpers idénticos
 (createNewGameObject, addComponent, removeComponent, patchComponent,
 setGameObjectSize, setAxis…). Se extrajo al hook **`useSceneEditor`**
 (`src/hooks/use-scene-editor.ts`), dueño único de `gameObjects[]` + `selectedId` y de
@@ -453,5 +533,5 @@ así salvo que moleste el nombre repetido.
    `NATIVE_COMPONENTS`, `createComponentRegistry` + context; demo `Border` en sandbox.
    Cerró **TD-004**.
 8. ✅ (**Decisión C / TD-017**) controlador compartido `useSceneEditor`: el grafo
-   duplicado se levantó a un hook dueño del estado; los 5 juegos lo desestructuran.
+   duplicado se levantó a un hook dueño del estado que consume `EditorLayout`.
 9. ⏳ Componente **Text** (pausado, ver §9 y la memoria del proyecto).

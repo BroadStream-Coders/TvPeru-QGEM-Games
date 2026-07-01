@@ -12,6 +12,11 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-004] Operaciones Combinadas eliminado (no se usa) (2026-07-01 00:46)
+Se removió el workspace `operaciones-combinadas` por completo (carpeta, card del home,
+menciones en el doc del engine). Era un stub (ex-TD-011) sin uso ni plan a corto plazo; se
+descarta en vez de migrarlo al `EditorLayout`. Cierra RM-004 y TD-011.
+
 ## [RM-048] deletreo migrado al `EditorLayout` (2026-07-01 00:28)
 deletreo pasó de un `page.tsx` de ~410 líneas a 4 piezas: `game.tsx` (ficha:
 assets/gameObjects/components/behavior/initialSelectedId), `DeletreoBehavior.tsx` (teclas/

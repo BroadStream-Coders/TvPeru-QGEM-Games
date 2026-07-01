@@ -4,7 +4,6 @@ import {
   ArrowRight,
   Trophy,
   FlaskConical,
-  Grid3x3,
   Calculator,
   UserX,
 } from "lucide-react";
@@ -22,12 +21,6 @@ const workspaces = [
     description: "Operaciones encadenadas por rondas",
     href: "/workspaces/calculo-mental",
     icon: Calculator,
-  },
-  {
-    name: "Operaciones Combinadas",
-    description: "Crucigrama de operaciones en grid 11×11",
-    href: "/workspaces/operaciones-combinadas",
-    icon: Grid3x3,
   },
   {
     name: "Intruso",

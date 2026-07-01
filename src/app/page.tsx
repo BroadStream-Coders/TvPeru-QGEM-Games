@@ -6,6 +6,7 @@ import {
   FlaskConical,
   Grid3x3,
   Calculator,
+  UserX,
 } from "lucide-react";
 import { AuthButton } from "@/components/shared/AuthButton";
 
@@ -27,6 +28,12 @@ const workspaces = [
     description: "Crucigrama de operaciones en grid 11×11",
     href: "/workspaces/operaciones-combinadas",
     icon: Grid3x3,
+  },
+  {
+    name: "Intruso",
+    description: "Replica de Deletreo",
+    href: "/workspaces/intruso",
+    icon: UserX,
   },
   {
     name: "Sandbox",

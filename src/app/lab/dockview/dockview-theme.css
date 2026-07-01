@@ -1,0 +1,24 @@
+/* dockview-theme-abyss remapped onto the QGEM editor palette (opt-in via .dv-qgem).
+   Only a handful of vars — enough to look native, not a full reskin. */
+.dv-qgem {
+  --dv-group-view-background-color: var(--editor-panel);
+  --dv-tabs-and-actions-container-background-color: var(--editor-head);
+  --dv-activegroup-visiblepanel-tab-background-color: var(--editor-panel);
+  --dv-activegroup-visiblepanel-tab-color: var(--editor-ink);
+  --dv-activegroup-hiddenpanel-tab-background-color: var(--editor-head);
+  --dv-activegroup-hiddenpanel-tab-color: var(--editor-dim);
+  --dv-inactivegroup-visiblepanel-tab-background-color: var(--editor-panel);
+  --dv-inactivegroup-visiblepanel-tab-color: var(--editor-dim);
+  --dv-inactivegroup-hiddenpanel-tab-background-color: var(--editor-head);
+  --dv-inactivegroup-hiddenpanel-tab-color: var(--editor-faint);
+  --dv-tab-divider-color: var(--editor-edge);
+  --dv-separator-border: var(--editor-line);
+  --dv-paneview-active-outline-color: var(--editor-acc);
+  --dv-active-sash-color: var(--editor-acc);
+  --dv-icon-hover-background-color: var(--editor-elev);
+  --dv-floating-box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55);
+}
+
+.dv-qgem .dv-active-group > .dv-tabs-and-actions-container {
+  box-shadow: inset 0 -2px 0 0 var(--editor-acc);
+}

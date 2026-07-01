@@ -3,6 +3,8 @@
 import {
   createContext,
   useContext,
+  useEffect,
+  useMemo,
   useState,
   type Dispatch,
   type SetStateAction,
@@ -13,7 +15,7 @@ import {
   type DockviewReadyEvent,
 } from "dockview-react";
 import "dockview-react/dist/styles/dockview.css";
-import "../../../components/shared/engine/dockview-theme.css";
+import "../dockview-theme.css";
 
 import { Scene } from "@engine/Scene";
 import { GameObjectView } from "@engine/GameObjectView";
@@ -29,9 +31,9 @@ import {
   ComponentRegistryProvider,
   type ComponentRegistry,
 } from "@engine/componentRegistry";
+import type { GameDefinition } from "@engine/editor/GameDefinition";
 import { useSceneEditor } from "@/hooks/use-scene-editor";
-
-const registry: ComponentRegistry = createComponentRegistry(NATIVE_COMPONENTS);
+import { useWorkspaceHeader } from "@/hooks/use-workspace-header";
 
 type Editor = ReturnType<typeof useSceneEditor> & {
   editMode: boolean;
@@ -209,11 +211,31 @@ function buildDefaultLayout(api: DockviewApi) {
   scene.api.setActive();
 }
 
-export function EditorDock() {
-  const editor = useSceneEditor({ registry });
+export function EditorLayout({ game }: { game: GameDefinition }) {
+  const setHeader = useWorkspaceHeader((s) => s.setHeader);
+  const resetHeader = useWorkspaceHeader((s) => s.resetHeader);
+
+  const registry = useMemo<ComponentRegistry>(
+    () =>
+      createComponentRegistry([
+        ...NATIVE_COMPONENTS,
+        ...(game.components ?? []),
+      ]),
+    [game.components],
+  );
+
+  const editor = useSceneEditor({
+    registry,
+    initialGameObjects: game.gameObjects,
+  });
   const [editMode, setEditMode] = useState(false);
 
   const value: Editor = { ...editor, editMode, setEditMode, registry };
+
+  useEffect(() => () => resetHeader(), [resetHeader]);
+  useEffect(() => {
+    setHeader({ title: game.title, icon: game.icon });
+  }, [setHeader, game.title, game.icon]);
 
   function onReady(event: DockviewReadyEvent) {
     buildDefaultLayout(event.api);

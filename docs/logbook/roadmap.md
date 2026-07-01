@@ -107,6 +107,19 @@ su "Hecho cuando", pero no es el foco actual).
   al editor, no el default.
 - **Fecha:** 2026-06-30 · **Estado:** Abierto
 
+## [RM-046] Pipeline de assets por key en el editor (depende de RM-045)
+
+- **Objetivo:** `EditorLayout` baja el catálogo del juego (`toManifest` +
+  `useAssetPreloader`) y lo provee **por key** vía un `AssetsContext` que cruza el
+  portal de dockview; el panel **Assets** muestra los assets reales + progreso
+  (reutiliza `AssetLoaderTiles`). Los componentes que usan assets (Image, Video,
+  audio, Text/font) resuelven por `assetKey` de forma **aditiva**: si no hay key,
+  usan `src` como hoy, así los juegos existentes no se rompen.
+- **Hecho cuando:** un juego con catálogo muestra sus assets cargados en el panel;
+  un Image con `assetKey` renderiza el blob resuelto; los juegos actuales (con `src`
+  crudo) siguen funcionando igual.
+- **Fecha:** 2026-06-30 · **Estado:** Abierto
+
 ---
 
 # Fase 2 — Engine genérico (diferido)

@@ -12,6 +12,13 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-045] Layout genérico del editor + contrato `GameDefinition` (2026-06-30 23:59)
+`EditorDock` se volvió `EditorLayout` genérico en `@engine/editor/`, recibe una
+`GameDefinition { id, title, icon?, assets?, gameObjects?, components? }` y de ahí deriva
+registry (`NATIVE_COMPONENTS + game.components`), `initialGameObjects` y el header. El Sandbox
+quedó como página fina (`<EditorLayout game={sandboxGame} />`) con una ficha vacía de
+referencia. Se eliminó el POC `border`. Assets aún placeholder (Fase 2, RM-046).
+
 ## [RM-042] Sistema de ventanas tipo Unity (dockview) en el Sandbox (2026-06-30 23:31)
 El chrome de edición del Sandbox usa `dockview-react`: Hierarchy, Inspector, Scene, Game y
 Assets como paneles con pestaña, redimensionables, reubicables y flotantes. Estado real de

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useRef, useState, useEffect } from "react";
+import { Maximize } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ViewModeTabs } from "@engine/ViewModeTabs";
 import { SceneViewModeProvider, ViewMode } from "@engine/SceneViewMode";
@@ -11,6 +12,8 @@ interface SceneProps extends React.HTMLAttributes<HTMLDivElement> {
   aspectRatioClass?: string;
   /** Oculta el cursor mientras está en pantalla completa (se sale con ESC) */
   hideCursorOnFullscreen?: boolean;
+  viewMode?: ViewMode;
+  showFullscreenButton?: boolean;
 }
 
 const STAGE_BACKGROUND_CLASS = "bg-stage";
@@ -33,11 +36,15 @@ export function Scene({
   className,
   aspectRatioClass = "aspect-video",
   hideCursorOnFullscreen = false,
+  viewMode: viewModeProp,
+  showFullscreenButton = false,
   ...props
 }: SceneProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
-  const [viewMode, setViewMode] = useState<ViewMode>("game");
+  const [internalViewMode, setInternalViewMode] = useState<ViewMode>("game");
+  const controlled = viewModeProp !== undefined;
+  const viewMode = controlled ? viewModeProp : internalViewMode;
 
   // Escuchar cuando el navegador entra o sale de FullScreen (por ejemplo si el usuario presiona ESC)
   useEffect(() => {
@@ -71,14 +78,24 @@ export function Scene({
   return (
     // 'group' nos sirve para mostrar el botón de maximizar solo cuando pasamos el mouse
     <div className="relative group flex h-full w-full flex-col">
-      {!isFullscreen && (
+      {!isFullscreen && !controlled && (
         <div className="w-full shrink-0">
           <ViewModeTabs
             mode={viewMode}
-            onChange={setViewMode}
+            onChange={setInternalViewMode}
             onFullscreen={toggleFullscreen}
           />
         </div>
+      )}
+      {!isFullscreen && showFullscreenButton && (
+        <button
+          onClick={toggleFullscreen}
+          title="Pantalla completa"
+          className="absolute right-2 top-2 z-30 flex items-center gap-1.5 rounded-[5px] bg-acc px-2.5 py-1 text-2xs font-semibold text-white opacity-0 transition-opacity hover:bg-acc-hover group-hover:opacity-100"
+        >
+          <Maximize size={12} />
+          Fullscreen
+        </button>
       )}
       <div
         ref={containerRef}

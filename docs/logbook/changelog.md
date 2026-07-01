@@ -12,6 +12,14 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-042] Sistema de ventanas tipo Unity (dockview) en el Sandbox (2026-06-30 23:31)
+El chrome de edición del Sandbox usa `dockview-react`: Hierarchy, Inspector, Scene, Game y
+Assets como paneles con pestaña, redimensionables, reubicables y flotantes. Estado real de
+`useSceneEditor` compartido vía Context (cruza el portal de dockview). Scene edita (grid,
+overlay, gestos); Game muestra limpio con botón de fullscreen. `Scene` ganó props aditivas
+`viewMode`/`showFullscreenButton` (los otros 4 juegos intactos). Tema `.dv-qgem` mapeado a la
+paleta del editor, centralizado en `@engine/dockview-theme.css`.
+
 ## [TD-017] Glue de edición de GameObjects extraído a `useSceneEditor` (2026-06-30 14:20)
 Las 9 funciones genéricas de edición (estado de `gameObjects`/`selectedId`, setters de
 transform/componentes, jerarquía y gesto) estaban duplicadas en los 5 workspaces. Se

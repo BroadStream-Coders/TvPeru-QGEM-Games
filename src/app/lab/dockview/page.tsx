@@ -9,7 +9,7 @@ import {
   type IContextMenuItemComponentProps,
 } from "dockview-react";
 import "dockview-react/dist/styles/dockview.css";
-import "./dockview-theme.css";
+import "../../../components/shared/engine/dockview-theme.css";
 
 /* ---- Fake panel contents, just so each panel looks like something ---- */
 

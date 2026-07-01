@@ -14,6 +14,16 @@ changelog y se borra de aquí.
 
 ---
 
+## [TD-018] El dockview del editor no tiene tamaño mínimo de panel
+
+- **Ubicación:** `src/app/workspaces/sandbox/EditorDock.tsx`
+- **Riesgo:** 4/10
+- **Problema:** los paneles se pueden redimensionar hasta casi cero; no hay un
+  mínimo configurado, así que un panel puede quedar colapsado e inusable.
+- **Impacto futuro:** layouts rotos o paneles inaccesibles sin forma clara de
+  recuperarlos; se agrava mientras no exista el menú "Windows" (RM-043).
+- **Fecha:** 2026-06-30 · **Estado:** Abierto
+
 ## [TD-014] El preloader de assets no encaja con cómo el componente Video carga su `src`
 
 - **Ubicación:** `src/helpers/asset-preloader.ts` ↔ `src/components/shared/engine/components/video/videoComponent.ts`

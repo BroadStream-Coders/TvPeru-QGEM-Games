@@ -86,18 +86,25 @@ su "Hecho cuando", pero no es el foco actual).
   contenido; la selección del navegador queda anulada en el área de display.
 - **Fecha:** 2026-06-29 · **Estado:** Abierto
 
-## [RM-042] Sistema de ventanas tipo Unity (dockview) en el editor
+## [RM-043] Menú "Windows" para reabrir paneles cerrados
 
-- **Objetivo:** Dar al chrome de edición un sistema de paneles acoplables estilo
-  Unity/VS Code con `dockview-react` (ya instalado): Inspector, Scene, Game,
-  Hierarchy, etc. como ventanas con pestaña nombrada, redimensionables,
-  reubicables por drag, flotantes y con pop-out a otra ventana. Tema mapeado a los
-  tokens del editor (`.dv-qgem` sobre `dockview-theme-abyss`). **Solo editor**: no
-  toca el `<FullScreen>` de broadcast, que sigue viviendo dentro del panel Game.
-  Se empieza por el **Sandbox**. La viabilidad ya se validó con una demo (borrada).
-- **Hecho cuando:** el Sandbox usa dockview para su layout de edición, cableado a
-  `useSceneEditor`, con layout por defecto (Hierarchy / Scene+Game / Inspector /
-  Console) y estilos integrados a la paleta actual.
+- **Objetivo:** Un desplegable **"Windows"** en el chrome del editor que liste los
+  paneles del layout (Hierarchy, Inspector, Scene, Game, Assets, …) y permita
+  volver a agregar cualquiera que se haya cerrado, por accidente o a propósito.
+  Sobre el dockview del Sandbox (RM-042).
+- **Hecho cuando:** existe el menú "Windows"; si un panel está cerrado, elegirlo lo
+  vuelve a abrir en el layout; si ya está abierto, lo enfoca.
+- **Fecha:** 2026-06-30 · **Estado:** Abierto
+
+## [RM-044] Acción "sacar como panel flotante" + rediseño del chrome flotante
+
+- **Objetivo:** Poder sacar un panel como **panel flotante** de dockview
+  (`addFloatingGroup` / floating), **no** como pop-out a otra ventana del navegador
+  (esa acción no se usará en ningún caso). Incluye **rediseñar el chrome del panel
+  flotante**, cuyo diseño por defecto es feo, para alinearlo a la paleta del editor.
+- **Hecho cuando:** desde el panel (menú de pestaña o botón) se puede convertir en
+  flotante y arrastrarlo dentro del editor; el flotante usa estilos propios acordes
+  al editor, no el default.
 - **Fecha:** 2026-06-30 · **Estado:** Abierto
 
 ---

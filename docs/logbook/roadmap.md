@@ -144,7 +144,7 @@ su "Hecho cuando", pero no es el foco actual).
   sueltas en `page.tsx`). Su `page.tsx` queda fino. Valida de paso `assetKey` (RM-046).
 - **Hecho cuando:** `/workspaces/deletreo` corre sobre `EditorLayout` con su lógica en
   `behavior`; el juego funciona igual que antes (teclas, animaciones, sonidos, sesión).
-- **Fecha:** 2026-07-01 · **Estado:** Abierto
+- **Fecha:** 2026-07-01 · **Estado:** En progreso (2026-07-01)
 
 ---
 

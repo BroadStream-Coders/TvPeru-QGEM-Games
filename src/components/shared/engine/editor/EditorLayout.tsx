@@ -121,6 +121,7 @@ function ScenePanel() {
               gameObject={go}
               allGameObjects={e.gameObjects}
               selectedId={e.selectedId}
+              onAnimatePosition={e.animatePosition}
             />
           ))}
       </div>
@@ -148,6 +149,7 @@ function GamePanel() {
               gameObject={go}
               allGameObjects={e.gameObjects}
               selectedId={null}
+              onAnimatePosition={e.animatePosition}
             />
           ))}
       </div>
@@ -234,6 +236,7 @@ export function EditorLayout({ game }: { game: GameDefinition }) {
   const editor = useSceneEditor({
     registry,
     initialGameObjects: game.gameObjects,
+    initialSelectedId: game.initialSelectedId,
   });
   const [editMode, setEditMode] = useState(false);
 

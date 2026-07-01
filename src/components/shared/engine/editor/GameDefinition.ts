@@ -9,6 +9,7 @@ export interface GameDefinition {
   icon?: ReactNode;
   assets?: AssetCatalog;
   gameObjects?: GameObject[] | (() => GameObject[]);
+  initialSelectedId?: string | null;
   components?: ComponentDefinition[];
   behavior?: ComponentType;
 }

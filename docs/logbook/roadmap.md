@@ -134,6 +134,15 @@ su "Hecho cuando", pero no es el foco actual).
   lógica en `behavior`; funciona igual que antes.
 - **Fecha:** 2026-07-01 · **Estado:** En progreso (2026-07-01)
 
+## [RM-050] Migrar Intruso al `EditorLayout` (depende de RM-047)
+
+- **Objetivo:** Tercer juego migrado, mismo patrón. Intruso es simple (un Background
+  con video, sin componentes propios ni teclas): `game.tsx` (assets, un gameObject
+  con video, behavior, initialSelectedId), `IntrusoBehavior.tsx` (efecto que setea el
+  `src` del video al cargar), `constants.ts`, `page.tsx` fino.
+- **Hecho cuando:** `/workspaces/intruso` corre sobre `EditorLayout`; funciona igual.
+- **Fecha:** 2026-07-01 · **Estado:** En progreso (2026-07-01)
+
 ---
 
 # Fase 2 — Engine genérico (diferido)

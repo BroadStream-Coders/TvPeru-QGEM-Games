@@ -12,6 +12,19 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-048] deletreo migrado al `EditorLayout` (2026-07-01 00:28)
+deletreo pasó de un `page.tsx` de ~410 líneas a 4 piezas: `game.tsx` (ficha:
+assets/gameObjects/components/behavior/initialSelectedId), `DeletreoBehavior.tsx` (teclas/
+sonidos/animaciones/sesión vía `useEditor`/`useAssets`/`useAnimations`), `constants.ts` y
+`page.tsx` fino. `EditorLayout` ganó `onAnimatePosition` (bounce/slide) e `initialSelectedId`.
+Primer juego real sobre el layout genérico.
+
+## [RM-047] Pieza de "comportamiento" (behavior) en el contrato (2026-07-01 00:28)
+`GameDefinition` ganó `behavior?` (un componente por juego que `EditorLayout` monta bajo sus
+providers) para alojar la lógica de runtime del juego. Se extrajo el `EditorContext` a
+`@engine/editor/editorContext.ts` (`useEditor` importable desde componentes de juego). Es la
+4ta pieza, además de assets/gameObjects/components.
+
 ## [RM-045] Layout genérico del editor + contrato `GameDefinition` (2026-06-30 23:59)
 `EditorDock` se volvió `EditorLayout` genérico en `@engine/editor/`, recibe una
 `GameDefinition { id, title, icon?, assets?, gameObjects?, components? }` y de ahí deriva

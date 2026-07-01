@@ -30,12 +30,8 @@ import {
   type ComponentRegistry,
 } from "@engine/componentRegistry";
 import { useSceneEditor } from "@/hooks/use-scene-editor";
-import { borderDefinition } from "./components/border";
 
-const registry: ComponentRegistry = createComponentRegistry([
-  ...NATIVE_COMPONENTS,
-  borderDefinition,
-]);
+const registry: ComponentRegistry = createComponentRegistry(NATIVE_COMPONENTS);
 
 type Editor = ReturnType<typeof useSceneEditor> & {
   editMode: boolean;

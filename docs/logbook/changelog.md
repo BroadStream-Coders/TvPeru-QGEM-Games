@@ -12,6 +12,24 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [TD-056] Fix color de tabs del dockview (activo se confundía con inactivo) (2026-07-03 10:10)
+La barra de tabs estaba en `head` (más claro que el tab activo en `panel`), y los inactivos
+también en `head`, así que resaltaban más que el activo. Se pasó barra y tabs inactivos a `bg`
+(oscuro) y el activo queda en `panel` (claro), fusionando con el contenido. En `dockview-theme.css`.
+
+## [RM-055] Assets: panel "Local" con organización propia + barra breadcrumb (2026-07-03 10:04)
+Panel renombrado a "Local" (icono HardDrive); futura ventana "Storage" aparte. El árbol ahora
+sale de un campo nuevo `folder` del catálogo (organización local, independiente del `path` de
+origen), no del path. Barra entre tab y contenido con breadcrumb navegable + contador de items.
+Poblado `folder` de ejemplo en intruso (Frames/Colors/Backgrounds/Fonts) y deletreo (Frames).
+
+## [RM-016] Panel de Assets tipo Unity (browser carpetas + miniaturas) (2026-07-03 09:55)
+`AssetBrowser`: árbol de carpetas derivado de los `path` del catálogo (izq, expandible + conteo)
+y grid de miniaturas de la carpeta seleccionada (der, recursivo). Miniatura real para imágenes
+ready (blob decodificado), ícono por tipo para video/audio/font; badge de tipo (ext) y de estado
+(ready/loading/error del preloader RM-007). Se agregó `catalog` al `assetsContext`; se eliminó el
+`AssetsBar` viejo. Diferido a futuro Supabase: pestañas Local/Storage, caching/GET y búsqueda.
+
 ## [RM-054] Iconos en las pestañas del dockview (2026-07-03 09:47)
 `defaultTabComponent` custom (`PanelTab`) que muestra icono lucide coloreado + título + cerrar
 en hover, reenviando los handlers de puntero de dockview. Mapa por id: hierarchy/scene (azul),

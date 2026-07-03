@@ -20,7 +20,7 @@ import {
   SlidersHorizontal,
   SquareDashed,
   Play,
-  Boxes,
+  HardDrive,
   X,
   type LucideIcon,
 } from "lucide-react";
@@ -46,7 +46,7 @@ import {
   useEditor,
   type EditorApi,
 } from "@engine/editor/editorContext";
-import { AssetLoaderTiles } from "@engine/AssetsBar";
+import { AssetBrowser } from "@engine/AssetBrowser";
 import {
   AssetsProvider,
   useAssets,
@@ -198,25 +198,9 @@ function GamePanel(props: IDockviewPanelProps) {
 }
 
 function AssetsPanel() {
-  const { statuses, kinds, progress } = useAssets();
-  const keys = Object.keys(statuses);
+  const { catalog, assets, statuses } = useAssets();
   return (
-    <div className="scrl h-full overflow-auto bg-panel">
-      {keys.length === 0 ? (
-        <div className="flex h-full items-center justify-center p-3">
-          <p className="text-2xs text-faint">Ninguno cargado.</p>
-        </div>
-      ) : (
-        <div className="p-3">
-          <p className="mb-2 font-mono text-2xs text-faint">
-            {progress.loaded}/{progress.total} listos
-          </p>
-          <div className="flex flex-wrap gap-3">
-            <AssetLoaderTiles statuses={statuses} kinds={kinds} />
-          </div>
-        </div>
-      )}
-    </div>
+    <AssetBrowser catalog={catalog} assets={assets} statuses={statuses} />
   );
 }
 
@@ -264,7 +248,7 @@ const TAB_ICONS: Record<string, { Icon: LucideIcon; color: string }> = {
   inspector: { Icon: SlidersHorizontal, color: "text-anim" },
   scene: { Icon: SquareDashed, color: "text-type-text" },
   game: { Icon: Play, color: "text-type-video" },
-  assets: { Icon: Boxes, color: "text-type-image" },
+  assets: { Icon: HardDrive, color: "text-type-image" },
 };
 
 function useTabTitle(api: IDockviewPanelHeaderProps["api"]) {
@@ -330,7 +314,7 @@ function buildDefaultLayout(api: DockviewApi) {
   api.addPanel({
     id: "assets",
     component: "assets",
-    title: "Assets",
+    title: "Local",
     initialHeight: 232,
     position: { referencePanel: "scene", direction: "below" },
   });
@@ -387,6 +371,7 @@ export function EditorLayout({ game }: { game: GameDefinition }) {
   );
   const preload = useAssetPreloader(manifest);
   const assetsState: LoadedAssetsState = {
+    catalog: game.assets ?? {},
     assets: preload.assets,
     statuses: preload.statuses,
     kinds,

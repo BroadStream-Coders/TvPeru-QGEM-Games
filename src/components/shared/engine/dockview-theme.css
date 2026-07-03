@@ -2,14 +2,16 @@
    Only a handful of vars — enough to look native, not a full reskin. */
 .dv-qgem {
   --dv-group-view-background-color: var(--editor-panel);
-  --dv-tabs-and-actions-container-background-color: var(--editor-head);
+  /* Barra de tabs oscura (bg); el tab activo va en `panel` (más claro) para que
+     resalte y "fusione" con el contenido; los inactivos receden en la barra. */
+  --dv-tabs-and-actions-container-background-color: var(--editor-bg);
   --dv-activegroup-visiblepanel-tab-background-color: var(--editor-panel);
   --dv-activegroup-visiblepanel-tab-color: var(--editor-ink);
-  --dv-activegroup-hiddenpanel-tab-background-color: var(--editor-head);
+  --dv-activegroup-hiddenpanel-tab-background-color: var(--editor-bg);
   --dv-activegroup-hiddenpanel-tab-color: var(--editor-dim);
   --dv-inactivegroup-visiblepanel-tab-background-color: var(--editor-panel);
   --dv-inactivegroup-visiblepanel-tab-color: var(--editor-dim);
-  --dv-inactivegroup-hiddenpanel-tab-background-color: var(--editor-head);
+  --dv-inactivegroup-hiddenpanel-tab-background-color: var(--editor-bg);
   --dv-inactivegroup-hiddenpanel-tab-color: var(--editor-faint);
   --dv-tab-divider-color: var(--editor-edge);
   --dv-separator-border: var(--editor-line);

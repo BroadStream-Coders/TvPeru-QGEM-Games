@@ -3,8 +3,11 @@
 import { createContext, useContext } from "react";
 import type { LoadedAsset, AssetKind } from "@/helpers/asset-preloader";
 import type { AssetStatus } from "@/hooks/use-asset-preloader";
+import type { AssetCatalog } from "@/helpers/asset-source";
 
 export interface LoadedAssetsState {
+  /** Catálogo original (key → { kind, path }); el path da la jerarquía de carpetas. */
+  catalog: AssetCatalog;
   assets: Record<string, LoadedAsset | undefined>;
   statuses: Record<string, AssetStatus>;
   kinds: Record<string, AssetKind>;
@@ -12,6 +15,7 @@ export interface LoadedAssetsState {
 }
 
 const EMPTY: LoadedAssetsState = {
+  catalog: {},
   assets: {},
   statuses: {},
   kinds: {},

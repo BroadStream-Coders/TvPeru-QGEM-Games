@@ -1,8 +1,10 @@
 import type { AssetManifest } from "@/helpers/asset-preloader";
 
+// `path` = origen físico del archivo (public/ o Supabase). `folder` = organización
+// dentro de la carga local, independiente del origen ("/"-separado para anidar).
 export type CatalogEntry =
-  | { kind: "image" | "video" | "audio"; path: string }
-  | { kind: "font"; path: string; family: string };
+  | { kind: "image" | "video" | "audio"; path: string; folder?: string }
+  | { kind: "font"; path: string; family: string; folder?: string };
 
 export type AssetCatalog = Record<string, CatalogEntry>;
 

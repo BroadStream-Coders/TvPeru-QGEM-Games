@@ -139,17 +139,6 @@ su "Hecho cuando", pero no es el foco actual).
 > Diferido a propósito hasta cerrar la Fase 1. Se retoma promoviendo patrones que
 > ya hayan aparecido en los juegos a mano, no por especulación.
 
-## [RM-016] Panel de assets tipo Unity
-
-- **Objetivo:** Panel de assets en la zona inferior del layout de juegos (donde
-  estaba el footer, RM-008) para cargar/gestionar assets visualmente, estilo Unity.
-  Se apoya en el preloader de RM-007. (Separado de RM-007 para no construir editor
-  antes de sacar juegos.)
-- **Hecho cuando:** existe el panel, permite cargar/gestionar assets y usa el
-  preloader (RM-007) para garantizar que estén listos antes de entregarlos a los
-  componentes.
-- **Fecha:** 2026-06-17 · **Estado:** Diferido
-
 ## [RM-005] GameObjects "especiales"
 
 - **Objetivo:** Definir gameobjects "especiales" como hijos de un gameobject, que
@@ -167,3 +156,79 @@ su "Hecho cuando", pero no es el foco actual).
 - **Hecho cuando:** se puede activar un overlay que muestra FPS/rendimiento en vivo
   dentro de un workspace.
 - **Fecha:** 2026-06-16 · **Estado:** Diferido (2026-06-17)
+
+---
+
+# Sandbox Editor — assets e inspector
+
+## [RM-057] Seleccionar assets locales → info en el Inspector
+
+- **Objetivo:** Poder seleccionar un asset en el panel Local para que el Inspector
+  muestre su información (tipo, peso, dimensiones, origen, etc.). Al implementar se
+  evalúa si el peso va en el tile (como el diseño) o en el Inspector.
+- **Hecho cuando:** al hacer click en un asset del panel Local, el Inspector muestra
+  sus metadatos.
+- **Fecha:** 2026-07-03 · **Estado:** Abierto
+
+## [RM-058] Presupuesto de memoria de assets (producción en vivo)
+
+- **Objetivo:** Evitar que en vivo un asset no cargue por falta de memoria. No hay
+  límite de cantidad; el límite es RAM/VRAM (blobs + memoria decodificada
+  `ancho×alto×4`). JS no mide blobs/GPU, solo estima. Definir presupuesto para el
+  equipo del estudio, barra de uso estimada y avisos, y estrategia de gestión.
+- **Hecho cuando:** existe una barra/indicador de uso estimado de memoria de assets y
+  avisa antes de acercarse al presupuesto del equipo.
+- **Fecha:** 2026-07-03 · **Estado:** Abierto
+
+## [RM-059] Pestaña Storage (navegar y descargar a local)
+
+- **Objetivo:** Ventana Storage (paralela a Local) para navegar los assets remotos
+  (Supabase), verlos aunque sea como iconos, y con una acción descargarlos a la carga
+  local. La organización local (RM-055) es independiente del origen.
+- **Hecho cuando:** existe la pestaña Storage, lista/navega assets remotos y permite
+  descargar uno al panel Local.
+- **Fecha:** 2026-07-03 · **Estado:** Abierto
+
+---
+
+# Arquitectura de componentes (modelo Unity)
+
+## [RM-060] Filosofía "Load First"
+
+- **Objetivo:** Establecer que todo recurso **primero se carga en Local y recién ahí
+  se usa** en un componente. Los componentes (image, video) dejan de tener carga/botón
+  de carga local propio; el recurso pasa por la carga Local y luego se coloca en el
+  componente. Es la filosofía guía del sistema; cambio mediano-grande que modifica el
+  funcionamiento de esos componentes. Se apoya en el panel Local (RM-055) y conecta con
+  el presupuesto de memoria (RM-058).
+- **Hecho cuando:** image y video ya no cargan assets por sí mismos ni tienen carga
+  local interna; toman un recurso que ya está presente en Local.
+- **Decisiones para la sesión (solo decidir, ya no descubrir):**
+  - **Primitivo compartido:** definir la "referencia a asset local" = un id/key del
+    Local que en render se resuelve al blob. Es el mismo tipo que necesita RM-061;
+    se decide su forma **aquí**.
+  - **Orden:** hacer **RM-060 antes que RM-061** (primero el pipeline Local + el tipo
+    de referencia; el modelo de componentes va encima). Confirmar este orden.
+  - **Migración:** es un cambio **breaking** para image/video y para intruso/deletreo
+    que ya los usan. Decidir la estrategia de migración y hacerlo **pronto** (hoy son
+    2-3 juegos; cada juego nuevo sobre el patrón viejo es más migración después).
+- **Fecha:** 2026-07-03 · **Estado:** Abierto
+
+## [RM-061] Componentes por referencia y parámetros públicos (estilo Unity)
+
+- **Objetivo:** Los componentes existentes se **referencian** y se setean sus
+  **parámetros públicos**, al estilo Unity. Ejemplo: el componente image **no** debe
+  buscar qué assets de imagen hay en Local (como hace hoy); en su lugar un componente
+  propio referencia al componente image y le asigna el asset cuando corresponde. El
+  image queda como renderer "tonto" con parámetros públicos; otro componente/behavior
+  los setea. Relaciona con RM-060 (el recurso referenciado vive en Local).
+- **Hecho cuando:** un componente/behavior puede referenciar a otro componente (p. ej.
+  image) y setear sus parámetros públicos; image ya no auto-descubre assets del Local.
+- **Decisiones para la sesión (solo decidir, ya no descubrir):**
+  - **Dos capas a nombrar por separado:** (a) *componente→asset* — image tiene un
+    parámetro público tipo "asset ref"; (b) *componente→componente* — un behavior
+    referencia al image y le setea ese parámetro. Decidir si existen ambas y cómo se
+    llaman, sin mezclarlas.
+  - **Dependencia:** usa el primitivo "referencia a asset local" definido en RM-060;
+    no inventarlo de nuevo aquí.
+- **Fecha:** 2026-07-03 · **Estado:** Abierto

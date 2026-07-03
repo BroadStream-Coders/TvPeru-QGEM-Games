@@ -98,6 +98,35 @@ export default function Home() {
               </Link>
             ))}
           </div>
+
+          {/* Herramientas internas — separadas de los juegos */}
+          <div className="space-y-3">
+            <div className="flex items-center gap-3">
+              <span className="text-3xs font-mono font-bold text-faint uppercase tracking-widest">
+                Herramientas internas
+              </span>
+              <div className="h-px flex-1 bg-edge" />
+            </div>
+            <Link
+              href="/lab"
+              className="group flex items-center gap-4 rounded-xl border border-dashed border-line bg-transparent p-4 transition-all hover:border-acc/40 hover:bg-panel/50"
+            >
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-dashed border-line text-faint group-hover:border-acc/40 group-hover:text-acc transition-colors">
+                <FlaskConical className="h-4 w-4" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-bold text-dim group-hover:text-ink truncate">
+                  Lab
+                </p>
+                <p className="mt-0.5 text-xs text-faint line-clamp-1">
+                  Demos aisladas de librerías, antes de producción
+                </p>
+              </div>
+              <div className="text-faint transition-all group-hover:text-acc group-hover:translate-x-0.5 pr-1">
+                <ArrowRight className="h-4 w-4" />
+              </div>
+            </Link>
+          </div>
         </div>
       </main>
 

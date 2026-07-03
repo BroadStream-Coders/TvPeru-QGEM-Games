@@ -1,12 +1,29 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type HTMLAttributes,
+} from "react";
 import {
   DockviewReact,
   type DockviewApi,
   type DockviewReadyEvent,
   type IDockviewPanelProps,
+  type IDockviewPanelHeaderProps,
 } from "dockview-react";
+import {
+  ListTree,
+  SlidersHorizontal,
+  SquareDashed,
+  Play,
+  Boxes,
+  X,
+  type LucideIcon,
+} from "lucide-react";
 import "dockview-react/dist/styles/dockview.css";
 import "../dockview-theme.css";
 
@@ -36,6 +53,7 @@ import {
   type LoadedAssetsState,
 } from "@engine/assetsContext";
 import type { GameDefinition } from "@engine/editor/GameDefinition";
+import { cn } from "@/lib/utils";
 import { useSceneEditor } from "@/hooks/use-scene-editor";
 import { useWorkspaceHeader } from "@/hooks/use-workspace-header";
 import { useAssetPreloader } from "@/hooks/use-asset-preloader";
@@ -202,6 +220,95 @@ function AssetsPanel() {
   );
 }
 
+function StatusBar() {
+  const e = useEditor();
+  const { progress } = useAssets();
+  const { loaded, total } = progress;
+  const loading = total > 0 && loaded < total;
+  const objCount = e.gameObjects.length;
+  const sel = e.selected;
+
+  return (
+    <div className="flex h-[23px] shrink-0 items-center gap-3 border-t border-edge bg-gradient-to-b from-[#202327] to-[#1a1d20] px-3 font-mono text-[11px] text-faint">
+      <span className="flex items-center gap-1.5 text-dim">
+        <span
+          className={cn(
+            "h-1.5 w-1.5 rounded-full",
+            loading ? "bg-type-video" : "bg-success",
+          )}
+        />
+        {loading ? "Cargando assets…" : "Listo"}
+      </span>
+      <span>
+        {objCount} {objCount === 1 ? "objeto" : "objetos"}
+      </span>
+      {sel && (
+        <span>
+          Sel: <span className="text-dim">{sel.name}</span>
+        </span>
+      )}
+      <div className="flex-1" />
+      {total > 0 && (
+        <span className={cn(loading && "text-acc")}>
+          {loaded}/{total} assets
+        </span>
+      )}
+      <span className="text-line-2">|</span>
+      <span>QGEM Engine</span>
+    </div>
+  );
+}
+
+const TAB_ICONS: Record<string, { Icon: LucideIcon; color: string }> = {
+  hierarchy: { Icon: ListTree, color: "text-type-text" },
+  inspector: { Icon: SlidersHorizontal, color: "text-anim" },
+  scene: { Icon: SquareDashed, color: "text-type-text" },
+  game: { Icon: Play, color: "text-type-video" },
+  assets: { Icon: Boxes, color: "text-type-image" },
+};
+
+function useTabTitle(api: IDockviewPanelHeaderProps["api"]) {
+  const [title, setTitle] = useState(api.title);
+  useEffect(() => {
+    const d = api.onDidTitleChange((e) => setTitle(e.title));
+    setTitle(api.title);
+    return () => d.dispose();
+  }, [api]);
+  return title;
+}
+
+type PanelTabProps = IDockviewPanelHeaderProps &
+  HTMLAttributes<HTMLDivElement> & { tabLocation?: unknown };
+
+function PanelTab({
+  api,
+  containerApi: _containerApi,
+  params: _params,
+  tabLocation: _tabLocation,
+  ...rest
+}: PanelTabProps) {
+  const title = useTabTitle(api);
+  const meta = TAB_ICONS[api.id];
+  return (
+    <div {...rest} className="dv-qgem-tab">
+      {meta && <meta.Icon className={cn("h-3.5 w-3.5 shrink-0", meta.color)} />}
+      <span className="dv-qgem-tab-title">{title}</span>
+      <button
+        type="button"
+        title="Cerrar"
+        className="dv-qgem-tab-close"
+        onPointerDown={(e) => e.preventDefault()}
+        onClick={(e) => {
+          e.preventDefault();
+          api.close();
+        }}
+      >
+        <X className="h-3 w-3" />
+      </button>
+    </div>
+  );
+}
+
 const components = {
   hierarchy: HierarchyPanel,
   inspector: InspectorPanel,
@@ -300,12 +407,16 @@ export function EditorLayout({ game }: { game: GameDefinition }) {
       <AssetsProvider value={assetsState}>
         <EditorProvider value={value}>
           {Behavior && <Behavior />}
-          <div className="min-h-0 flex-1">
-            <DockviewReact
-              className="dockview-theme-abyss dv-qgem"
-              components={components}
-              onReady={onReady}
-            />
+          <div className="flex min-h-0 flex-1 flex-col">
+            <div className="min-h-0 flex-1">
+              <DockviewReact
+                className="dockview-theme-abyss dv-qgem"
+                components={components}
+                defaultTabComponent={PanelTab}
+                onReady={onReady}
+              />
+            </div>
+            <StatusBar />
           </div>
         </EditorProvider>
       </AssetsProvider>

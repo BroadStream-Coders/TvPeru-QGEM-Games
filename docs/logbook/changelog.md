@@ -12,6 +12,16 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-054] Iconos en las pestañas del dockview (2026-07-03 09:47)
+`defaultTabComponent` custom (`PanelTab`) que muestra icono lucide coloreado + título + cerrar
+en hover, reenviando los handlers de puntero de dockview. Mapa por id: hierarchy/scene (azul),
+inspector (violeta), game (ámbar), assets (verde). Estilos en `dockview-theme.css`.
+
+## [RM-053] Status bar (footbar) del editor (2026-07-03 09:37)
+Barra de 23px bajo el dockview en `EditorLayout` (da respiro al panel Assets). Muestra solo
+datos reales: estado según el preloader (Listo/Cargando assets…), nº de objetos, objeto
+seleccionado, y `N/M assets` listos + tag "QGEM Engine". Sin FPS/GB inventados del diseño.
+
 ## [RM-052] Topbar a 34px igual al diseño, por grupos ocultables (2026-07-03 09:08)
 `WorkspaceHeader` reconstruido a 34px: botón Volver icono-only, brand (icono+título, sin
 versión), menus e history presentes pero ocultos vía `const SHOW`, Play (=fullscreen del

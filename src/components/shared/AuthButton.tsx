@@ -1,6 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import { LogOut } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { supabase } from "@/helpers/supabase";
 import { useAuth } from "@/hooks/use-auth";
 
@@ -25,43 +27,109 @@ const GoogleIcon = () => (
   </svg>
 );
 
+function initials(email: string) {
+  const local = email.split("@")[0];
+  const parts = local.split(/[.\-_]+/).filter(Boolean);
+  const chars =
+    parts.length >= 2
+      ? [parts[0][0], parts[1][0]]
+      : [local[0] ?? "", local[1] ?? ""];
+  return chars.join("").toUpperCase();
+}
+
+function Avatar({
+  url,
+  email,
+  className,
+}: {
+  url?: string;
+  email: string;
+  className: string;
+}) {
+  const [failed, setFailed] = useState(false);
+  if (url && !failed) {
+    return (
+      <img
+        src={url}
+        alt=""
+        referrerPolicy="no-referrer"
+        onError={() => setFailed(true)}
+        className={cn(
+          "shrink-0 rounded-full object-cover ring-1 ring-white/10",
+          className,
+        )}
+      />
+    );
+  }
+  return (
+    <span
+      className={cn(
+        "flex shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-acc to-anim font-bold text-white ring-1 ring-white/10",
+        className,
+      )}
+    >
+      {initials(email)}
+    </span>
+  );
+}
+
 export function AuthButton() {
   const { user, loading } = useAuth();
 
   if (loading) return null;
 
-  const signIn = () =>
-    supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: `${window.location.origin}${window.location.pathname}`,
-      },
-    });
-
   if (!user) {
+    const signIn = () =>
+      supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: `${window.location.origin}${window.location.pathname}`,
+        },
+      });
     return (
       <button
         onClick={signIn}
-        className="flex items-center gap-2 rounded-lg border border-line bg-panel px-3 py-1.5 text-sm font-medium hover:border-acc"
+        title="Iniciar sesión con Google"
+        className="flex h-6 w-6 items-center justify-center rounded-md border border-line bg-panel transition-colors hover:border-acc"
       >
         <GoogleIcon />
-        Continuar con Google
       </button>
     );
   }
 
+  const email = user.email ?? "usuario";
+  const username = email.split("@")[0];
+  const meta = user.user_metadata ?? {};
+  const avatarUrl: string | undefined = meta.avatar_url ?? meta.picture;
+
   return (
-    <div className="flex items-center gap-2">
-      <span className="max-w-[12rem] truncate text-sm text-dim">
-        {user.email}
-      </span>
-      <button
-        onClick={() => supabase.auth.signOut()}
-        title="Cerrar sesión"
-        className="flex h-7 w-7 items-center justify-center rounded-lg border border-line bg-panel text-dim hover:border-acc hover:text-ink"
-      >
-        <LogOut className="h-3.5 w-3.5" />
+    <div className="group/acct relative">
+      <button className="flex h-6 items-center rounded-full border border-transparent p-0.5 transition-colors hover:border-line-2 hover:bg-elev">
+        <Avatar url={avatarUrl} email={email} className="h-5 w-5 text-[10px]" />
       </button>
+
+      {/* dropdown (CSS hover) — pt-2 hace de puente para no perder el hover */}
+      <div className="invisible absolute right-0 top-full z-50 pt-2 opacity-0 transition-opacity group-hover/acct:visible group-hover/acct:opacity-100">
+        <div className="w-56 rounded-lg border border-line-2 bg-panel-2 p-1.5 shadow-2xl">
+          <div className="flex items-center gap-2.5 px-2 pb-2 pt-1">
+            <Avatar url={avatarUrl} email={email} className="h-8 w-8 text-xs" />
+            <div className="min-w-0">
+              <div className="truncate text-[12px] font-semibold text-ink">
+                {username}
+              </div>
+              <div className="truncate text-[10.5px] text-faint">{email}</div>
+            </div>
+          </div>
+          <div className="mx-1 mb-1.5 h-px bg-line" />
+          <button
+            onClick={() => supabase.auth.signOut()}
+            className="flex h-[30px] w-full items-center gap-2.5 rounded-md px-2 text-[12.5px] text-[#e88f8f] hover:bg-elev"
+          >
+            <LogOut className="h-3.5 w-3.5" />
+            Cerrar sesión
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

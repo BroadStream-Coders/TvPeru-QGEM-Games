@@ -40,7 +40,7 @@ export default function Home() {
   return (
     <div className="flex min-h-screen flex-col bg-bg text-ink font-sans">
       {/* Top bar */}
-      <header className="flex h-12 items-center border-b border-edge px-6 bg-head sticky top-0 z-20">
+      <header className="flex h-[34px] items-center border-b border-edge px-6 bg-head sticky top-0 z-20">
         <div className="flex items-center gap-3">
           <div className="flex h-6 w-6 items-center justify-center rounded-md bg-acc-bg text-acc">
             <Trophy className="h-3.5 w-3.5" />

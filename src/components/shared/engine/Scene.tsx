@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useRef, useState, useEffect } from "react";
-import { Maximize } from "lucide-react";
+import React, { useRef, useState, useEffect, useCallback } from "react";
 import { cn } from "@/lib/utils";
 import { ViewModeTabs } from "@engine/ViewModeTabs";
 import { SceneViewModeProvider, ViewMode } from "@engine/SceneViewMode";
@@ -13,7 +12,8 @@ interface SceneProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Oculta el cursor mientras está en pantalla completa (se sale con ESC) */
   hideCursorOnFullscreen?: boolean;
   viewMode?: ViewMode;
-  showFullscreenButton?: boolean;
+  /** Recibe el toggle de fullscreen una vez montado (para dispararlo desde la topbar). */
+  onFullscreenReady?: (toggle: () => void) => void;
 }
 
 const STAGE_BACKGROUND_CLASS = "bg-stage";
@@ -37,7 +37,7 @@ export function Scene({
   aspectRatioClass = "aspect-video",
   hideCursorOnFullscreen = false,
   viewMode: viewModeProp,
-  showFullscreenButton = false,
+  onFullscreenReady,
   ...props
 }: SceneProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -57,7 +57,7 @@ export function Scene({
       document.removeEventListener("fullscreenchange", onFullscreenChange);
   }, []);
 
-  const toggleFullscreen = async () => {
+  const toggleFullscreen = useCallback(async () => {
     try {
       if (!document.fullscreenElement) {
         // Entrar a fullscreen y enfocar el contenedor para que escuche el teclado
@@ -73,7 +73,11 @@ export function Scene({
         err,
       );
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    onFullscreenReady?.(toggleFullscreen);
+  }, [onFullscreenReady, toggleFullscreen]);
 
   return (
     // 'group' nos sirve para mostrar el botón de maximizar solo cuando pasamos el mouse
@@ -86,16 +90,6 @@ export function Scene({
             onFullscreen={toggleFullscreen}
           />
         </div>
-      )}
-      {!isFullscreen && showFullscreenButton && (
-        <button
-          onClick={toggleFullscreen}
-          title="Pantalla completa"
-          className="absolute right-2 top-2 z-30 flex items-center gap-1.5 rounded-[5px] bg-acc px-2.5 py-1 text-2xs font-semibold text-white opacity-0 transition-opacity hover:bg-acc-hover group-hover:opacity-100"
-        >
-          <Maximize size={12} />
-          Fullscreen
-        </button>
       )}
       <div
         ref={containerRef}

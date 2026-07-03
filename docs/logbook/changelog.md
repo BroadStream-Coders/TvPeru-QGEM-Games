@@ -12,6 +12,22 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-052] Topbar a 34px igual al diseño, por grupos ocultables (2026-07-03 09:08)
+`WorkspaceHeader` reconstruido a 34px: botón Volver icono-only, brand (icono+título, sin
+versión), menus e history presentes pero ocultos vía `const SHOW`, Play (=fullscreen del
+Game, cableado por `onPlay` en el header store + `onFullscreenReady` en `Scene`), Load
+condicional a `onLoad`, y `AuthButton` como avatar+dropdown (solo Logout). Se eliminó ON AIR.
+Play activa primero la pestaña Game (vía `props.api.setActive`) y entra a fullscreen en el
+siguiente frame, así funciona desde cualquier pestaña sin error; se quitó el botón de
+fullscreen que vivía dentro de `Scene` (`showFullscreenButton`). Cierre: header del root (`/`)
+igualado a 34px; `AuthButton` deslogueado = solo ícono Google, logueado = solo avatar (foto
+de `user_metadata.avatar_url` con fallback a iniciales color+letra), info en el dropdown.
+
+## [RM-051] Layout por defecto igual al diseño Sandbox (2026-07-03 08:49)
+Reordenado `buildDefaultLayout`: Assets se agrega antes que hierarchy/inspector para que
+ocupe todo el ancho abajo (altura 232 del diseño), no solo bajo Scene. Tokens de color ya
+existían (RM-026) y coinciden con el diseño; sin cambios ahí.
+
 ## [RM-004] Operaciones Combinadas eliminado (no se usa) (2026-07-01 00:46)
 Se removió el workspace `operaciones-combinadas` por completo (carpeta, card del home,
 menciones en el doc del engine). Era un stub (ex-TD-011) sin uso ni plan a corto plazo; se

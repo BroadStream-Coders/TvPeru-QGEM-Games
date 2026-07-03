@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   DockviewReact,
   type DockviewApi,
   type DockviewReadyEvent,
+  type IDockviewPanelProps,
 } from "dockview-react";
 import "dockview-react/dist/styles/dockview.css";
 import "../dockview-theme.css";
@@ -136,10 +137,31 @@ function ScenePanel() {
   );
 }
 
-function GamePanel() {
+function GamePanel(props: IDockviewPanelProps) {
   const e = useEditor();
+  const setHeader = useWorkspaceHeader((s) => s.setHeader);
+  const toggleRef = useRef<(() => void) | null>(null);
+  const registerFullscreen = useCallback((toggle: () => void) => {
+    toggleRef.current = toggle;
+  }, []);
+
+  // Play (topbar): activa la pestaña Game — puede estar oculta — y entra a
+  // fullscreen en el siguiente frame, ya visible, para no fallar el request.
+  const play = useCallback(() => {
+    props.api.setActive();
+    requestAnimationFrame(() => toggleRef.current?.());
+  }, [props.api]);
+
+  useEffect(() => {
+    setHeader({ onPlay: play });
+  }, [setHeader, play]);
+
   return (
-    <Scene viewMode="game" showFullscreenButton hideCursorOnFullscreen>
+    <Scene
+      viewMode="game"
+      hideCursorOnFullscreen
+      onFullscreenReady={registerFullscreen}
+    >
       <div className="absolute inset-0">
         {e.gameObjects
           .filter((go) => !go.parentId && go.active)
@@ -196,6 +218,15 @@ function buildDefaultLayout(api: DockviewApi) {
     title: "Game",
     position: { referencePanel: "scene", direction: "within" },
   });
+  // Assets first so it splits the root into rows and spans the full width at the
+  // bottom; hierarchy/inspector are added after so they only split the top row.
+  api.addPanel({
+    id: "assets",
+    component: "assets",
+    title: "Assets",
+    initialHeight: 232,
+    position: { referencePanel: "scene", direction: "below" },
+  });
   api.addPanel({
     id: "hierarchy",
     component: "hierarchy",
@@ -209,13 +240,6 @@ function buildDefaultLayout(api: DockviewApi) {
     title: "Inspector",
     initialWidth: 336,
     position: { referencePanel: "scene", direction: "right" },
-  });
-  api.addPanel({
-    id: "assets",
-    component: "assets",
-    title: "Assets",
-    initialHeight: 180,
-    position: { referencePanel: "scene", direction: "below" },
   });
   scene.api.setActive();
 }

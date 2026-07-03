@@ -5,8 +5,12 @@ interface WorkspaceHeaderState {
   title: string | null;
   icon: React.ReactNode | null;
   onLoad?: (file: File) => void;
+  /** Registrado por el panel Game del editor; la topbar dispara fullscreen. */
+  onPlay?: () => void;
   setHeader: (
-    header: Omit<WorkspaceHeaderState, "setHeader" | "resetHeader">,
+    header: Partial<
+      Pick<WorkspaceHeaderState, "title" | "icon" | "onLoad" | "onPlay">
+    >,
   ) => void;
   resetHeader: () => void;
 }
@@ -15,11 +19,13 @@ export const useWorkspaceHeader = create<WorkspaceHeaderState>((set) => ({
   title: null,
   icon: null,
   onLoad: undefined,
+  onPlay: undefined,
   setHeader: (header) => set((state) => ({ ...state, ...header })),
   resetHeader: () =>
     set({
       title: null,
       icon: null,
       onLoad: undefined,
+      onPlay: undefined,
     }),
 }));

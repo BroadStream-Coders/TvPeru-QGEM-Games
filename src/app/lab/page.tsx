@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, FlaskConical, LayoutDashboard } from "lucide-react";
+import { ArrowRight, FlaskConical, LayoutDashboard, Move3d } from "lucide-react";
 
 const demos = [
   {
@@ -7,6 +7,13 @@ const demos = [
     description: "Sistema de ventanas acoplables tipo Unity/VS Code",
     href: "/lab/dockview",
     icon: LayoutDashboard,
+  },
+  {
+    name: "react-moveable",
+    description:
+      "Canvas paneable + gizmos tipo Figma (react-moveable · infinite-viewer · selecto)",
+    href: "/lab/react-moveable",
+    icon: Move3d,
   },
 ];
 

@@ -1,10 +1,6 @@
 import { Image as ImageIcon, Maximize2 } from "lucide-react";
 import { ComponentSection } from "@engine/ComponentSection";
-import {
-  SelectField,
-  AssetField,
-  FieldIconButton,
-} from "@engine/InspectorFields";
+import { SelectField, FieldIconButton } from "@engine/InspectorFields";
 import {
   ImageComponent,
   ImageFit,
@@ -22,25 +18,15 @@ export function ImageInspector({
   onRemove: () => void;
   onResize: (size: { x: number; y: number }) => void;
 }) {
-  const { kinds } = useAssets();
+  const { assets, kinds } = useAssets();
   const imageKeys = Object.keys(kinds).filter((k) => kinds[k] === "image");
-
-  const onPickFile = (file: File) => {
-    const reader = new FileReader();
-    reader.onload = () =>
-      onChange({
-        ...component,
-        src: String(reader.result),
-        fileName: file.name,
-      });
-    reader.readAsDataURL(file);
-  };
+  const url = component.assetKey ? assets[component.assetKey]?.url : undefined;
 
   const fitToImage = () => {
-    if (!component.src) return;
+    if (!url) return;
     const img = new window.Image();
     img.onload = () => onResize({ x: img.naturalWidth, y: img.naturalHeight });
-    img.src = component.src;
+    img.src = url;
   };
 
   return (
@@ -50,32 +36,22 @@ export function ImageInspector({
       accent="image"
       onRemove={onRemove}
     >
-      {imageKeys.length > 0 && (
-        <SelectField
-          label="Asset"
-          value={component.assetKey ?? ""}
-          onChange={(key) =>
-            onChange({ ...component, assetKey: key || undefined })
-          }
-          options={[
-            { value: "", label: "— archivo manual —" },
-            ...imageKeys.map((k) => ({ value: k, label: k })),
-          ]}
-        />
-      )}
-      <AssetField
-        label="Source"
-        name={component.fileName}
-        kind={component.fileName?.split(".").pop()?.toUpperCase()}
-        accent="image"
-        accept="image/*"
-        onPick={onPickFile}
+      <SelectField
+        label="Asset"
+        value={component.assetKey ?? ""}
+        onChange={(key) =>
+          onChange({ ...component, assetKey: key || undefined })
+        }
+        options={[
+          { value: "", label: "— sin asset —" },
+          ...imageKeys.map((k) => ({ value: k, label: k })),
+        ]}
         actions={
           <FieldIconButton
             icon={<Maximize2 size={13} />}
             title="Ajustar al tamaño de la imagen"
             onClick={fitToImage}
-            disabled={!component.src}
+            disabled={!url}
           />
         }
       />

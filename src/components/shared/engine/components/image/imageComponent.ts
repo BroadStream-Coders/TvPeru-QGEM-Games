@@ -4,9 +4,7 @@ export type ImageFit = "contain" | "fill";
 
 export interface ImageComponent extends GameObjectComponent {
   type: "image";
-  src: string;
   fit: ImageFit;
-  fileName?: string;
   assetKey?: string;
 }
 
@@ -15,9 +13,7 @@ export function createImageComponent(
 ): ImageComponent {
   return {
     type: "image",
-    src: init?.src ?? "",
     fit: init?.fit ?? "fill",
-    fileName: init?.fileName,
     assetKey: init?.assetKey,
   };
 }

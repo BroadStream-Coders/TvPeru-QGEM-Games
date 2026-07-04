@@ -59,7 +59,7 @@ export const deletreoGame: GameDefinition = {
         pivot: { x: 0.5, y: 0.5 },
       },
       components: [
-        createImageComponent({ src: "", fit: "fill" }),
+        createImageComponent({ fit: "fill", assetKey: "mainFrame" }),
         createPopComponent(),
         createShakeComponent(),
         createBounceComponent(),

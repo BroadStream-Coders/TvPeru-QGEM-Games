@@ -12,6 +12,11 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-063] Image "Load First": quitar el cargador manual (2026-07-03 22:04)
+Image quedó `{ fit, assetKey }`: `ImageView` y el mask resuelven por `assetKey` desde Local, sin carga
+propia; Inspector = recuadro-selector Asset + icono de ajuste. Deletreo migrado (togglea mainFrame/errorFrame);
+`AssetField` borrado (carga manual muerta en Load First).
+
 ## [RM-062] Local: cargar archivos del PC (ingesta a Local) (2026-07-03 21:42)
 Botón "Cargar" en la barra de Local sube archivos del equipo (image/video/audio) vía
 `createObjectURL` — blob listo al instante, key autogenerada+dedupe, en la raíz. `assetsState`

@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useEditor } from "@engine/editor/editorContext";
 import { useAssets } from "@engine/assetsContext";
 import { useAnimations } from "@engine/animations/AnimationsContext";
-import { ImageComponent } from "@engine/components/image/imageComponent";
 import { useGameKeys } from "@/hooks/use-game-keys";
 import { playSound } from "@/lib/audio";
 import {
@@ -17,13 +16,10 @@ export function DeletreoBehavior() {
   const { assets } = useAssets();
   const { trigger } = useAnimations();
 
-  const normalUrl = assets.mainFrame?.url;
-  const errorUrl = assets.errorFrame?.url;
   const correctUrl = assets.correct?.url;
   const incorrectUrl = assets.incorrect?.url;
 
   const [spellStep, setSpellStep] = useState(0);
-  const [normalSrc, setNormalSrc] = useState("");
 
   const controller = gameObjects
     .find((go) => go.id === CONTROLLER_ID)
@@ -48,40 +44,26 @@ export function DeletreoBehavior() {
       ),
     );
 
-  const setMainFrameImageSrc = (src: string) =>
+  const setMainFrameAsset = (assetKey: string) =>
     setGameObjects((prev) =>
       prev.map((go) =>
         go.id === FRAME_ID
           ? {
               ...go,
               components: go.components.map((c) =>
-                c.type === "image" ? { ...c, src } : c,
+                c.type === "image" ? { ...c, assetKey } : c,
               ),
             }
           : go,
       ),
     );
 
-  useEffect(() => {
-    if (!normalUrl) return;
-    setNormalSrc(normalUrl);
-    setMainFrameImageSrc(normalUrl);
-  }, [normalUrl]);
-
-  useEffect(() => {
-    const frame = gameObjects.find((go) => go.id === FRAME_ID);
-    const img = frame?.components.find((c) => c.type === "image") as
-      | ImageComponent
-      | undefined;
-    if (img?.src && img.src !== errorUrl) setNormalSrc(img.src);
-  }, [gameObjects, errorUrl]);
-
   const currentGroup = groups[groupIndex]?.words ?? [];
   const word = currentGroup[slotIndex] ?? "";
 
   useEffect(() => {
     setSpellStep(0);
-    setMainFrameImageSrc(normalSrc);
+    setMainFrameAsset("mainFrame");
   }, [groupIndex, slotIndex, controller?.fileName]);
 
   useEffect(() => {
@@ -126,12 +108,12 @@ export function DeletreoBehavior() {
     onBack: prevSlot,
     onShowAnswer: () => {
       setSpellStep(word.length);
-      setMainFrameImageSrc(normalSrc);
+      setMainFrameAsset("mainFrame");
       if (correctUrl) playSound(correctUrl);
       trigger(FRAME_ID, "pop");
     },
     onMarkError: () => {
-      if (errorUrl) setMainFrameImageSrc(errorUrl);
+      setMainFrameAsset("errorFrame");
       if (incorrectUrl) playSound(incorrectUrl);
       trigger(FRAME_ID, "shake");
     },

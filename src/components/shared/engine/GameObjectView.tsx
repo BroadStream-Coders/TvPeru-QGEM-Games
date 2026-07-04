@@ -10,6 +10,7 @@ import {
   maskStyle,
 } from "@engine/components/mask/maskComponent";
 import { ImageComponent } from "@engine/components/image/imageComponent";
+import { useAssets } from "@engine/assetsContext";
 
 interface GameObjectViewProps {
   gameObject: GameObject;
@@ -45,10 +46,11 @@ export function GameObjectView({
   const maskImage = gameObject.components.find(
     (c): c is ImageComponent => c.type === "image",
   );
+  const { assets } = useAssets();
+  const maskUrl =
+    mask && maskImage?.assetKey ? assets[maskImage.assetKey]?.url : undefined;
   const wrapperStyle =
-    mask && maskImage?.src
-      ? maskStyle(maskImage.src, maskImage.fit)
-      : undefined;
+    maskUrl && maskImage ? maskStyle(maskUrl, maskImage.fit) : undefined;
 
   const animationRef = useGameObjectAnimations(gameObject, onAnimatePosition);
   const externalRef = contentRef?.(gameObject);

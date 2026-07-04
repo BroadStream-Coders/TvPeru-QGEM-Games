@@ -201,28 +201,16 @@ su "Hecho cuando", pero no es el foco actual).
   blob (mismo primitivo que necesita RM-061). Se apoya en el panel Local (RM-055) y el
   presupuesto de memoria (RM-058).
 - **Se divide en:**
-  - **RM-062** — Local puede cargar archivos del PC (ingesta). _Primera._
+  - **RM-062** — Local carga archivos del PC (ingesta). ✅ hecho.
   - **RM-063** — Image "Load First": quitar su cargador manual, dejar solo la referencia.
   - **RM-064** — Video "Load First": quitar carga file/url, referenciar Local.
-  - **Pendiente de definir:** un mecanismo "seleccionar un asset de Local y colocarlo en
-    el componente", posiblemente **previo** a RM-063/RM-064. Se discute aparte.
-    (Relaciona con RM-057 y RM-061.)
-- **Orden:** RM-062 → (mecanismo de colocación, si se define) → RM-063 → RM-064; va
-  **antes que RM-061**. RM-060 se cierra cuando cierran sus hijas.
+- **Colocación (decidido):** en RM-063/064 el asset se asigna por un **dropdown en el
+  Inspector** (Nivel A). La interacción select-in-Local → asignar / drag (Nivel B) se
+  hace junto a **RM-061**, no antes. (RM-057 sigue siendo solo el panel de info.)
+- **Orden:** RM-063 → RM-064; va **antes que RM-061**. RM-060 se cierra cuando cierran
+  sus hijas.
 - **Hecho cuando:** image y video ya no cargan assets por sí mismos; toman un recurso
   que ya está presente en Local.
-- **Fecha:** 2026-07-03 · **Estado:** Abierto
-
-## [RM-063] Image "Load First": quitar el cargador manual
-
-- **Objetivo:** image deja de cargar archivos por su cuenta y se queda solo con la
-  referencia a un asset de Local. Quitar `AssetField`/`onPickFile`/`src`/`fileName`
-  manual del `ImageInspector`; `ImageView` resuelve solo desde el asset referenciado.
-- **Depende de:** RM-062 y del mecanismo de colocación si se define.
-- **Migración (breaking):** `deletreo` setea `src` a mano en su behavior (swap
-  normal/error) → pasa a setear la referencia.
-- **Hecho cuando:** el `ImageInspector` no tiene carga manual; image toma un asset ya
-  presente en Local.
 - **Fecha:** 2026-07-03 · **Estado:** Abierto
 
 ## [RM-064] Video "Load First": referenciar Local en vez de cargar
@@ -230,7 +218,8 @@ su "Hecho cuando", pero no es el foco actual).
 - **Objetivo:** video deja de cargar file/URL propio y referencia un asset de Local (hoy
   no conoce Local en absoluto). Quitar `source`/file/url del `VideoInspector`;
   `VideoView` resuelve desde el asset referenciado.
-- **Depende de:** RM-062 y del mecanismo de colocación si se define.
+- **Colocación:** dropdown "Asset" en el Inspector (Nivel A, ver RM-060).
+- **Depende de:** RM-062.
 - **Decisión pendiente:** qué pasa con la URL externa arbitraria (modo Link): ¿se
   elimina y todo va por Local? (es la línea "pura" de RM-060).
 - **Migración (breaking):** `intruso` setea `{ src, source: "url" }` en su behavior →

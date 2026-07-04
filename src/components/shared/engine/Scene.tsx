@@ -23,6 +23,8 @@ const VIEWPORT_CHECKER: React.CSSProperties = {
     "repeating-conic-gradient(#101214 0 25%, #0c0e10 0 50%) 0 / 22px 22px",
 };
 
+const GAME_BACKDROP: React.CSSProperties = { background: "#202327" };
+
 const GRID_CELL = "5.208333cqw";
 const STAGE_GRID_STYLE: React.CSSProperties = {
   backgroundImage:
@@ -45,6 +47,7 @@ export function Scene({
   const [internalViewMode, setInternalViewMode] = useState<ViewMode>("game");
   const controlled = viewModeProp !== undefined;
   const viewMode = controlled ? viewModeProp : internalViewMode;
+  const gameWindowed = !isFullscreen && viewMode === "game";
 
   // Escuchar cuando el navegador entra o sale de FullScreen (por ejemplo si el usuario presiona ESC)
   useEffect(() => {
@@ -94,12 +97,21 @@ export function Scene({
       <div
         ref={containerRef}
         tabIndex={0}
-        style={isFullscreen ? undefined : VIEWPORT_CHECKER}
+        style={
+          isFullscreen
+            ? undefined
+            : gameWindowed
+              ? GAME_BACKDROP
+              : VIEWPORT_CHECKER
+        }
         className={cn(
           "relative focus:outline-none flex items-center justify-center transition-all duration-300",
-          isFullscreen
-            ? "w-screen h-screen bg-black"
-            : "min-h-0 w-full flex-1 overflow-auto p-3",
+          isFullscreen && "w-screen h-screen bg-black",
+          gameWindowed &&
+            "min-h-0 w-full flex-1 overflow-hidden [container-type:size]",
+          !isFullscreen &&
+            !gameWindowed &&
+            "min-h-0 w-full flex-1 overflow-auto p-3",
           isFullscreen && hideCursorOnFullscreen && "cursor-none",
         )}
       >
@@ -108,14 +120,20 @@ export function Scene({
             "relative overflow-hidden [container-type:size]",
             STAGE_BACKGROUND_CLASS,
             aspectRatioClass,
-            isFullscreen
-              ? "h-full w-auto max-w-full"
-              : "w-full max-w-[1280px] shadow-lg border border-edge",
+            isFullscreen && "h-full w-auto max-w-full",
+            !isFullscreen &&
+              !gameWindowed &&
+              "w-full max-w-[1280px] shadow-lg border border-edge",
             className,
           )}
           {...props}
+          style={
+            gameWindowed ? { width: "min(100cqi, 100cqb * 16 / 9)" } : undefined
+          }
         >
-          <div className="absolute inset-0" style={STAGE_GRID_STYLE} />
+          {!gameWindowed && (
+            <div className="absolute inset-0" style={STAGE_GRID_STYLE} />
+          )}
 
           <div className="relative z-10 w-full h-full">
             <SceneViewModeProvider value={viewMode}>

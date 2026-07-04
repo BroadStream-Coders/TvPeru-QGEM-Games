@@ -12,6 +12,16 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-065] Topbar "Cargar" cableado a la data del juego (2026-07-04 09:27)
+`GameDefinition` gana `onLoad(file, editor)`; `EditorLayout` lo pasa al header (aparece el botón "Cargar"). Deletreo
+y Cálculo Mental definen su `onLoad` (parsean su JSON y patchean su componente de data); se quitó el botón "Cargar
+JSON" de ambos inspectores — un solo punto de carga.
+
+## [RM-061] Componentes por referencia (estilo Unity) (2026-07-04 09:27)
+Primitivo `ComponentRef { gameObjectId, type }` + campo `ComponentRefField`/`AssetSelectField` en el inspector. El
+`controller` de deletreo pasó a componente especializado `Deletreo` (montado en Anchor): referencia un Image y
+togglea `normalFrame`/`errorFrame` según `frame`; el behavior solo setea `frame`. Image quedó renderer tonto.
+
 ## [RM-064] Video "Load First": referenciar Local en vez de cargar (2026-07-03 22:35)
 Video quedó `{ fit, assetKey, muted, loop }`: referencia un asset de Local, sin file/URL propio; Inspector igual
 que image (Asset + ajuste, Sound/Loop). Intruso hornea `assetKey:"background"` y su behavior se eliminó. De paso

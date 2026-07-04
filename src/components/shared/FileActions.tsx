@@ -1,19 +1,18 @@
 "use client";
 
 import { useRef } from "react";
-import { Button } from "@/components/ui/button";
 import { Upload } from "lucide-react";
 
 interface FileActionsProps {
   onLoad: (file: File) => void;
   accept?: string;
-  loadLabel?: string;
+  title?: string;
 }
 
 export function FileActions({
   onLoad,
   accept = ".json,.zip",
-  loadLabel = "Cargar",
+  title = "Cargar",
 }: FileActionsProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -26,14 +25,14 @@ export function FileActions({
 
   return (
     <>
-      <Button
-        size="sm"
+      <button
+        type="button"
+        title={title}
         onClick={() => fileInputRef.current?.click()}
-        className="h-7 gap-1.5 bg-acc text-white hover:bg-acc-hover active:scale-[0.98] text-xs shadow-sm transition-all font-semibold"
+        className="flex h-6 w-7 items-center justify-center rounded-md border border-line bg-elev text-dim transition-colors hover:border-acc hover:text-ink"
       >
         <Upload className="h-3.5 w-3.5" />
-        <span className="hidden sm:inline">{loadLabel}</span>
-      </Button>
+      </button>
 
       <input
         ref={fileInputRef}

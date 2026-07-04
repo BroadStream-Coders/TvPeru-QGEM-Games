@@ -362,6 +362,8 @@ export function EditorLayout({ game }: { game: GameDefinition }) {
   const [editMode, setEditMode] = useState(false);
 
   const value: EditorApi = { ...editor, editMode, setEditMode, registry };
+  const apiRef = useRef(value);
+  apiRef.current = value;
   const Behavior = game.behavior;
 
   const manifest = useMemo(() => toManifest(game.assets ?? {}), [game.assets]);
@@ -446,8 +448,11 @@ export function EditorLayout({ game }: { game: GameDefinition }) {
 
   useEffect(() => () => resetHeader(), [resetHeader]);
   useEffect(() => {
-    setHeader({ title: game.title, icon: game.icon });
-  }, [setHeader, game.title, game.icon]);
+    const onLoad = game.onLoad
+      ? (file: File) => game.onLoad!(file, apiRef.current)
+      : undefined;
+    setHeader({ title: game.title, icon: game.icon, onLoad });
+  }, [setHeader, game.title, game.icon, game.onLoad]);
 
   function onReady(event: DockviewReadyEvent) {
     buildDefaultLayout(event.api);

@@ -18,7 +18,12 @@ import { CALCULO_ASSETS } from "./assets";
 import { slotDefinition } from "./components/slot";
 import { createSlotComponent } from "./components/slot/slotComponent";
 import { controllerDefinition } from "./components/controller";
-import { createControllerComponent } from "./components/controller/controllerComponent";
+import {
+  createControllerComponent,
+  isCalcData,
+  type CalcData,
+} from "./components/controller/controllerComponent";
+import { loadJsonFile } from "@/helpers/persistence";
 import {
   BACKGROUND_ID,
   CONTROLLER_ID,
@@ -68,6 +73,33 @@ export const calculoMentalGame: GameDefinition = {
   },
   components: [slotDefinition, controllerDefinition],
   behavior: CalculoMentalBehavior,
+  onLoad: (file, editor) => {
+    loadJsonFile<CalcData>(file, isCalcData)
+      .then((data) =>
+        editor.setGameObjects((prev) =>
+          prev.map((go) =>
+            go.id === CONTROLLER_ID
+              ? {
+                  ...go,
+                  components: go.components.map((c) =>
+                    c.type === "controller"
+                      ? {
+                          ...c,
+                          groups: data.groups,
+                          groupIndex: 0,
+                          boardIndex: 0,
+                          cursor: -1,
+                          fileName: file.name,
+                        }
+                      : c,
+                  ),
+                }
+              : go,
+          ),
+        ),
+      )
+      .catch(() => console.error("JSON inválido para Cálculo Mental."));
+  },
   gameObjects: () => [
     createGameObject({
       id: BACKGROUND_ID,

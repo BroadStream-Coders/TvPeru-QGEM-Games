@@ -1,12 +1,7 @@
-import { Gamepad2, Upload, Keyboard } from "lucide-react";
+import { Gamepad2, Keyboard } from "lucide-react";
 import { ComponentSection } from "@engine/ComponentSection";
 import { ComponentRefField, AssetSelectField } from "@engine/InspectorFields";
-import { loadJsonFile } from "@/helpers/persistence";
-import {
-  DeletreoComponent,
-  DeletreoData,
-  isDeletreoData,
-} from "./deletreoComponent";
+import { DeletreoComponent } from "./deletreoComponent";
 
 const KEY_LEGEND: { keys: string; label: string }[] = [
   { keys: "Numpad 0-9", label: "Elegir grupo" },
@@ -27,21 +22,6 @@ export function DeletreoInspector({
   onChange: (next: DeletreoComponent) => void;
   onRemove: () => void;
 }) {
-  const onPick = async (file: File) => {
-    try {
-      const data = await loadJsonFile<DeletreoData>(file, isDeletreoData);
-      onChange({
-        ...component,
-        groups: data.groups,
-        groupIndex: 0,
-        slotIndex: 0,
-        fileName: file.name,
-      });
-    } catch {
-      console.error("JSON inválido para Deletreo.");
-    }
-  };
-
   const groupCount = component.groups.length;
   const slotCount = component.groups.reduce((n, g) => n + g.words.length, 0);
   const slotsInGroup =
@@ -75,21 +55,6 @@ export function DeletreoInspector({
           onChange({ ...component, errorFrame: key || undefined })
         }
       />
-
-      <label className="flex cursor-pointer items-center justify-center gap-1.5 rounded-md border border-line py-1.5 text-xs font-medium text-ink transition-colors hover:border-acc hover:bg-elev">
-        <Upload size={13} />
-        Cargar JSON
-        <input
-          type="file"
-          accept="application/json,.json"
-          onChange={(e) => {
-            const file = e.target.files?.[0];
-            if (file) onPick(file);
-            e.target.value = "";
-          }}
-          className="hidden"
-        />
-      </label>
 
       {component.fileName ? (
         <div className="flex flex-col gap-1 rounded-md bg-elev p-2 text-2xs text-dim">

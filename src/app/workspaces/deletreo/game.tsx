@@ -13,7 +13,12 @@ import { DELETREO_ASSETS } from "./assets";
 import { spellframeDefinition } from "./components/spellframe";
 import { createSpellframeComponent } from "./components/spellframe/spellframeComponent";
 import { deletreoDefinition } from "./components/deletreo";
-import { createDeletreoComponent } from "./components/deletreo/deletreoComponent";
+import {
+  createDeletreoComponent,
+  isDeletreoData,
+  type DeletreoData,
+} from "./components/deletreo/deletreoComponent";
+import { loadJsonFile } from "@/helpers/persistence";
 import { ANCHOR_ID, FRAME_ID, TEXT_ID } from "./constants";
 import { DeletreoBehavior } from "./DeletreoBehavior";
 
@@ -29,6 +34,32 @@ export const deletreoGame: GameDefinition = {
   },
   components: [spellframeDefinition, deletreoDefinition],
   behavior: DeletreoBehavior,
+  onLoad: (file, editor) => {
+    loadJsonFile<DeletreoData>(file, isDeletreoData)
+      .then((data) =>
+        editor.setGameObjects((prev) =>
+          prev.map((go) =>
+            go.id === ANCHOR_ID
+              ? {
+                  ...go,
+                  components: go.components.map((c) =>
+                    c.type === "deletreo"
+                      ? {
+                          ...c,
+                          groups: data.groups,
+                          groupIndex: 0,
+                          slotIndex: 0,
+                          fileName: file.name,
+                        }
+                      : c,
+                  ),
+                }
+              : go,
+          ),
+        ),
+      )
+      .catch(() => console.error("JSON inválido para Deletreo."));
+  },
   gameObjects: () => [
     createGameObject({
       id: "background",

@@ -1,11 +1,6 @@
-import { Gamepad2, Upload, Keyboard } from "lucide-react";
+import { Gamepad2, Keyboard } from "lucide-react";
 import { ComponentSection } from "@engine/ComponentSection";
-import { loadJsonFile } from "@/helpers/persistence";
-import {
-  ControllerComponent,
-  CalcData,
-  isCalcData,
-} from "./controllerComponent";
+import { ControllerComponent } from "./controllerComponent";
 
 const KEY_LEGEND: { keys: string; label: string }[] = [
   { keys: "Numpad 0-9", label: "Elegir grupo" },
@@ -21,30 +16,11 @@ const KEY_LEGEND: { keys: string; label: string }[] = [
 
 export function ControllerInspector({
   component,
-  onChange,
   onRemove,
 }: {
   component: ControllerComponent;
-  onChange: (next: ControllerComponent) => void;
   onRemove: () => void;
-  onResize: (size: { x: number; y: number }) => void;
 }) {
-  const onPick = async (file: File) => {
-    try {
-      const data = await loadJsonFile<CalcData>(file, isCalcData);
-      onChange({
-        ...component,
-        groups: data.groups,
-        groupIndex: 0,
-        boardIndex: 0,
-        cursor: -1,
-        fileName: file.name,
-      });
-    } catch {
-      console.error("JSON inválido para Cálculo Mental.");
-    }
-  };
-
   const groupCount = component.groups.length;
   const boardsInGroup =
     component.groups[component.groupIndex]?.boards.length ?? 0;
@@ -55,21 +31,6 @@ export function ControllerInspector({
       icon={<Gamepad2 size={13} />}
       onRemove={onRemove}
     >
-      <label className="flex cursor-pointer items-center justify-center gap-1.5 rounded-md border border-line py-1.5 text-xs font-medium text-ink transition-colors hover:border-acc hover:bg-elev">
-        <Upload size={13} />
-        Cargar JSON
-        <input
-          type="file"
-          accept="application/json,.json"
-          onChange={(e) => {
-            const file = e.target.files?.[0];
-            if (file) onPick(file);
-            e.target.value = "";
-          }}
-          className="hidden"
-        />
-      </label>
-
       {component.fileName ? (
         <div className="flex flex-col gap-1 rounded-md bg-elev p-2 text-2xs text-dim">
           <span className="truncate text-ink">{component.fileName}</span>

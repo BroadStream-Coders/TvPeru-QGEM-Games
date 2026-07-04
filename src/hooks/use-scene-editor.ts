@@ -8,6 +8,7 @@ import {
   createGameObject,
   reorderGameObjects,
   collectSubtreeIds,
+  duplicateSubtrees,
   gameObjectKind,
   gameObjectHasAnimation,
 } from "@engine/gameObject";
@@ -79,6 +80,17 @@ export function useSceneEditor({
     ]);
     setSelectedId(id);
   };
+
+  const duplicateSelected = useCallback(() => {
+    if (!selectedIds.length) return;
+    const { next, newRootIds } = duplicateSubtrees(gameObjects, selectedIds, {
+      x: 20,
+      y: -20,
+    });
+    if (!newRootIds.length) return;
+    setGameObjects(next);
+    setSelectedIds(newRootIds);
+  }, [gameObjects, selectedIds]);
 
   const deleteGameObject = (id: string) => {
     const ids = collectSubtreeIds(gameObjects, id);
@@ -200,6 +212,7 @@ export function useSceneEditor({
     setTransform,
     patchGameObject,
     createNewGameObject,
+    duplicateSelected,
     deleteGameObject,
     handleReorder,
     addComponent,

@@ -12,6 +12,12 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-068] Duplicar objetos en Scene (Ctrl/Cmd+D estilo Figma) (2026-07-04 15:52)
+`duplicateSubtrees` (gameObject.ts) clona la selección con su subárbol: ids nuevos, `parentId` reapuntado a los clones, offset
+(+20,-20) solo en las raíces y `ComponentRef.gameObjectId` internos remapeados a las copias. Expuesto como `duplicateSelected` en el
+editor y cableado a Ctrl/Cmd+D en `SceneCanvas`; poda descendientes (no duplica hijo si el padre también está seleccionado) y deja
+seleccionadas las copias.
+
 ## [RM-067] Edición de Scene migrada a react-moveable (2026-07-04 15:36)
 `SceneCanvas` reemplazó el sistema propio (`SelectionOverlay`+`use-transform-gesture`, eliminados): InfiniteViewer (zoom/pan/encajar,
 panel dockview `renderer:"always"`) + Moveable controlado (drag/resize/rotate, Shift=ratio) que convierte a coordenadas del modelo

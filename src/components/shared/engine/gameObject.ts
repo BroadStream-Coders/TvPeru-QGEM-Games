@@ -110,6 +110,64 @@ export function deleteGameObjectAndChildren(
   return all.filter((go) => !ids.has(go.id));
 }
 
+function remapRefs(value: unknown, idMap: Map<string, string>): void {
+  if (Array.isArray(value)) {
+    value.forEach((v) => remapRefs(v, idMap));
+  } else if (value && typeof value === "object") {
+    const obj = value as Record<string, unknown>;
+    for (const key of Object.keys(obj)) {
+      const v = obj[key];
+      if (key === "gameObjectId" && typeof v === "string" && idMap.has(v)) {
+        obj[key] = idMap.get(v);
+      } else {
+        remapRefs(v, idMap);
+      }
+    }
+  }
+}
+
+export function duplicateSubtrees(
+  all: GameObject[],
+  rootIds: string[],
+  offset: Vec2,
+): { next: GameObject[]; newRootIds: string[] } {
+  const roots = rootIds.filter(
+    (id) => !rootIds.some((o) => o !== id && isDescendantOf(all, id, o)),
+  );
+  if (!roots.length) return { next: all, newRootIds: [] };
+
+  const rootSet = new Set(roots);
+  const idMap = new Map<string, string>();
+  for (const rootId of roots) {
+    for (const id of collectSubtreeIds(all, rootId)) {
+      if (!idMap.has(id)) idMap.set(id, crypto.randomUUID());
+    }
+  }
+
+  const clones: GameObject[] = [];
+  for (const go of all) {
+    if (!idMap.has(go.id)) continue;
+    const clone = structuredClone(go);
+    clone.id = idMap.get(go.id)!;
+    if (go.parentId && idMap.has(go.parentId)) {
+      clone.parentId = idMap.get(go.parentId);
+    }
+    if (rootSet.has(go.id)) {
+      clone.transform.position = {
+        x: clone.transform.position.x + offset.x,
+        y: clone.transform.position.y + offset.y,
+      };
+    }
+    clone.components.forEach((c) => remapRefs(c, idMap));
+    clones.push(clone);
+  }
+
+  return {
+    next: [...all, ...clones],
+    newRootIds: roots.map((r) => idMap.get(r)!),
+  };
+}
+
 export function reorderGameObjects(
   all: GameObject[],
   draggedId: string,

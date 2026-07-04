@@ -14,6 +14,20 @@ changelog y se borra de aquí.
 
 ---
 
+## [TD-019] Ctrl/Cmd+D (duplicar) choca con el atajo de marcador en Brave
+
+- **Ubicación:** `src/components/shared/engine/editor/SceneCanvas.tsx` (handler `onKeyDown`)
+- **Riesgo:** 2/10
+- **Problema:** El duplicar usa Ctrl/Cmd+D con `preventDefault()`. En Chrome (el
+  target del proyecto) esto cancela el diálogo de marcador y funciona. En Brave (y
+  algún otro Chromium con el atajo "cableado") el navegador captura Ctrl+D antes que
+  la página, así que en vez de duplicar guarda un marcador.
+- **Impacto futuro:** Ninguno en el equipo del estudio (solo Chrome). Solo relevante
+  si algún día se usa en otro navegador; ahí habría que ofrecer un atajo alternativo
+  (p. ej. Ctrl+J) o un botón/menú de "Duplicar" en el canvas/Hierarchy. Esencialmente
+  fuera de alcance por la convención "target solo Chrome".
+- **Fecha:** 2026-07-04 · **Estado:** Abierto
+
 ## [TD-018] El dockview del editor no tiene tamaño mínimo de panel
 
 - **Ubicación:** `src/app/workspaces/sandbox/EditorDock.tsx`

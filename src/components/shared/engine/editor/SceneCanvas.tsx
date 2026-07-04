@@ -74,6 +74,8 @@ export function SceneCanvas() {
 
   const targetsRef = useRef(targets);
   targetsRef.current = targets;
+  const duplicateRef = useRef(e.duplicateSelected);
+  duplicateRef.current = e.duplicateSelected;
   const gestureRef = useRef<Map<string, Snap>>(new Map());
   const draggingRef = useRef(false);
 
@@ -115,6 +117,15 @@ export function SceneCanvas() {
   useEffect(() => {
     const onKeyDown = (ev: KeyboardEvent) => {
       if (ev.key === "Shift") setShiftHeld(true);
+      if (
+        (ev.ctrlKey || ev.metaKey) &&
+        (ev.key === "d" || ev.key === "D") &&
+        !isTyping(ev.target)
+      ) {
+        ev.preventDefault();
+        duplicateRef.current();
+        return;
+      }
       if (isTyping(ev.target) || ev.code !== "Space") return;
       ev.preventDefault();
       setSpaceHeld(true);

@@ -29,7 +29,7 @@ import "../dockview-theme.css";
 
 import { Scene } from "@engine/Scene";
 import { GameObjectView } from "@engine/GameObjectView";
-import { SelectionOverlay } from "@engine/SelectionOverlay";
+import { SceneCanvas } from "@engine/editor/SceneCanvas";
 import { Hierarchy } from "@engine/Hierarchy";
 import { GameObjectInspector } from "@engine/GameObjectInspector";
 import { RectTransformInspector } from "@engine/RectTransformInspector";
@@ -129,31 +129,7 @@ function InspectorPanel() {
 }
 
 function ScenePanel() {
-  const e = useEditor();
-  return (
-    <Scene viewMode="scene">
-      <div ref={e.stageRef} className="absolute inset-0">
-        {e.gameObjects
-          .filter((go) => !go.parentId && go.active)
-          .map((go) => (
-            <GameObjectView
-              key={go.id}
-              gameObject={go}
-              allGameObjects={e.gameObjects}
-              selectedId={e.selectedId}
-              onAnimatePosition={e.animatePosition}
-            />
-          ))}
-      </div>
-      {e.editMode && (
-        <SelectionOverlay
-          selected={e.selected}
-          allGameObjects={e.gameObjects}
-          onGesture={e.beginGesture}
-        />
-      )}
-    </Scene>
-  );
+  return <SceneCanvas />;
 }
 
 function GamePanel(props: IDockviewPanelProps) {
@@ -308,7 +284,12 @@ const components = {
 };
 
 function buildDefaultLayout(api: DockviewApi) {
-  const scene = api.addPanel({ id: "scene", component: "scene", title: "Scene" });
+  const scene = api.addPanel({
+    id: "scene",
+    component: "scene",
+    title: "Scene",
+    renderer: "always",
+  });
   api.addPanel({
     id: "game",
     component: "game",

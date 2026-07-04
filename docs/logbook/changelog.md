@@ -12,6 +12,10 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-066] Ventana Game: fit contain sin scroll + look Unity (2026-07-04 10:01)
+La rama Game de `Scene.tsx` (solo en ventana) encaja el stage 16:9 con `min(100cqi, 100cqb*16/9)` — pillarbox/letterbox,
+nunca scroll — sobre un backdrop plano `#202327`, sin grilla ni borde (estilo Game view de Unity). Fullscreen y Scene intactos.
+
 ## [RM-065] Topbar "Cargar" cableado a la data del juego (2026-07-04 09:27)
 `GameDefinition` gana `onLoad(file, editor)`; `EditorLayout` lo pasa al header (aparece el botón "Cargar"). Deletreo
 y Cálculo Mental definen su `onLoad` (parsean su JSON y patchean su componente de data); se quitó el botón "Cargar

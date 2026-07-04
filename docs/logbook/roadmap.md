@@ -134,6 +134,28 @@ su "Hecho cuando", pero no es el foco actual).
 
 ---
 
+## [RM-067] Migrar la edición de Scene a react-moveable (basado en lab/react-moveable)
+
+- **Objetivo:** Reemplazar el sistema de edición propio del panel **Scene**
+  (`SelectionOverlay` + `use-transform-gesture`) por `react-moveable` +
+  `react-infinite-viewer`, sumando zoom/pan, rotación y keepRatio. Clave: Moveable
+  va **controlado** (sus eventos se convierten a coordenadas del modelo y escriben en
+  `gameObjects`), porque el engine es data-autoritativo y Scene/Game renderizan el
+  mismo modelo. **Game no se toca.**
+- **Hecho cuando:** en Scene se puede arrastrar/redimensionar/rotar/ratio con Moveable
+  y navegar con zoom/pan; el modelo sigue siendo la única verdad; `SelectionOverlay` y
+  `use-transform-gesture` quedan eliminados.
+- **Fecha:** 2026-07-04 · **Estado:** En progreso (2026-07-04) — Fase 1 hecha:
+  `SceneCanvas` (InfiniteViewer + viewport 1920×1080 con zoom/pan/fit/encajar),
+  cableado en `ScenePanel`; la edición vieja sigue viva dentro del viewer. **Gotcha
+  clave:** el panel Scene DEBE registrarse con `renderer: "always"` en dockview; con el
+  default (`onlyWhenVisible`) dockview destruye/reconstruye el DOM al cambiar de pestaña
+  y InfiniteViewer se rompe (salto de vista, "Encajar" muerto). Con `"always"` lo oculta
+  vía `visibility:hidden` y el viewer sobrevive. Falta Fase 2 (Moveable controlado, borrar
+  el sistema viejo) y Fase 3 (snapping/guías, multi-selección).
+
+---
+
 # Fase 2 — Engine genérico (diferido)
 
 > Diferido a propósito hasta cerrar la Fase 1. Se retoma promoviendo patrones que

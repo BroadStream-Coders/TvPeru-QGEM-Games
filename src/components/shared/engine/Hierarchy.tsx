@@ -83,7 +83,7 @@ function findNode(nodes: TreeNode[], id: string): TreeNode | null {
 
 export function Hierarchy({
   nodes,
-  selectedId,
+  selectedIds,
   onSelect,
   onCreate,
   onDelete,
@@ -91,8 +91,8 @@ export function Hierarchy({
   onToggleActive,
 }: {
   nodes: TreeNode[];
-  selectedId: string | null;
-  onSelect: (id: string) => void;
+  selectedIds: string[];
+  onSelect: (id: string, additive: boolean) => void;
   onCreate?: (parentId: string | null) => void;
   onDelete?: (id: string) => void;
   onReorder?: (
@@ -165,7 +165,7 @@ export function Hierarchy({
               key={node.id}
               node={node}
               depth={0}
-              selectedId={selectedId}
+              selectedIds={selectedIds}
               onSelect={onSelect}
               onToggleActive={onToggleActive}
               dnd={dnd}
@@ -202,7 +202,7 @@ function DropLine({ depth }: { depth: number }) {
 function TreeItem({
   node,
   depth,
-  selectedId,
+  selectedIds,
   onSelect,
   onToggleActive,
   dnd,
@@ -210,15 +210,15 @@ function TreeItem({
 }: {
   node: TreeNode;
   depth: number;
-  selectedId: string | null;
-  onSelect: (id: string) => void;
+  selectedIds: string[];
+  onSelect: (id: string, additive: boolean) => void;
   onToggleActive?: (id: string, active: boolean) => void;
   dnd: DndContext;
   menu: MenuActions;
 }) {
   const [expanded, setExpanded] = useState(true);
   const hasChildren = !!node.children?.length;
-  const selected = node.id === selectedId;
+  const selected = selectedIds.includes(node.id);
   const isActive = node.active !== false;
   const kind = node.kind ?? "group";
 
@@ -259,8 +259,8 @@ function TreeItem({
         e.preventDefault();
         dnd.onDrop();
       }}
-      onClick={() => onSelect(node.id)}
-      onContextMenu={() => onSelect(node.id)}
+      onClick={(e) => onSelect(node.id, e.shiftKey || e.ctrlKey || e.metaKey)}
+      onContextMenu={() => onSelect(node.id, false)}
       style={{ paddingLeft: depth * 12 + 8 }}
       className={cn(
         "group/row relative flex h-[23px] cursor-pointer select-none items-center gap-1.5 pr-1.5 text-xs",
@@ -353,7 +353,7 @@ function TreeItem({
               key={child.id}
               node={child}
               depth={depth + 1}
-              selectedId={selectedId}
+              selectedIds={selectedIds}
               onSelect={onSelect}
               onToggleActive={onToggleActive}
               dnd={dnd}

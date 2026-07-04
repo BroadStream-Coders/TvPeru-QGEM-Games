@@ -67,8 +67,16 @@ function HierarchyPanel() {
     <div className="scrl h-full overflow-y-auto bg-panel p-3">
       <Hierarchy
         nodes={e.hierarchyNodes}
-        selectedId={e.selectedId}
-        onSelect={e.setSelectedId}
+        selectedIds={e.selectedIds}
+        onSelect={(id, additive) =>
+          additive
+            ? e.setSelectedIds((prev) =>
+                prev.includes(id)
+                  ? prev.filter((x) => x !== id)
+                  : [...prev, id],
+              )
+            : e.setSelectedId(id)
+        }
         onCreate={(parentId) => e.createNewGameObject(parentId ?? undefined)}
         onDelete={e.deleteGameObject}
         onReorder={e.handleReorder}
@@ -117,6 +125,10 @@ function InspectorPanel() {
             onAdd={(type) => e.addComponent(selected.id, type)}
           />
         </>
+      ) : e.selectedIds.length > 1 ? (
+        <p className="p-3 text-2xs text-dim">
+          {e.selectedIds.length} objetos seleccionados.
+        </p>
       ) : (
         <p className="p-3 text-2xs text-dim">
           Crea un objeto con click derecho en Hierarchy.

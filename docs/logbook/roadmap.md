@@ -175,7 +175,14 @@ su "Hecho cuando", pero no es el foco actual).
   al soltar. La lista de objetos se memoiza (`useMemo`) para que Shift/Space/zoom no la
   re-rendericen y pisen la escritura directa. NO se eliminó el pivot (rompería los juegos
   existentes y no hace falta). El panel Game refleja el cambio al soltar, no en vivo.
-  Falta Fase 3.
+  **Fase 3 parcial (2026-07-04):** selección por canvas con `react-selecto` (click,
+  marquee, shift-add) + multi-selección. Modelo pasó de `selectedId` a `selectedIds[]`
+  (con `selectedId`/`selected` derivados para el Inspector single); Hierarchy resalta
+  varios y hace selección aditiva con shift/ctrl; Inspector muestra "N objetos
+  seleccionados" cuando hay >1. Moveable maneja grupo (`onDrag/Resize/RotateGroup`) con
+  snapshots por elemento y commit batch; el gesto sigue por escritura directa al DOM.
+  Marquee poda descendientes si su ancestro también quedó seleccionado (evita doble
+  movimiento). Se quitó el botón "Ratio" (queda Shift). Falta: snapping/guías.
 
 ---
 

@@ -24,12 +24,20 @@ export function useSceneEditor({
   const [gameObjects, setGameObjects] = useState<GameObject[]>(
     initialGameObjects ?? [],
   );
-  const [selectedId, setSelectedId] = useState<string | null>(
-    initialSelectedId,
+  const [selectedIds, setSelectedIds] = useState<string[]>(
+    initialSelectedId ? [initialSelectedId] : [],
+  );
+  const setSelectedId = useCallback(
+    (id: string | null) => setSelectedIds(id ? [id] : []),
+    [],
   );
 
   const stageRef = useRef<HTMLDivElement>(null);
-  const selected = gameObjects.find((go) => go.id === selectedId) ?? null;
+  const selectedId = selectedIds.length ? selectedIds[selectedIds.length - 1] : null;
+  const selected =
+    selectedIds.length === 1
+      ? (gameObjects.find((go) => go.id === selectedIds[0]) ?? null)
+      : null;
 
   const buildNode = (go: GameObject): TreeNode => {
     const children = gameObjects
@@ -75,7 +83,7 @@ export function useSceneEditor({
   const deleteGameObject = (id: string) => {
     const ids = collectSubtreeIds(gameObjects, id);
     setGameObjects((prev) => prev.filter((go) => !ids.has(go.id)));
-    if (selectedId && ids.has(selectedId)) setSelectedId(null);
+    setSelectedIds((prev) => prev.filter((sid) => !ids.has(sid)));
   };
 
   const handleReorder = (
@@ -184,6 +192,8 @@ export function useSceneEditor({
     setGameObjects,
     selectedId,
     setSelectedId,
+    selectedIds,
+    setSelectedIds,
     selected,
     hierarchyNodes,
     stageRef,

@@ -68,6 +68,14 @@ Poder ingerir un asset al panel Local desde una URL (descargar/generar), no solo
 
 Arrastrar para asignar: un asset del panel Local sobre un componente (setea su `assetKey`), y un componente sobre un campo de referencia (RM-061). Hoy la asignación es por dropdown/selector; el drag es el upgrade de UX. Es el "Nivel B" pospuesto de RM-060/RM-061.
 
+## [WL-018] Snapping y guías al mover/redimensionar en Scene
+
+Al arrastrar/redimensionar en el canvas de Scene, mostrar guías de alineación
+(smart guides estilo Figma/Unity) y snapping a bordes/centros de otros objetos y
+del lienzo. Moveable ya trae `snappable`/`elementGuidelines`/`verticalGuidelines`;
+faltaría alimentarle las guías (bordes de los demás GO + centro del 1920×1080) y
+decidir umbral y atajo para desactivarlo. Era la Fase 3 restante de RM-067.
+
 ## [WL-017] `id` estable por componente
 
 Dar un `id` propio a cada componente. Hoy solo el GameObject tiene `id`; los componentes se identifican por `type` dentro de su objeto (uno de cada tipo por objeto). Haría falta si un objeto llega a tener varios componentes del mismo tipo, o para referencias más robustas. La referencia a componente de RM-061 usa `{ gameObjectId, type }` justamente para no necesitar esto todavía.

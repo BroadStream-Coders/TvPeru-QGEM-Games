@@ -70,6 +70,7 @@ export function SceneCanvas() {
   const [spaceHeld, setSpaceHeld] = useState(false);
   const [shiftHeld, setShiftHeld] = useState(false);
   const [targets, setTargets] = useState<HTMLElement[]>([]);
+  const [rootEl, setRootEl] = useState<HTMLDivElement | null>(null);
 
   const targetsRef = useRef(targets);
   targetsRef.current = targets;
@@ -312,6 +313,7 @@ export function SceneCanvas() {
       </div>
 
       <div
+        ref={setRootEl}
         className="relative min-h-0 flex-1 overflow-hidden"
         style={{ background: "#202327" }}
       >
@@ -389,6 +391,7 @@ export function SceneCanvas() {
         {!spaceHeld && (
           <Selecto
             ref={selectoRef}
+            rootContainer={rootEl ?? undefined}
             dragContainer=".scene-viewer"
             selectableTargets={["[data-go-id]"]}
             hitRate={0}

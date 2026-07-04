@@ -134,58 +134,6 @@ su "Hecho cuando", pero no es el foco actual).
 
 ---
 
-## [RM-067] Migrar la edición de Scene a react-moveable (basado en lab/react-moveable)
-
-- **Objetivo:** Reemplazar el sistema de edición propio del panel **Scene**
-  (`SelectionOverlay` + `use-transform-gesture`) por `react-moveable` +
-  `react-infinite-viewer`, sumando zoom/pan, rotación y keepRatio. Clave: Moveable
-  va **controlado** (sus eventos se convierten a coordenadas del modelo y escriben en
-  `gameObjects`), porque el engine es data-autoritativo y Scene/Game renderizan el
-  mismo modelo. **Game no se toca.**
-- **Hecho cuando:** en Scene se puede arrastrar/redimensionar/rotar/ratio con Moveable
-  y navegar con zoom/pan; el modelo sigue siendo la única verdad; `SelectionOverlay` y
-  `use-transform-gesture` quedan eliminados.
-- **Fecha:** 2026-07-04 · **Estado:** En progreso (2026-07-04) — Fase 1 hecha:
-  `SceneCanvas` (InfiniteViewer + viewport 1920×1080 con zoom/pan/fit/encajar),
-  cableado en `ScenePanel`; la edición vieja sigue viva dentro del viewer. **Gotcha
-  clave:** el panel Scene DEBE registrarse con `renderer: "always"` en dockview; con el
-  default (`onlyWhenVisible`) dockview destruye/reconstruye el DOM al cambiar de pestaña
-  y InfiniteViewer se rompe (salto de vista, "Encajar" muerto). Con `"always"` lo oculta
-  vía `visibility:hidden` y el viewer sobrevive. Falta Fase 2 (Moveable controlado, borrar
-  el sistema viejo) y Fase 3 (snapping/guías, multi-selección).
-  **Fase 2 hecha (2026-07-04):** Moveable controlado en `SceneCanvas`
-  (drag/resize/rotate + toggle Ratio), sus eventos se convierten a coordenadas del
-  modelo vía `sceneTransform.ts` (`toAbsRect`/`fromAbsRect`, mismas fórmulas que el
-  gesto viejo) y escriben con un nuevo `setTransform` del editor. Target = el div del GO
-  seleccionado por `data-go-id` (marcado en `RectTransform`). Los controles salen al
-  seleccionar (se eliminó el toggle `editMode` completo: state, `EditorApi`, botón
-  "Editar" del Inspector). Resize usa `ev.drag.beforeTranslate` (el cálculo por
-  `direction` daba un resize brusco). Shift fuerza ratio además del toggle. Se quitaron
-  las líneas punteadas de outline en `GameObjectView`. Eliminados `SelectionOverlay.tsx`
-  y `use-transform-gesture.ts`.
-  **Gotcha coordenadas (2026-07-04):** Moveable NO sabe parsear un `transform:
-  translate(-pivot%,-pivot%)`; con eso el resize saltaba y los handles se desalineaban.
-  Se refactorizó `RectTransform` para posicionar con `left/top/width/height` directos
-  (pivot plegado en el %), dejando `transform` solo para `rotate()`. Layout visual
-  idéntico (verificado old==new), pero el objetivo queda "Moveable-friendly".
-  **Fluidez (2026-07-04):** el resize/drag se sentían "duros" porque cada frame del
-  gesto hacía `setTransform` → re-render de TODA la escena. Ahora durante el gesto se
-  escribe el DOM del objeto directo (`rectTransformStyle` extraído de `RectTransform`,
-  misma fórmula → sin salto ni residuo al volcar) y se hace `setTransform` una sola vez
-  al soltar. La lista de objetos se memoiza (`useMemo`) para que Shift/Space/zoom no la
-  re-rendericen y pisen la escritura directa. NO se eliminó el pivot (rompería los juegos
-  existentes y no hace falta). El panel Game refleja el cambio al soltar, no en vivo.
-  **Fase 3 parcial (2026-07-04):** selección por canvas con `react-selecto` (click,
-  marquee, shift-add) + multi-selección. Modelo pasó de `selectedId` a `selectedIds[]`
-  (con `selectedId`/`selected` derivados para el Inspector single); Hierarchy resalta
-  varios y hace selección aditiva con shift/ctrl; Inspector muestra "N objetos
-  seleccionados" cuando hay >1. Moveable maneja grupo (`onDrag/Resize/RotateGroup`) con
-  snapshots por elemento y commit batch; el gesto sigue por escritura directa al DOM.
-  Marquee poda descendientes si su ancestro también quedó seleccionado (evita doble
-  movimiento). Se quitó el botón "Ratio" (queda Shift). Falta: snapping/guías.
-
----
-
 # Fase 2 — Engine genérico (diferido)
 
 > Diferido a propósito hasta cerrar la Fase 1. Se retoma promoviendo patrones que

@@ -12,6 +12,13 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-067] Edición de Scene migrada a react-moveable (2026-07-04 15:36)
+`SceneCanvas` reemplazó el sistema propio (`SelectionOverlay`+`use-transform-gesture`, eliminados): InfiniteViewer (zoom/pan/encajar,
+panel dockview `renderer:"always"`) + Moveable controlado (drag/resize/rotate, Shift=ratio) que convierte a coordenadas del modelo
+(`sceneTransform.ts`) y escribe directo al DOM en el gesto + commit al soltar; `RectTransform` reposicionado left/top para ser
+Moveable-friendly. Multi-selección por react-selecto (click/marquee/shift, `rootContainer` fija el offset por el transform de dockview)
+y grupos de Moveable; `selectedId`→`selectedIds[]`. Snapping/guías → WL-018.
+
 ## [RM-066] Ventana Game: fit contain sin scroll + look Unity (2026-07-04 10:01)
 La rama Game de `Scene.tsx` (solo en ventana) encaja el stage 16:9 con `min(100cqi, 100cqb*16/9)` — pillarbox/letterbox,
 nunca scroll — sobre un backdrop plano `#202327`, sin grilla ni borde (estilo Game view de Unity). Fullscreen y Scene intactos.

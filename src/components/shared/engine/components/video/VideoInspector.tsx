@@ -4,6 +4,7 @@ import {
   SelectField,
   FieldIconButton,
   ToggleField,
+  AssetSelectField,
 } from "@engine/InspectorFields";
 import {
   VideoComponent,
@@ -22,8 +23,7 @@ export function VideoInspector({
   onRemove: () => void;
   onResize: (size: { x: number; y: number }) => void;
 }) {
-  const { assets, kinds } = useAssets();
-  const videoKeys = Object.keys(kinds).filter((k) => kinds[k] === "video");
+  const { assets } = useAssets();
   const url = component.assetKey ? assets[component.assetKey]?.url : undefined;
 
   const fitToVideo = () => {
@@ -40,16 +40,13 @@ export function VideoInspector({
       accent="video"
       onRemove={onRemove}
     >
-      <SelectField
+      <AssetSelectField
         label="Asset"
+        kind="video"
         value={component.assetKey ?? ""}
         onChange={(key) =>
           onChange({ ...component, assetKey: key || undefined })
         }
-        options={[
-          { value: "", label: "— no asset —" },
-          ...videoKeys.map((k) => ({ value: k, label: k })),
-        ]}
         actions={
           <FieldIconButton
             icon={<Maximize2 size={13} />}

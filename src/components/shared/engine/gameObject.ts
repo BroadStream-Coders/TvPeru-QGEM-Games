@@ -4,6 +4,11 @@ export interface GameObjectComponent {
   type: string;
 }
 
+export interface ComponentRef {
+  gameObjectId: string;
+  type: string;
+}
+
 export interface GameObject {
   id: string;
   name: string;

@@ -63,3 +63,11 @@ Poder renombrar la key/nombre de un asset ya cargado en Local. Hoy (RM-062) la k
 ## [WL-015] Traer/descargar un asset a Local desde una URL
 
 Poder ingerir un asset al panel Local desde una URL (descargar/generar), no solo desde archivos del PC (RM-062). Nace al quitar la URL directa del video en RM-064: el link deja de vivir en el componente. Distinto de la pestaña Storage/Supabase (RM-059), que navega assets remotos ya catalogados.
+
+## [WL-016] Asignar por drag-and-drop (Nivel B)
+
+Arrastrar para asignar: un asset del panel Local sobre un componente (setea su `assetKey`), y un componente sobre un campo de referencia (RM-061). Hoy la asignación es por dropdown/selector; el drag es el upgrade de UX. Es el "Nivel B" pospuesto de RM-060/RM-061.
+
+## [WL-017] `id` estable por componente
+
+Dar un `id` propio a cada componente. Hoy solo el GameObject tiene `id`; los componentes se identifican por `type` dentro de su objeto (uno de cada tipo por objeto). Haría falta si un objeto llega a tener varios componentes del mismo tipo, o para referencias más robustas. La referencia a componente de RM-061 usa `{ gameObjectId, type }` justamente para no necesitar esto todavía.

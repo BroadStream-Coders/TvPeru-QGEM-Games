@@ -1,11 +1,12 @@
 import { Gamepad2, Upload, Keyboard } from "lucide-react";
 import { ComponentSection } from "@engine/ComponentSection";
+import { ComponentRefField, AssetSelectField } from "@engine/InspectorFields";
 import { loadJsonFile } from "@/helpers/persistence";
 import {
-  ControllerComponent,
+  DeletreoComponent,
   DeletreoData,
   isDeletreoData,
-} from "./controllerComponent";
+} from "./deletreoComponent";
 
 const KEY_LEGEND: { keys: string; label: string }[] = [
   { keys: "Numpad 0-9", label: "Elegir grupo" },
@@ -17,15 +18,14 @@ const KEY_LEGEND: { keys: string; label: string }[] = [
   { keys: "↑ / ↓", label: "Mostrar / ocultar cuadro" },
 ];
 
-export function ControllerInspector({
+export function DeletreoInspector({
   component,
   onChange,
   onRemove,
 }: {
-  component: ControllerComponent;
-  onChange: (next: ControllerComponent) => void;
+  component: DeletreoComponent;
+  onChange: (next: DeletreoComponent) => void;
   onRemove: () => void;
-  onResize: (size: { x: number; y: number }) => void;
 }) {
   const onPick = async (file: File) => {
     try {
@@ -49,10 +49,33 @@ export function ControllerInspector({
 
   return (
     <ComponentSection
-      title="Controller"
+      title="Deletreo"
       icon={<Gamepad2 size={13} />}
       onRemove={onRemove}
     >
+      <ComponentRefField
+        label="Image"
+        targetType="image"
+        value={component.image}
+        onChange={(image) => onChange({ ...component, image })}
+      />
+      <AssetSelectField
+        label="Normal"
+        kind="image"
+        value={component.normalFrame ?? ""}
+        onChange={(key) =>
+          onChange({ ...component, normalFrame: key || undefined })
+        }
+      />
+      <AssetSelectField
+        label="Error"
+        kind="image"
+        value={component.errorFrame ?? ""}
+        onChange={(key) =>
+          onChange({ ...component, errorFrame: key || undefined })
+        }
+      />
+
       <label className="flex cursor-pointer items-center justify-center gap-1.5 rounded-md border border-line py-1.5 text-xs font-medium text-ink transition-colors hover:border-acc hover:bg-elev">
         <Upload size={13} />
         Cargar JSON
@@ -74,8 +97,8 @@ export function ControllerInspector({
           <span>Grupos: {groupCount}</span>
           <span>Slots: {slotCount}</span>
           <span className="mt-1 text-ink">
-            Grupo {groupCount ? component.groupIndex + 1 : 0}/{groupCount} ·
-            Slot {slotsInGroup ? component.slotIndex + 1 : 0}/{slotsInGroup}
+            Grupo {groupCount ? component.groupIndex + 1 : 0}/{groupCount} · Slot{" "}
+            {slotsInGroup ? component.slotIndex + 1 : 0}/{slotsInGroup}
           </span>
         </div>
       ) : (

@@ -210,4 +210,9 @@ su "Hecho cuando", pero no es el foco actual).
     llaman, sin mezclarlas.
   - **Dependencia:** usa el primitivo "referencia a asset local" definido en RM-060;
     no inventarlo de nuevo aquí.
-- **Fecha:** 2026-07-03 · **Estado:** Abierto
+- **Partido:** el drag (Nivel B) → WL-016; `id` por componente → WL-017. Esta RM = el
+  primitivo `ComponentRef { gameObjectId, type }` + campo en el inspector + probarlo
+  volviendo `controller` de deletreo en un componente `Deletreo` especializado
+  (referencia un Image, tiene `normalFrame`/`errorFrame`, hace el swap). Incremental:
+  las teclas siguen en `DeletreoBehavior`, que solo setea `frame`.
+- **Fecha:** 2026-07-03 · **Estado:** En progreso (2026-07-03)

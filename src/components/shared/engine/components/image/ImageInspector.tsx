@@ -1,6 +1,10 @@
 import { Image as ImageIcon, Maximize2 } from "lucide-react";
 import { ComponentSection } from "@engine/ComponentSection";
-import { SelectField, FieldIconButton } from "@engine/InspectorFields";
+import {
+  SelectField,
+  FieldIconButton,
+  AssetSelectField,
+} from "@engine/InspectorFields";
 import {
   ImageComponent,
   ImageFit,
@@ -18,8 +22,7 @@ export function ImageInspector({
   onRemove: () => void;
   onResize: (size: { x: number; y: number }) => void;
 }) {
-  const { assets, kinds } = useAssets();
-  const imageKeys = Object.keys(kinds).filter((k) => kinds[k] === "image");
+  const { assets } = useAssets();
   const url = component.assetKey ? assets[component.assetKey]?.url : undefined;
 
   const fitToImage = () => {
@@ -36,16 +39,13 @@ export function ImageInspector({
       accent="image"
       onRemove={onRemove}
     >
-      <SelectField
+      <AssetSelectField
         label="Asset"
+        kind="image"
         value={component.assetKey ?? ""}
         onChange={(key) =>
           onChange({ ...component, assetKey: key || undefined })
         }
-        options={[
-          { value: "", label: "— no asset —" },
-          ...imageKeys.map((k) => ({ value: k, label: k })),
-        ]}
         actions={
           <FieldIconButton
             icon={<Maximize2 size={13} />}

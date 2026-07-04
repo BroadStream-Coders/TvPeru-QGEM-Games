@@ -1,4 +1,4 @@
-import { GameObjectComponent } from "@engine/gameObject";
+import { ComponentRef, GameObjectComponent } from "@engine/gameObject";
 
 export interface DeletreoGroup {
   words: string[];
@@ -8,23 +8,33 @@ export interface DeletreoData {
   groups: DeletreoGroup[];
 }
 
-export interface ControllerComponent extends GameObjectComponent {
-  type: "controller";
+export type DeletreoFrame = "normal" | "error";
+
+export interface DeletreoComponent extends GameObjectComponent {
+  type: "deletreo";
   groups: DeletreoGroup[];
   groupIndex: number;
   slotIndex: number;
   fileName?: string;
+  image: ComponentRef | null;
+  normalFrame?: string;
+  errorFrame?: string;
+  frame: DeletreoFrame;
 }
 
-export function createControllerComponent(
-  init?: Partial<Omit<ControllerComponent, "type">>,
-): ControllerComponent {
+export function createDeletreoComponent(
+  init?: Partial<Omit<DeletreoComponent, "type">>,
+): DeletreoComponent {
   return {
-    type: "controller",
+    type: "deletreo",
     groups: init?.groups ?? [],
     groupIndex: init?.groupIndex ?? 0,
     slotIndex: init?.slotIndex ?? 0,
     fileName: init?.fileName,
+    image: init?.image ?? null,
+    normalFrame: init?.normalFrame,
+    errorFrame: init?.errorFrame,
+    frame: init?.frame ?? "normal",
   };
 }
 

@@ -4,6 +4,10 @@ import { ReactNode } from "react";
 import { ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { NumberInput } from "@engine/NumberField";
+import { useAssets } from "@engine/assetsContext";
+import { useEditor } from "@engine/editor/editorContext";
+import type { AssetKind } from "@/helpers/asset-preloader";
+import type { ComponentRef } from "@engine/gameObject";
 
 const ICON_BTN =
   "flex size-7 shrink-0 items-center justify-center rounded-[5px] border border-line text-dim transition-colors hover:border-acc hover:text-ink disabled:cursor-not-allowed disabled:opacity-50";
@@ -106,6 +110,65 @@ export function SelectField<T extends string>({
       </div>
       {actions}
     </FieldRow>
+  );
+}
+
+export function AssetSelectField({
+  label,
+  kind,
+  value,
+  onChange,
+  actions,
+}: {
+  label?: string;
+  kind: AssetKind;
+  value: string;
+  onChange: (key: string) => void;
+  actions?: ReactNode;
+}) {
+  const { kinds } = useAssets();
+  const keys = Object.keys(kinds).filter((k) => kinds[k] === kind);
+  return (
+    <SelectField
+      label={label}
+      value={value}
+      onChange={onChange}
+      options={[
+        { value: "", label: "— no asset —" },
+        ...keys.map((k) => ({ value: k, label: k })),
+      ]}
+      actions={actions}
+    />
+  );
+}
+
+export function ComponentRefField({
+  label,
+  targetType,
+  value,
+  onChange,
+}: {
+  label?: string;
+  targetType: string;
+  value: ComponentRef | null;
+  onChange: (ref: ComponentRef | null) => void;
+}) {
+  const { gameObjects } = useEditor();
+  const candidates = gameObjects.filter((go) =>
+    go.components.some((c) => c.type === targetType),
+  );
+  return (
+    <SelectField
+      label={label}
+      value={value?.gameObjectId ?? ""}
+      onChange={(goId) =>
+        onChange(goId ? { gameObjectId: goId, type: targetType } : null)
+      }
+      options={[
+        { value: "", label: "— none —" },
+        ...candidates.map((go) => ({ value: go.id, label: go.name })),
+      ]}
+    />
   );
 }
 

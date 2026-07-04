@@ -12,9 +12,9 @@ import { SHARED_ASSETS } from "@/assets/shared";
 import { DELETREO_ASSETS } from "./assets";
 import { spellframeDefinition } from "./components/spellframe";
 import { createSpellframeComponent } from "./components/spellframe/spellframeComponent";
-import { controllerDefinition } from "./components/controller";
-import { createControllerComponent } from "./components/controller/controllerComponent";
-import { ANCHOR_ID, FRAME_ID, TEXT_ID, CONTROLLER_ID } from "./constants";
+import { deletreoDefinition } from "./components/deletreo";
+import { createDeletreoComponent } from "./components/deletreo/deletreoComponent";
+import { ANCHOR_ID, FRAME_ID, TEXT_ID } from "./constants";
 import { DeletreoBehavior } from "./DeletreoBehavior";
 
 export const deletreoGame: GameDefinition = {
@@ -27,7 +27,7 @@ export const deletreoGame: GameDefinition = {
     incorrect: SHARED_ASSETS.incorrectSound,
     ...DELETREO_ASSETS,
   },
-  components: [spellframeDefinition, controllerDefinition],
+  components: [spellframeDefinition, deletreoDefinition],
   behavior: DeletreoBehavior,
   gameObjects: () => [
     createGameObject({
@@ -48,6 +48,13 @@ export const deletreoGame: GameDefinition = {
         size: { x: 1170, y: 204 },
         pivot: { x: 0.5, y: 0.5 },
       },
+      components: [
+        createDeletreoComponent({
+          image: { gameObjectId: FRAME_ID, type: "image" },
+          normalFrame: "mainFrame",
+          errorFrame: "errorFrame",
+        }),
+      ],
     }),
     createGameObject({
       id: FRAME_ID,
@@ -76,16 +83,6 @@ export const deletreoGame: GameDefinition = {
         pivot: { x: 0.5, y: 0.5 },
       },
       components: [createSpellframeComponent()],
-    }),
-    createGameObject({
-      id: CONTROLLER_ID,
-      name: "Controller",
-      transform: {
-        position: { x: 0, y: 0 },
-        size: { x: 0, y: 0 },
-        pivot: { x: 0.5, y: 0.5 },
-      },
-      components: [createControllerComponent()],
     }),
   ],
 };

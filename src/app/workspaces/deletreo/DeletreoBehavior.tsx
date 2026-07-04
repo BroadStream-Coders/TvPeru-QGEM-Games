@@ -7,9 +7,10 @@ import { useAnimations } from "@engine/animations/AnimationsContext";
 import { useGameKeys } from "@/hooks/use-game-keys";
 import { playSound } from "@/lib/audio";
 import {
-  ControllerComponent,
-} from "./components/controller/controllerComponent";
-import { FRAME_ID, TEXT_ID, CONTROLLER_ID } from "./constants";
+  DeletreoComponent,
+  DeletreoFrame,
+} from "./components/deletreo/deletreoComponent";
+import { ANCHOR_ID, FRAME_ID, TEXT_ID } from "./constants";
 
 export function DeletreoBehavior() {
   const { gameObjects, setGameObjects } = useEditor();
@@ -22,48 +23,36 @@ export function DeletreoBehavior() {
   const [spellStep, setSpellStep] = useState(0);
 
   const controller = gameObjects
-    .find((go) => go.id === CONTROLLER_ID)
-    ?.components.find((c) => c.type === "controller") as
-    | ControllerComponent
+    .find((go) => go.id === ANCHOR_ID)
+    ?.components.find((c) => c.type === "deletreo") as
+    | DeletreoComponent
     | undefined;
   const groups = controller?.groups ?? [];
   const groupIndex = controller?.groupIndex ?? 0;
   const slotIndex = controller?.slotIndex ?? 0;
 
-  const patchController = (patch: Partial<ControllerComponent>) =>
+  const patchDeletreo = (patch: Partial<DeletreoComponent>) =>
     setGameObjects((prev) =>
       prev.map((go) =>
-        go.id === CONTROLLER_ID
+        go.id === ANCHOR_ID
           ? {
               ...go,
               components: go.components.map((c) =>
-                c.type === "controller" ? { ...c, ...patch } : c,
+                c.type === "deletreo" ? { ...c, ...patch } : c,
               ),
             }
           : go,
       ),
     );
 
-  const setMainFrameAsset = (assetKey: string) =>
-    setGameObjects((prev) =>
-      prev.map((go) =>
-        go.id === FRAME_ID
-          ? {
-              ...go,
-              components: go.components.map((c) =>
-                c.type === "image" ? { ...c, assetKey } : c,
-              ),
-            }
-          : go,
-      ),
-    );
+  const setFrame = (frame: DeletreoFrame) => patchDeletreo({ frame });
 
   const currentGroup = groups[groupIndex]?.words ?? [];
   const word = currentGroup[slotIndex] ?? "";
 
   useEffect(() => {
     setSpellStep(0);
-    setMainFrameAsset("mainFrame");
+    setFrame("normal");
   }, [groupIndex, slotIndex, controller?.fileName]);
 
   useEffect(() => {
@@ -83,22 +72,22 @@ export function DeletreoBehavior() {
 
   const selectGroup = (n: number) => {
     if (n < 0 || n >= groups.length) return;
-    patchController({ groupIndex: n, slotIndex: 0 });
+    patchDeletreo({ groupIndex: n, slotIndex: 0 });
   };
 
   const selectSlot = (n: number) => {
     if (n < 0 || n >= currentGroup.length) return;
-    patchController({ slotIndex: n });
+    patchDeletreo({ slotIndex: n });
   };
 
   const nextSlot = () => {
     if (slotIndex >= currentGroup.length - 1) return;
-    patchController({ slotIndex: slotIndex + 1 });
+    patchDeletreo({ slotIndex: slotIndex + 1 });
   };
 
   const prevSlot = () => {
     if (slotIndex <= 0) return;
-    patchController({ slotIndex: slotIndex - 1 });
+    patchDeletreo({ slotIndex: slotIndex - 1 });
   };
 
   useGameKeys({
@@ -108,12 +97,12 @@ export function DeletreoBehavior() {
     onBack: prevSlot,
     onShowAnswer: () => {
       setSpellStep(word.length);
-      setMainFrameAsset("mainFrame");
+      setFrame("normal");
       if (correctUrl) playSound(correctUrl);
       trigger(FRAME_ID, "pop");
     },
     onMarkError: () => {
-      setMainFrameAsset("errorFrame");
+      setFrame("error");
       if (incorrectUrl) playSound(incorrectUrl);
       trigger(FRAME_ID, "shake");
     },

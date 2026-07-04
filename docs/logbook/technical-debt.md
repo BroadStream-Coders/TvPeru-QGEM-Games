@@ -14,6 +14,23 @@ changelog y se borra de aquí.
 
 ---
 
+## [TD-020] `stripForExport` es opt-in: un componente puede filtrar data de runtime al exportar
+
+- **Ubicación:** `src/components/shared/engine/componentRegistry.ts` (campo `stripForExport`) · consumido en `src/components/shared/engine/editor/EditorLayout.tsx` (`handleExport`)
+- **Riesgo:** 6/10
+- **Problema:** El export de escena (File → Export) limpia la data de runtime de
+  cada componente llamando a su `stripForExport`, pero es opcional. Un componente
+  que guarde estado de runtime en el GameObject (como hoy `deletreo` con `groups` o
+  `spellframe` con `word`/`spellStep`, ambos escritos por el behavior) y **olvide**
+  declarar `stripForExport` exportará esa data al `scene.json` sin aviso.
+- **Impacto futuro:** El `scene.json` que se commitea como "diseño" quedaría
+  contaminado con palabras/estado de una sesión concreta, rompiendo la premisa de
+  que el diseño no lleva data. Falla en silencio (no hay error ni test). Al agregar
+  un componente nuevo con estado de runtime hay que acordarse de esto. Mitigación
+  posible: marcar en la definición qué campos son runtime y forzar declararlo, o un
+  chequeo que avise si un componente muta campos no declarados como diseño.
+- **Fecha:** 2026-07-04 · **Estado:** Abierto
+
 ## [TD-019] Ctrl/Cmd+D (duplicar) choca con el atajo de marcador en Brave
 
 - **Ubicación:** `src/components/shared/engine/editor/SceneCanvas.tsx` (handler `onKeyDown`)

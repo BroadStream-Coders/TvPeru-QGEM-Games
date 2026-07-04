@@ -20,6 +20,7 @@ export interface ComponentDefinition<
   type: C["type"];
   label: string;
   create: () => C;
+  stripForExport?: (component: C) => C;
   view?: ComponentType<{ component: C }>;
   editor: ComponentType<{
     component: C;

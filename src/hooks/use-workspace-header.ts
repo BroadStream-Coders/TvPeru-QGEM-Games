@@ -7,9 +7,13 @@ interface WorkspaceHeaderState {
   onLoad?: (file: File) => void;
   /** Registrado por el panel Game del editor; la topbar dispara fullscreen. */
   onPlay?: () => void;
+  onExport?: () => void;
   setHeader: (
     header: Partial<
-      Pick<WorkspaceHeaderState, "title" | "icon" | "onLoad" | "onPlay">
+      Pick<
+        WorkspaceHeaderState,
+        "title" | "icon" | "onLoad" | "onPlay" | "onExport"
+      >
     >,
   ) => void;
   resetHeader: () => void;
@@ -20,6 +24,7 @@ export const useWorkspaceHeader = create<WorkspaceHeaderState>((set) => ({
   icon: null,
   onLoad: undefined,
   onPlay: undefined,
+  onExport: undefined,
   setHeader: (header) => set((state) => ({ ...state, ...header })),
   resetHeader: () =>
     set({
@@ -27,5 +32,6 @@ export const useWorkspaceHeader = create<WorkspaceHeaderState>((set) => ({
       icon: null,
       onLoad: undefined,
       onPlay: undefined,
+      onExport: undefined,
     }),
 }));

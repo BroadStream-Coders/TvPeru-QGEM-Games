@@ -435,13 +435,38 @@ export function EditorLayout({ game }: { game: GameDefinition }) {
     addLocalFiles,
   };
 
+  const handleExport = useCallback(() => {
+    const { gameObjects, registry } = apiRef.current;
+    const scene = gameObjects.map((go) => ({
+      ...go,
+      components: go.components.map((c) => {
+        const strip = registry.get(c.type)?.stripForExport;
+        return strip ? strip(c) : c;
+      }),
+    }));
+    const blob = new Blob([JSON.stringify(scene, null, 2)], {
+      type: "application/json",
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${game.id}.scene.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }, [game.id]);
+
   useEffect(() => () => resetHeader(), [resetHeader]);
   useEffect(() => {
     const onLoad = game.onLoad
       ? (file: File) => game.onLoad!(file, apiRef.current)
       : undefined;
-    setHeader({ title: game.title, icon: game.icon, onLoad });
-  }, [setHeader, game.title, game.icon, game.onLoad]);
+    setHeader({
+      title: game.title,
+      icon: game.icon,
+      onLoad,
+      onExport: handleExport,
+    });
+  }, [setHeader, game.title, game.icon, game.onLoad, handleExport]);
 
   function onReady(event: DockviewReadyEvent) {
     buildDefaultLayout(event.api);

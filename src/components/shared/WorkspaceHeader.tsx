@@ -1,20 +1,41 @@
 "use client";
 
+import type { ReactNode } from "react";
 import Link from "next/link";
-import { ArrowLeft, Play, Undo2, Redo2 } from "lucide-react";
+import { ArrowLeft, Play, Undo2, Redo2, Download } from "lucide-react";
+import { Menubar } from "radix-ui";
 import { FileActions } from "./FileActions";
 import { AuthButton } from "./AuthButton";
 
 import { useWorkspaceHeader } from "@/hooks/use-workspace-header";
 
 // Grupos presentes pero ocultos por ahora — poner en true para mostrarlos.
-const SHOW = { menus: false, history: false } as const;
-const MENUS = ["File", "Edit", "Object", "Component", "Window", "Help"];
+const SHOW = { history: false } as const;
+
+interface MenuItem {
+  label: string;
+  icon?: ReactNode;
+  onSelect: () => void;
+}
+interface Menu {
+  label: string;
+  items: MenuItem[];
+}
 
 export function WorkspaceHeader() {
-  const { title, icon, onLoad, onPlay } = useWorkspaceHeader();
+  const { title, icon, onLoad, onPlay, onExport } = useWorkspaceHeader();
 
   if (!title) return null;
+
+  const menus: Menu[] = [];
+  const fileItems: MenuItem[] = [];
+  if (onExport)
+    fileItems.push({
+      label: "Export",
+      icon: <Download />,
+      onSelect: onExport,
+    });
+  if (fileItems.length) menus.push({ label: "File", items: fileItems });
 
   return (
     <header className="z-10 flex h-[34px] w-full shrink-0 items-center gap-0.5 border-b border-edge bg-gradient-to-b from-head to-[#202327] px-2 text-[12.5px]">
@@ -37,16 +58,36 @@ export function WorkspaceHeader() {
         <span className="font-semibold tracking-[.2px] text-ink">{title}</span>
       </div>
 
-      {/* B · menus (oculto) */}
-      {SHOW.menus &&
-        MENUS.map((m) => (
-          <div
-            key={m}
-            className="cursor-default rounded-[5px] px-2.5 py-1 text-dim transition-colors hover:bg-elev hover:text-ink"
-          >
-            {m}
-          </div>
-        ))}
+      {/* B · menus */}
+      {menus.length > 0 && (
+        <Menubar.Root className="flex items-center gap-0.5">
+          {menus.map((menu) => (
+            <Menubar.Menu key={menu.label}>
+              <Menubar.Trigger className="cursor-default rounded-[5px] px-2.5 py-1 text-dim outline-none transition-colors hover:bg-elev hover:text-ink data-open:bg-elev data-open:text-ink">
+                {menu.label}
+              </Menubar.Trigger>
+              <Menubar.Portal>
+                <Menubar.Content
+                  align="start"
+                  sideOffset={4}
+                  className="z-50 min-w-44 origin-(--radix-menubar-content-transform-origin) overflow-hidden rounded-lg border border-line bg-panel p-1 text-ink shadow-md duration-100 data-open:animate-in data-open:fade-in-0 data-open:zoom-in-95 data-closed:animate-out data-closed:fade-out-0 data-closed:zoom-out-95"
+                >
+                  {menu.items.map((item) => (
+                    <Menubar.Item
+                      key={item.label}
+                      onSelect={item.onSelect}
+                      className="relative flex w-full cursor-default items-center gap-1.5 rounded-md px-1.5 py-1 text-xs outline-hidden select-none focus:bg-elev focus:text-ink [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-3.5"
+                    >
+                      {item.icon}
+                      {item.label}
+                    </Menubar.Item>
+                  ))}
+                </Menubar.Content>
+              </Menubar.Portal>
+            </Menubar.Menu>
+          ))}
+        </Menubar.Root>
+      )}
 
       <div className="flex-1" />
 

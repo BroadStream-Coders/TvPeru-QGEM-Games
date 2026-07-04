@@ -10,6 +10,12 @@ export const deletreoDefinition = defineComponent<DeletreoComponent>({
   type: "deletreo",
   label: "Deletreo",
   create: () => createDeletreoComponent(),
+  stripForExport: (c) =>
+    createDeletreoComponent({
+      image: c.image ?? undefined,
+      normalFrame: c.normalFrame,
+      errorFrame: c.errorFrame,
+    }),
   view: DeletreoView,
   editor: DeletreoInspector,
 });

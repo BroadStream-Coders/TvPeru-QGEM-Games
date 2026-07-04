@@ -1,0 +1,143 @@
+[
+  {
+    "id": "background",
+    "name": "Background",
+    "active": true,
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 1920,
+        "y": 1080
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "color",
+        "value": "#01FF02"
+      }
+    ]
+  },
+  {
+    "id": "frame-anchor",
+    "name": "Anchor",
+    "active": true,
+    "transform": {
+      "position": {
+        "x": 25,
+        "y": -358
+      },
+      "size": {
+        "x": 1170,
+        "y": 204
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "deletreo",
+        "groups": [],
+        "groupIndex": 0,
+        "slotIndex": 0,
+        "image": {
+          "gameObjectId": "main-frame",
+          "type": "image"
+        },
+        "normalFrame": "mainFrame",
+        "errorFrame": "errorFrame",
+        "frame": "normal"
+      }
+    ]
+  },
+  {
+    "id": "main-frame",
+    "name": "MainFrame",
+    "active": true,
+    "parentId": "frame-anchor",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 1170,
+        "y": 204
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "mainFrame"
+      },
+      {
+        "type": "pop",
+        "scale": 1.1,
+        "duration": 0.3
+      },
+      {
+        "type": "shake",
+        "amplitude": 2,
+        "shakes": 3,
+        "duration": 0.4
+      },
+      {
+        "type": "bounce",
+        "travelSpeed": 1800,
+        "bounceAmplitude": 40,
+        "bounceDuration": 0.4
+      },
+      {
+        "type": "slide",
+        "speed": 1800,
+        "hiddenOffset": {
+          "x": 0,
+          "y": -330
+        }
+      }
+    ]
+  },
+  {
+    "id": "text",
+    "name": "Text",
+    "active": true,
+    "parentId": "main-frame",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 900,
+        "y": 160
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "spellframe",
+        "word": "",
+        "spellStep": 0,
+        "fontSize": 60,
+        "letterSpacing": 20,
+        "underlineGap": 0
+      }
+    ]
+  }
+]

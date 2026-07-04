@@ -2,7 +2,6 @@ import React, { useMemo } from "react";
 import { RectTransform, Vec2 } from "@engine/RectTransform";
 import { GameObject } from "@engine/gameObject";
 import { useComponentRegistry } from "@engine/componentRegistry";
-import { useSceneViewMode } from "@engine/SceneViewMode";
 import { useGameObjectAnimations } from "@engine/animations/useGameObjectAnimations";
 import { mergeRefs } from "@engine/refs";
 import {
@@ -31,10 +30,7 @@ export function GameObjectView({
   contentRef,
   onAnimatePosition,
 }: GameObjectViewProps) {
-  const viewMode = useSceneViewMode();
   const registry = useComponentRegistry();
-  const selected = gameObject.id === selectedId;
-  const showOutline = viewMode === "scene";
 
   const childObjects = allGameObjects.filter(
     (go) => go.parentId === gameObject.id,
@@ -61,6 +57,7 @@ export function GameObjectView({
 
   return (
     <RectTransform
+      goId={gameObject.id}
       position={gameObject.transform.position}
       size={gameObject.transform.size}
       pivot={gameObject.transform.pivot}
@@ -93,13 +90,6 @@ export function GameObjectView({
         )}
         {renderContent?.(gameObject)}
       </div>
-      {showOutline && (
-        <div
-          className={`pointer-events-none absolute inset-0 border-2 border-dashed ${
-            selected ? "border-brand" : "border-white/60"
-          }`}
-        />
-      )}
     </RectTransform>
   );
 }

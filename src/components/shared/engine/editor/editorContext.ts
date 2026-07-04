@@ -1,17 +1,10 @@
 "use client";
 
-import {
-  createContext,
-  useContext,
-  type Dispatch,
-  type SetStateAction,
-} from "react";
+import { createContext, useContext } from "react";
 import type { ComponentRegistry } from "@engine/componentRegistry";
 import type { useSceneEditor } from "@/hooks/use-scene-editor";
 
 export type EditorApi = ReturnType<typeof useSceneEditor> & {
-  editMode: boolean;
-  setEditMode: Dispatch<SetStateAction<boolean>>;
   registry: ComponentRegistry;
 };
 

@@ -98,8 +98,6 @@ function InspectorPanel() {
             transform={selected.transform}
             setAxis={e.setAxis}
             setRotation={e.setRotation}
-            editMode={e.editMode}
-            onToggleEdit={() => e.setEditMode((v) => !v)}
           />
           {selected.components.map((component, index) => {
             const Editor = e.registry.get(component.type)?.editor;
@@ -340,9 +338,7 @@ export function EditorLayout({ game }: { game: GameDefinition }) {
     initialGameObjects: game.gameObjects,
     initialSelectedId: game.initialSelectedId,
   });
-  const [editMode, setEditMode] = useState(false);
-
-  const value: EditorApi = { ...editor, editMode, setEditMode, registry };
+  const value: EditorApi = { ...editor, registry };
   const apiRef = useRef(value);
   apiRef.current = value;
   const Behavior = game.behavior;

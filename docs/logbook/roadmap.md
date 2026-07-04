@@ -153,6 +153,29 @@ su "Hecho cuando", pero no es el foco actual).
   y InfiniteViewer se rompe (salto de vista, "Encajar" muerto). Con `"always"` lo oculta
   vía `visibility:hidden` y el viewer sobrevive. Falta Fase 2 (Moveable controlado, borrar
   el sistema viejo) y Fase 3 (snapping/guías, multi-selección).
+  **Fase 2 hecha (2026-07-04):** Moveable controlado en `SceneCanvas`
+  (drag/resize/rotate + toggle Ratio), sus eventos se convierten a coordenadas del
+  modelo vía `sceneTransform.ts` (`toAbsRect`/`fromAbsRect`, mismas fórmulas que el
+  gesto viejo) y escriben con un nuevo `setTransform` del editor. Target = el div del GO
+  seleccionado por `data-go-id` (marcado en `RectTransform`). Los controles salen al
+  seleccionar (se eliminó el toggle `editMode` completo: state, `EditorApi`, botón
+  "Editar" del Inspector). Resize usa `ev.drag.beforeTranslate` (el cálculo por
+  `direction` daba un resize brusco). Shift fuerza ratio además del toggle. Se quitaron
+  las líneas punteadas de outline en `GameObjectView`. Eliminados `SelectionOverlay.tsx`
+  y `use-transform-gesture.ts`.
+  **Gotcha coordenadas (2026-07-04):** Moveable NO sabe parsear un `transform:
+  translate(-pivot%,-pivot%)`; con eso el resize saltaba y los handles se desalineaban.
+  Se refactorizó `RectTransform` para posicionar con `left/top/width/height` directos
+  (pivot plegado en el %), dejando `transform` solo para `rotate()`. Layout visual
+  idéntico (verificado old==new), pero el objetivo queda "Moveable-friendly".
+  **Fluidez (2026-07-04):** el resize/drag se sentían "duros" porque cada frame del
+  gesto hacía `setTransform` → re-render de TODA la escena. Ahora durante el gesto se
+  escribe el DOM del objeto directo (`rectTransformStyle` extraído de `RectTransform`,
+  misma fórmula → sin salto ni residuo al volcar) y se hace `setTransform` una sola vez
+  al soltar. La lista de objetos se memoiza (`useMemo`) para que Shift/Space/zoom no la
+  re-rendericen y pisen la escritura directa. NO se eliminó el pivot (rompería los juegos
+  existentes y no hace falta). El panel Game refleja el cambio al soltar, no en vivo.
+  Falta Fase 3.
 
 ---
 

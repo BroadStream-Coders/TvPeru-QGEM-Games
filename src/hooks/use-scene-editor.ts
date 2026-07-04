@@ -1,18 +1,16 @@
 import { useCallback, useRef, useState } from "react";
-import { Vec2, Vec2Field } from "@engine/RectTransform";
+import { RectTransformValues, Vec2, Vec2Field } from "@engine/RectTransform";
 import { TreeNode } from "@engine/Hierarchy";
 import { ComponentRegistry } from "@engine/componentRegistry";
 import {
   GameObject,
   GameObjectComponent,
   createGameObject,
-  ancestorOffset,
   reorderGameObjects,
   collectSubtreeIds,
   gameObjectKind,
   gameObjectHasAnimation,
 } from "@engine/gameObject";
-import { useTransformGesture } from "@/hooks/use-transform-gesture";
 
 export function useSceneEditor({
   registry,
@@ -169,38 +167,17 @@ export function useSceneEditor({
     [],
   );
 
-  const { beginGesture } = useTransformGesture({
-    stageRef,
-    getTransform: () => {
-      if (!selected) return null;
-      const origin = ancestorOffset(selected, gameObjects);
-      return {
-        ...selected.transform,
-        position: {
-          x: selected.transform.position.x + origin.x,
-          y: selected.transform.position.y + origin.y,
-        },
-      };
-    },
-    onChange: ({ position, size }) =>
+  const setTransform = useCallback(
+    (id: string, patch: Partial<RectTransformValues>) =>
       setGameObjects((prev) =>
-        prev.map((go) => {
-          if (go.id !== selectedId) return go;
-          const origin = ancestorOffset(go, gameObjects);
-          return {
-            ...go,
-            transform: {
-              ...go.transform,
-              position: {
-                x: position.x - origin.x,
-                y: position.y - origin.y,
-              },
-              size,
-            },
-          };
-        }),
+        prev.map((go) =>
+          go.id === id
+            ? { ...go, transform: { ...go.transform, ...patch } }
+            : go,
+        ),
       ),
-  });
+    [],
+  );
 
   return {
     gameObjects,
@@ -210,7 +187,7 @@ export function useSceneEditor({
     selected,
     hierarchyNodes,
     stageRef,
-    beginGesture,
+    setTransform,
     patchGameObject,
     createNewGameObject,
     deleteGameObject,

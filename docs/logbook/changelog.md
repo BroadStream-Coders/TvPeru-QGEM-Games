@@ -12,6 +12,19 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-064] Video "Load First": referenciar Local en vez de cargar (2026-07-03 22:35)
+Video quedó `{ fit, assetKey, muted, loop }`: referencia un asset de Local, sin file/URL propio; Inspector igual
+que image (Asset + ajuste, Sound/Loop). Intruso hornea `assetKey:"background"` y su behavior se eliminó. De paso
+se quitó `cover` (lo cubre el mask) y video + videoControl pasaron a inglés.
+
+## [TD-014] Preloader ↔ Video reconectados (resuelto por RM-064) (2026-07-03 22:35)
+Al pasar video a Load First declara su asset en el catálogo/manifest y consume el blob ya precargado; se van los
+caminos file/URL que saltaban el preloader (adiós arranque en negro en vivo).
+
+## [RM-060] Filosofía "Load First" (paraguas) (2026-07-03 22:35)
+Cerrado: todo recurso pasa por Local y los componentes solo lo referencian por `assetKey`. Completado por RM-062
+(ingesta a Local), RM-063 (image) y RM-064 (video). Colocación = dropdown (Nivel A); drag/select-in-Local (Nivel B) → RM-061.
+
 ## [RM-063] Image "Load First": quitar el cargador manual (2026-07-03 22:04)
 Image quedó `{ fit, assetKey }`: `ImageView` y el mask resuelven por `assetKey` desde Local, sin carga
 propia; Inspector = recuadro-selector Asset + icono de ajuste. Deletreo migrado (togglea mainFrame/errorFrame);

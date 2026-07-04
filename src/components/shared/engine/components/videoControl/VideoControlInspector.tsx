@@ -41,7 +41,7 @@ function KeyField({
             : "border-line bg-bg text-ink hover:border-line-2"
         }`}
       >
-        {listening ? "Presiona una tecla…" : value.toUpperCase()}
+        {listening ? "Press a key…" : value.toUpperCase()}
       </button>
     </label>
   );
@@ -59,18 +59,18 @@ export function VideoControlInspector({
 }) {
   return (
     <ComponentSection
-      title="Control de video"
+      title="Video Control"
       icon={<Keyboard size={13} />}
       accent="video"
       onRemove={onRemove}
     >
       <KeyField
-        label="Pausa"
+        label="Pause"
         value={component.pauseKey}
         onChange={(pauseKey) => onChange({ ...component, pauseKey })}
       />
       <KeyField
-        label="Reinicio"
+        label="Restart"
         value={component.restartKey}
         onChange={(restartKey) => onChange({ ...component, restartKey })}
       />

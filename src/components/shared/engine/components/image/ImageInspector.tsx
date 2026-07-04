@@ -43,13 +43,13 @@ export function ImageInspector({
           onChange({ ...component, assetKey: key || undefined })
         }
         options={[
-          { value: "", label: "— sin asset —" },
+          { value: "", label: "— no asset —" },
           ...imageKeys.map((k) => ({ value: k, label: k })),
         ]}
         actions={
           <FieldIconButton
             icon={<Maximize2 size={13} />}
-            title="Ajustar al tamaño de la imagen"
+            title="Fit to image size"
             onClick={fitToImage}
             disabled={!url}
           />

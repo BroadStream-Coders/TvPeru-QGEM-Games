@@ -24,14 +24,6 @@ changelog y se borra de aquí.
   recuperarlos; se agrava mientras no exista el menú "Windows" (RM-043).
 - **Fecha:** 2026-06-30 · **Estado:** Abierto
 
-## [TD-014] El preloader de assets no encaja con cómo el componente Video carga su `src`
-
-- **Ubicación:** `src/helpers/asset-preloader.ts` ↔ `src/components/shared/engine/components/video/videoComponent.ts`
-- **Riesgo:** 5/10
-- **Problema:** El preloader (`preloadAssets`) trabaja sobre un `AssetManifest` aparte (clave → `{ kind, src }`) que baja a blob y decodifica antes del primer render. El componente Video, en cambio, resuelve su `src` por su cuenta: modo **Link** (URL de Supabase escrita en el inspector) o modo **Equipo** (blob efímero del archivo local). Ninguna de las dos fuentes pasa por el manifest, así que el video que realmente se reproduce **no** se precarga; y al revés, un blob ya precargado por el manifest no se cablea de vuelta al modelo del Video. Además `loadOne` para `kind: "video"` sólo hace `fetch`→blob, **no** decodifica/espera `canplaythrough` como sí hace imagen y audio, por lo que ni siquiera garantiza readiness real.
-- **Impacto futuro:** En cabina, un video pesado puede tironear o arrancar en negro en su primer play porque no estaba precargado, justo en una herramienta de salida en vivo. Al integrar Supabase habrá que decidir el contrato: o el Video declara su asset en el manifest (y consume el blob ya listo), o el preloader aprende a precargar lo que declaran los componentes Video de la escena. Hoy son dos caminos desconectados.
-- **Fecha:** 2026-06-25 · **Estado:** Abierto
-
 ## [TD-008] `contentRef` añadido al `GameObjectView` genérico por una necesidad de un juego
 
 - **Ubicación:** `src/components/shared/engine/GameObjectView.tsx`

@@ -8,7 +8,7 @@ import { VideoControlInspector } from "@engine/components/videoControl/VideoCont
 
 export const videoControlDefinition = defineComponent<VideoControlComponent>({
   type: "videoControl",
-  label: "Control de video",
+  label: "Video Control",
   create: () => createVideoControlComponent(),
   view: VideoControlView,
   editor: VideoControlInspector,

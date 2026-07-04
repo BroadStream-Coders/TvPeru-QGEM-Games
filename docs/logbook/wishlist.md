@@ -59,3 +59,7 @@ La rotación (RM-041) hoy solo se edita por el campo numérico del inspector; el
 ## [WL-014] Renombrar assets en Local
 
 Poder renombrar la key/nombre de un asset ya cargado en Local. Hoy (RM-062) la key de un archivo subido se autogenera desde el nombre de archivo, sin edición posterior.
+
+## [WL-015] Traer/descargar un asset a Local desde una URL
+
+Poder ingerir un asset al panel Local desde una URL (descargar/generar), no solo desde archivos del PC (RM-062). Nace al quitar la URL directa del video en RM-064: el link deja de vivir en el componente. Distinto de la pestaña Storage/Supabase (RM-059), que navega assets remotos ya catalogados.

@@ -1,10 +1,13 @@
 import { VideoComponent } from "@engine/components/video/videoComponent";
+import { useAssets } from "@engine/assetsContext";
 
 export function VideoView({ component }: { component: VideoComponent }) {
-  if (!component.src) return null;
+  const { assets } = useAssets();
+  const url = component.assetKey ? assets[component.assetKey]?.url : undefined;
+  if (!url) return null;
   return (
     <video
-      src={component.src}
+      src={url}
       autoPlay
       loop={component.loop}
       muted={component.muted}

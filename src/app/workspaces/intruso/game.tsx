@@ -6,7 +6,6 @@ import { createVideoComponent } from "@engine/components/video/videoComponent";
 import { SHARED_ASSETS } from "@/assets/shared";
 import { INTRUSO_ASSETS } from "./assets";
 import { BACKGROUND_ID } from "./constants";
-import { IntrusoBehavior } from "./IntrusoBehavior";
 
 export const intrusoGame: GameDefinition = {
   id: "intruso",
@@ -18,7 +17,6 @@ export const intrusoGame: GameDefinition = {
     incorrect: SHARED_ASSETS.incorrectSound,
     ...INTRUSO_ASSETS,
   },
-  behavior: IntrusoBehavior,
   gameObjects: () => [
     createGameObject({
       id: BACKGROUND_ID,
@@ -28,7 +26,9 @@ export const intrusoGame: GameDefinition = {
         size: { x: DESIGN_WIDTH, y: DESIGN_HEIGHT },
         pivot: { x: 0.5, y: 0.5 },
       },
-      components: [createVideoComponent({ fit: "cover" })],
+      components: [
+        createVideoComponent({ fit: "fill", assetKey: "background" }),
+      ],
     }),
   ],
 };

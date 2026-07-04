@@ -1,4 +1,4 @@
-import type { AssetManifest } from "@/helpers/asset-preloader";
+import type { AssetManifest, LoadedAsset } from "@/helpers/asset-preloader";
 
 // `path` = origen físico del archivo (public/ o Supabase). `folder` = organización
 // dentro de la carga local, independiente del origen ("/"-separado para anidar).
@@ -15,6 +15,22 @@ const BASE = SUPABASE_URL
 
 export const resolveAssetUrl = (path: string): string =>
   `${BASE}/${path.replace(/^\//, "")}`;
+
+export type LocalAsset = { entry: CatalogEntry; loaded: LoadedAsset };
+
+const kindFromFile = (file: File): "image" | "video" | "audio" | null => {
+  if (file.type.startsWith("image/")) return "image";
+  if (file.type.startsWith("video/")) return "video";
+  if (file.type.startsWith("audio/")) return "audio";
+  return null;
+};
+
+export function localAssetFromFile(file: File): LocalAsset | null {
+  const kind = kindFromFile(file);
+  if (!kind) return null;
+  const url = URL.createObjectURL(file);
+  return { entry: { kind, path: file.name, folder: "" }, loaded: { kind, url } };
+}
 
 export function toManifest(catalog: AssetCatalog): AssetManifest {
   return Object.fromEntries(

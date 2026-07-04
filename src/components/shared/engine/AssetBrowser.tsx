@@ -11,6 +11,7 @@ import {
   Check,
   Loader2,
   X,
+  Upload,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { AssetCatalog, CatalogEntry } from "@/helpers/asset-source";
@@ -120,10 +121,12 @@ export function AssetBrowser({
   catalog,
   assets,
   statuses,
+  onAddFiles,
 }: {
   catalog: AssetCatalog;
   assets: Record<string, LoadedAsset | undefined>;
   statuses: Record<string, AssetStatus>;
+  onAddFiles: (files: FileList | File[]) => void;
 }) {
   const keys = Object.keys(catalog);
   const root = useMemo(() => buildTree(catalog), [catalog]);
@@ -158,14 +161,6 @@ export function AssetBrowser({
       : []),
   ];
 
-  if (keys.length === 0) {
-    return (
-      <div className="flex h-full items-center justify-center bg-panel">
-        <p className="text-2xs text-faint">No hay assets en la carga local.</p>
-      </div>
-    );
-  }
-
   return (
     <div className="flex h-full min-h-0 flex-col">
       {/* Barra: breadcrumb + contador */}
@@ -190,6 +185,20 @@ export function AssetBrowser({
         <span className="shrink-0 font-mono text-[10.5px] text-faint">
           {files.length} {files.length === 1 ? "item" : "items"}
         </span>
+        <label className="flex shrink-0 cursor-pointer items-center gap-1 rounded-[4px] border border-line px-1.5 py-0.5 text-[11px] text-dim transition-colors hover:border-acc hover:text-ink">
+          <Upload className="h-3 w-3" />
+          Cargar
+          <input
+            type="file"
+            multiple
+            accept="image/*,video/*,audio/*"
+            className="hidden"
+            onChange={(e) => {
+              if (e.target.files?.length) onAddFiles(e.target.files);
+              e.target.value = "";
+            }}
+          />
+        </label>
       </div>
 
       <div className="flex min-h-0 flex-1">
@@ -245,6 +254,11 @@ export function AssetBrowser({
 
         {/* Grid de miniaturas */}
         <div className="scrl flex-1 overflow-auto bg-bg p-3">
+          {files.length === 0 && (
+            <p className="flex h-full items-center justify-center text-2xs text-faint">
+              Carpeta vacía. Usa «Cargar» para traer archivos del equipo.
+            </p>
+          )}
           <div
             className="grid gap-3"
             style={{ gridTemplateColumns: "repeat(auto-fill,minmax(92px,1fr))" }}

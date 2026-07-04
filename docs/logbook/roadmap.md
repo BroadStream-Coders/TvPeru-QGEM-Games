@@ -193,25 +193,50 @@ su "Hecho cuando", pero no es el foco actual).
 
 # Arquitectura de componentes (modelo Unity)
 
-## [RM-060] Filosofía "Load First"
+## [RM-060] Filosofía "Load First" (paraguas)
 
-- **Objetivo:** Establecer que todo recurso **primero se carga en Local y recién ahí
-  se usa** en un componente. Los componentes (image, video) dejan de tener carga/botón
-  de carga local propio; el recurso pasa por la carga Local y luego se coloca en el
-  componente. Es la filosofía guía del sistema; cambio mediano-grande que modifica el
-  funcionamiento de esos componentes. Se apoya en el panel Local (RM-055) y conecta con
-  el presupuesto de memoria (RM-058).
-- **Hecho cuando:** image y video ya no cargan assets por sí mismos ni tienen carga
-  local interna; toman un recurso que ya está presente en Local.
-- **Decisiones para la sesión (solo decidir, ya no descubrir):**
-  - **Primitivo compartido:** definir la "referencia a asset local" = un id/key del
-    Local que en render se resuelve al blob. Es el mismo tipo que necesita RM-061;
-    se decide su forma **aquí**.
-  - **Orden:** hacer **RM-060 antes que RM-061** (primero el pipeline Local + el tipo
-    de referencia; el modelo de componentes va encima). Confirmar este orden.
-  - **Migración:** es un cambio **breaking** para image/video y para intruso/deletreo
-    que ya los usan. Decidir la estrategia de migración y hacerlo **pronto** (hoy son
-    2-3 juegos; cada juego nuevo sobre el patrón viejo es más migración después).
+- **Principio:** todo recurso **primero se carga en Local** y desde ahí se **referencia**
+  en un componente; los componentes (image, video) dejan de cargar archivos por su
+  cuenta. La "referencia a asset local" = una key del Local que en render se resuelve al
+  blob (mismo primitivo que necesita RM-061). Se apoya en el panel Local (RM-055) y el
+  presupuesto de memoria (RM-058).
+- **Se divide en:**
+  - **RM-062** — Local puede cargar archivos del PC (ingesta). _Primera._
+  - **RM-063** — Image "Load First": quitar su cargador manual, dejar solo la referencia.
+  - **RM-064** — Video "Load First": quitar carga file/url, referenciar Local.
+  - **Pendiente de definir:** un mecanismo "seleccionar un asset de Local y colocarlo en
+    el componente", posiblemente **previo** a RM-063/RM-064. Se discute aparte.
+    (Relaciona con RM-057 y RM-061.)
+- **Orden:** RM-062 → (mecanismo de colocación, si se define) → RM-063 → RM-064; va
+  **antes que RM-061**. RM-060 se cierra cuando cierran sus hijas.
+- **Hecho cuando:** image y video ya no cargan assets por sí mismos; toman un recurso
+  que ya está presente en Local.
+- **Fecha:** 2026-07-03 · **Estado:** Abierto
+
+## [RM-063] Image "Load First": quitar el cargador manual
+
+- **Objetivo:** image deja de cargar archivos por su cuenta y se queda solo con la
+  referencia a un asset de Local. Quitar `AssetField`/`onPickFile`/`src`/`fileName`
+  manual del `ImageInspector`; `ImageView` resuelve solo desde el asset referenciado.
+- **Depende de:** RM-062 y del mecanismo de colocación si se define.
+- **Migración (breaking):** `deletreo` setea `src` a mano en su behavior (swap
+  normal/error) → pasa a setear la referencia.
+- **Hecho cuando:** el `ImageInspector` no tiene carga manual; image toma un asset ya
+  presente en Local.
+- **Fecha:** 2026-07-03 · **Estado:** Abierto
+
+## [RM-064] Video "Load First": referenciar Local en vez de cargar
+
+- **Objetivo:** video deja de cargar file/URL propio y referencia un asset de Local (hoy
+  no conoce Local en absoluto). Quitar `source`/file/url del `VideoInspector`;
+  `VideoView` resuelve desde el asset referenciado.
+- **Depende de:** RM-062 y del mecanismo de colocación si se define.
+- **Decisión pendiente:** qué pasa con la URL externa arbitraria (modo Link): ¿se
+  elimina y todo va por Local? (es la línea "pura" de RM-060).
+- **Migración (breaking):** `intruso` setea `{ src, source: "url" }` en su behavior →
+  pasa a referencia; su behavior casi desaparece.
+- **Hecho cuando:** el `VideoInspector` no tiene carga propia; video toma un asset
+  presente en Local.
 - **Fecha:** 2026-07-03 · **Estado:** Abierto
 
 ## [RM-061] Componentes por referencia y parámetros públicos (estilo Unity)

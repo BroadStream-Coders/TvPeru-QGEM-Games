@@ -55,3 +55,7 @@ En Scene poder hacer pan (arrastrar la cámara) y zoom (acercar/alejar), con un 
 ## [WL-013] Rotación editable desde el canvas
 
 La rotación (RM-041) hoy solo se edita por el campo numérico del inspector; el `SelectionOverlay` y `useTransformGesture` siguen siendo axis-aligned, así que con un objeto rotado los handles se ven desalineados. Promover para: rotar el overlay junto al objeto, agregar un handle de arrastre para rotar y hacer que el resize funcione en espacio rotado (matemática de rotación en el gesto).
+
+## [WL-014] Renombrar assets en Local
+
+Poder renombrar la key/nombre de un asset ya cargado en Local. Hoy (RM-062) la key de un archivo subido se autogenera desde el nombre de archivo, sin edición posterior.

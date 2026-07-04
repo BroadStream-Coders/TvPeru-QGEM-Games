@@ -57,8 +57,9 @@ import { cn } from "@/lib/utils";
 import { useSceneEditor } from "@/hooks/use-scene-editor";
 import { useWorkspaceHeader } from "@/hooks/use-workspace-header";
 import { useAssetPreloader } from "@/hooks/use-asset-preloader";
-import { toManifest } from "@/helpers/asset-source";
-import type { AssetKind } from "@/helpers/asset-preloader";
+import { toManifest, localAssetFromFile } from "@/helpers/asset-source";
+import type { LocalAsset } from "@/helpers/asset-source";
+import type { AssetKind, LoadedAsset } from "@/helpers/asset-preloader";
 
 function HierarchyPanel() {
   const e = useEditor();
@@ -198,9 +199,14 @@ function GamePanel(props: IDockviewPanelProps) {
 }
 
 function AssetsPanel() {
-  const { catalog, assets, statuses } = useAssets();
+  const { catalog, assets, statuses, addLocalFiles } = useAssets();
   return (
-    <AssetBrowser catalog={catalog} assets={assets} statuses={statuses} />
+    <AssetBrowser
+      catalog={catalog}
+      assets={assets}
+      statuses={statuses}
+      onAddFiles={addLocalFiles}
+    />
   );
 }
 
@@ -370,12 +376,72 @@ export function EditorLayout({ game }: { game: GameDefinition }) {
     [game.assets],
   );
   const preload = useAssetPreloader(manifest);
+
+  const [userAssets, setUserAssets] = useState<Record<string, LocalAsset>>({});
+  const addLocalFiles = useCallback(
+    (files: FileList | File[]) => {
+      const list = Array.from(files);
+      setUserAssets((prev) => {
+        const taken = new Set([
+          ...Object.keys(game.assets ?? {}),
+          ...Object.keys(prev),
+        ]);
+        const next = { ...prev };
+        for (const file of list) {
+          const asset = localAssetFromFile(file);
+          if (!asset) continue;
+          const dot = file.name.lastIndexOf(".");
+          const base = dot > 0 ? file.name.slice(0, dot) : file.name;
+          let key = base;
+          let i = 2;
+          while (taken.has(key)) key = `${base}-${i++}`;
+          taken.add(key);
+          next[key] = asset;
+        }
+        return next;
+      });
+    },
+    [game.assets],
+  );
+
+  const userAssetsRef = useRef(userAssets);
+  userAssetsRef.current = userAssets;
+  useEffect(
+    () => () => {
+      for (const a of Object.values(userAssetsRef.current))
+        URL.revokeObjectURL(a.loaded.url);
+    },
+    [],
+  );
+
+  const catalog = useMemo(() => {
+    const base = { ...(game.assets ?? {}) };
+    for (const [key, a] of Object.entries(userAssets)) base[key] = a.entry;
+    return base;
+  }, [game.assets, userAssets]);
+  const assets = useMemo(() => {
+    const base: Record<string, LoadedAsset | undefined> = { ...preload.assets };
+    for (const [key, a] of Object.entries(userAssets)) base[key] = a.loaded;
+    return base;
+  }, [preload.assets, userAssets]);
+  const statuses = useMemo(() => {
+    const base = { ...preload.statuses };
+    for (const key of Object.keys(userAssets)) base[key] = "ready" as const;
+    return base;
+  }, [preload.statuses, userAssets]);
+  const mergedKinds = useMemo(() => {
+    const base = { ...kinds };
+    for (const [key, a] of Object.entries(userAssets)) base[key] = a.entry.kind;
+    return base;
+  }, [kinds, userAssets]);
+
   const assetsState: LoadedAssetsState = {
-    catalog: game.assets ?? {},
-    assets: preload.assets,
-    statuses: preload.statuses,
-    kinds,
+    catalog,
+    assets,
+    statuses,
+    kinds: mergedKinds,
     progress: preload.progress,
+    addLocalFiles,
   };
 
   useEffect(() => () => resetHeader(), [resetHeader]);

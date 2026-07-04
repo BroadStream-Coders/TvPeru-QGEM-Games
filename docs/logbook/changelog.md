@@ -12,6 +12,11 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-062] Local: cargar archivos del PC (ingesta a Local) (2026-07-03 21:42)
+Botón "Cargar" en la barra de Local sube archivos del equipo (image/video/audio) vía
+`createObjectURL` — blob listo al instante, key autogenerada+dedupe, en la raíz. `assetsState`
+pasó a mutable en `EditorLayout` (`addLocalFiles` fusiona con el catálogo precargado; revoke al desmontar). Primera de RM-060.
+
 ## [TD-056] Fix color de tabs del dockview (activo se confundía con inactivo) (2026-07-03 10:10)
 La barra de tabs estaba en `head` (más claro que el tab activo en `panel`), y los inactivos
 también en `head`, así que resaltaban más que el activo. Se pasó barra y tabs inactivos a `bg`

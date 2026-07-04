@@ -12,6 +12,7 @@ export interface LoadedAssetsState {
   statuses: Record<string, AssetStatus>;
   kinds: Record<string, AssetKind>;
   progress: { loaded: number; total: number };
+  addLocalFiles: (files: FileList | File[]) => void;
 }
 
 const EMPTY: LoadedAssetsState = {
@@ -20,6 +21,7 @@ const EMPTY: LoadedAssetsState = {
   statuses: {},
   kinds: {},
   progress: { loaded: 0, total: 0 },
+  addLocalFiles: () => {},
 };
 
 const AssetsContext = createContext<LoadedAssetsState>(EMPTY);

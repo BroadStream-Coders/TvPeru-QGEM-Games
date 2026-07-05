@@ -1,0 +1,579 @@
+[
+  {
+    "id": "background",
+    "name": "Background",
+    "active": true,
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 1920,
+        "y": 1080
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "color",
+        "value": "#01FF02"
+      }
+    ]
+  },
+  {
+    "id": "controller",
+    "name": "Controller",
+    "active": true,
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 1920,
+        "y": 1080
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "controller",
+        "groups": [],
+        "groupIndex": 0,
+        "boardIndex": 0,
+        "cursor": -1
+      }
+    ]
+  },
+  {
+    "id": "slot-0",
+    "name": "Slot 1",
+    "active": true,
+    "parentId": "controller",
+    "transform": {
+      "position": {
+        "x": -675,
+        "y": -400
+      },
+      "size": {
+        "x": 400,
+        "y": 200
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "slot",
+        "status": "none",
+        "blueSrc": "",
+        "purpleSrc": "",
+        "checkSrc": "",
+        "xSrc": ""
+      },
+      {
+        "type": "pop",
+        "scale": 1.1,
+        "duration": 0.3
+      },
+      {
+        "type": "shake",
+        "amplitude": 2,
+        "shakes": 3,
+        "duration": 0.4
+      },
+      {
+        "type": "bounce",
+        "travelSpeed": 1800,
+        "bounceAmplitude": 40,
+        "bounceDuration": 0.4
+      },
+      {
+        "type": "slide",
+        "speed": 1800,
+        "hiddenOffset": {
+          "x": 0,
+          "y": -330
+        }
+      }
+    ]
+  },
+  {
+    "id": "slot-0-question",
+    "name": "Pregunta",
+    "active": false,
+    "parentId": "slot-0",
+    "transform": {
+      "position": {
+        "x": -8,
+        "y": 30
+      },
+      "size": {
+        "x": 346,
+        "y": 124
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "text",
+        "text": "",
+        "fontSize": 8,
+        "autoSize": true,
+        "fontSizeMin": 1,
+        "fontSizeMax": 6,
+        "color": "#ffffff",
+        "fontFamily": "var(--font-poppins-semibold)",
+        "bold": false,
+        "italic": false,
+        "underline": false,
+        "alignH": "center",
+        "alignV": "middle",
+        "overflow": "wrap"
+      }
+    ]
+  },
+  {
+    "id": "slot-0-answer",
+    "name": "Respuesta",
+    "active": false,
+    "parentId": "slot-0",
+    "transform": {
+      "position": {
+        "x": 69,
+        "y": -45
+      },
+      "size": {
+        "x": 230,
+        "y": 87
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "text",
+        "text": "",
+        "fontSize": 8,
+        "autoSize": true,
+        "fontSizeMin": 1,
+        "fontSizeMax": 6,
+        "color": "#ffffff",
+        "fontFamily": "var(--font-poppins-semibold)",
+        "bold": false,
+        "italic": false,
+        "underline": false,
+        "alignH": "center",
+        "alignV": "middle",
+        "overflow": "wrap"
+      }
+    ]
+  },
+  {
+    "id": "slot-1",
+    "name": "Slot 2",
+    "active": true,
+    "parentId": "controller",
+    "transform": {
+      "position": {
+        "x": -280,
+        "y": -400
+      },
+      "size": {
+        "x": 400,
+        "y": 200
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "slot",
+        "status": "none",
+        "blueSrc": "",
+        "purpleSrc": "",
+        "checkSrc": "",
+        "xSrc": ""
+      },
+      {
+        "type": "pop",
+        "scale": 1.1,
+        "duration": 0.3
+      },
+      {
+        "type": "shake",
+        "amplitude": 2,
+        "shakes": 3,
+        "duration": 0.4
+      },
+      {
+        "type": "bounce",
+        "travelSpeed": 1800,
+        "bounceAmplitude": 40,
+        "bounceDuration": 0.4
+      },
+      {
+        "type": "slide",
+        "speed": 1800,
+        "hiddenOffset": {
+          "x": 0,
+          "y": -330
+        }
+      }
+    ]
+  },
+  {
+    "id": "slot-1-question",
+    "name": "Pregunta",
+    "active": false,
+    "parentId": "slot-1",
+    "transform": {
+      "position": {
+        "x": -8,
+        "y": 30
+      },
+      "size": {
+        "x": 346,
+        "y": 124
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "text",
+        "text": "",
+        "fontSize": 8,
+        "autoSize": true,
+        "fontSizeMin": 1,
+        "fontSizeMax": 6,
+        "color": "#ffffff",
+        "fontFamily": "var(--font-poppins-semibold)",
+        "bold": false,
+        "italic": false,
+        "underline": false,
+        "alignH": "center",
+        "alignV": "middle",
+        "overflow": "wrap"
+      }
+    ]
+  },
+  {
+    "id": "slot-1-answer",
+    "name": "Respuesta",
+    "active": false,
+    "parentId": "slot-1",
+    "transform": {
+      "position": {
+        "x": 69,
+        "y": -45
+      },
+      "size": {
+        "x": 230,
+        "y": 87
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "text",
+        "text": "",
+        "fontSize": 8,
+        "autoSize": true,
+        "fontSizeMin": 1,
+        "fontSizeMax": 6,
+        "color": "#ffffff",
+        "fontFamily": "var(--font-poppins-semibold)",
+        "bold": false,
+        "italic": false,
+        "underline": false,
+        "alignH": "center",
+        "alignV": "middle",
+        "overflow": "wrap"
+      }
+    ]
+  },
+  {
+    "id": "slot-2",
+    "name": "Slot 3",
+    "active": true,
+    "parentId": "controller",
+    "transform": {
+      "position": {
+        "x": 115,
+        "y": -400
+      },
+      "size": {
+        "x": 400,
+        "y": 200
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "slot",
+        "status": "none",
+        "blueSrc": "",
+        "purpleSrc": "",
+        "checkSrc": "",
+        "xSrc": ""
+      },
+      {
+        "type": "pop",
+        "scale": 1.1,
+        "duration": 0.3
+      },
+      {
+        "type": "shake",
+        "amplitude": 2,
+        "shakes": 3,
+        "duration": 0.4
+      },
+      {
+        "type": "bounce",
+        "travelSpeed": 1800,
+        "bounceAmplitude": 40,
+        "bounceDuration": 0.4
+      },
+      {
+        "type": "slide",
+        "speed": 1800,
+        "hiddenOffset": {
+          "x": 0,
+          "y": -330
+        }
+      }
+    ]
+  },
+  {
+    "id": "slot-2-question",
+    "name": "Pregunta",
+    "active": false,
+    "parentId": "slot-2",
+    "transform": {
+      "position": {
+        "x": -8,
+        "y": 30
+      },
+      "size": {
+        "x": 346,
+        "y": 124
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "text",
+        "text": "",
+        "fontSize": 8,
+        "autoSize": true,
+        "fontSizeMin": 1,
+        "fontSizeMax": 6,
+        "color": "#ffffff",
+        "fontFamily": "var(--font-poppins-semibold)",
+        "bold": false,
+        "italic": false,
+        "underline": false,
+        "alignH": "center",
+        "alignV": "middle",
+        "overflow": "wrap"
+      }
+    ]
+  },
+  {
+    "id": "slot-2-answer",
+    "name": "Respuesta",
+    "active": false,
+    "parentId": "slot-2",
+    "transform": {
+      "position": {
+        "x": 69,
+        "y": -45
+      },
+      "size": {
+        "x": 230,
+        "y": 87
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "text",
+        "text": "",
+        "fontSize": 8,
+        "autoSize": true,
+        "fontSizeMin": 1,
+        "fontSizeMax": 6,
+        "color": "#ffffff",
+        "fontFamily": "var(--font-poppins-semibold)",
+        "bold": false,
+        "italic": false,
+        "underline": false,
+        "alignH": "center",
+        "alignV": "middle",
+        "overflow": "wrap"
+      }
+    ]
+  },
+  {
+    "id": "slot-3",
+    "name": "Slot 4",
+    "active": true,
+    "parentId": "controller",
+    "transform": {
+      "position": {
+        "x": 510,
+        "y": -400
+      },
+      "size": {
+        "x": 400,
+        "y": 200
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "slot",
+        "status": "none",
+        "blueSrc": "",
+        "purpleSrc": "",
+        "checkSrc": "",
+        "xSrc": ""
+      },
+      {
+        "type": "pop",
+        "scale": 1.1,
+        "duration": 0.3
+      },
+      {
+        "type": "shake",
+        "amplitude": 2,
+        "shakes": 3,
+        "duration": 0.4
+      },
+      {
+        "type": "bounce",
+        "travelSpeed": 1800,
+        "bounceAmplitude": 40,
+        "bounceDuration": 0.4
+      },
+      {
+        "type": "slide",
+        "speed": 1800,
+        "hiddenOffset": {
+          "x": 0,
+          "y": -330
+        }
+      }
+    ]
+  },
+  {
+    "id": "slot-3-question",
+    "name": "Pregunta",
+    "active": false,
+    "parentId": "slot-3",
+    "transform": {
+      "position": {
+        "x": -8,
+        "y": 30
+      },
+      "size": {
+        "x": 346,
+        "y": 124
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "text",
+        "text": "",
+        "fontSize": 8,
+        "autoSize": true,
+        "fontSizeMin": 1,
+        "fontSizeMax": 6,
+        "color": "#ffffff",
+        "fontFamily": "var(--font-poppins-semibold)",
+        "bold": false,
+        "italic": false,
+        "underline": false,
+        "alignH": "center",
+        "alignV": "middle",
+        "overflow": "wrap"
+      }
+    ]
+  },
+  {
+    "id": "slot-3-answer",
+    "name": "Respuesta",
+    "active": false,
+    "parentId": "slot-3",
+    "transform": {
+      "position": {
+        "x": 69,
+        "y": -45
+      },
+      "size": {
+        "x": 230,
+        "y": 87
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "text",
+        "text": "",
+        "fontSize": 8,
+        "autoSize": true,
+        "fontSizeMin": 1,
+        "fontSizeMax": 6,
+        "color": "#ffffff",
+        "fontFamily": "var(--font-poppins-semibold)",
+        "bold": false,
+        "italic": false,
+        "underline": false,
+        "alignH": "center",
+        "alignV": "middle",
+        "overflow": "wrap"
+      }
+    ]
+  }
+]

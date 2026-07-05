@@ -12,6 +12,12 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-069] Exportar escena a scene.json y sembrar juegos desde él (2026-07-04 16:31)
+Botón File → Export en la topbar (menú radix `Menubar` data-driven que solo lista acciones cableadas) descarga `<id>.scene.json`
+con `JSON.stringify` del estado del editor, limpiando data de runtime vía `ComponentDefinition.stripForExport` (deletreo, spellframe,
+controller, slot). `deletreo` y `calculo-mental` ahora siembran `gameObjects` con `import scene from "./scene.json"` en vez del array
+hardcodeado, cerrando el loop editar→exportar→reemplazar archivo como nueva distribución.
+
 ## [RM-068] Duplicar objetos en Scene (Ctrl/Cmd+D estilo Figma) (2026-07-04 15:52)
 `duplicateSubtrees` (gameObject.ts) clona la selección con su subárbol: ids nuevos, `parentId` reapuntado a los clones, offset
 (+20,-20) solo en las raíces y `ComponentRef.gameObjectId` internos remapeados a las copias. Expuesto como `duplicateSelected` en el

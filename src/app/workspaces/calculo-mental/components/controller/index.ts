@@ -10,6 +10,7 @@ export const controllerDefinition = defineComponent<ControllerComponent>({
   type: "controller",
   label: "Controller",
   create: () => createControllerComponent(),
+  stripForExport: () => createControllerComponent(),
   view: ControllerView,
   editor: ControllerInspector,
 });

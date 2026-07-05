@@ -7,6 +7,7 @@ export const slotDefinition = defineComponent<SlotComponent>({
   type: "slot",
   label: "Slot",
   create: () => createSlotComponent(),
+  stripForExport: () => createSlotComponent(),
   view: SlotView,
   editor: SlotInspector,
 });

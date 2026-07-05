@@ -48,6 +48,11 @@ export function localAssetFromFile(file: File): LocalAsset | null {
     URL.revokeObjectURL(url);
     return null;
   }
+  if (kind === "image") {
+    const img = new Image();
+    img.src = url;
+    img.decode().catch(() => {});
+  }
   return { entry: { kind, path: file.name, folder: "" }, loaded: { kind, url } };
 }
 

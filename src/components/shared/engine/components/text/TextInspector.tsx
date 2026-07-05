@@ -1,6 +1,5 @@
 import {
   Type,
-  Upload,
   AlignLeft,
   AlignCenter,
   AlignRight,
@@ -15,7 +14,12 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ComponentSection } from "@engine/ComponentSection";
-import { ColorField, SelectField, FieldRow } from "@engine/InspectorFields";
+import {
+  ColorField,
+  SelectField,
+  FieldRow,
+  AssetSelectField,
+} from "@engine/InspectorFields";
 import { NumberInput } from "@engine/NumberField";
 import {
   TextAlignH,
@@ -97,27 +101,6 @@ export function TextInspector({
   onRemove: () => void;
   onResize: (size: { x: number; y: number }) => void;
 }) {
-  const onPickFont = async (file: File) => {
-    if (component.fontSrc?.startsWith("blob:")) {
-      URL.revokeObjectURL(component.fontSrc);
-    }
-    const src = URL.createObjectURL(file);
-    const family = `qgem-font-${crypto.randomUUID()}`;
-    const face = new FontFace(family, `url(${src})`);
-    try {
-      await face.load();
-      document.fonts.add(face);
-      onChange({
-        ...component,
-        fontFamily: family,
-        fontSrc: src,
-        fontFileName: file.name,
-      });
-    } catch {
-      URL.revokeObjectURL(src);
-    }
-  };
-
   return (
     <ComponentSection
       title="Text"
@@ -133,26 +116,14 @@ export function TextInspector({
         className="w-full resize-y rounded-[5px] border border-line bg-bg px-2 py-1 text-xs text-ink outline-none focus:border-acc"
       />
 
-      <FieldRow label="Font">
-        <span className="min-w-0 flex-1 truncate text-xs text-ink">
-          {component.fontFileName ?? "IBM Plex Sans"}
-        </span>
-        <label
-          title="Cargar fuente desde equipo"
-          className="flex size-7 shrink-0 cursor-pointer items-center justify-center rounded-[5px] border border-line text-dim transition-colors hover:border-acc hover:text-ink"
-        >
-          <Upload size={13} />
-          <input
-            type="file"
-            accept=".ttf,.otf,.woff,.woff2,font/*"
-            onChange={(e) => {
-              const file = e.target.files?.[0];
-              if (file) onPickFont(file);
-            }}
-            className="hidden"
-          />
-        </label>
-      </FieldRow>
+      <AssetSelectField
+        label="Font"
+        kind="font"
+        value={component.fontAssetKey ?? ""}
+        onChange={(key) =>
+          onChange({ ...component, fontAssetKey: key || undefined })
+        }
+      />
 
       <FieldRow label="Size">
         {component.autoSize ? (

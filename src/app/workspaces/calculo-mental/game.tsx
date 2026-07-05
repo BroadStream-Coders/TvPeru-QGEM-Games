@@ -23,6 +23,7 @@ export const calculoMentalGame: GameDefinition = {
   assets: {
     correct: SHARED_ASSETS.correctSound,
     incorrect: SHARED_ASSETS.incorrectSound,
+    poppinsSemiBold: SHARED_ASSETS.poppinsSemiBold,
     ...CALCULO_ASSETS,
   },
   components: [slotDefinition, controllerDefinition],

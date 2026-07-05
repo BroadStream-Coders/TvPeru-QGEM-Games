@@ -12,9 +12,7 @@ export interface TextComponent extends GameObjectComponent {
   fontSizeMin: number;
   fontSizeMax: number;
   color: string;
-  fontFamily?: string;
-  fontSrc?: string;
-  fontFileName?: string;
+  fontAssetKey?: string;
   bold: boolean;
   italic: boolean;
   underline: boolean;
@@ -34,9 +32,7 @@ export function createTextComponent(
     fontSizeMin: init?.fontSizeMin ?? 1,
     fontSizeMax: init?.fontSizeMax ?? 20,
     color: init?.color ?? "#ffffff",
-    fontFamily: init?.fontFamily,
-    fontSrc: init?.fontSrc,
-    fontFileName: init?.fontFileName,
+    fontAssetKey: init?.fontAssetKey,
     bold: init?.bold ?? false,
     italic: init?.italic ?? false,
     underline: init?.underline ?? false,

@@ -6,6 +6,7 @@ import {
   TextAlignV,
   TextComponent,
 } from "@engine/components/text/textComponent";
+import { useAssets } from "@engine/assetsContext";
 
 const JUSTIFY: Record<TextAlignH, CSSProperties["justifyContent"]> = {
   left: "flex-start",
@@ -31,8 +32,12 @@ export function TextView({ component }: { component: TextComponent }) {
   const textRef = useRef<HTMLDivElement>(null);
   const [fittedSize, setFittedSize] = useState(component.fontSize);
 
-  const { autoSize, fontSizeMin, fontSizeMax, text, fontFamily, bold, italic } =
-    component;
+  const { assets } = useAssets();
+  const fontFamily = component.fontAssetKey
+    ? assets[component.fontAssetKey]?.family
+    : undefined;
+
+  const { autoSize, fontSizeMin, fontSizeMax, text, bold, italic } = component;
 
   useLayoutEffect(() => {
     if (!autoSize) return;
@@ -119,7 +124,7 @@ export function TextView({ component }: { component: TextComponent }) {
         ref={textRef}
         style={{
           color: component.color,
-          fontFamily: component.fontFamily,
+          fontFamily,
           fontSize: `${size}cqh`,
           fontWeight: component.bold ? "bold" : "normal",
           fontStyle: component.italic ? "italic" : "normal",

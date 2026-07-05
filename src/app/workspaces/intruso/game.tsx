@@ -1,11 +1,10 @@
 import { UserX } from "lucide-react";
 import type { GameDefinition } from "@engine/editor/GameDefinition";
-import { DESIGN_WIDTH, DESIGN_HEIGHT } from "@engine/RectTransform";
-import { createGameObject } from "@engine/gameObject";
-import { createVideoComponent } from "@engine/components/video/videoComponent";
+import type { GameObject } from "@engine/gameObject";
 import { SHARED_ASSETS } from "@/assets/shared";
 import { INTRUSO_ASSETS } from "./assets";
 import { BACKGROUND_ID } from "./constants";
+import scene from "./scene.json";
 
 export const intrusoGame: GameDefinition = {
   id: "intruso",
@@ -17,18 +16,5 @@ export const intrusoGame: GameDefinition = {
     incorrect: SHARED_ASSETS.incorrectSound,
     ...INTRUSO_ASSETS,
   },
-  gameObjects: () => [
-    createGameObject({
-      id: BACKGROUND_ID,
-      name: "Background",
-      transform: {
-        position: { x: 0, y: 0 },
-        size: { x: DESIGN_WIDTH, y: DESIGN_HEIGHT },
-        pivot: { x: 0.5, y: 0.5 },
-      },
-      components: [
-        createVideoComponent({ fit: "fill", assetKey: "background" }),
-      ],
-    }),
-  ],
+  gameObjects: scene as GameObject[],
 };

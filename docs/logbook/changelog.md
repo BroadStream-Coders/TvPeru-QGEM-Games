@@ -12,6 +12,11 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-071] Intruso sembrado desde scene.json (2026-07-05 08:32)
+`intruso/game.tsx` flipeado a `import scene from "./scene.json"` (semilla: el Background con video). No tiene behavior ni onLoad, así
+que no hubo estado de runtime que migrar — solo entró al loop de autoría/export como los otros. Completa los 3 juegos con contenido
+sobre `scene.json`.
+
 ## [RM-070] Capa de runtime del engine: diseño y estado de juego separados (2026-07-05 07:56)
 Nuevo store `useSceneRuntime` + `mergeRuntime` (`@engine/runtime`): los behaviors ya no mutan el diseño con `setGameObjects`, escriben
 overrides (`active`/`transform`/componentes) en una capa aparte. El panel Game renderiza `diseño+runtime`; Scene renderiza

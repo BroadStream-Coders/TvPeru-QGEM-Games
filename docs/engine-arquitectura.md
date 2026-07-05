@@ -542,8 +542,9 @@ sobre el shell `EditorLayout` (§2.5) — cada uno una `page.tsx` fina que pasa 
 - **Export de escena + capa de runtime (RM-069/RM-070, §2.6):** File → Export baja el
   `scene.json` del diseño; los juegos lo siembran con `import scene from "./scene.json"`.
   Los behaviors escriben el estado de juego en `useSceneRuntime` (no en el diseño), así
-  que el export sale siempre limpio. Migrados **deletreo** y **calculo-mental**; **intruso
-  sigue con el modelo viejo** (pendiente). Cerró TD-020 y eliminó `stripForExport`.
+  que el export sale siempre limpio. Los 3 juegos con contenido (**deletreo**,
+  **calculo-mental**, **intruso**) siembran desde `scene.json`; intruso no tiene behavior,
+  así que solo necesitó el flip. Cerró TD-020 y eliminó `stripForExport`.
 
 **Pendiente / lo que sigue:**
 

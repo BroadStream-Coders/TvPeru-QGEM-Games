@@ -1,7 +1,6 @@
 import { SpellCheck } from "lucide-react";
 import type { GameDefinition } from "@engine/editor/GameDefinition";
 import type { GameObject } from "@engine/gameObject";
-import { SHARED_ASSETS } from "@/assets/shared";
 import { DELETREO_ASSETS } from "./assets";
 import { spellframeDefinition } from "./components/spellframe";
 import { deletreoDefinition } from "./components/deletreo";
@@ -20,12 +19,7 @@ export const deletreoGame: GameDefinition = {
   title: "Deletreo",
   icon: <SpellCheck className="h-3 w-3" />,
   initialSelectedId: FRAME_ID,
-  assets: {
-    correct: SHARED_ASSETS.correctSound,
-    incorrect: SHARED_ASSETS.incorrectSound,
-    geniusTechno: SHARED_ASSETS.geniusTechno,
-    ...DELETREO_ASSETS,
-  },
+  assets: DELETREO_ASSETS,
   components: [spellframeDefinition, deletreoDefinition],
   behavior: DeletreoBehavior,
   onLoad: (file) => {

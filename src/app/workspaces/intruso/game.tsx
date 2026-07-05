@@ -1,7 +1,6 @@
 import { UserX } from "lucide-react";
 import type { GameDefinition } from "@engine/editor/GameDefinition";
 import type { GameObject } from "@engine/gameObject";
-import { SHARED_ASSETS } from "@/assets/shared";
 import { INTRUSO_ASSETS } from "./assets";
 import { BACKGROUND_ID } from "./constants";
 import scene from "./scene.json";
@@ -11,10 +10,6 @@ export const intrusoGame: GameDefinition = {
   title: "Intruso",
   icon: <UserX className="h-3 w-3" />,
   initialSelectedId: BACKGROUND_ID,
-  assets: {
-    correct: SHARED_ASSETS.correctSound,
-    incorrect: SHARED_ASSETS.incorrectSound,
-    ...INTRUSO_ASSETS,
-  },
+  assets: INTRUSO_ASSETS,
   gameObjects: scene as GameObject[],
 };

@@ -1,7 +1,6 @@
 import { Calculator } from "lucide-react";
 import type { GameDefinition } from "@engine/editor/GameDefinition";
 import type { GameObject } from "@engine/gameObject";
-import { SHARED_ASSETS } from "@/assets/shared";
 import { CALCULO_ASSETS } from "./assets";
 import { slotDefinition } from "./components/slot";
 import { controllerDefinition } from "./components/controller";
@@ -20,12 +19,7 @@ export const calculoMentalGame: GameDefinition = {
   title: "Cálculo Mental",
   icon: <Calculator className="h-3 w-3" />,
   initialSelectedId: SLOT_IDS[0],
-  assets: {
-    correct: SHARED_ASSETS.correctSound,
-    incorrect: SHARED_ASSETS.incorrectSound,
-    poppinsSemiBold: SHARED_ASSETS.poppinsSemiBold,
-    ...CALCULO_ASSETS,
-  },
+  assets: CALCULO_ASSETS,
   components: [slotDefinition, controllerDefinition],
   behavior: CalculoMentalBehavior,
   onLoad: (file) => {

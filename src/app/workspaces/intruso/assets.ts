@@ -1,6 +1,8 @@
 import type { AssetCatalog } from "@/helpers/asset-source";
 
 export const INTRUSO_ASSETS = {
+  correct: { kind: "audio", path: "shared/audio/correct.mp3" },
+  incorrect: { kind: "audio", path: "shared/audio/incorrect.mp3" },
   mainFrame: {
     kind: "image",
     path: "games/intruso/mainFrame.png",

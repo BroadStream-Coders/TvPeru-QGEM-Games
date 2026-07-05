@@ -1,10 +1,5 @@
 import type { Metadata } from "next";
-import {
-  ibmPlexSans,
-  ibmPlexMono,
-  jetBrainsMono,
-  poppinsSemiBold,
-} from "@/lib/fonts";
+import { ibmPlexSans, ibmPlexMono } from "@/lib/fonts";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -24,7 +19,7 @@ export default function RootLayout({
   return (
     <html lang="es" className="dark">
       <body
-        className={`${ibmPlexSans.variable} ${ibmPlexMono.variable} ${jetBrainsMono.variable} ${poppinsSemiBold.variable} antialiased`}
+        className={`${ibmPlexSans.variable} ${ibmPlexMono.variable} antialiased`}
       >
         {children}
       </body>

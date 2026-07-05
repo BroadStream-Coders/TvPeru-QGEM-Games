@@ -188,4 +188,3 @@ su "Hecho cuando", pero no es el foco actual).
 - **Hecho cuando:** existe la pestaña Storage, lista/navega assets remotos y permite
   descargar uno al panel Local.
 - **Fecha:** 2026-07-03 · **Estado:** Abierto
-

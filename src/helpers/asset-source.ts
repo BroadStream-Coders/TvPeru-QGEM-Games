@@ -18,6 +18,10 @@ export const resolveAssetUrl = (path: string): string =>
 
 export type LocalAsset = { entry: CatalogEntry; loaded: LoadedAsset };
 
+const FONT_EXT = /\.(ttf|otf|woff2?)$/i;
+const isFontFile = (file: File) =>
+  file.type.startsWith("font/") || FONT_EXT.test(file.name);
+
 const kindFromFile = (file: File): "image" | "video" | "audio" | null => {
   if (file.type.startsWith("image/")) return "image";
   if (file.type.startsWith("video/")) return "video";
@@ -26,9 +30,24 @@ const kindFromFile = (file: File): "image" | "video" | "audio" | null => {
 };
 
 export function localAssetFromFile(file: File): LocalAsset | null {
-  const kind = kindFromFile(file);
-  if (!kind) return null;
   const url = URL.createObjectURL(file);
+
+  if (isFontFile(file)) {
+    const family = `qgem-font-${crypto.randomUUID()}`;
+    const face = new FontFace(family, `url(${url})`);
+    document.fonts.add(face);
+    face.load();
+    return {
+      entry: { kind: "font", path: file.name, family, folder: "" },
+      loaded: { kind: "font", url, family },
+    };
+  }
+
+  const kind = kindFromFile(file);
+  if (!kind) {
+    URL.revokeObjectURL(url);
+    return null;
+  }
   return { entry: { kind, path: file.name, folder: "" }, loaded: { kind, url } };
 }
 

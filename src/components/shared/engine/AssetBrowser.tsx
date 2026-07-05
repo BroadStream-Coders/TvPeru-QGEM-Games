@@ -191,7 +191,7 @@ export function AssetBrowser({
           <input
             type="file"
             multiple
-            accept="image/*,video/*,audio/*"
+            accept="image/*,video/*,audio/*,font/*,.ttf,.otf,.woff,.woff2"
             className="hidden"
             onChange={(e) => {
               if (e.target.files?.length) onAddFiles(e.target.files);

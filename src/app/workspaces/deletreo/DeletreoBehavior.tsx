@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useEditor } from "@engine/editor/editorContext";
 import { useAssets } from "@engine/assetsContext";
 import { useAnimations } from "@engine/animations/AnimationsContext";
+import { useSceneRuntime } from "@/hooks/use-scene-runtime";
 import { useGameKeys } from "@/hooks/use-game-keys";
 import { playSound } from "@/lib/audio";
 import {
@@ -13,37 +13,25 @@ import {
 import { ANCHOR_ID, FRAME_ID, TEXT_ID } from "./constants";
 
 export function DeletreoBehavior() {
-  const { gameObjects, setGameObjects } = useEditor();
   const { assets } = useAssets();
   const { trigger } = useAnimations();
+  const runtime = useSceneRuntime((s) => s.runtime);
+  const patchComponent = useSceneRuntime((s) => s.patchComponent);
 
   const correctUrl = assets.correct?.url;
   const incorrectUrl = assets.incorrect?.url;
 
   const [spellStep, setSpellStep] = useState(0);
 
-  const controller = gameObjects
-    .find((go) => go.id === ANCHOR_ID)
-    ?.components.find((c) => c.type === "deletreo") as
-    | DeletreoComponent
+  const controller = runtime[ANCHOR_ID]?.components?.deletreo as
+    | Partial<DeletreoComponent>
     | undefined;
   const groups = controller?.groups ?? [];
   const groupIndex = controller?.groupIndex ?? 0;
   const slotIndex = controller?.slotIndex ?? 0;
 
   const patchDeletreo = (patch: Partial<DeletreoComponent>) =>
-    setGameObjects((prev) =>
-      prev.map((go) =>
-        go.id === ANCHOR_ID
-          ? {
-              ...go,
-              components: go.components.map((c) =>
-                c.type === "deletreo" ? { ...c, ...patch } : c,
-              ),
-            }
-          : go,
-      ),
-    );
+    patchComponent(ANCHOR_ID, "deletreo", patch);
 
   const setFrame = (frame: DeletreoFrame) => patchDeletreo({ frame });
 
@@ -56,19 +44,8 @@ export function DeletreoBehavior() {
   }, [groupIndex, slotIndex, controller?.fileName]);
 
   useEffect(() => {
-    setGameObjects((prev) =>
-      prev.map((go) =>
-        go.id === TEXT_ID
-          ? {
-              ...go,
-              components: go.components.map((c) =>
-                c.type === "spellframe" ? { ...c, word, spellStep } : c,
-              ),
-            }
-          : go,
-      ),
-    );
-  }, [word, spellStep, setGameObjects]);
+    patchComponent(TEXT_ID, "spellframe", { word, spellStep });
+  }, [word, spellStep, patchComponent]);
 
   const selectGroup = (n: number) => {
     if (n < 0 || n >= groups.length) return;

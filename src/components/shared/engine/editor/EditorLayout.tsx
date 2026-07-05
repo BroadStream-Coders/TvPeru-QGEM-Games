@@ -55,6 +55,8 @@ import {
 import type { GameDefinition } from "@engine/editor/GameDefinition";
 import { cn } from "@/lib/utils";
 import { useSceneEditor } from "@/hooks/use-scene-editor";
+import { useSceneRuntime } from "@/hooks/use-scene-runtime";
+import { mergeRuntime } from "@engine/runtime/sceneRuntime";
 import { useWorkspaceHeader } from "@/hooks/use-workspace-header";
 import { useAssetPreloader } from "@/hooks/use-asset-preloader";
 import { toManifest, localAssetFromFile } from "@/helpers/asset-source";
@@ -144,6 +146,12 @@ function ScenePanel() {
 
 function GamePanel(props: IDockviewPanelProps) {
   const e = useEditor();
+  const runtime = useSceneRuntime((s) => s.runtime);
+  const setRuntimeTransform = useSceneRuntime((s) => s.setTransform);
+  const merged = useMemo(
+    () => mergeRuntime(e.gameObjects, runtime),
+    [e.gameObjects, runtime],
+  );
   const setHeader = useWorkspaceHeader((s) => s.setHeader);
   const toggleRef = useRef<(() => void) | null>(null);
   const registerFullscreen = useCallback((toggle: () => void) => {
@@ -168,15 +176,17 @@ function GamePanel(props: IDockviewPanelProps) {
       onFullscreenReady={registerFullscreen}
     >
       <div className="absolute inset-0">
-        {e.gameObjects
+        {merged
           .filter((go) => !go.parentId && go.active)
           .map((go) => (
             <GameObjectView
               key={go.id}
               gameObject={go}
-              allGameObjects={e.gameObjects}
+              allGameObjects={merged}
               selectedId={null}
-              onAnimatePosition={e.animatePosition}
+              onAnimatePosition={(id, position) =>
+                setRuntimeTransform(id, { position })
+              }
             />
           ))}
       </div>
@@ -335,6 +345,7 @@ function buildDefaultLayout(api: DockviewApi) {
 export function EditorLayout({ game }: { game: GameDefinition }) {
   const setHeader = useWorkspaceHeader((s) => s.setHeader);
   const resetHeader = useWorkspaceHeader((s) => s.resetHeader);
+  const resetRuntime = useSceneRuntime((s) => s.reset);
 
   const registry = useMemo<ComponentRegistry>(
     () =>
@@ -436,14 +447,7 @@ export function EditorLayout({ game }: { game: GameDefinition }) {
   };
 
   const handleExport = useCallback(() => {
-    const { gameObjects, registry } = apiRef.current;
-    const scene = gameObjects.map((go) => ({
-      ...go,
-      components: go.components.map((c) => {
-        const strip = registry.get(c.type)?.stripForExport;
-        return strip ? strip(c) : c;
-      }),
-    }));
+    const scene = apiRef.current.gameObjects;
     const blob = new Blob([JSON.stringify(scene, null, 2)], {
       type: "application/json",
     });
@@ -456,6 +460,7 @@ export function EditorLayout({ game }: { game: GameDefinition }) {
   }, [game.id]);
 
   useEffect(() => () => resetHeader(), [resetHeader]);
+  useEffect(() => () => resetRuntime(), [resetRuntime]);
   useEffect(() => {
     const onLoad = game.onLoad
       ? (file: File) => game.onLoad!(file, apiRef.current)

@@ -14,31 +14,6 @@ changelog y se borra de aquí.
 
 ---
 
-## [TD-020] El export de escena puede filtrar data de runtime (strip opt-in + campos que el strip no cubre)
-
-- **Ubicación:** `src/components/shared/engine/componentRegistry.ts` (campo `stripForExport`) · consumido en `src/components/shared/engine/editor/EditorLayout.tsx` (`handleExport`)
-- **Riesgo:** 6/10
-- **Problema:** El export de escena (File → Export) limpia la data de runtime de
-  cada componente llamando a su `stripForExport`, pero hay dos huecos:
-  1. **Es opcional.** Un componente que guarde estado de runtime en el GameObject
-     (hoy `deletreo`/`spellframe`/`controller`/`slot`, escritos por sus behaviors) y
-     **olvide** declarar `stripForExport` exporta esa data sin aviso.
-  2. **El strip es por-componente**, así que no alcanza a: (a) campos de runtime que
-     un behavior escribe en un **componente nativo** compartido —p. ej. `calculo-mental`
-     mete la pregunta/respuesta en el `text` nativo, que en otros juegos es diseño, así
-     que no se puede stripear a ciegas; (b) `active` a nivel **GameObject** (no es
-     componente). Ambos solo salen limpios si se exporta desde un **estado limpio**
-     (sesión sin cargar, sin jugar). De hecho el primer `scene.json` de calculo-mental
-     salió con preguntas, `active:true` y URLs blob muertas por exportarse a mitad de juego.
-- **Impacto futuro:** Un `scene.json` commiteado como "diseño" puede quedar contaminado
-  con data de una sesión concreta (palabras, `active`, blobs muertos), rompiendo la
-  premisa de que el diseño no lleva data. Falla en silencio (no hay error ni test).
-  Mitigación posible: exportar siempre desde estado limpio como convención; o separar
-  el estado de runtime del estado de diseño en el editor (que los behaviors no muten
-  los mismos GameObjects que se exportan); o un chequeo que avise si se exporta con
-  data cargada.
-- **Fecha:** 2026-07-04 · **Estado:** Abierto
-
 ## [TD-019] Ctrl/Cmd+D (duplicar) choca con el atajo de marcador en Brave
 
 - **Ubicación:** `src/components/shared/engine/editor/SceneCanvas.tsx` (handler `onKeyDown`)

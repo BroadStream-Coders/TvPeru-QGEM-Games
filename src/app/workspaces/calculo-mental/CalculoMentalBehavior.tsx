@@ -1,12 +1,11 @@
 "use client";
 
 import { useEffect } from "react";
-import { useEditor } from "@engine/editor/editorContext";
 import { useAssets } from "@engine/assetsContext";
 import { useAnimations } from "@engine/animations/AnimationsContext";
+import { useSceneRuntime } from "@/hooks/use-scene-runtime";
 import { useGameKeys } from "@/hooks/use-game-keys";
 import { playSound } from "@/lib/audio";
-import { SlotComponent } from "./components/slot/slotComponent";
 import { ControllerComponent } from "./components/controller/controllerComponent";
 import {
   SLOT_COUNT,
@@ -17,44 +16,17 @@ import {
 } from "./constants";
 
 export function CalculoMentalBehavior() {
-  const { gameObjects, setGameObjects, patchGameObject } = useEditor();
   const { assets } = useAssets();
   const { trigger } = useAnimations();
+  const runtime = useSceneRuntime((s) => s.runtime);
+  const patchComponent = useSceneRuntime((s) => s.patchComponent);
+  const setActive = useSceneRuntime((s) => s.setActive);
 
-  const blueUrl = assets.blueFrame?.url;
-  const purpleUrl = assets.purpleFrame?.url;
-  const checkUrl = assets.check?.url;
-  const xUrl = assets.x?.url;
   const correctUrl = assets.correct?.url;
   const incorrectUrl = assets.incorrect?.url;
 
-  useEffect(() => {
-    setGameObjects((prev) =>
-      prev.map((go) =>
-        SLOT_IDS.includes(go.id)
-          ? {
-              ...go,
-              components: go.components.map((c) => {
-                if (c.type !== "slot") return c;
-                const slot = c as SlotComponent;
-                return {
-                  ...slot,
-                  blueSrc: blueUrl ?? slot.blueSrc,
-                  purpleSrc: purpleUrl ?? slot.purpleSrc,
-                  checkSrc: checkUrl ?? slot.checkSrc,
-                  xSrc: xUrl ?? slot.xSrc,
-                };
-              }),
-            }
-          : go,
-      ),
-    );
-  }, [blueUrl, purpleUrl, checkUrl, xUrl, setGameObjects]);
-
-  const controller = gameObjects
-    .find((go) => go.id === CONTROLLER_ID)
-    ?.components.find((c) => c.type === "controller") as
-    | ControllerComponent
+  const controller = runtime[CONTROLLER_ID]?.components?.controller as
+    | Partial<ControllerComponent>
     | undefined;
   const groups = controller?.groups ?? [];
   const groupIndex = controller?.groupIndex ?? 0;
@@ -63,81 +35,24 @@ export function CalculoMentalBehavior() {
   const fileName = controller?.fileName;
 
   const patchController = (patch: Partial<ControllerComponent>) =>
-    setGameObjects((prev) =>
-      prev.map((go) =>
-        go.id === CONTROLLER_ID
-          ? {
-              ...go,
-              components: go.components.map((c) =>
-                c.type === "controller" ? { ...c, ...patch } : c,
-              ),
-            }
-          : go,
-      ),
-    );
+    patchComponent(CONTROLLER_ID, "controller", patch);
 
-  const patchSlot = (id: string, patch: Partial<SlotComponent>) =>
-    setGameObjects((prev) =>
-      prev.map((go) =>
-        go.id === id
-          ? {
-              ...go,
-              components: go.components.map((c) =>
-                c.type === "slot" ? { ...c, ...patch } : c,
-              ),
-            }
-          : go,
-      ),
-    );
+  const setStatus = (id: string, status: string) =>
+    patchComponent(id, "slot", { status });
 
   const boardSlots = groups[groupIndex]?.boards[boardIndex]?.slots ?? [];
 
   useEffect(() => {
     const slots = groups[groupIndex]?.boards[boardIndex]?.slots ?? [];
-    setGameObjects((prev) =>
-      prev.map((go) => {
-        if (go.id === CONTROLLER_ID) {
-          return {
-            ...go,
-            components: go.components.map((c) =>
-              c.type === "controller" ? { ...c, cursor: -1 } : c,
-            ),
-          };
-        }
-        if (SLOT_IDS.includes(go.id)) {
-          return {
-            ...go,
-            components: go.components.map((c) =>
-              c.type === "slot" ? { ...c, status: "none" } : c,
-            ),
-          };
-        }
-        const qIndex = QUESTION_IDS.indexOf(go.id);
-        if (qIndex !== -1) {
-          const text = slots[qIndex]?.question ?? "";
-          return {
-            ...go,
-            active: false,
-            components: go.components.map((c) =>
-              c.type === "text" ? { ...c, text } : c,
-            ),
-          };
-        }
-        const aIndex = ANSWER_IDS.indexOf(go.id);
-        if (aIndex !== -1) {
-          const text = slots[aIndex]?.answer ?? "";
-          return {
-            ...go,
-            active: false,
-            components: go.components.map((c) =>
-              c.type === "text" ? { ...c, text } : c,
-            ),
-          };
-        }
-        return go;
-      }),
-    );
-  }, [groupIndex, boardIndex, fileName, setGameObjects]);
+    patchController({ cursor: -1 });
+    SLOT_IDS.forEach((id, i) => {
+      patchComponent(id, "slot", { status: "none" });
+      patchComponent(QUESTION_IDS[i], "text", { text: slots[i]?.question ?? "" });
+      patchComponent(ANSWER_IDS[i], "text", { text: slots[i]?.answer ?? "" });
+      setActive(QUESTION_IDS[i], false);
+      setActive(ANSWER_IDS[i], false);
+    });
+  }, [groupIndex, boardIndex, fileName, patchComponent, setActive]);
 
   const selectGroup = (n: number) => {
     if (n < 0 || n >= groups.length) return;
@@ -164,15 +79,15 @@ export function CalculoMentalBehavior() {
   const revealNextQuestion = () => {
     const next = cursor + 1;
     if (next >= SLOT_COUNT || next >= boardSlots.length) return;
-    patchGameObject(QUESTION_IDS[next], { active: true });
+    setActive(QUESTION_IDS[next], true);
     patchController({ cursor: next });
   };
 
   const selectBackSlot = () => {
     if (cursor < 0) return;
-    patchGameObject(QUESTION_IDS[cursor], { active: false });
-    patchGameObject(ANSWER_IDS[cursor], { active: false });
-    patchSlot(SLOT_IDS[cursor], { status: "none" });
+    setActive(QUESTION_IDS[cursor], false);
+    setActive(ANSWER_IDS[cursor], false);
+    setStatus(SLOT_IDS[cursor], "none");
     patchController({ cursor: cursor - 1 });
   };
 
@@ -183,22 +98,22 @@ export function CalculoMentalBehavior() {
 
   const showCurrentAnswer = () => {
     if (cursor < 0) return;
-    patchGameObject(ANSWER_IDS[cursor], { active: true });
-    patchSlot(SLOT_IDS[cursor], { status: "correct" });
+    setActive(ANSWER_IDS[cursor], true);
+    setStatus(SLOT_IDS[cursor], "correct");
     if (correctUrl) playSound(correctUrl);
     trigger(SLOT_IDS[cursor], "pop");
   };
 
   const markCurrentError = () => {
     if (cursor < 0) return;
-    patchSlot(SLOT_IDS[cursor], { status: "incorrect" });
+    setStatus(SLOT_IDS[cursor], "incorrect");
     if (incorrectUrl) playSound(incorrectUrl);
     trigger(SLOT_IDS[cursor], "shake");
   };
 
   const clearCurrent = () => {
     if (cursor < 0) return;
-    patchSlot(SLOT_IDS[cursor], { status: "none" });
+    setStatus(SLOT_IDS[cursor], "none");
   };
 
   useGameKeys({

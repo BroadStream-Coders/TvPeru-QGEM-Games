@@ -12,6 +12,18 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-070] Capa de runtime del engine: diseño y estado de juego separados (2026-07-05 07:56)
+Nuevo store `useSceneRuntime` + `mergeRuntime` (`@engine/runtime`): los behaviors ya no mutan el diseño con `setGameObjects`, escriben
+overrides (`active`/`transform`/componentes) en una capa aparte. El panel Game renderiza `diseño+runtime`; Scene renderiza
+`diseño+runtime` de contenido pero con transform de diseño (para editar layout viendo el contenido real). `deletreo` y `calculo-mental`
+migrados (sesión, palabra, status, active, textos y frame normal/error ahora son runtime). El `slot` pasó a resolver claves de asset en
+`SlotView` (fin de las URLs blob en el diseño). Export = `JSON.stringify` del diseño, siempre limpio. Cierra TD-020. Se eliminó el
+código muerto del sistema anterior (`animatePosition` y `setTransform` en `useSceneEditor`) y se documentó todo en `engine-arquitectura.md` §2.6.
+
+## [TD-020] Resuelto: el export ya no puede filtrar data de runtime (2026-07-05 07:56)
+Eliminado el mecanismo `stripForExport` (era un parche opt-in que no cubría `text` nativo ni `active`). Con la capa de runtime el diseño
+nunca se ensucia, así que exportar es siempre correcto sin convención de "estado limpio". Ver RM-070.
+
 ## [RM-069] Exportar escena a scene.json y sembrar juegos desde él (2026-07-04 16:31)
 Botón File → Export en la topbar (menú radix `Menubar` data-driven que solo lista acciones cableadas) descarga `<id>.scene.json`
 con `JSON.stringify` del estado del editor, limpiando data de runtime vía `ComponentDefinition.stripForExport` (deletreo, spellframe,

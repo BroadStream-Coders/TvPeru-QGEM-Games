@@ -10,6 +10,7 @@ import {
   type CalcData,
 } from "./components/controller/controllerComponent";
 import { loadJsonFile } from "@/helpers/persistence";
+import { useSceneRuntime } from "@/hooks/use-scene-runtime";
 import { CONTROLLER_ID, SLOT_IDS } from "./constants";
 import { CalculoMentalBehavior } from "./CalculoMentalBehavior";
 import scene from "./scene.json";
@@ -26,30 +27,16 @@ export const calculoMentalGame: GameDefinition = {
   },
   components: [slotDefinition, controllerDefinition],
   behavior: CalculoMentalBehavior,
-  onLoad: (file, editor) => {
+  onLoad: (file) => {
     loadJsonFile<CalcData>(file, isCalcData)
       .then((data) =>
-        editor.setGameObjects((prev) =>
-          prev.map((go) =>
-            go.id === CONTROLLER_ID
-              ? {
-                  ...go,
-                  components: go.components.map((c) =>
-                    c.type === "controller"
-                      ? {
-                          ...c,
-                          groups: data.groups,
-                          groupIndex: 0,
-                          boardIndex: 0,
-                          cursor: -1,
-                          fileName: file.name,
-                        }
-                      : c,
-                  ),
-                }
-              : go,
-          ),
-        ),
+        useSceneRuntime.getState().patchComponent(CONTROLLER_ID, "controller", {
+          groups: data.groups,
+          groupIndex: 0,
+          boardIndex: 0,
+          cursor: -1,
+          fileName: file.name,
+        }),
       )
       .catch(() => console.error("JSON inválido para Cálculo Mental."));
   },

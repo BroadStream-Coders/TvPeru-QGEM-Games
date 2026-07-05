@@ -1,5 +1,5 @@
 import { useCallback, useRef, useState } from "react";
-import { RectTransformValues, Vec2, Vec2Field } from "@engine/RectTransform";
+import { Vec2, Vec2Field } from "@engine/RectTransform";
 import { TreeNode } from "@engine/Hierarchy";
 import { ComponentRegistry } from "@engine/componentRegistry";
 import {
@@ -175,30 +175,6 @@ export function useSceneEditor({
       ),
     );
 
-  const animatePosition = useCallback(
-    (id: string, position: Vec2) =>
-      setGameObjects((prev) =>
-        prev.map((go) =>
-          go.id === id
-            ? { ...go, transform: { ...go.transform, position } }
-            : go,
-        ),
-      ),
-    [],
-  );
-
-  const setTransform = useCallback(
-    (id: string, patch: Partial<RectTransformValues>) =>
-      setGameObjects((prev) =>
-        prev.map((go) =>
-          go.id === id
-            ? { ...go, transform: { ...go.transform, ...patch } }
-            : go,
-        ),
-      ),
-    [],
-  );
-
   return {
     gameObjects,
     setGameObjects,
@@ -209,7 +185,6 @@ export function useSceneEditor({
     selected,
     hierarchyNodes,
     stageRef,
-    setTransform,
     patchGameObject,
     createNewGameObject,
     duplicateSelected,
@@ -221,6 +196,5 @@ export function useSceneEditor({
     setGameObjectSize,
     setAxis,
     setRotation,
-    animatePosition,
   };
 }

@@ -7,6 +7,8 @@ import Selecto from "react-selecto";
 import { Maximize, Minus, Plus } from "lucide-react";
 
 import { useEditor } from "@engine/editor/editorContext";
+import { useSceneRuntime } from "@/hooks/use-scene-runtime";
+import { mergeRuntime } from "@engine/runtime/sceneRuntime";
 import { GameObjectView } from "@engine/GameObjectView";
 import { SceneViewModeProvider } from "@engine/SceneViewMode";
 import {
@@ -62,6 +64,7 @@ function Tbtn(props: React.ButtonHTMLAttributes<HTMLButtonElement>) {
 
 export function SceneCanvas() {
   const e = useEditor();
+  const runtime = useSceneRuntime((s) => s.runtime);
   const viewerRef = useRef<InfiniteViewer>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
   const moveableRef = useRef<Moveable>(null);
@@ -281,19 +284,23 @@ export function SceneCanvas() {
     moveableRef.current?.updateRect();
   }
 
+  const displayObjects = useMemo(
+    () => mergeRuntime(e.gameObjects, runtime, { transform: false }),
+    [e.gameObjects, runtime],
+  );
+
   const sceneObjects = useMemo(
     () =>
-      e.gameObjects
+      displayObjects
         .filter((go) => !go.parentId && go.active)
         .map((go) => (
           <GameObjectView
             key={go.id}
             gameObject={go}
-            allGameObjects={e.gameObjects}
-            onAnimatePosition={e.animatePosition}
+            allGameObjects={displayObjects}
           />
         )),
-    [e.gameObjects, e.animatePosition],
+    [displayObjects],
   );
 
   const moveableTarget =

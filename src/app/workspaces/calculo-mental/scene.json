@@ -74,11 +74,7 @@
     "components": [
       {
         "type": "slot",
-        "status": "none",
-        "blueSrc": "",
-        "purpleSrc": "",
-        "checkSrc": "",
-        "xSrc": ""
+        "status": "none"
       },
       {
         "type": "pop",
@@ -114,12 +110,12 @@
     "parentId": "slot-0",
     "transform": {
       "position": {
-        "x": -8,
+        "x": -5,
         "y": 30
       },
       "size": {
-        "x": 346,
-        "y": 124
+        "x": 310,
+        "y": 80
       },
       "pivot": {
         "x": 0.5,
@@ -205,11 +201,7 @@
     "components": [
       {
         "type": "slot",
-        "status": "none",
-        "blueSrc": "",
-        "purpleSrc": "",
-        "checkSrc": "",
-        "xSrc": ""
+        "status": "none"
       },
       {
         "type": "pop",
@@ -245,12 +237,12 @@
     "parentId": "slot-1",
     "transform": {
       "position": {
-        "x": -8,
+        "x": -5,
         "y": 30
       },
       "size": {
-        "x": 346,
-        "y": 124
+        "x": 310,
+        "y": 80
       },
       "pivot": {
         "x": 0.5,
@@ -336,11 +328,7 @@
     "components": [
       {
         "type": "slot",
-        "status": "none",
-        "blueSrc": "",
-        "purpleSrc": "",
-        "checkSrc": "",
-        "xSrc": ""
+        "status": "none"
       },
       {
         "type": "pop",
@@ -376,12 +364,12 @@
     "parentId": "slot-2",
     "transform": {
       "position": {
-        "x": -8,
+        "x": -5,
         "y": 30
       },
       "size": {
-        "x": 346,
-        "y": 124
+        "x": 310,
+        "y": 80
       },
       "pivot": {
         "x": 0.5,
@@ -467,11 +455,7 @@
     "components": [
       {
         "type": "slot",
-        "status": "none",
-        "blueSrc": "",
-        "purpleSrc": "",
-        "checkSrc": "",
-        "xSrc": ""
+        "status": "none"
       },
       {
         "type": "pop",
@@ -507,12 +491,12 @@
     "parentId": "slot-3",
     "transform": {
       "position": {
-        "x": -8,
+        "x": -5,
         "y": 30
       },
       "size": {
-        "x": 346,
-        "y": 124
+        "x": 310,
+        "y": 80
       },
       "pivot": {
         "x": 0.5,

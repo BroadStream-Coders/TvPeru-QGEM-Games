@@ -54,10 +54,15 @@ clásico ni retained-mode de Unity).**
 - **Inspector y Scene no se hablan entre sí.** Se comunican **solo a través del
   dato**. Prueba mental: el Inspector edita `transform.position` → la Scene se
   mueve, sin que ninguno conozca al otro, solo porque ambos leen el mismo objeto.
-- Distinguir dos tipos de estado:
-  - **Estado autorado** = el modelo (serializable, lo edita el Inspector).
-  - **Estado runtime** = gameplay efímero (animaciones, paso del deletreo, sonidos)
-    que maneja la lógica del juego y **no** se serializa.
+- Distinguir dos tipos de estado, que hoy viven en **dos stores físicamente
+  separados** (RM-070, ver §2.6):
+  - **Estado autorado (diseño)** = el modelo `gameObjects[]` en `useSceneEditor`.
+    Es serializable y **lo único que se exporta** (`scene.json`, RM-069). Solo lo
+    mutan las ediciones del Inspector/Scene.
+  - **Estado runtime** = gameplay efímero (palabra actual, paso del deletreo,
+    `active`, `status`, la posición durante una animación, la data de sesión cargada)
+    que maneja la lógica del juego. Vive en `useSceneRuntime` como overrides y **no**
+    se serializa. Los behaviors escriben **aquí**, nunca en el diseño.
 
 ### Quién es dueño del dato: el controlador (`useSceneEditor`)
 
@@ -172,9 +177,12 @@ tiene **lógica que corre** (teclas, sonidos, animaciones, carga de sesión) —
 "estado runtime" de §2. Eso vive en un componente que `EditorLayout` monta bajo sus
 providers (`{Behavior && <Behavior />}`); devuelve `null` y opera vía hooks:
 
-- `useEditor()` (`@engine/editor/editorContext.ts`) — el estado y las mutaciones de
-  `useSceneEditor` (gameObjects, setGameObjects, patchGameObject, animatePosition…),
-  importable desde cualquier componente de juego.
+- `useSceneRuntime()` (`@/hooks/use-scene-runtime.ts`) — la **capa de runtime**
+  (§2.6): donde el behavior escribe el estado de juego (`patchComponent`, `setActive`,
+  `setTransform`). **Es el hook que un behavior usa para escribir**, no `useEditor`.
+- `useEditor()` (`@engine/editor/editorContext.ts`) — el estado de diseño de
+  `useSceneEditor`, para **leer** el grafo autorado. Un behavior normalmente **no**
+  lo usa para escribir (eso ensuciaría el diseño).
 - `useAssets()` (`@engine/assetsContext.ts`) — los assets ya cargados, por key.
 - `useAnimations()` — dispara pop/shake/bounce/slide que registran los GameObjects.
 
@@ -188,6 +196,57 @@ progreso. Un componente puede referenciar un asset por **`assetKey`** (su "apodo
 vez de un `src` crudo: `ImageView` resuelve `assetKey → blob` vía `useAssets`, y si no
 hay key cae al `src` (**aditivo**, no rompe los juegos viejos). Cambiar de storage
 (local ↔ Supabase) = editar solo el catálogo, cero GameObjects.
+
+---
+
+## 2.6 Diseño vs runtime: la capa de overrides (RM-070)
+
+> Esta es la separación que hace que **guardar/exportar sea siempre correcto**.
+> Léela antes de escribir cualquier `behavior`.
+
+**El problema que resuelve.** Antes los behaviors manejaban el estado de juego
+mutando el modelo con `setGameObjects` (metían la palabra actual en el `text`,
+prendían `active`, escribían URLs de assets en el slot…). Como ese mismo modelo es
+lo que se exporta, **jugar ensuciaba el diseño**: el `scene.json` salía con la data
+de la sesión, `active:true`, blobs muertos. El parche `stripForExport` intentaba
+adivinar y borrar eso al exportar, pero no alcanzaba (campos nativos, `active`).
+
+**La solución: dos estados en dos stores.**
+
+```
+useSceneEditor  →  gameObjects[]           (DISEÑO: autorado, serializable, se exporta)
+useSceneRuntime →  runtime[goId] = override  (JUEGO: efímero, no se exporta)
+```
+
+- `useSceneRuntime` (`@/hooks/use-scene-runtime.ts`, store Zustand) guarda un mapa
+  `gameObjectId → { active?, transform?, components? }`. Los behaviors escriben ahí
+  con `patchComponent(id, type, patch)`, `setActive(id, bool)`, `setTransform(id, patch)`.
+- `mergeRuntime(design, runtime)` (`@engine/runtime/sceneRuntime.ts`) es una función
+  **pura** que fusiona el override sobre el diseño para renderizar.
+
+**Dónde se aplica el merge:**
+
+- El panel **Game** renderiza `mergeRuntime(diseño, runtime)` completo (incluye el
+  `transform` de las animaciones bounce/slide).
+- El panel **Scene** renderiza `mergeRuntime(diseño, runtime, { transform: false })`:
+  aplica el **contenido** (para editar el layout viendo la palabra/dato real cargado)
+  pero **conserva el `transform` de diseño**, porque ahí es lo que estás editando.
+- El **export** hace `JSON.stringify` del **diseño** puro (`useSceneEditor.gameObjects`),
+  que nunca fue tocado por el juego → **siempre limpio, exportes cuando exportes**.
+  Ya no hay `stripForExport` ni convención de "exportar desde estado limpio".
+
+**Reglas al escribir un behavior nuevo (importante):**
+
+1. El estado de juego (palabra, `status`, `active`, texto, posición animada, la data
+   de sesión de `onLoad`) va a `useSceneRuntime`, **nunca** a `setGameObjects`.
+2. El diseño solo guarda **claves de asset** (`assetKey`), nunca URLs resueltas: un
+   `blob:…` muere al recargar y trae `localhost`. Las vistas resuelven la clave con
+   `useAssets()` al renderizar (así lo hace `slot` con sus frames, y `image`).
+3. `useSceneRuntime` se resetea al desmontar el workspace (`EditorLayout`).
+
+Con esto, el loop de trabajo cierra: **editás el diseño en el editor viendo el
+contenido real, exportás el `scene.json` limpio, y ese archivo es la nueva
+distribución del juego** (`import scene from "./scene.json"`, RM-069).
 
 ---
 
@@ -480,6 +539,11 @@ sobre el shell `EditorLayout` (§2.5) — cada uno una `page.tsx` fina que pasa 
 - **4 juegos migrados al shell:** sandbox (vacío), deletreo (RM-048), calculo-mental
   (RM-049), intruso (RM-050). Operaciones Combinadas se **eliminó** (no se usaba;
   era un stub, ex-TD-011/RM-004).
+- **Export de escena + capa de runtime (RM-069/RM-070, §2.6):** File → Export baja el
+  `scene.json` del diseño; los juegos lo siembran con `import scene from "./scene.json"`.
+  Los behaviors escriben el estado de juego en `useSceneRuntime` (no en el diseño), así
+  que el export sale siempre limpio. Migrados **deletreo** y **calculo-mental**; **intruso
+  sigue con el modelo viejo** (pendiente). Cerró TD-020 y eliminó `stripForExport`.
 
 **Pendiente / lo que sigue:**
 

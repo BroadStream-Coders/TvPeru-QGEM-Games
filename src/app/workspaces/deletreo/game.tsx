@@ -10,6 +10,7 @@ import {
   type DeletreoData,
 } from "./components/deletreo/deletreoComponent";
 import { loadJsonFile } from "@/helpers/persistence";
+import { useSceneRuntime } from "@/hooks/use-scene-runtime";
 import { ANCHOR_ID, FRAME_ID } from "./constants";
 import { DeletreoBehavior } from "./DeletreoBehavior";
 import scene from "./scene.json";
@@ -26,29 +27,15 @@ export const deletreoGame: GameDefinition = {
   },
   components: [spellframeDefinition, deletreoDefinition],
   behavior: DeletreoBehavior,
-  onLoad: (file, editor) => {
+  onLoad: (file) => {
     loadJsonFile<DeletreoData>(file, isDeletreoData)
       .then((data) =>
-        editor.setGameObjects((prev) =>
-          prev.map((go) =>
-            go.id === ANCHOR_ID
-              ? {
-                  ...go,
-                  components: go.components.map((c) =>
-                    c.type === "deletreo"
-                      ? {
-                          ...c,
-                          groups: data.groups,
-                          groupIndex: 0,
-                          slotIndex: 0,
-                          fileName: file.name,
-                        }
-                      : c,
-                  ),
-                }
-              : go,
-          ),
-        ),
+        useSceneRuntime.getState().patchComponent(ANCHOR_ID, "deletreo", {
+          groups: data.groups,
+          groupIndex: 0,
+          slotIndex: 0,
+          fileName: file.name,
+        }),
       )
       .catch(() => console.error("JSON inválido para Deletreo."));
   },

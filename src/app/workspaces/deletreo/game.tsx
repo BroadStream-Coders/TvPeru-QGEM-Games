@@ -23,6 +23,7 @@ export const deletreoGame: GameDefinition = {
   assets: {
     correct: SHARED_ASSETS.correctSound,
     incorrect: SHARED_ASSETS.incorrectSound,
+    geniusTechno: SHARED_ASSETS.geniusTechno,
     ...DELETREO_ASSETS,
   },
   components: [spellframeDefinition, deletreoDefinition],

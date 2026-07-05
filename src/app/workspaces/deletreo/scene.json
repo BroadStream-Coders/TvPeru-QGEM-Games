@@ -136,7 +136,8 @@
         "spellStep": 0,
         "fontSize": 60,
         "letterSpacing": 20,
-        "underlineGap": 0
+        "underlineGap": 0,
+        "fontAssetKey": "geniusTechno"
       }
     ]
   }

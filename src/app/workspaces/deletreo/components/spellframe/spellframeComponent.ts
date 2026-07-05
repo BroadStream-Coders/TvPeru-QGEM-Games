@@ -7,9 +7,7 @@ export interface SpellframeComponent extends GameObjectComponent {
   fontSize: number;
   letterSpacing: number;
   underlineGap: number;
-  fontFamily?: string;
-  fontSrc?: string;
-  fontFileName?: string;
+  fontAssetKey?: string;
 }
 
 export function createSpellframeComponent(
@@ -22,8 +20,6 @@ export function createSpellframeComponent(
     fontSize: init?.fontSize ?? 60,
     letterSpacing: init?.letterSpacing ?? 20,
     underlineGap: init?.underlineGap ?? 0,
-    fontFamily: init?.fontFamily,
-    fontSrc: init?.fontSrc,
-    fontFileName: init?.fontFileName,
+    fontAssetKey: init?.fontAssetKey ?? "geniusTechno",
   };
 }

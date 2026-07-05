@@ -1,19 +1,22 @@
 import { DESIGN_WIDTH } from "@engine/RectTransform";
 import { SpellframeComponent } from "./spellframeComponent";
-import { DEFAULT_FONT } from "./defaultFont";
+import { useAssets } from "@engine/assetsContext";
 
 export function SpellframeView({
   component,
 }: {
   component: SpellframeComponent;
 }) {
-  const useCustomFont = !!component.fontFamily;
+  const { assets } = useAssets();
+  const fontFamily = component.fontAssetKey
+    ? assets[component.fontAssetKey]?.family
+    : undefined;
   return (
     <div className="w-full h-full">
       <div
-        className={`${useCustomFont ? "" : DEFAULT_FONT.font.className} w-full h-full flex items-center justify-center font-normal uppercase leading-none text-white`}
+        className="w-full h-full flex items-center justify-center font-normal uppercase leading-none text-white"
         style={{
-          fontFamily: component.fontFamily,
+          fontFamily,
           fontSize: `${(component.fontSize / DESIGN_WIDTH) * 100}cqw`,
           gap: `${(component.letterSpacing / DESIGN_WIDTH) * 100}cqw`,
         }}

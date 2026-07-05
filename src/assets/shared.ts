@@ -9,4 +9,10 @@ export const SHARED_ASSETS = {
     family: "Poppins SemiBold",
     folder: "Fonts",
   },
+  geniusTechno: {
+    kind: "font",
+    path: "shared/fonts/GeniusTechno-Regular.ttf",
+    family: "GeniusTechno",
+    folder: "Fonts",
+  },
 } satisfies AssetCatalog;

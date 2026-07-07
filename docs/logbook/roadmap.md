@@ -96,6 +96,19 @@ su "Hecho cuando", pero no es el foco actual).
   al editor, no el default.
 - **Fecha:** 2026-06-30 · **Estado:** Abierto
 
+## [RM-072] Undo/redo en el editor de escena
+
+- **Objetivo:** Que el editor tenga historial de deshacer/rehacer (Ctrl+Z / Ctrl+Shift+Z)
+  sobre las ediciones de la escena (transform, crear/borrar/reordenar objetos, cambios
+  de componentes). **Librería recomendada: `zundo`** (middleware temporal para Zustand):
+  se envuelve el store del editor y da el historial casi gratis, sin hilar un stack de
+  snapshots a mano. Encaja con el patrón commit-on-release de `SceneCanvas` (cada commit
+  a `setGameObjects` = un paso de historia; los `paint` intermedios del gesto no deben
+  entrar al historial). Verificar la API actual de `zundo` (context7) antes de cablear.
+- **Hecho cuando:** con un objeto editado, Ctrl+Z revierte el último cambio y Ctrl+Shift+Z
+  lo rehace; los pasos intermedios de un arrastre no ensucian el historial (un gesto = un paso).
+- **Fecha:** 2026-07-05 · **Estado:** Abierto
+
 ## [RM-046] Pipeline de assets por key en el editor (depende de RM-045)
 
 - **Objetivo:** `EditorLayout` baja el catálogo del juego (`toManifest` +

@@ -2,6 +2,11 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+> **Documento clave:** para decisiones **generales o de arquitectura**, lee primero
+> `docs/engine-arquitectura.md` — es la fuente de verdad del engine (qué es, cómo
+> piensa, cómo se nombra, en qué estado está). Para cambios **específicos y acotados**
+> no siempre hace falta.
+
 ## Commands
 
 ```bash

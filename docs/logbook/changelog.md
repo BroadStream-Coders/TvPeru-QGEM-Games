@@ -12,6 +12,9 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-076] Conversión Unity prefab → scene.json demostrada con Cálculo Mental (2026-07-07 14:25)
+Se leyó `CalculoMental.prefab` (YAML) y se regeneró `scene.json` + `SlotView` con los valores exactos de Unity: anclas resueltas a origen-centro, márgenes TMP horneados en el rect del texto, auto-size TMP→engine (`cqh = px ÷ 10.8`). Pipeline validado para replicar los demás juegos sin poner valores a mano.
+
 ## [RM-072] Undo/redo en el editor de escena (2026-07-07 10:06)
 Estado de diseño migrado a store Zustand (`use-editor-store.ts`) envuelto con `zundo` (`temporal`, `partialize` a `gameObjects`, `limit` 100); `use-scene-editor.ts` quedó como wrapper delgado. Botones de la topbar cableados + atajos Ctrl+Z / Ctrl+Shift+Z / Ctrl+Y (con guard en inputs). Cada `setGameObjects` = un paso.
 

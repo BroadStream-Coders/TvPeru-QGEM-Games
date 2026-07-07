@@ -59,12 +59,12 @@
     "parentId": "controller",
     "transform": {
       "position": {
-        "x": -675,
-        "y": -400
+        "x": -673.25,
+        "y": -396.8
       },
       "size": {
-        "x": 400,
-        "y": 200
+        "x": 365.5,
+        "y": 179.7
       },
       "pivot": {
         "x": 0.5,
@@ -98,7 +98,7 @@
         "speed": 1800,
         "hiddenOffset": {
           "x": 0,
-          "y": -330
+          "y": -393.2
         }
       }
     ]
@@ -110,12 +110,12 @@
     "parentId": "slot-0",
     "transform": {
       "position": {
-        "x": -5,
-        "y": 30
+        "x": -6.25,
+        "y": 30.85
       },
       "size": {
-        "x": 310,
-        "y": 80
+        "x": 309,
+        "y": 74
       },
       "pivot": {
         "x": 0.5,
@@ -126,10 +126,10 @@
       {
         "type": "text",
         "text": "",
-        "fontSize": 8,
+        "fontSize": 2.59,
         "autoSize": true,
-        "fontSizeMin": 1,
-        "fontSizeMax": 6,
+        "fontSizeMin": 1.85,
+        "fontSizeMax": 6.48,
         "color": "#ffffff",
         "fontAssetKey": "poppinsSemiBold",
         "bold": false,
@@ -148,12 +148,12 @@
     "parentId": "slot-0",
     "transform": {
       "position": {
-        "x": 69,
-        "y": -45
+        "x": 67.75,
+        "y": -47.1
       },
       "size": {
-        "x": 230,
-        "y": 87
+        "x": 200,
+        "y": 54.5
       },
       "pivot": {
         "x": 0.5,
@@ -164,10 +164,10 @@
       {
         "type": "text",
         "text": "",
-        "fontSize": 8,
+        "fontSize": 3.15,
         "autoSize": true,
-        "fontSizeMin": 1,
-        "fontSizeMax": 6,
+        "fontSizeMin": 1.67,
+        "fontSizeMax": 5.56,
         "color": "#ffffff",
         "fontAssetKey": "poppinsSemiBold",
         "bold": false,
@@ -186,12 +186,12 @@
     "parentId": "controller",
     "transform": {
       "position": {
-        "x": -280,
-        "y": -400
+        "x": -279.75,
+        "y": -396.8
       },
       "size": {
-        "x": 400,
-        "y": 200
+        "x": 365.5,
+        "y": 179.7
       },
       "pivot": {
         "x": 0.5,
@@ -225,7 +225,7 @@
         "speed": 1800,
         "hiddenOffset": {
           "x": 0,
-          "y": -330
+          "y": -393.2
         }
       }
     ]
@@ -237,12 +237,12 @@
     "parentId": "slot-1",
     "transform": {
       "position": {
-        "x": -5,
-        "y": 30
+        "x": -6.25,
+        "y": 30.85
       },
       "size": {
-        "x": 310,
-        "y": 80
+        "x": 309,
+        "y": 74
       },
       "pivot": {
         "x": 0.5,
@@ -253,10 +253,10 @@
       {
         "type": "text",
         "text": "",
-        "fontSize": 8,
+        "fontSize": 2.59,
         "autoSize": true,
-        "fontSizeMin": 1,
-        "fontSizeMax": 6,
+        "fontSizeMin": 1.85,
+        "fontSizeMax": 6.48,
         "color": "#ffffff",
         "fontAssetKey": "poppinsSemiBold",
         "bold": false,
@@ -275,12 +275,12 @@
     "parentId": "slot-1",
     "transform": {
       "position": {
-        "x": 69,
-        "y": -45
+        "x": 67.75,
+        "y": -47.1
       },
       "size": {
-        "x": 230,
-        "y": 87
+        "x": 200,
+        "y": 54.5
       },
       "pivot": {
         "x": 0.5,
@@ -291,10 +291,10 @@
       {
         "type": "text",
         "text": "",
-        "fontSize": 8,
+        "fontSize": 3.15,
         "autoSize": true,
-        "fontSizeMin": 1,
-        "fontSizeMax": 6,
+        "fontSizeMin": 1.67,
+        "fontSizeMax": 5.56,
         "color": "#ffffff",
         "fontAssetKey": "poppinsSemiBold",
         "bold": false,
@@ -313,12 +313,12 @@
     "parentId": "controller",
     "transform": {
       "position": {
-        "x": 115,
-        "y": -400
+        "x": 113.75,
+        "y": -396.8
       },
       "size": {
-        "x": 400,
-        "y": 200
+        "x": 365.5,
+        "y": 179.7
       },
       "pivot": {
         "x": 0.5,
@@ -352,7 +352,7 @@
         "speed": 1800,
         "hiddenOffset": {
           "x": 0,
-          "y": -330
+          "y": -393.2
         }
       }
     ]
@@ -364,12 +364,12 @@
     "parentId": "slot-2",
     "transform": {
       "position": {
-        "x": -5,
-        "y": 30
+        "x": -6.25,
+        "y": 30.85
       },
       "size": {
-        "x": 310,
-        "y": 80
+        "x": 309,
+        "y": 74
       },
       "pivot": {
         "x": 0.5,
@@ -380,10 +380,10 @@
       {
         "type": "text",
         "text": "",
-        "fontSize": 8,
+        "fontSize": 2.59,
         "autoSize": true,
-        "fontSizeMin": 1,
-        "fontSizeMax": 6,
+        "fontSizeMin": 1.85,
+        "fontSizeMax": 6.48,
         "color": "#ffffff",
         "fontAssetKey": "poppinsSemiBold",
         "bold": false,
@@ -402,12 +402,12 @@
     "parentId": "slot-2",
     "transform": {
       "position": {
-        "x": 69,
-        "y": -45
+        "x": 67.75,
+        "y": -47.1
       },
       "size": {
-        "x": 230,
-        "y": 87
+        "x": 200,
+        "y": 54.5
       },
       "pivot": {
         "x": 0.5,
@@ -418,10 +418,10 @@
       {
         "type": "text",
         "text": "",
-        "fontSize": 8,
+        "fontSize": 3.15,
         "autoSize": true,
-        "fontSizeMin": 1,
-        "fontSizeMax": 6,
+        "fontSizeMin": 1.67,
+        "fontSizeMax": 5.56,
         "color": "#ffffff",
         "fontAssetKey": "poppinsSemiBold",
         "bold": false,
@@ -440,12 +440,12 @@
     "parentId": "controller",
     "transform": {
       "position": {
-        "x": 510,
-        "y": -400
+        "x": 507.25,
+        "y": -396.8
       },
       "size": {
-        "x": 400,
-        "y": 200
+        "x": 365.5,
+        "y": 179.7
       },
       "pivot": {
         "x": 0.5,
@@ -479,7 +479,7 @@
         "speed": 1800,
         "hiddenOffset": {
           "x": 0,
-          "y": -330
+          "y": -393.2
         }
       }
     ]
@@ -491,12 +491,12 @@
     "parentId": "slot-3",
     "transform": {
       "position": {
-        "x": -5,
-        "y": 30
+        "x": -6.25,
+        "y": 30.85
       },
       "size": {
-        "x": 310,
-        "y": 80
+        "x": 309,
+        "y": 74
       },
       "pivot": {
         "x": 0.5,
@@ -507,10 +507,10 @@
       {
         "type": "text",
         "text": "",
-        "fontSize": 8,
+        "fontSize": 2.59,
         "autoSize": true,
-        "fontSizeMin": 1,
-        "fontSizeMax": 6,
+        "fontSizeMin": 1.85,
+        "fontSizeMax": 6.48,
         "color": "#ffffff",
         "fontAssetKey": "poppinsSemiBold",
         "bold": false,
@@ -529,12 +529,12 @@
     "parentId": "slot-3",
     "transform": {
       "position": {
-        "x": 69,
-        "y": -45
+        "x": 67.75,
+        "y": -47.1
       },
       "size": {
-        "x": 230,
-        "y": 87
+        "x": 200,
+        "y": 54.5
       },
       "pivot": {
         "x": 0.5,
@@ -545,10 +545,10 @@
       {
         "type": "text",
         "text": "",
-        "fontSize": 8,
+        "fontSize": 3.15,
         "autoSize": true,
-        "fontSizeMin": 1,
-        "fontSizeMax": 6,
+        "fontSizeMin": 1.67,
+        "fontSizeMax": 5.56,
         "color": "#ffffff",
         "fontAssetKey": "poppinsSemiBold",
         "bold": false,

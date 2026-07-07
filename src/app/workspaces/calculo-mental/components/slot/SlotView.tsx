@@ -34,26 +34,44 @@ export function SlotView({ component }: { component: SlotComponent }) {
   return (
     <div className="absolute inset-0">
       <div
-        style={frameStyle("48%", "35%", "86.5%", "62%", url(FRAME_KEYS.blue))}
+        style={frameStyle(
+          "47.33%",
+          "34.5%",
+          "94.66%",
+          "69%",
+          url(FRAME_KEYS.blue),
+        )}
       />
       <div
         style={frameStyle(
-          "67.25%",
-          "72.5%",
-          "57.5%",
-          "43.5%",
+          "68.54%",
+          "75.79%",
+          "62.93%",
+          "48.41%",
           url(FRAME_KEYS.purple),
         )}
       />
 
       {component.status === "correct" && (
         <div
-          style={frameStyle("92.5%", "7.5%", "23%", "41%", url(FRAME_KEYS.check))}
+          style={frameStyle(
+            "95.84%",
+            "4.06%",
+            "25.17%",
+            "45.63%",
+            url(FRAME_KEYS.check),
+          )}
         />
       )}
       {component.status === "incorrect" && (
         <div
-          style={frameStyle("90%", "7.5%", "19%", "36.5%", url(FRAME_KEYS.x))}
+          style={frameStyle(
+            "93.65%",
+            "3.78%",
+            "20.79%",
+            "40.62%",
+            url(FRAME_KEYS.x),
+          )}
         />
       )}
     </div>

@@ -21,6 +21,54 @@ su "Hecho cuando", pero no es el foco actual).
 
 ---
 
+# ⭐ Terna prioritaria — Evaluación del proyecto (2026-07-07)
+
+> Las 3 acciones de mayor retorno/esfuerzo detectadas en la evaluación de
+> escalabilidad/producto. **En pausa deliberada:** ahora el foco es sacar juegos;
+> hacer más engine/sistema antes de eso sería miedo a lanzar. Se retoman cuando
+> se destrabe la salida de juegos.
+
+## [RM-073] Campo `version` en `scene.json`
+
+- **Objetivo:** Que toda escena exportada lleve un campo de versión del formato
+  (p. ej. envolver el array en `{ version: 1, gameObjects: [...] }` o campo
+  equivalente), y que la carga lo lea. Hoy el export es un array pelado: el día
+  que cambie el modelo de `GameObject`, cada `scene.json` exportado por
+  producción se vuelve ilegible sin forma de detectar de qué versión era.
+- **Hecho cuando:** el export escribe la versión, la carga la valida (y rechaza
+  o migra versiones viejas con mensaje claro), y los 3 `scene.json` sembrados
+  la incluyen.
+- **Fecha:** 2026-07-07 · **Estado:** Abierto
+
+## [RM-074] CI mínimo + tests de las funciones puras del engine
+
+- **Objetivo:** Red de seguridad automatizada mínima para una app que sale al
+  aire: un GitHub Action que corra `pnpm build` en cada push, y un puñado de
+  tests sobre las funciones puras del engine (matemática de coordenadas de
+  `RectTransform`/`ancestorOffset`, `mergeRuntime`, `duplicateSubtrees`,
+  `reorderGameObjects`, los type-guards de sesión). Sin suite grande: solo lo
+  que se testea en una tarde y atrapa regresiones antes del estudio.
+- **Hecho cuando:** existe el workflow de CI corriendo build + tests, y las
+  funciones listadas tienen al menos un test cada una.
+- **Fecha:** 2026-07-07 · **Estado:** Abierto
+
+## [RM-075] "Show mode": candado de edición para el en vivo
+
+- **Objetivo:** Un modo show que **congele la edición** durante el broadcast.
+  Contexto real de uso: el operador SÍ tendrá el editor disponible minutos antes
+  del en vivo para ajustes de posición y similares, pero la mayor parte del
+  tiempo no mueve nada — y hoy nada impide que un click accidental arrastre un
+  GameObject, borre algo o cierre un panel en pleno aire. Es un candado/toggle
+  (edición ↔ show), no quitar el editor: en show quedan activas solo las teclas
+  del juego y fullscreen; gestos de canvas, Inspector, Hierarchy y cierre de
+  paneles quedan bloqueados.
+- **Hecho cuando:** existe el toggle; activado, no se puede mutar el diseño ni
+  el layout de paneles desde ninguna superficie, y las teclas del behavior +
+  fullscreen siguen funcionando; desactivarlo restaura la edición normal.
+- **Fecha:** 2026-07-07 · **Estado:** Abierto
+
+---
+
 # Fase 1 — Juegos a mano (la ventana de oportunidad)
 
 ## [RM-014] Juego "Intruso"

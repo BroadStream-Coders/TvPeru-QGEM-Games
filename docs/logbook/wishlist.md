@@ -80,6 +80,15 @@ decidir umbral y atajo para desactivarlo. Era la Fase 3 restante de RM-067.
 
 Dar un `id` propio a cada componente. Hoy solo el GameObject tiene `id`; los componentes se identifican por `type` dentro de su objeto (uno de cada tipo por objeto). Haría falta si un objeto llega a tener varios componentes del mismo tipo, o para referencias más robustas. La referencia a componente de RM-061 usa `{ gameObjectId, type }` justamente para no necesitar esto todavía.
 
+## [WL-020] Guía de operador (mitigar bus factor 1)
+
+Documento corto de operación en vivo, pensado para que alguien que no es el autor
+pueda operar el sistema: cómo abrir cada juego, cómo cargar el archivo de sesión
+(ZIP/JSON), qué teclas usa cada behavior (deletreo: F/M…, video: K/J…), cómo entrar
+a fullscreen y qué hacer si algo falla al aire. Hoy todo ese conocimiento vive en
+una sola persona y en el código. Encaja como `docs/operacion.md` o similar; se
+vuelve relevante apenas otra persona toque la máquina del estudio.
+
 ## [WL-019] Integrar animaciones/transiciones con `motion` (ex-framer-motion)
 
 Reemplazar los 4 hooks caseros de animación (`usePop`/`useShake`/`useBounceMove`/`useSlide`) por un sistema sobre **`motion`**, que da springs reales, `AnimatePresence` (enter/exit) y **`layoutId`** (shared layout / *magic move*: un objeto que existe en dos pantallas vuela y se transforma de una a la otra — el efecto tipo Balatro). Explorado en el lab `/lab/motion` (transición entre pantallas con modos magic move / slide / fade / pop + sliders de rebote/duración). Camino: promover a un componente de animación del engine (misma tripleta) que declare el objeto y su feel, montándose sobre el registro de `AnimationsContext`. Encaja con el modelo del engine (objetos con `id` → posiciones), así que la migración es directa. Verificar la API actual de `motion` (context7) al cablear; import es `motion/react`.

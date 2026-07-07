@@ -14,6 +14,34 @@ changelog y se borra de aquí.
 
 ---
 
+## [TD-057] `supabase.ts` lee las env vars con `!` sin validar
+
+- **Ubicación:** `src/helpers/supabase.ts:4-5`
+- **Riesgo:** 3/10
+- **Problema:** `createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, …ANON_KEY!)`
+  usa non-null assertion: si falta una env var, el cliente se crea con
+  `undefined` y el error aparece lejos de la causa (en el primer request o en
+  auth), no al arrancar. `storage-check` y `asset-source` sí manejan la ausencia
+  con `|| ""` / opcional.
+- **Impacto futuro:** En una máquina nueva (estudio, otro dev) sin `.env` el
+  síntoma será críptico. Un guard que lance "falta NEXT_PUBLIC_SUPABASE_URL" al
+  crear el cliente lo hace obvio.
+- **Fecha:** 2026-07-07 · **Estado:** Abierto
+
+## [TD-058] Páginas `lab/` (~1.250 líneas de demos) conviven con producción
+
+- **Ubicación:** `src/app/lab/` (`motion`, `react-moveable`, `dockview`)
+- **Riesgo:** 2/10
+- **Problema:** Los laboratorios de exploración (motion 517 líneas, moveable 458,
+  dockview 280) viven como rutas del mismo app de producción. Cumplieron su rol
+  (validar librerías antes de cablear); hoy son peso muerto en el build y rutas
+  accesibles desde el navegador del estudio.
+- **Impacto futuro:** Ruido al navegar el código y superficie accidental en
+  producción. Cuando un lab ya se promovió al engine (motion → RM/WL-019,
+  moveable/dockview ya cableados), su página puede borrarse; git conserva la
+  referencia.
+- **Fecha:** 2026-07-07 · **Estado:** Abierto
+
 ## [TD-019] Ctrl/Cmd+D (duplicar) choca con el atajo de marcador en Brave
 
 - **Ubicación:** `src/components/shared/engine/editor/SceneCanvas.tsx` (handler `onKeyDown`)

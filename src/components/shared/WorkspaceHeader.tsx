@@ -9,9 +9,6 @@ import { AuthButton } from "./AuthButton";
 
 import { useWorkspaceHeader } from "@/hooks/use-workspace-header";
 
-// Grupos presentes pero ocultos por ahora — poner en true para mostrarlos.
-const SHOW = { history: false } as const;
-
 interface MenuItem {
   label: string;
   icon?: ReactNode;
@@ -23,7 +20,8 @@ interface Menu {
 }
 
 export function WorkspaceHeader() {
-  const { title, icon, onLoad, onPlay, onExport } = useWorkspaceHeader();
+  const { title, icon, onLoad, onPlay, onExport, onUndo, onRedo, canUndo, canRedo } =
+    useWorkspaceHeader();
 
   if (!title) return null;
 
@@ -107,18 +105,22 @@ export function WorkspaceHeader() {
 
       <div className="flex-1" />
 
-      {/* E · history (oculto) */}
-      {SHOW.history && (
+      {/* E · history */}
+      {onUndo && onRedo && (
         <div className="flex gap-0.5">
           <button
             title="Deshacer"
-            className="flex h-[22px] w-[26px] items-center justify-center rounded-[5px] text-dim transition-colors hover:bg-elev hover:text-ink"
+            onClick={() => onUndo()}
+            disabled={!canUndo}
+            className="flex h-[22px] w-[26px] items-center justify-center rounded-[5px] text-dim transition-colors hover:bg-elev hover:text-ink disabled:pointer-events-none disabled:opacity-40"
           >
             <Undo2 className="h-3.5 w-3.5" />
           </button>
           <button
             title="Rehacer"
-            className="flex h-[22px] w-[26px] items-center justify-center rounded-[5px] text-dim transition-colors hover:bg-elev hover:text-ink"
+            onClick={() => onRedo()}
+            disabled={!canRedo}
+            className="flex h-[22px] w-[26px] items-center justify-center rounded-[5px] text-dim transition-colors hover:bg-elev hover:text-ink disabled:pointer-events-none disabled:opacity-40"
           >
             <Redo2 className="h-3.5 w-3.5" />
           </button>

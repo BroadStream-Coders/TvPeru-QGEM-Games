@@ -53,8 +53,10 @@ import {
   type LoadedAssetsState,
 } from "@engine/assetsContext";
 import type { GameDefinition } from "@engine/editor/GameDefinition";
+import { useStore } from "zustand";
 import { cn } from "@/lib/utils";
 import { useSceneEditor } from "@/hooks/use-scene-editor";
+import { useEditorStore } from "@/hooks/use-editor-store";
 import { useSceneRuntime } from "@/hooks/use-scene-runtime";
 import { mergeRuntime } from "@engine/runtime/sceneRuntime";
 import { useWorkspaceHeader } from "@/hooks/use-workspace-header";
@@ -366,6 +368,41 @@ export function EditorLayout({ game }: { game: GameDefinition }) {
   apiRef.current = value;
   const Behavior = game.behavior;
 
+  const { undo, redo } = useEditorStore.temporal.getState();
+  const canUndo = useStore(
+    useEditorStore.temporal,
+    (s) => s.pastStates.length > 0,
+  );
+  const canRedo = useStore(
+    useEditorStore.temporal,
+    (s) => s.futureStates.length > 0,
+  );
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (!(e.ctrlKey || e.metaKey)) return;
+      const t = e.target as HTMLElement | null;
+      if (
+        t &&
+        (t.tagName === "INPUT" ||
+          t.tagName === "TEXTAREA" ||
+          t.isContentEditable)
+      )
+        return;
+      const k = e.key.toLowerCase();
+      if (k === "z") {
+        e.preventDefault();
+        if (e.shiftKey) redo();
+        else undo();
+      } else if (k === "y") {
+        e.preventDefault();
+        redo();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [undo, redo]);
+
   const manifest = useMemo(() => toManifest(game.assets ?? {}), [game.assets]);
   const kinds = useMemo<Record<string, AssetKind>>(
     () =>
@@ -470,8 +507,22 @@ export function EditorLayout({ game }: { game: GameDefinition }) {
       icon: game.icon,
       onLoad,
       onExport: handleExport,
+      onUndo: undo,
+      onRedo: redo,
+      canUndo,
+      canRedo,
     });
-  }, [setHeader, game.title, game.icon, game.onLoad, handleExport]);
+  }, [
+    setHeader,
+    game.title,
+    game.icon,
+    game.onLoad,
+    handleExport,
+    undo,
+    redo,
+    canUndo,
+    canRedo,
+  ]);
 
   function onReady(event: DockviewReadyEvent) {
     buildDefaultLayout(event.api);

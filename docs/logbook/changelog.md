@@ -12,6 +12,9 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-072] Undo/redo en el editor de escena (2026-07-07 10:06)
+Estado de diseño migrado a store Zustand (`use-editor-store.ts`) envuelto con `zundo` (`temporal`, `partialize` a `gameObjects`, `limit` 100); `use-scene-editor.ts` quedó como wrapper delgado. Botones de la topbar cableados + atajos Ctrl+Z / Ctrl+Shift+Z / Ctrl+Y (con guard en inputs). Cada `setGameObjects` = un paso.
+
 ## [RM-071] Intruso sembrado desde scene.json (2026-07-05 08:32)
 `intruso/game.tsx` flipeado a `import scene from "./scene.json"` (semilla: el Background con video). No tiene behavior ni onLoad, así
 que no hubo estado de runtime que migrar — solo entró al loop de autoría/export como los otros. Completa los 3 juegos con contenido

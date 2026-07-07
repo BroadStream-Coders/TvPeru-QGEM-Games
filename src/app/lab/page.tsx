@@ -1,7 +1,14 @@
 import Link from "next/link";
-import { ArrowRight, FlaskConical, LayoutDashboard, Move3d } from "lucide-react";
+import { ArrowRight, FlaskConical, LayoutDashboard, Move3d, Sparkles } from "lucide-react";
 
 const demos = [
+  {
+    name: "motion",
+    description:
+      "Animaciones y transiciones entre pantallas (motion · ex-framer-motion) — magic move / slide / fade",
+    href: "/lab/motion",
+    icon: Sparkles,
+  },
   {
     name: "dockview",
     description: "Sistema de ventanas acoplables tipo Unity/VS Code",

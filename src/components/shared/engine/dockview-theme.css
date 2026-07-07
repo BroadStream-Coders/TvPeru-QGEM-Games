@@ -21,7 +21,7 @@
   --dv-floating-box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55);
 }
 
-.dv-qgem .dv-tab.dv-active-tab {
+.dv-qgem .dv-active-group .dv-tab.dv-active-tab {
   box-shadow: inset 0 2px 0 0 var(--editor-acc);
 }
 

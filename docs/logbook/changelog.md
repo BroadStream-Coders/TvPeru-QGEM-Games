@@ -12,6 +12,9 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-058] Presupuesto de memoria de assets (2026-07-08 10:31)
+`LoadedAsset` ahora captura `bytes` (+`width`/`height` en imágenes) en los dos embudos de carga, con registro incremental por asset (una descarga lenta ya no bloquea el conteo); store `use-memory-budget.ts` acumula por categoría (catálogo/local/sesión — sesión sin consumidor aún). `MemoryBadge` siempre visible en la StatusBar del editor: barra + % con desglose en tooltip (ámbar 70%, rojo 90%) y click → popover con hardware del equipo (RAM/CPU/GPU/heap). Presupuesto provisional 2 GB → calibrar en RM-077.
+
 ## [RM-076] Conversión Unity prefab → scene.json demostrada con Cálculo Mental (2026-07-07 14:25)
 Se leyó `CalculoMental.prefab` (YAML) y se regeneró `scene.json` + `SlotView` con los valores exactos de Unity: anclas resueltas a origen-centro, márgenes TMP horneados en el rect del texto, auto-size TMP→engine (`cqh = px ÷ 10.8`). Pipeline validado para replicar los demás juegos sin poner valores a mano.
 

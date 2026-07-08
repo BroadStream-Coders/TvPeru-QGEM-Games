@@ -1,4 +1,5 @@
 import type { AssetManifest, LoadedAsset } from "@/helpers/asset-preloader";
+import { useMemoryBudget } from "@/hooks/use-memory-budget";
 
 // `path` = origen físico del archivo (public/ o Supabase). `folder` = organización
 // dentro de la carga local, independiente del origen ("/"-separado para anidar).
@@ -31,15 +32,17 @@ const kindFromFile = (file: File): "image" | "video" | "audio" | null => {
 
 export function localAssetFromFile(file: File): LocalAsset | null {
   const url = URL.createObjectURL(file);
+  const { register } = useMemoryBudget.getState();
 
   if (isFontFile(file)) {
     const family = `qgem-font-${crypto.randomUUID()}`;
     const face = new FontFace(family, `url(${url})`);
     document.fonts.add(face);
     face.load();
+    register("local", url, { kind: "font", bytes: file.size });
     return {
       entry: { kind: "font", path: file.name, family, folder: "" },
-      loaded: { kind: "font", url, family },
+      loaded: { kind: "font", url, family, bytes: file.size },
     };
   }
 
@@ -48,12 +51,26 @@ export function localAssetFromFile(file: File): LocalAsset | null {
     URL.revokeObjectURL(url);
     return null;
   }
+  register("local", url, { kind, bytes: file.size });
   if (kind === "image") {
     const img = new Image();
     img.src = url;
-    img.decode().catch(() => {});
+    img
+      .decode()
+      .then(() =>
+        register("local", url, {
+          kind,
+          bytes: file.size,
+          width: img.naturalWidth,
+          height: img.naturalHeight,
+        }),
+      )
+      .catch(() => {});
   }
-  return { entry: { kind, path: file.name, folder: "" }, loaded: { kind, url } };
+  return {
+    entry: { kind, path: file.name, folder: "" },
+    loaded: { kind, url, bytes: file.size },
+  };
 }
 
 export function toManifest(catalog: AssetCatalog): AssetManifest {

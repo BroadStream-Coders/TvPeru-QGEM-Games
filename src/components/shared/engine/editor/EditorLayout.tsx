@@ -62,6 +62,8 @@ import { mergeRuntime } from "@engine/runtime/sceneRuntime";
 import { useWorkspaceHeader } from "@/hooks/use-workspace-header";
 import { useAssetPreloader } from "@/hooks/use-asset-preloader";
 import { toManifest, localAssetFromFile } from "@/helpers/asset-source";
+import { useMemoryBudget } from "@/hooks/use-memory-budget";
+import { MemoryBadge } from "@/components/shared/MemoryBadge";
 import type { LocalAsset } from "@/helpers/asset-source";
 import type { AssetKind, LoadedAsset } from "@/helpers/asset-preloader";
 
@@ -241,6 +243,7 @@ function StatusBar() {
           {loaded}/{total} assets
         </span>
       )}
+      <MemoryBadge />
       <span className="text-line-2">|</span>
       <span>QGEM Engine</span>
     </div>
@@ -417,38 +420,36 @@ export function EditorLayout({ game }: { game: GameDefinition }) {
   const preload = useAssetPreloader(manifest);
 
   const [userAssets, setUserAssets] = useState<Record<string, LocalAsset>>({});
+  const userAssetsRef = useRef(userAssets);
+  userAssetsRef.current = userAssets;
+
   const addLocalFiles = useCallback(
     (files: FileList | File[]) => {
-      const list = Array.from(files);
-      setUserAssets((prev) => {
-        const taken = new Set([
-          ...Object.keys(game.assets ?? {}),
-          ...Object.keys(prev),
-        ]);
-        const next = { ...prev };
-        for (const file of list) {
-          const asset = localAssetFromFile(file);
-          if (!asset) continue;
-          const dot = file.name.lastIndexOf(".");
-          const base = dot > 0 ? file.name.slice(0, dot) : file.name;
-          let key = base;
-          let i = 2;
-          while (taken.has(key)) key = `${base}-${i++}`;
-          taken.add(key);
-          next[key] = asset;
-        }
-        return next;
-      });
+      const taken = new Set([
+        ...Object.keys(game.assets ?? {}),
+        ...Object.keys(userAssetsRef.current),
+      ]);
+      const additions: Record<string, LocalAsset> = {};
+      for (const file of Array.from(files)) {
+        const asset = localAssetFromFile(file);
+        if (!asset) continue;
+        const dot = file.name.lastIndexOf(".");
+        const base = dot > 0 ? file.name.slice(0, dot) : file.name;
+        let key = base;
+        let i = 2;
+        while (taken.has(key)) key = `${base}-${i++}`;
+        taken.add(key);
+        additions[key] = asset;
+      }
+      setUserAssets((prev) => ({ ...prev, ...additions }));
     },
     [game.assets],
   );
-
-  const userAssetsRef = useRef(userAssets);
-  userAssetsRef.current = userAssets;
   useEffect(
     () => () => {
       for (const a of Object.values(userAssetsRef.current))
         URL.revokeObjectURL(a.loaded.url);
+      useMemoryBudget.getState().clear("local");
     },
     [],
   );

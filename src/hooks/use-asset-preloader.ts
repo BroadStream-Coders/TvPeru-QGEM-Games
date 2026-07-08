@@ -4,6 +4,7 @@ import {
   LoadedAsset,
   preloadAssets,
 } from "@/helpers/asset-preloader";
+import { useMemoryBudget } from "@/hooks/use-memory-budget";
 
 export type AssetStatus = "loading" | "ready" | "error";
 
@@ -32,8 +33,16 @@ export function useAssetPreloader(manifest: AssetManifest): UseAssetPreloader {
     setStatuses(Object.fromEntries(keys.map((key) => [key, "loading"])));
     setReady(false);
 
-    const result = preloadAssets(manifest, (key, ok) => {
+    const result = preloadAssets(manifest, (key, ok, asset) => {
       if (!active) return;
+      if (asset) {
+        useMemoryBudget.getState().register("catalog", key, {
+          kind: asset.kind,
+          bytes: asset.bytes,
+          width: asset.width,
+          height: asset.height,
+        });
+      }
       setStatuses((prev) => ({ ...prev, [key]: ok ? "ready" : "error" }));
     });
 
@@ -45,6 +54,7 @@ export function useAssetPreloader(manifest: AssetManifest): UseAssetPreloader {
 
     return () => {
       active = false;
+      useMemoryBudget.getState().clear("catalog");
       result.then(({ dispose }) => dispose());
     };
   }, [manifest, keys]);

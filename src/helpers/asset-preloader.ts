@@ -10,6 +10,9 @@ export interface LoadedAsset {
   kind: AssetKind;
   url: string;
   family?: string;
+  bytes: number;
+  width?: number;
+  height?: number;
 }
 
 export interface PreloadResult {
@@ -18,7 +21,9 @@ export interface PreloadResult {
   dispose: () => void;
 }
 
-const fetchObjectUrl = async (src: string): Promise<string> => {
+const fetchObjectUrl = async (
+  src: string,
+): Promise<{ url: string; bytes: number }> => {
   const response = await fetch(src);
   if (!response.ok) {
     throw new Error(
@@ -26,13 +31,16 @@ const fetchObjectUrl = async (src: string): Promise<string> => {
     );
   }
   const blob = await response.blob();
-  return URL.createObjectURL(blob);
+  return { url: URL.createObjectURL(blob), bytes: blob.size };
 };
 
-const decodeImage = (url: string): Promise<void> => {
+const decodeImage = async (
+  url: string,
+): Promise<{ width: number; height: number }> => {
   const img = new Image();
   img.src = url;
-  return img.decode();
+  await img.decode();
+  return { width: img.naturalWidth, height: img.naturalHeight };
 };
 
 const decodeAudio = (url: string): Promise<void> =>
@@ -64,25 +72,26 @@ const loadFont = async (family: string, url: string): Promise<void> => {
 };
 
 const loadOne = async (spec: AssetSpec): Promise<LoadedAsset> => {
-  const url = await fetchObjectUrl(spec.src);
+  const { url, bytes } = await fetchObjectUrl(spec.src);
   switch (spec.kind) {
-    case "image":
-      await decodeImage(url);
-      return { kind: "image", url };
+    case "image": {
+      const { width, height } = await decodeImage(url);
+      return { kind: "image", url, bytes, width, height };
+    }
     case "video":
-      return { kind: "video", url };
+      return { kind: "video", url, bytes };
     case "audio":
       await decodeAudio(url);
-      return { kind: "audio", url };
+      return { kind: "audio", url, bytes };
     case "font":
       await loadFont(spec.family, url);
-      return { kind: "font", url, family: spec.family };
+      return { kind: "font", url, bytes, family: spec.family };
   }
 };
 
 export async function preloadAssets(
   manifest: AssetManifest,
-  onSettle?: (key: string, ok: boolean) => void,
+  onSettle?: (key: string, ok: boolean, asset?: LoadedAsset) => void,
 ): Promise<PreloadResult> {
   const assets: Record<string, LoadedAsset> = {};
   const errors: Record<string, unknown> = {};
@@ -96,7 +105,7 @@ export async function preloadAssets(
         const loaded = await loadOne(spec);
         assets[key] = loaded;
         createdUrls.push(loaded.url);
-        onSettle?.(key, true);
+        onSettle?.(key, true, loaded);
       } catch (error) {
         errors[key] = error;
         onSettle?.(key, false);

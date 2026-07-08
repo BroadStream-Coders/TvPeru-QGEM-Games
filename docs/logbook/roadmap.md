@@ -218,15 +218,14 @@ su "Hecho cuando", pero no es el foco actual).
   sus metadatos.
 - **Fecha:** 2026-07-03 · **Estado:** Abierto
 
-## [RM-058] Presupuesto de memoria de assets (producción en vivo)
+## [RM-077] Calibrar el presupuesto de memoria con las specs del estudio
 
-- **Objetivo:** Evitar que en vivo un asset no cargue por falta de memoria. No hay
-  límite de cantidad; el límite es RAM/VRAM (blobs + memoria decodificada
-  `ancho×alto×4`). JS no mide blobs/GPU, solo estima. Definir presupuesto para el
-  equipo del estudio, barra de uso estimada y avisos, y estrategia de gestión.
-- **Hecho cuando:** existe una barra/indicador de uso estimado de memoria de assets y
-  avisa antes de acercarse al presupuesto del equipo.
-- **Fecha:** 2026-07-03 · **Estado:** Abierto
+- **Objetivo:** `MEMORY_BUDGET_BYTES` (`src/hooks/use-memory-budget.ts`) quedó en
+  2 GB provisional. Cuando Esteban pase las specs del equipo del estudio (RAM, y
+  GPU/VRAM si se conoce; la más débil si son varias), ajustar el número (~25% de la
+  RAM como regla base).
+- **Hecho cuando:** la constante refleja un presupuesto derivado de las specs reales.
+- **Fecha:** 2026-07-07 · **Estado:** Abierto
 
 ## [RM-059] Pestaña Storage (navegar y descargar a local)
 

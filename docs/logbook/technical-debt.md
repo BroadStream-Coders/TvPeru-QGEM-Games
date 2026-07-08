@@ -14,6 +14,36 @@ changelog y se borra de aquí.
 
 ---
 
+## [TD-061] Los blobs de la sesión no se liberan al salir del workspace
+
+- **Ubicación:** `src/components/shared/engine/editor/EditorLayout.tsx:501` (unmount solo hace `resetRuntime()`) · `src/app/workspaces/intruso/session.ts` (crea los blob URLs)
+- **Riesgo:** 3/10
+- **Problema:** Al desmontar el workspace se resetea el runtime, pero los blob
+  URLs de la sesión (fotos de Intruso) no se revocan y la categoría "Sesión" del
+  presupuesto de memoria no se limpia. Resultado: al cambiar de juego sin
+  recargar la página, la RAM de las fotos sigue retenida por el navegador y el
+  MemoryBadge sigue mostrando "Sesión: X MB" de un juego que ya no está en
+  pantalla. Catálogo y Local sí se liberan (EditorLayout:451-452).
+- **Impacto futuro:** Navegar entre varios juegos con sesiones pesadas en una
+  misma tanda acumula memoria fantasma. Arreglo probable: un registro central de
+  URLs de sesión (store pequeño con `dispose()`) que los loaders alimentan y
+  EditorLayout revoca + `clear("session")` en el unmount.
+- **Fecha:** 2026-07-08 · **Estado:** Abierto
+
+## [TD-060] Recargar una sesión con el mismo nombre no refresca la vista (Cálculo Mental, Deletreo)
+
+- **Ubicación:** `src/app/workspaces/calculo-mental/CalculoMentalBehavior.tsx:55` (deps del efecto keyed por `fileName`) · patrón equivalente en Deletreo
+- **Riesgo:** 3/10
+- **Problema:** El efecto que vuelca la sesión a la escena depende de
+  `[índices, fileName]`. Si el operador re-exporta la sesión y la carga con el
+  mismo nombre de archivo estando en los índices iniciales, las deps no cambian
+  y la pantalla sigue mostrando la data anterior hasta navegar. Intruso ya lo
+  resuelve con un sello `loadedAt: Date.now()` en el controller.
+- **Impacto futuro:** Corrección de último minuto antes del vivo que "no entra"
+  sin explicación. Arreglo: replicar el `loadedAt` de Intruso en los otros
+  behaviors.
+- **Fecha:** 2026-07-08 · **Estado:** Abierto
+
 ## [TD-059] Inspector y Hierarchy no ven ni editan el estado runtime
 
 - **Ubicación:** `src/components/shared/engine/editor/EditorLayout.tsx:70-145` (HierarchyPanel/InspectorPanel leen `useEditor`, solo diseño) · `src/components/shared/engine/runtime/sceneRuntime.ts:23` (`ov.active ?? go.active`)

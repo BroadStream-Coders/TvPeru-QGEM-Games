@@ -6,6 +6,7 @@ export interface ImageComponent extends GameObjectComponent {
   type: "image";
   fit: ImageFit;
   assetKey?: string;
+  src?: string;
 }
 
 export function createImageComponent(

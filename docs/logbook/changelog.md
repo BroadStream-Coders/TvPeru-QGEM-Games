@@ -12,6 +12,12 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-014] Juego "Intruso" (Nivel 1) completo (2026-07-08 12:20)
+Primer juego con sesión ZIP: `session.ts` lee `sessionData.json` + fotos → blobs decodificados → runtime (categoría "Sesión" del presupuesto de memoria). Behavior con rondas (0-9/N/B), selección virtual Q-W-E-R, V valida con sonido, M revela la correcta con sonido. Engine ganó `onOption`/`onValidate` en useGameKeys y `src` runtime en el componente image; clipping de la foto resuelto con el componente mask nativo (edición manual de la escena). Nivel 2 queda fuera de alcance por acuerdo.
+
+## [RM-078] Conversión Unity prefab → scene.json de Intruso, Nivel 1 (2026-07-08 12:20)
+Se leyó `Intruso.prefab` y se regeneró `scene.json` (34 GameObjects) con valores exactos: HorizontalLayoutGroup resuelto a mano (4 opciones en x = ±610.125/±203.375), márgenes TMP horneados en el rect del texto, frames de estado (normal/correct/incorrect) como GameObjects con `active` igual que en Unity. Nivel 2 fuera de alcance; behavior y sesión ZIP pendientes (RM-014).
+
 ## [RM-058] Presupuesto de memoria de assets (2026-07-08 10:31)
 `LoadedAsset` ahora captura `bytes` (+`width`/`height` en imágenes) en los dos embudos de carga, con registro incremental por asset (una descarga lenta ya no bloquea el conteo); store `use-memory-budget.ts` acumula por categoría (catálogo/local/sesión — sesión sin consumidor aún). `MemoryBadge` siempre visible en la StatusBar del editor: barra + % con desglose en tooltip (ámbar 70%, rojo 90%) y click → popover con hardware del equipo (RAM/CPU/GPU/heap). Presupuesto provisional 2 GB → calibrar en RM-077.
 

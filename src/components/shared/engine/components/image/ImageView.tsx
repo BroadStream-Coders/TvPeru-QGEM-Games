@@ -3,7 +3,9 @@ import { useAssets } from "@engine/assetsContext";
 
 export function ImageView({ component }: { component: ImageComponent }) {
   const { assets } = useAssets();
-  const url = component.assetKey ? assets[component.assetKey]?.url : undefined;
+  const url =
+    component.src ||
+    (component.assetKey ? assets[component.assetKey]?.url : undefined);
   if (!url) return null;
   const backgroundSize = component.fit === "fill" ? "100% 100%" : component.fit;
   return (

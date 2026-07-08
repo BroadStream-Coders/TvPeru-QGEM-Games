@@ -33,6 +33,10 @@ export interface GameKeyHandlers {
   onBack?: () => void;
   /** Tecla M (mostrar respuesta). */
   onShowAnswer?: () => void;
+  /** Teclas Q/W/E/R (elegir opción 0-3). Si está definido, E deja de disparar onInteract. */
+  onOption?: (index: number) => void;
+  /** Tecla V (validar selección). */
+  onValidate?: () => void;
   /** Tecla F (marcar error). */
   onMarkError?: () => void;
   /** Tecla E (interacción). */
@@ -84,8 +88,21 @@ export function useGameKeys(handlers: GameKeyHandlers) {
         return;
       }
 
+      const optionMap: Record<string, number> = {
+        KeyQ: 0,
+        KeyW: 1,
+        KeyE: 2,
+        KeyR: 3,
+      };
+      if (h.onOption && code in optionMap) {
+        e.preventDefault();
+        h.onOption(optionMap[code]);
+        return;
+      }
+
       const map: Record<string, keyof GameKeyHandlers | undefined> = {
         KeyN: "onNext",
+        KeyV: "onValidate",
         KeyB: "onBack",
         KeyM: "onShowAnswer",
         KeyF: "onMarkError",

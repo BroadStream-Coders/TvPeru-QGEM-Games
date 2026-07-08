@@ -14,6 +14,26 @@ changelog y se borra de aquí.
 
 ---
 
+## [TD-059] Inspector y Hierarchy no ven ni editan el estado runtime
+
+- **Ubicación:** `src/components/shared/engine/editor/EditorLayout.tsx:70-145` (HierarchyPanel/InspectorPanel leen `useEditor`, solo diseño) · `src/components/shared/engine/runtime/sceneRuntime.ts:23` (`ov.active ?? go.active`)
+- **Riesgo:** 5/10
+- **Problema:** El canvas renderiza `mergeRuntime(diseño, runtime)`, pero Hierarchy
+  e Inspector están cableados solo al diseño (`e.hierarchyNodes`, `e.selected`,
+  `e.patchGameObject`). Toda propiedad que el behavior pisó vía `useSceneRuntime`
+  (`active` de los textos, `text` de los componentes, `status` de los slots) queda
+  de facto inmutable desde el editor: el toggle de active y el campo de texto
+  escriben al diseño, pero el override de runtime siempre gana en el merge, así
+  que el cambio no se ve. Además el Inspector muestra valores viejos (el texto de
+  diseño, no la pregunta cargada de la sesión).
+- **Impacto futuro:** Rompe el flujo del operador pre-vivo (RM-075): con la data
+  cargada como referencia visual puede mover transform y fuente (props que el
+  behavior no pisa) pero no apagar un GameObject ni tocar su texto, sin ningún
+  indicio de por qué. Arreglo probable: Inspector/Hierarchy leen el merge y, al
+  editar una prop con override, limpian ese override puntual además de escribir
+  al diseño (el behavior sigue siendo autoridad cuando vuelva a escribir).
+- **Fecha:** 2026-07-08 · **Estado:** Abierto
+
 ## [TD-057] `supabase.ts` lee las env vars con `!` sin validar
 
 - **Ubicación:** `src/helpers/supabase.ts:4-5`

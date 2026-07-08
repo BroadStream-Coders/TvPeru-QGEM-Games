@@ -129,7 +129,7 @@ export function TextView({ component }: { component: TextComponent }) {
           fontWeight: component.bold ? "bold" : "normal",
           fontStyle: component.italic ? "italic" : "normal",
           textDecoration: component.underline ? "underline" : "none",
-          lineHeight: 1.1,
+          lineHeight: "normal",
           textAlign: TEXT_ALIGN[component.alignH],
           whiteSpace: wrap ? "pre-wrap" : "pre",
           overflowWrap: wrap ? "break-word" : undefined,

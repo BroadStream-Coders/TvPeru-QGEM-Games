@@ -1,0 +1,457 @@
+[
+  {
+    "id": "background",
+    "name": "Background",
+    "active": true,
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 1920,
+        "y": 1080
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "color",
+        "value": "#01FF02"
+      }
+    ]
+  },
+  {
+    "id": "level1",
+    "name": "Level 1",
+    "active": true,
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 1920,
+        "y": 1080
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "controller",
+        "groups": [],
+        "groupIndex": 0,
+        "questionIndex": 0,
+        "selected": -1
+      }
+    ]
+  },
+  {
+    "id": "main-banner",
+    "name": "MainBanner",
+    "active": true,
+    "parentId": "level1",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": -327.9
+      },
+      "size": {
+        "x": 1302,
+        "y": 262
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "mainBanner"
+      }
+    ]
+  },
+  {
+    "id": "question-text",
+    "name": "QuestionText",
+    "active": true,
+    "parentId": "main-banner",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 5
+      },
+      "size": {
+        "x": 1182,
+        "y": 152
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "text",
+        "text": "¿PREGUNTA?",
+        "fontSize": 3.33,
+        "autoSize": true,
+        "fontSizeMin": 1.67,
+        "fontSizeMax": 9.26,
+        "color": "#ffffff",
+        "fontAssetKey": "geniusTechno",
+        "bold": false,
+        "italic": false,
+        "underline": false,
+        "alignH": "center",
+        "alignV": "middle",
+        "overflow": "wrap"
+      }
+    ]
+  },
+  {
+    "id": "option-0",
+    "name": "Answer SI",
+    "active": true,
+    "parentId": "level1",
+    "transform": {
+      "position": {
+        "x": -814,
+        "y": -322.5
+      },
+      "size": {
+        "x": 292,
+        "y": 195
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": []
+  },
+  {
+    "id": "option-0-frame-normal",
+    "name": "Normal",
+    "active": true,
+    "parentId": "option-0",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 292,
+        "y": 195
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "answerBanner"
+      }
+    ]
+  },
+  {
+    "id": "option-0-frame-correct",
+    "name": "Correct",
+    "active": false,
+    "parentId": "option-0",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 291,
+        "y": 195
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "correctFrame"
+      }
+    ]
+  },
+  {
+    "id": "option-0-frame-incorrect",
+    "name": "Incorrect",
+    "active": false,
+    "parentId": "option-0",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 291,
+        "y": 195
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "incorrectFrame"
+      }
+    ]
+  },
+  {
+    "id": "option-0-selection",
+    "name": "Selection",
+    "active": true,
+    "parentId": "option-0",
+    "transform": {
+      "position": {
+        "x": 17.5,
+        "y": 0
+      },
+      "size": {
+        "x": 131,
+        "y": 209
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "selection"
+      }
+    ]
+  },
+  {
+    "id": "option-0-text",
+    "name": "Text SI",
+    "active": true,
+    "parentId": "option-0",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 200,
+        "y": 150
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "text",
+        "text": "SI",
+        "fontSize": 10.19,
+        "autoSize": false,
+        "fontSizeMin": 1.67,
+        "fontSizeMax": 6.67,
+        "color": "#ffffff",
+        "fontAssetKey": "geniusTechno",
+        "bold": false,
+        "italic": false,
+        "underline": false,
+        "alignH": "center",
+        "alignV": "middle",
+        "overflow": "wrap"
+      }
+    ]
+  },
+  {
+    "id": "option-1",
+    "name": "Answer NO",
+    "active": true,
+    "parentId": "level1",
+    "transform": {
+      "position": {
+        "x": 814,
+        "y": -322.5
+      },
+      "size": {
+        "x": 292,
+        "y": 195
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": []
+  },
+  {
+    "id": "option-1-frame-normal",
+    "name": "Normal",
+    "active": true,
+    "parentId": "option-1",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 292,
+        "y": 195
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "answerBanner",
+        "flipX": true
+      }
+    ]
+  },
+  {
+    "id": "option-1-frame-correct",
+    "name": "Correct",
+    "active": false,
+    "parentId": "option-1",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 291,
+        "y": 195
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "correctFrame",
+        "flipX": true
+      }
+    ]
+  },
+  {
+    "id": "option-1-frame-incorrect",
+    "name": "Incorrect",
+    "active": false,
+    "parentId": "option-1",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 291,
+        "y": 195
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "incorrectFrame",
+        "flipX": true
+      }
+    ]
+  },
+  {
+    "id": "option-1-selection",
+    "name": "Selection",
+    "active": true,
+    "parentId": "option-1",
+    "transform": {
+      "position": {
+        "x": -26,
+        "y": 0
+      },
+      "size": {
+        "x": 131,
+        "y": 209
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "selection"
+      }
+    ]
+  },
+  {
+    "id": "option-1-text",
+    "name": "Text NO",
+    "active": true,
+    "parentId": "option-1",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 200,
+        "y": 150
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "text",
+        "text": "NO",
+        "fontSize": 10.19,
+        "autoSize": false,
+        "fontSizeMin": 1.67,
+        "fontSizeMax": 6.67,
+        "color": "#ffffff",
+        "fontAssetKey": "geniusTechno",
+        "bold": false,
+        "italic": false,
+        "underline": false,
+        "alignH": "center",
+        "alignV": "middle",
+        "overflow": "wrap"
+      }
+    ]
+  }
+]

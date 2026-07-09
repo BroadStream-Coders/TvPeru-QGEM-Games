@@ -7,6 +7,7 @@ export interface ImageComponent extends GameObjectComponent {
   fit: ImageFit;
   assetKey?: string;
   src?: string;
+  flipX?: boolean;
 }
 
 export function createImageComponent(

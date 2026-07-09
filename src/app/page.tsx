@@ -7,6 +7,7 @@ import {
   Calculator,
   VenetianMask,
   BookOpen,
+  Zap,
 } from "lucide-react";
 import { AuthButton } from "@/components/shared/AuthButton";
 
@@ -34,6 +35,12 @@ const workspaces = [
     description: "Preguntas de dos opciones por grupos",
     href: "/workspaces/la-sabes-o-no",
     icon: BookOpen,
+  },
+  {
+    name: "Al Vuelo",
+    description: "Preguntas rápidas de sí o no",
+    href: "/workspaces/al-vuelo",
+    icon: Zap,
   },
   {
     name: "Sandbox",

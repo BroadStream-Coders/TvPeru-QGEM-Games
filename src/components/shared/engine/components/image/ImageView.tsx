@@ -14,6 +14,7 @@ export function ImageView({ component }: { component: ImageComponent }) {
       style={{
         backgroundImage: `url(${url})`,
         backgroundSize,
+        transform: component.flipX ? "scaleX(-1)" : undefined,
       }}
     />
   );

@@ -4,6 +4,7 @@ import {
   SelectField,
   FieldIconButton,
   AssetSelectField,
+  ToggleField,
 } from "@engine/InspectorFields";
 import {
   ImageComponent,
@@ -63,6 +64,11 @@ export function ImageInspector({
           { value: "contain" as ImageFit, label: "Contain" },
           { value: "fill" as ImageFit, label: "Stretch" },
         ]}
+      />
+      <ToggleField
+        label="Flip X"
+        checked={component.flipX ?? false}
+        onChange={(flipX) => onChange({ ...component, flipX })}
       />
     </ComponentSection>
   );

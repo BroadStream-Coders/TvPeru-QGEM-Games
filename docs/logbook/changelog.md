@@ -12,6 +12,9 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-079] Juego "Al Vuelo" (ex Si o No) migrado desde Unity (2026-07-09 15:08)
+Escena convertida del prefab (banner + pregunta auto-size con GeniusTechno + opciones SÍ/NO con frames normal/correct/incorrect y flecha fija), behavior con teclas convenidas y sesión JSON `{question, answer}`. Se agregó `flipX` al componente `image` del engine (los frames del NO van espejados, scale x −1 en Unity).
+
 ## [RM-075] Play Mode: separación estructura ↔ sesión (2026-07-09 13:30)
 Redefinida de "show mode candado" a Play Mode estilo Unity: toggle play/edit con snapshot/restore y corte de zundo, merge y behavior solo en play, sesión dormida en `useGameSession`, topbar del panel Game con `On Play: Restrict | Edit` (default restrict vía `GameDefinition.playConfig`) y Play separado de Fullscreen. El candado original quedó absorbido como el modo restrict.
 

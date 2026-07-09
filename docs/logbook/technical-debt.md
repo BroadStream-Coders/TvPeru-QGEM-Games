@@ -92,20 +92,6 @@ changelog y se borra de aquí.
   referencia.
 - **Fecha:** 2026-07-07 · **Estado:** Abierto
 
-## [TD-019] Ctrl/Cmd+D (duplicar) choca con el atajo de marcador en Brave
-
-- **Ubicación:** `src/components/shared/engine/editor/SceneCanvas.tsx` (handler `onKeyDown`)
-- **Riesgo:** 2/10
-- **Problema:** El duplicar usa Ctrl/Cmd+D con `preventDefault()`. En Chrome (el
-  target del proyecto) esto cancela el diálogo de marcador y funciona. En Brave (y
-  algún otro Chromium con el atajo "cableado") el navegador captura Ctrl+D antes que
-  la página, así que en vez de duplicar guarda un marcador.
-- **Impacto futuro:** Ninguno en el equipo del estudio (solo Chrome). Solo relevante
-  si algún día se usa en otro navegador; ahí habría que ofrecer un atajo alternativo
-  (p. ej. Ctrl+J) o un botón/menú de "Duplicar" en el canvas/Hierarchy. Esencialmente
-  fuera de alcance por la convención "target solo Chrome".
-- **Fecha:** 2026-07-04 · **Estado:** Abierto
-
 ## [TD-018] El dockview del editor no tiene tamaño mínimo de panel
 
 - **Ubicación:** `src/app/workspaces/sandbox/EditorDock.tsx`
@@ -124,14 +110,6 @@ changelog y se borra de aquí.
 - **Objetivo del cambio:** Que las animaciones de error (tecla F) y correcto (tecla M) se apliquen a la imagen del marco y a sus hijos, no solo a las letras; el `contentRef` da acceso al único elemento del árbol del GameObject que se puede animar sin romper el posicionamiento.
 - **Impacto futuro:** Es un punto de extensión válido pero abre la puerta a que el engine acumule props ad-hoc por demanda de juegos. Revisar si conviene una API de animación/efectos más formal a nivel de GameObject (p. ej. un componente o hook del engine) antes de que aparezcan más casos así.
 - **Fecha:** 2026-06-11 · **Estado:** Abierto
-
-## [TD-009] `Vec2` (tipo nuclear) vive dentro de `RectTransform.tsx`
-
-- **Ubicación:** `src/components/shared/engine/RectTransform.tsx:7`
-- **Riesgo:** 1/10
-- **Problema:** `Vec2` y `RectTransformValues` —los tipos de datos más usados del engine, importados por `gameObject.ts`, `componentRegistry.ts`, los gestos y casi todo— se declaran dentro de un archivo de componente React (`.tsx`), junto al positioner y a las constantes `DESIGN_*`. Es el único sitio donde un tipo nuclear y un componente comparten archivo.
-- **Impacto futuro:** Ninguno funcional; solo acoplamiento conceptual (importar un tipo puro arrastra un `.tsx`). Si se limpia, `Vec2`/`RectTransformValues` pedirían un `geometry.ts`/`types.ts` propio.
-- **Fecha:** 2026-06-16 · **Estado:** Abierto
 
 ## [TD-010] Raíz del engine plana: 13 archivos mezclando 4 roles
 

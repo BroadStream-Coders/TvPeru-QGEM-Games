@@ -12,6 +12,21 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-046] Pipeline de assets por key en el editor (2026-07-09 10:22)
+El pipeline (catálogo → preloader → AssetsContext → panel Assets) quedó demostrado con los juegos reales: 32 `assetKey` en los scene.json de Intruso/La sabes o No/Deletreo y `fontAssetKey` en Cálculo Mental; los componentes resuelven por key de forma aditiva.
+
+## [RM-050] Migrar Intruso al `EditorLayout` (2026-07-09 10:09)
+Absorbida por RM-014: Intruso corre sobre `EditorLayout` con `page.tsx` fino, `game.tsx`, `IntrusoBehavior.tsx`, `constants.ts` (+ `session.ts` y `scene.json`). Terminó siendo mucho más que el "background con video" de la descripción original.
+
+## [RM-049] Migrar Cálculo Mental al `EditorLayout` (2026-07-09 10:09)
+Absorbida por RM-013: Cálculo Mental corre sobre `EditorLayout` con `page.tsx` fino, `game.tsx`, `CalculoMentalBehavior.tsx`, `constants.ts` y componentes propios slot/controller.
+
+## [RM-024] Cargar nuevas fuentes en Cálculo Mental (2026-07-09 10:05)
+Resuelto de pasada al migrar Cálculo Mental al componente Text (RM-076): los textos usan `fontAssetKey` (Poppins SemiBold del catálogo, cargada en runtime vía FontFace), el TextInspector permite elegir la fuente y `asset-source.ts` acepta archivos de fuente locales.
+
+## [RM-022] Una sola fuente en el build; el resto desde storage (2026-07-09 10:00)
+Verificado como cumplido: el bundle solo trae la tipografía base de la UI (IBM Plex Sans + Mono vía `next/font/google`), sin fuentes de juego empaquetadas; las fuentes de broadcast se cargan en runtime vía FontFace (`asset-source.ts` local, `asset-preloader.ts` URL/storage).
+
 ## [RM-015] Juego "La sabes o No" completo (2026-07-09 09:53)
 Workspace nuevo migrado desde `LoSabesONo.prefab` (25 GameObjects, layout horneado: opciones en x=±335, márgenes TMP en los rects, texto propio por frame de estado para conservar los colores de Unity). Sesión JSON plano (`groups → questions` con 2 opciones); teclas 0-9 pregunta, numpad grupo, N/B, Q/W, V, M. Aprobado visualmente contra Unity.
 

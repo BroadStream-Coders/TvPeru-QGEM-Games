@@ -7,14 +7,6 @@ Si una idea se promueve, se borra de aquí y nace un `RM` nuevo.
 
 ---
 
-## [WL-001] Layout del engine estilo Unity
-
-Rediseñar la distribución de espacios del layout del engine para que se sienta más como el desarrollo en Unity que como lo que es hoy.
-
-## [WL-002] Pedir un diseño a Claude Design
-
-Solicitar a Claude Design una propuesta de diseño del engine a partir de estas especificaciones.
-
 ## [WL-003] Sistema de anclajes estilo Unity Canvas
 
 Agregar el sistema de anclajes (anchors) del Canvas de Unity al rectTransform de los gameobjects.
@@ -88,6 +80,18 @@ pueda operar el sistema: cómo abrir cada juego, cómo cargar el archivo de sesi
 a fullscreen y qué hacer si algo falla al aire. Hoy todo ese conocimiento vive en
 una sola persona y en el código. Encaja como `docs/operacion.md` o similar; se
 vuelve relevante apenas otra persona toque la máquina del estudio.
+
+## [WL-021] Acción "sacar como panel flotante" + rediseño del chrome flotante
+
+Sacar un panel como panel flotante de dockview (`addFloatingGroup`, no pop-out a otra ventana) y rediseñar el chrome flotante default para alinearlo a la paleta del editor. Era RM-044; degradada 2026-07-09 por ser cosmética de editor frente a la prioridad de sacar juegos.
+
+## [WL-022] Pestaña Storage (navegar y descargar a local)
+
+Ventana Storage paralela a Local para navegar los assets remotos (Supabase) y descargarlos a la carga local. Era RM-059; degradada 2026-07-09 porque depende del Supabase futuro (distante).
+
+## [WL-023] Seleccionar assets locales → info en el Inspector
+
+Click en un asset del panel Local muestra sus metadatos (tipo, peso, dimensiones, origen) en el Inspector; evaluar si el peso va en el tile o en el Inspector. Era RM-057; degradada 2026-07-09 por nice-to-have.
 
 ## [WL-019] Integrar animaciones/transiciones con `motion` (ex-framer-motion)
 

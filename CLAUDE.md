@@ -6,6 +6,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 > `docs/engine-arquitectura.md` — es la fuente de verdad del engine (qué es, cómo
 > piensa, cómo se nombra, en qué estado está). Para cambios **específicos y acotados**
 > no siempre hace falta.
+>
+> Para **migrar un juego desde Unity** (prefab → scene.json + behavior), sigue
+> `docs/migracion-unity.md` — el proceso completo ya está documentado ahí.
 
 ## Commands
 

@@ -24,7 +24,7 @@ const workspaces = [
   },
   {
     name: "Intruso",
-    description: "Replica de Deletreo",
+    description: "Encuentra al elemento inconsistente",
     href: "/workspaces/intruso",
     icon: VenetianMask,
   },

@@ -16,6 +16,7 @@ export const laSabesGame: GameDefinition = {
   assets: LA_SABES_ASSETS,
   components: [controllerDefinition],
   behavior: LaSabesBehavior,
+  requiresSession: true,
   onLoad: (file) => {
     loadLaSabesSession(file).catch((error) =>
       console.error("Sesión inválida para La Sabes o No.", error),

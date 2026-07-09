@@ -21,6 +21,7 @@ import {
   SquareDashed,
   Play,
   HardDrive,
+  Maximize,
   X,
   type LucideIcon,
 } from "lucide-react";
@@ -34,7 +35,7 @@ import { Hierarchy } from "@engine/Hierarchy";
 import { GameObjectInspector } from "@engine/GameObjectInspector";
 import { RectTransformInspector } from "@engine/RectTransformInspector";
 import { AddComponentButton } from "@engine/AddComponentButton";
-import { gameObjectKind } from "@engine/gameObject";
+import { gameObjectKind, type GameObject } from "@engine/gameObject";
 import {
   createComponentRegistry,
   NATIVE_COMPONENTS,
@@ -60,6 +61,8 @@ import { useEditorStore } from "@/hooks/use-editor-store";
 import { useSceneRuntime } from "@/hooks/use-scene-runtime";
 import { mergeRuntime } from "@engine/runtime/sceneRuntime";
 import { useWorkspaceHeader } from "@/hooks/use-workspace-header";
+import { usePlayMode, type PlayEditing } from "@/hooks/use-play-mode";
+import { useGameSession } from "@/hooks/use-game-session";
 import { useAssetPreloader } from "@/hooks/use-asset-preloader";
 import { toManifest, localAssetFromFile } from "@/helpers/asset-source";
 import { useMemoryBudget } from "@/hooks/use-memory-budget";
@@ -67,10 +70,19 @@ import { MemoryBadge } from "@/components/shared/MemoryBadge";
 import type { LocalAsset } from "@/helpers/asset-source";
 import type { AssetKind, LoadedAsset } from "@/helpers/asset-preloader";
 
+const useRestricted = () =>
+  usePlayMode((s) => s.playing && s.editing === "restrict");
+
 function HierarchyPanel() {
   const e = useEditor();
+  const restricted = useRestricted();
   return (
-    <div className="scrl h-full overflow-y-auto bg-panel p-3">
+    <div
+      className={cn(
+        "scrl h-full overflow-y-auto bg-panel p-3",
+        restricted && "pointer-events-none opacity-60",
+      )}
+    >
       <Hierarchy
         nodes={e.hierarchyNodes}
         selectedIds={e.selectedIds}
@@ -95,8 +107,14 @@ function HierarchyPanel() {
 function InspectorPanel() {
   const e = useEditor();
   const selected = e.selected;
+  const restricted = useRestricted();
   return (
-    <div className="scrl flex h-full flex-col overflow-y-auto bg-panel">
+    <div
+      className={cn(
+        "scrl flex h-full flex-col overflow-y-auto bg-panel",
+        restricted && "pointer-events-none opacity-60",
+      )}
+    >
       {selected ? (
         <>
           <GameObjectInspector
@@ -145,56 +163,99 @@ function InspectorPanel() {
 }
 
 function ScenePanel() {
-  return <SceneCanvas />;
+  const restricted = useRestricted();
+  return (
+    <div
+      className={cn(
+        "h-full",
+        restricted && "pointer-events-none opacity-60",
+      )}
+    >
+      <SceneCanvas />
+    </div>
+  );
 }
+
+const PLAY_EDITING_OPTIONS: { value: PlayEditing; label: string }[] = [
+  { value: "restrict", label: "Restrict" },
+  { value: "edit", label: "Edit" },
+];
 
 function GamePanel(props: IDockviewPanelProps) {
   const e = useEditor();
   const runtime = useSceneRuntime((s) => s.runtime);
   const setRuntimeTransform = useSceneRuntime((s) => s.setTransform);
+  const playing = usePlayMode((s) => s.playing);
   const merged = useMemo(
-    () => mergeRuntime(e.gameObjects, runtime),
-    [e.gameObjects, runtime],
+    () => (playing ? mergeRuntime(e.gameObjects, runtime) : e.gameObjects),
+    [playing, e.gameObjects, runtime],
   );
-  const setHeader = useWorkspaceHeader((s) => s.setHeader);
+  const editing = usePlayMode((s) => s.editing);
+  const setEditing = usePlayMode((s) => s.setEditing);
   const toggleRef = useRef<(() => void) | null>(null);
   const registerFullscreen = useCallback((toggle: () => void) => {
     toggleRef.current = toggle;
   }, []);
 
-  // Play (topbar): activa la pestaña Game — puede estar oculta — y entra a
-  // fullscreen en el siguiente frame, ya visible, para no fallar el request.
-  const play = useCallback(() => {
-    props.api.setActive();
-    requestAnimationFrame(() => toggleRef.current?.());
-  }, [props.api]);
-
+  // Entrar a play activa la pestaña Game (puede estar oculta tras Scene).
   useEffect(() => {
-    setHeader({ onPlay: play });
-  }, [setHeader, play]);
+    if (playing) props.api.setActive();
+  }, [playing, props.api]);
 
   return (
-    <Scene
-      viewMode="game"
-      hideCursorOnFullscreen
-      onFullscreenReady={registerFullscreen}
-    >
-      <div className="absolute inset-0">
-        {merged
-          .filter((go) => !go.parentId && go.active)
-          .map((go) => (
-            <GameObjectView
-              key={go.id}
-              gameObject={go}
-              allGameObjects={merged}
-              selectedId={null}
-              onAnimatePosition={(id, position) =>
-                setRuntimeTransform(id, { position })
-              }
-            />
+    <div className="flex h-full flex-col">
+      <div className="flex h-[30px] shrink-0 items-center gap-2 border-b border-line bg-head px-2">
+        <span className="font-mono text-2xs text-faint">On Play</span>
+        <div className="flex items-center rounded-[5px] bg-elev p-0.5">
+          {PLAY_EDITING_OPTIONS.map(({ value, label }) => (
+            <button
+              key={value}
+              onClick={() => setEditing(value)}
+              className={cn(
+                "rounded-[4px] px-2 py-0.5 text-2xs font-medium transition-colors",
+                editing === value
+                  ? "bg-elev-2 text-ink"
+                  : "text-dim hover:text-ink",
+              )}
+            >
+              {label}
+            </button>
           ))}
+        </div>
+        <div className="flex-1" />
+        <button
+          onClick={() => toggleRef.current?.()}
+          title="Pantalla completa"
+          className="flex items-center gap-1.5 rounded-[5px] px-2 py-1 text-2xs font-medium text-dim transition-colors hover:bg-elev hover:text-ink"
+        >
+          <Maximize size={12} />
+          Fullscreen
+        </button>
       </div>
-    </Scene>
+      <div className="min-h-0 flex-1">
+        <Scene
+          viewMode="game"
+          hideCursorOnFullscreen
+          onFullscreenReady={registerFullscreen}
+        >
+          <div className="absolute inset-0">
+            {merged
+              .filter((go) => !go.parentId && go.active)
+              .map((go) => (
+                <GameObjectView
+                  key={go.id}
+                  gameObject={go}
+                  allGameObjects={merged}
+                  selectedId={null}
+                  onAnimatePosition={(id, position) =>
+                    setRuntimeTransform(id, { position })
+                  }
+                />
+              ))}
+          </div>
+        </Scene>
+      </div>
+    </div>
   );
 }
 
@@ -213,6 +274,7 @@ function AssetsPanel() {
 function StatusBar() {
   const e = useEditor();
   const { progress } = useAssets();
+  const playing = usePlayMode((s) => s.playing);
   const { loaded, total } = progress;
   const loading = total > 0 && loaded < total;
   const objCount = e.gameObjects.length;
@@ -220,6 +282,12 @@ function StatusBar() {
 
   return (
     <div className="flex h-[23px] shrink-0 items-center gap-3 border-t border-edge bg-gradient-to-b from-[#202327] to-[#1a1d20] px-3 font-mono text-[11px] text-faint">
+      {playing && (
+        <span className="flex items-center gap-1.5 font-semibold text-play">
+          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-play" />
+          PLAY
+        </span>
+      )}
       <span className="flex items-center gap-1.5 text-dim">
         <span
           className={cn(
@@ -351,6 +419,34 @@ export function EditorLayout({ game }: { game: GameDefinition }) {
   const setHeader = useWorkspaceHeader((s) => s.setHeader);
   const resetHeader = useWorkspaceHeader((s) => s.resetHeader);
   const resetRuntime = useSceneRuntime((s) => s.reset);
+  const playing = usePlayMode((s) => s.playing);
+  const hasSession = useGameSession((s) => s.session !== null);
+  const playDisabled = !!game.requiresSession && !hasSession;
+
+  const defaultEditing = game.playConfig?.editing;
+  useEffect(() => {
+    usePlayMode.getState().reset(defaultEditing);
+    return () => usePlayMode.getState().reset();
+  }, [defaultEditing]);
+
+  const playSnapshotRef = useRef<GameObject[] | null>(null);
+  useEffect(() => {
+    if (playing) {
+      playSnapshotRef.current = useEditorStore.getState().gameObjects;
+      useEditorStore.temporal.getState().clear();
+    } else if (playSnapshotRef.current) {
+      useEditorStore.getState().setGameObjects(playSnapshotRef.current);
+      playSnapshotRef.current = null;
+      useSceneRuntime.getState().reset();
+      useEditorStore.temporal.getState().clear();
+    }
+  }, [playing]);
+
+  const togglePlay = useCallback(() => {
+    const s = usePlayMode.getState();
+    if (s.playing) s.exitPlay();
+    else s.enterPlay();
+  }, []);
 
   const registry = useMemo<ComponentRegistry>(
     () =>
@@ -384,6 +480,8 @@ export function EditorLayout({ game }: { game: GameDefinition }) {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (!(e.ctrlKey || e.metaKey)) return;
+      const pm = usePlayMode.getState();
+      if (pm.playing && pm.editing === "restrict") return;
       const t = e.target as HTMLElement | null;
       if (
         t &&
@@ -499,6 +597,7 @@ export function EditorLayout({ game }: { game: GameDefinition }) {
 
   useEffect(() => () => resetHeader(), [resetHeader]);
   useEffect(() => () => resetRuntime(), [resetRuntime]);
+  useEffect(() => () => useGameSession.getState().clear(), []);
   useEffect(() => {
     const onLoad = game.onLoad
       ? (file: File) => game.onLoad!(file, apiRef.current)
@@ -507,7 +606,9 @@ export function EditorLayout({ game }: { game: GameDefinition }) {
       title: game.title,
       icon: game.icon,
       onLoad,
-      onExport: handleExport,
+      onPlay: togglePlay,
+      playDisabled,
+      onExport: playing ? undefined : handleExport,
       onUndo: undo,
       onRedo: redo,
       canUndo,
@@ -518,6 +619,9 @@ export function EditorLayout({ game }: { game: GameDefinition }) {
     game.title,
     game.icon,
     game.onLoad,
+    togglePlay,
+    playing,
+    playDisabled,
     handleExport,
     undo,
     redo,
@@ -533,8 +637,13 @@ export function EditorLayout({ game }: { game: GameDefinition }) {
     <ComponentRegistryProvider value={registry}>
       <AssetsProvider value={assetsState}>
         <EditorProvider value={value}>
-          {Behavior && <Behavior />}
-          <div className="flex min-h-0 flex-1 flex-col">
+          {Behavior && playing && <Behavior />}
+          <div
+            className={cn(
+              "flex min-h-0 flex-1 flex-col",
+              playing && "border-2 border-play",
+            )}
+          >
             <div className="min-h-0 flex-1">
               <DockviewReact
                 className="dockview-theme-abyss dv-qgem"

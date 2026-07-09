@@ -2,12 +2,14 @@
 
 import type { ReactNode } from "react";
 import Link from "next/link";
-import { ArrowLeft, Play, Undo2, Redo2, Download } from "lucide-react";
+import { ArrowLeft, Play, Square, Undo2, Redo2, Download } from "lucide-react";
 import { Menubar } from "radix-ui";
 import { FileActions } from "./FileActions";
 import { AuthButton } from "./AuthButton";
 
+import { cn } from "@/lib/utils";
 import { useWorkspaceHeader } from "@/hooks/use-workspace-header";
+import { usePlayMode } from "@/hooks/use-play-mode";
 
 interface MenuItem {
   label: string;
@@ -20,8 +22,19 @@ interface Menu {
 }
 
 export function WorkspaceHeader() {
-  const { title, icon, onLoad, onPlay, onExport, onUndo, onRedo, canUndo, canRedo } =
-    useWorkspaceHeader();
+  const {
+    title,
+    icon,
+    onLoad,
+    onPlay,
+    playDisabled,
+    onExport,
+    onUndo,
+    onRedo,
+    canUndo,
+    canRedo,
+  } = useWorkspaceHeader();
+  const playing = usePlayMode((s) => s.playing);
 
   if (!title) return null;
 
@@ -94,10 +107,26 @@ export function WorkspaceHeader() {
         {onPlay && (
           <button
             onClick={onPlay}
-            title="Pantalla completa"
-            className="flex h-6 w-7 items-center justify-center rounded-md bg-acc text-white shadow-sm transition-colors hover:bg-acc-hover"
+            disabled={!playing && playDisabled}
+            title={
+              playing
+                ? "Salir de Play Mode"
+                : playDisabled
+                  ? "Carga una sesión primero"
+                  : "Play Mode"
+            }
+            className={cn(
+              "flex h-6 w-7 items-center justify-center rounded-md text-white shadow-sm transition-colors disabled:opacity-40",
+              playing
+                ? "bg-play hover:bg-play/85"
+                : "bg-acc hover:bg-acc-hover",
+            )}
           >
-            <Play className="h-3 w-3 fill-current" />
+            {playing ? (
+              <Square className="h-3 w-3 fill-current" />
+            ) : (
+              <Play className="h-3 w-3 fill-current" />
+            )}
           </button>
         )}
         {onLoad && <FileActions onLoad={onLoad} />}

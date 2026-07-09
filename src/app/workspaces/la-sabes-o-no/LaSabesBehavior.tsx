@@ -3,9 +3,13 @@
 import { useEffect } from "react";
 import { useAssets } from "@engine/assetsContext";
 import { useSceneRuntime } from "@/hooks/use-scene-runtime";
+import { useGameSession } from "@/hooks/use-game-session";
 import { useGameKeys } from "@/hooks/use-game-keys";
 import { playSound } from "@/lib/audio";
-import { ControllerComponent } from "./components/controller/controllerComponent";
+import {
+  ControllerComponent,
+  type LaSabesData,
+} from "./components/controller/controllerComponent";
 import {
   LEVEL1_ID,
   QUESTION_TEXT_ID,
@@ -27,18 +31,27 @@ export function LaSabesBehavior() {
   const correctUrl = assets.correct?.url;
   const incorrectUrl = assets.incorrect?.url;
 
+  const session = useGameSession((s) => s.session) as LaSabesData | null;
+  const loadedAt = useGameSession((s) => s.loadedAt);
+
   const controller = runtime[LEVEL1_ID]?.components?.controller as
     Partial<ControllerComponent> | undefined;
-  const groups = controller?.groups ?? [];
+  const groups = session?.groups ?? [];
   const groupIndex = controller?.groupIndex ?? 0;
   const questionIndex = controller?.questionIndex ?? 0;
   const selected = controller?.selected ?? -1;
-  const loadedAt = controller?.loadedAt;
   const questions = groups[groupIndex]?.questions ?? [];
   const question = questions[questionIndex];
 
   const patchController = (patch: Partial<ControllerComponent>) =>
     patchComponent(LEVEL1_ID, "controller", patch);
+
+  useEffect(() => {
+    patchComponent(LEVEL1_ID, "controller", {
+      groupIndex: 0,
+      questionIndex: 0,
+    });
+  }, [loadedAt, patchComponent]);
 
   useEffect(() => {
     const current = groups[groupIndex]?.questions[questionIndex];

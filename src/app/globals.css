@@ -46,6 +46,7 @@
   --color-type-image: var(--editor-type-image);
   --color-type-video: var(--editor-type-video);
   --color-anim: var(--editor-anim);
+  --color-play: var(--editor-play);
 
   --text-3xs: 9px;
   --text-2xs: 10px;
@@ -89,6 +90,7 @@
   --editor-type-image: #46c98b;
   --editor-type-video: #e0a83a;
   --editor-anim: #a779f0;
+  --editor-play: #e0a83a;
 }
 
 .dark {

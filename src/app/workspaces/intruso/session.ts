@@ -1,12 +1,14 @@
 import { loadZipFile } from "@/helpers/persistence";
-import { useSceneRuntime } from "@/hooks/use-scene-runtime";
+import { useGameSession } from "@/hooks/use-game-session";
 import { useMemoryBudget } from "@/hooks/use-memory-budget";
-import { LEVEL1_ID } from "./constants";
 import {
   isIntrusoData,
-  type ControllerComponent,
   type IntrusoRound,
 } from "./components/controller/controllerComponent";
+
+export interface IntrusoSession {
+  rounds: IntrusoRound[];
+}
 
 const mimeFor = (path: string) =>
   /\.jpe?g$/i.test(path) ? "image/jpeg" : "image/png";
@@ -19,13 +21,6 @@ export async function loadIntrusoSession(file: File) {
   if (!isIntrusoData(data)) {
     throw new Error("Estructura de archivo no válida para este juego.");
   }
-
-  const prev = useSceneRuntime.getState().runtime[LEVEL1_ID]?.components
-    ?.controller as Partial<ControllerComponent> | undefined;
-  prev?.rounds?.forEach((r) => {
-    if (r.imageUrl) URL.revokeObjectURL(r.imageUrl);
-  });
-  useMemoryBudget.getState().clear("session");
 
   const rounds: IntrusoRound[] = await Promise.all(
     data.textRounds.map(async (r) => {
@@ -50,11 +45,14 @@ export async function loadIntrusoSession(file: File) {
     }),
   );
 
-  useSceneRuntime.getState().patchComponent(LEVEL1_ID, "controller", {
-    rounds,
-    roundIndex: 0,
-    selected: -1,
+  const session: IntrusoSession = { rounds };
+  useGameSession.getState().setSession(session, {
     fileName: file.name,
-    loadedAt: Date.now(),
+    dispose: () => {
+      rounds.forEach((r) => {
+        if (r.imageUrl) URL.revokeObjectURL(r.imageUrl);
+      });
+      useMemoryBudget.getState().clear("session");
+    },
   });
 }

@@ -7,6 +7,13 @@ Si una idea se promueve, se borra de aquí y nace un `RM` nuevo.
 
 ---
 
+## [WL-024] Selector de comportamiento de fullscreen al entrar a Play
+
+Desplegable en la topbar del panel Game para el comportamiento al dar Play:
+`fullscreen on play / focus only / none`. Hoy Play y Fullscreen son dos gestos
+separados (Play en el header, Fullscreen en la topbar del panel Game); esto sería
+azúcar de conveniencia sobre eso.
+
 ## [WL-003] Sistema de anclajes estilo Unity Canvas
 
 Agregar el sistema de anclajes (anchors) del Canvas de Unity al rectTransform de los gameobjects.
@@ -32,9 +39,12 @@ reset, copiar/pegar valores…). No se implementaron: `enabled` no existe en el 
 primitivo dropdown-menu (hoy solo hay context-menu). Hoy `ComponentSection` solo trae
 remove directo. Promover si se quiere desactivar componentes sin eliminarlos.
 
-## [WL-008] Revisar la creación de componentes y el nombre de la clase base
+## [WL-025] Motor de inspector por esquema (absorbe WL-008)
 
-La tripleta de un componente genera bastantes archivos; evaluar simplificarlo. Además, valorar renombrar la clase base `GameObjectComponent` a solo `Component`. A decidir al momento de tocarlo.
+Que cada componente declare un esquema de propiedades y un renderer genérico
+genere el inspector (a mano solo como override, estilo Unity). Segunda fase:
+el renderer lee valores vivos (merge) durante play. Base para componentes
+scripteados por el usuario a futuro. Detalle y preguntas: `docs/idea-inspector-engine.md`.
 
 ## [WL-011] Login con Google One Tap / FedCM (prompt en la esquina)
 

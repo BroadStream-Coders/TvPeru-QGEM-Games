@@ -5,8 +5,10 @@ interface WorkspaceHeaderState {
   title: string | null;
   icon: React.ReactNode | null;
   onLoad?: (file: File) => void;
-  /** Registrado por el panel Game del editor; la topbar dispara fullscreen. */
+  /** Registrado por el editor; alterna el Play Mode. */
   onPlay?: () => void;
+  /** Play deshabilitado (el juego requiere sesión y no hay una cargada). */
+  playDisabled?: boolean;
   onExport?: () => void;
   onUndo?: () => void;
   onRedo?: () => void;
@@ -20,6 +22,7 @@ interface WorkspaceHeaderState {
         | "icon"
         | "onLoad"
         | "onPlay"
+        | "playDisabled"
         | "onExport"
         | "onUndo"
         | "onRedo"
@@ -36,6 +39,7 @@ export const useWorkspaceHeader = create<WorkspaceHeaderState>((set) => ({
   icon: null,
   onLoad: undefined,
   onPlay: undefined,
+  playDisabled: false,
   onExport: undefined,
   onUndo: undefined,
   onRedo: undefined,
@@ -48,6 +52,7 @@ export const useWorkspaceHeader = create<WorkspaceHeaderState>((set) => ({
       icon: null,
       onLoad: undefined,
       onPlay: undefined,
+      playDisabled: false,
       onExport: undefined,
       onUndo: undefined,
       onRedo: undefined,

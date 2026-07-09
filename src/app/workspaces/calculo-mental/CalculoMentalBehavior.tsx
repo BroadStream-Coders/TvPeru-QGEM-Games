@@ -4,9 +4,13 @@ import { useEffect } from "react";
 import { useAssets } from "@engine/assetsContext";
 import { useAnimations } from "@engine/animations/AnimationsContext";
 import { useSceneRuntime } from "@/hooks/use-scene-runtime";
+import { useGameSession } from "@/hooks/use-game-session";
 import { useGameKeys } from "@/hooks/use-game-keys";
 import { playSound } from "@/lib/audio";
-import { ControllerComponent } from "./components/controller/controllerComponent";
+import {
+  ControllerComponent,
+  type CalcData,
+} from "./components/controller/controllerComponent";
 import {
   SLOT_COUNT,
   SLOT_IDS,
@@ -25,14 +29,16 @@ export function CalculoMentalBehavior() {
   const correctUrl = assets.correct?.url;
   const incorrectUrl = assets.incorrect?.url;
 
+  const session = useGameSession((s) => s.session) as CalcData | null;
+  const loadedAt = useGameSession((s) => s.loadedAt);
+
   const controller = runtime[CONTROLLER_ID]?.components?.controller as
     | Partial<ControllerComponent>
     | undefined;
-  const groups = controller?.groups ?? [];
+  const groups = session?.groups ?? [];
   const groupIndex = controller?.groupIndex ?? 0;
   const boardIndex = controller?.boardIndex ?? 0;
   const cursor = controller?.cursor ?? -1;
-  const fileName = controller?.fileName;
 
   const patchController = (patch: Partial<ControllerComponent>) =>
     patchComponent(CONTROLLER_ID, "controller", patch);
@@ -41,6 +47,13 @@ export function CalculoMentalBehavior() {
     patchComponent(id, "slot", { status });
 
   const boardSlots = groups[groupIndex]?.boards[boardIndex]?.slots ?? [];
+
+  useEffect(() => {
+    patchComponent(CONTROLLER_ID, "controller", {
+      groupIndex: 0,
+      boardIndex: 0,
+    });
+  }, [loadedAt, patchComponent]);
 
   useEffect(() => {
     const slots = groups[groupIndex]?.boards[boardIndex]?.slots ?? [];
@@ -52,7 +65,7 @@ export function CalculoMentalBehavior() {
       setActive(QUESTION_IDS[i], false);
       setActive(ANSWER_IDS[i], false);
     });
-  }, [groupIndex, boardIndex, fileName, patchComponent, setActive]);
+  }, [groupIndex, boardIndex, loadedAt, patchComponent, setActive]);
 
   const selectGroup = (n: number) => {
     if (n < 0 || n >= groups.length) return;

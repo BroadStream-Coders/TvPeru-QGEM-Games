@@ -14,55 +14,18 @@ changelog y se borra de aquí.
 
 ---
 
-## [TD-061] Los blobs de la sesión no se liberan al salir del workspace
+## [TD-062] Los inspectors de sesión muestran "Sin sesión cargada" leyendo del diseño
 
-- **Ubicación:** `src/components/shared/engine/editor/EditorLayout.tsx:501` (unmount solo hace `resetRuntime()`) · `src/app/workspaces/intruso/session.ts` (crea los blob URLs)
-- **Riesgo:** 3/10
-- **Problema:** Al desmontar el workspace se resetea el runtime, pero los blob
-  URLs de la sesión (fotos de Intruso) no se revocan y la categoría "Sesión" del
-  presupuesto de memoria no se limpia. Resultado: al cambiar de juego sin
-  recargar la página, la RAM de las fotos sigue retenida por el navegador y el
-  MemoryBadge sigue mostrando "Sesión: X MB" de un juego que ya no está en
-  pantalla. Catálogo y Local sí se liberan (EditorLayout:451-452).
-- **Impacto futuro:** Navegar entre varios juegos con sesiones pesadas en una
-  misma tanda acumula memoria fantasma. Arreglo probable: un registro central de
-  URLs de sesión (store pequeño con `dispose()`) que los loaders alimentan y
-  EditorLayout revoca + `clear("session")` en el unmount.
-- **Fecha:** 2026-07-08 · **Estado:** Abierto
-
-## [TD-060] Recargar una sesión con el mismo nombre no refresca la vista (Cálculo Mental, Deletreo)
-
-- **Ubicación:** `src/app/workspaces/calculo-mental/CalculoMentalBehavior.tsx:55` (deps del efecto keyed por `fileName`) · patrón equivalente en Deletreo
-- **Riesgo:** 3/10
-- **Problema:** El efecto que vuelca la sesión a la escena depende de
-  `[índices, fileName]`. Si el operador re-exporta la sesión y la carga con el
-  mismo nombre de archivo estando en los índices iniciales, las deps no cambian
-  y la pantalla sigue mostrando la data anterior hasta navegar. Intruso ya lo
-  resuelve con un sello `loadedAt: Date.now()` en el controller.
-- **Impacto futuro:** Corrección de último minuto antes del vivo que "no entra"
-  sin explicación. Arreglo: replicar el `loadedAt` de Intruso en los otros
-  behaviors.
-- **Fecha:** 2026-07-08 · **Estado:** Abierto
-
-## [TD-059] Inspector y Hierarchy no ven ni editan el estado runtime
-
-- **Ubicación:** `src/components/shared/engine/editor/EditorLayout.tsx:70-145` (HierarchyPanel/InspectorPanel leen `useEditor`, solo diseño) · `src/components/shared/engine/runtime/sceneRuntime.ts:23` (`ov.active ?? go.active`)
-- **Riesgo:** 5/10
-- **Problema:** El canvas renderiza `mergeRuntime(diseño, runtime)`, pero Hierarchy
-  e Inspector están cableados solo al diseño (`e.hierarchyNodes`, `e.selected`,
-  `e.patchGameObject`). Toda propiedad que el behavior pisó vía `useSceneRuntime`
-  (`active` de los textos, `text` de los componentes, `status` de los slots) queda
-  de facto inmutable desde el editor: el toggle de active y el campo de texto
-  escriben al diseño, pero el override de runtime siempre gana en el merge, así
-  que el cambio no se ve. Además el Inspector muestra valores viejos (el texto de
-  diseño, no la pregunta cargada de la sesión).
-- **Impacto futuro:** Rompe el flujo del operador pre-vivo (RM-075): con la data
-  cargada como referencia visual puede mover transform y fuente (props que el
-  behavior no pisa) pero no apagar un GameObject ni tocar su texto, sin ningún
-  indicio de por qué. Arreglo probable: Inspector/Hierarchy leen el merge y, al
-  editar una prop con override, limpian ese override puntual además de escribir
-  al diseño (el behavior sigue siendo autoridad cuando vuelva a escribir).
-- **Fecha:** 2026-07-08 · **Estado:** Abierto
+- **Ubicación:** `src/app/workspaces/*/components/*/​*Inspector.tsx` (los 4 juegos muestran `component.fileName`)
+- **Riesgo:** 2/10
+- **Problema:** La línea de estado de sesión en los inspectors de controller lee
+  `component.fileName` del diseño, que nunca se llena (la sesión ahora vive en
+  `useGameSession`, y antes vivía en runtime, que el Inspector tampoco veía).
+  Siempre dice "Sin sesión cargada" aunque haya una.
+- **Impacto futuro:** UI que miente al operador. Arreglo: leer
+  `useGameSession((s) => s.fileName)` en esos inspectors (y quitar `fileName` de
+  los tipos de componente de diseño).
+- **Fecha:** 2026-07-09 · **Estado:** Abierto
 
 ## [TD-057] `supabase.ts` lee las env vars con `!` sin validar
 

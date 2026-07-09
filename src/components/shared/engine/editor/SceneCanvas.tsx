@@ -8,6 +8,7 @@ import { Maximize, Minus, Plus } from "lucide-react";
 
 import { useEditor } from "@engine/editor/editorContext";
 import { useSceneRuntime } from "@/hooks/use-scene-runtime";
+import { usePlayMode } from "@/hooks/use-play-mode";
 import { mergeRuntime } from "@engine/runtime/sceneRuntime";
 import { GameObjectView } from "@engine/GameObjectView";
 import { SceneViewModeProvider } from "@engine/SceneViewMode";
@@ -65,6 +66,7 @@ function Tbtn(props: React.ButtonHTMLAttributes<HTMLButtonElement>) {
 export function SceneCanvas() {
   const e = useEditor();
   const runtime = useSceneRuntime((s) => s.runtime);
+  const playing = usePlayMode((s) => s.playing);
   const viewerRef = useRef<InfiniteViewer>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
   const moveableRef = useRef<Moveable>(null);
@@ -126,6 +128,8 @@ export function SceneCanvas() {
         !isTyping(ev.target)
       ) {
         ev.preventDefault();
+        const pm = usePlayMode.getState();
+        if (pm.playing && pm.editing === "restrict") return;
         duplicateRef.current();
         return;
       }
@@ -285,8 +289,11 @@ export function SceneCanvas() {
   }
 
   const displayObjects = useMemo(
-    () => mergeRuntime(e.gameObjects, runtime, { transform: false }),
-    [e.gameObjects, runtime],
+    () =>
+      playing
+        ? mergeRuntime(e.gameObjects, runtime, { transform: false })
+        : e.gameObjects,
+    [playing, e.gameObjects, runtime],
   );
 
   const sceneObjects = useMemo(

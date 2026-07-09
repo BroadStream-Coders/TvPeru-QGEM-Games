@@ -3,9 +3,11 @@
 import { useEffect } from "react";
 import { useAssets } from "@engine/assetsContext";
 import { useSceneRuntime } from "@/hooks/use-scene-runtime";
+import { useGameSession } from "@/hooks/use-game-session";
 import { useGameKeys } from "@/hooks/use-game-keys";
 import { playSound } from "@/lib/audio";
 import { ControllerComponent } from "./components/controller/controllerComponent";
+import type { IntrusoSession } from "./session";
 import {
   LEVEL1_ID,
   PICTURE_ID,
@@ -25,17 +27,23 @@ export function IntrusoBehavior() {
   const correctUrl = assets.correct?.url;
   const incorrectUrl = assets.incorrect?.url;
 
+  const session = useGameSession((s) => s.session) as IntrusoSession | null;
+  const loadedAt = useGameSession((s) => s.loadedAt);
+
   const controller = runtime[LEVEL1_ID]?.components?.controller as
     | Partial<ControllerComponent>
     | undefined;
-  const rounds = controller?.rounds ?? [];
+  const rounds = session?.rounds ?? [];
   const roundIndex = controller?.roundIndex ?? 0;
   const selected = controller?.selected ?? -1;
-  const loadedAt = controller?.loadedAt;
   const round = rounds[roundIndex];
 
   const patchController = (patch: Partial<ControllerComponent>) =>
     patchComponent(LEVEL1_ID, "controller", patch);
+
+  useEffect(() => {
+    patchComponent(LEVEL1_ID, "controller", { roundIndex: 0 });
+  }, [loadedAt, patchComponent]);
 
   useEffect(() => {
     const current = rounds[roundIndex];

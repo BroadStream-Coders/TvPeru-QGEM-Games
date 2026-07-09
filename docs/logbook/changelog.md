@@ -12,6 +12,18 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-075] Play Mode: separación estructura ↔ sesión (2026-07-09 13:30)
+Redefinida de "show mode candado" a Play Mode estilo Unity: toggle play/edit con snapshot/restore y corte de zundo, merge y behavior solo en play, sesión dormida en `useGameSession`, topbar del panel Game con `On Play: Restrict | Edit` (default restrict vía `GameDefinition.playConfig`) y Play separado de Fullscreen. El candado original quedó absorbido como el modo restrict.
+
+## [TD-061] Blobs de sesión sin liberar al salir del workspace (2026-07-09 13:30)
+Resuelto por el store de sesión: `setSession` acepta un `dispose` que corre al reemplazar la sesión y en el unmount del workspace; Intruso revoca ahí sus blob URLs y limpia el presupuesto "session".
+
+## [TD-060] Recargar sesión con el mismo nombre no refrescaba (2026-07-09 13:30)
+Resuelto por diseño: `loadedAt` vive en `useGameSession` y los 4 behaviors se re-disparan con él; recargar durante play re-ejecuta el puente siempre, sin sellos por juego.
+
+## [TD-059] Inspector/Hierarchy no veían el estado runtime (2026-07-09 13:30)
+Resuelto por diseño con el Play Mode: en edición el canvas pinta solo diseño (sin merge), así que no hay overrides que mientan al editar; en play la edición queda restringida por defecto (`restrict`).
+
 ## [RM-046] Pipeline de assets por key en el editor (2026-07-09 10:22)
 El pipeline (catálogo → preloader → AssetsContext → panel Assets) quedó demostrado con los juegos reales: 32 `assetKey` en los scene.json de Intruso/La sabes o No/Deletreo y `fontAssetKey` en Cálculo Mental; los componentes resuelven por key de forma aditiva.
 

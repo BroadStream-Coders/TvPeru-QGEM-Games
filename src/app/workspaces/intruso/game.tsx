@@ -16,6 +16,7 @@ export const intrusoGame: GameDefinition = {
   assets: INTRUSO_ASSETS,
   components: [controllerDefinition],
   behavior: IntrusoBehavior,
+  requiresSession: true,
   onLoad: (file) => {
     loadIntrusoSession(file).catch((error) =>
       console.error("Sesión inválida para Intruso.", error),

@@ -52,21 +52,6 @@ su "Hecho cuando", pero no es el foco actual).
   funciones listadas tienen al menos un test cada una.
 - **Fecha:** 2026-07-07 · **Estado:** Abierto
 
-## [RM-075] "Show mode": candado de edición para el en vivo
-
-- **Objetivo:** Un modo show que **congele la edición** durante el broadcast.
-  Contexto real de uso: el operador SÍ tendrá el editor disponible minutos antes
-  del en vivo para ajustes de posición y similares, pero la mayor parte del
-  tiempo no mueve nada — y hoy nada impide que un click accidental arrastre un
-  GameObject, borre algo o cierre un panel en pleno aire. Es un candado/toggle
-  (edición ↔ show), no quitar el editor: en show quedan activas solo las teclas
-  del juego y fullscreen; gestos de canvas, Inspector, Hierarchy y cierre de
-  paneles quedan bloqueados.
-- **Hecho cuando:** existe el toggle; activado, no se puede mutar el diseño ni
-  el layout de paneles desde ninguna superficie, y las teclas del behavior +
-  fullscreen siguen funcionando; desactivarlo restaura la edición normal.
-- **Fecha:** 2026-07-07 · **Estado:** Abierto
-
 ---
 
 # Mejoras de editor / engine comprometidas

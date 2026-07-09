@@ -4,11 +4,13 @@ import { useEffect, useState } from "react";
 import { useAssets } from "@engine/assetsContext";
 import { useAnimations } from "@engine/animations/AnimationsContext";
 import { useSceneRuntime } from "@/hooks/use-scene-runtime";
+import { useGameSession } from "@/hooks/use-game-session";
 import { useGameKeys } from "@/hooks/use-game-keys";
 import { playSound } from "@/lib/audio";
 import {
   DeletreoComponent,
   DeletreoFrame,
+  type DeletreoData,
 } from "./components/deletreo/deletreoComponent";
 import { ANCHOR_ID, FRAME_ID, TEXT_ID } from "./constants";
 
@@ -23,10 +25,13 @@ export function DeletreoBehavior() {
 
   const [spellStep, setSpellStep] = useState(0);
 
+  const session = useGameSession((s) => s.session) as DeletreoData | null;
+  const loadedAt = useGameSession((s) => s.loadedAt);
+
   const controller = runtime[ANCHOR_ID]?.components?.deletreo as
     | Partial<DeletreoComponent>
     | undefined;
-  const groups = controller?.groups ?? [];
+  const groups = session?.groups ?? [];
   const groupIndex = controller?.groupIndex ?? 0;
   const slotIndex = controller?.slotIndex ?? 0;
 
@@ -39,9 +44,13 @@ export function DeletreoBehavior() {
   const word = currentGroup[slotIndex] ?? "";
 
   useEffect(() => {
+    patchComponent(ANCHOR_ID, "deletreo", { groupIndex: 0, slotIndex: 0 });
+  }, [loadedAt, patchComponent]);
+
+  useEffect(() => {
     setSpellStep(0);
     setFrame("normal");
-  }, [groupIndex, slotIndex, controller?.fileName]);
+  }, [groupIndex, slotIndex, loadedAt]);
 
   useEffect(() => {
     patchComponent(TEXT_ID, "spellframe", { word, spellStep });

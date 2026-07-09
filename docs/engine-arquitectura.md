@@ -224,25 +224,38 @@ useSceneRuntime →  runtime[goId] = override  (JUEGO: efímero, no se exporta)
 - `mergeRuntime(design, runtime)` (`@engine/runtime/sceneRuntime.ts`) es una función
   **pura** que fusiona el override sobre el diseño para renderizar.
 
-**Dónde se aplica el merge:**
+**Dónde se aplica el merge (gateado por Play Mode):**
 
-- El panel **Game** renderiza `mergeRuntime(diseño, runtime)` completo (incluye el
-  `transform` de las animaciones bounce/slide).
-- El panel **Scene** renderiza `mergeRuntime(diseño, runtime, { transform: false })`:
-  aplica el **contenido** (para editar el layout viendo la palabra/dato real cargado)
-  pero **conserva el `transform` de diseño**, porque ahí es lo que estás editando.
-- El **export** hace `JSON.stringify` del **diseño** puro (`useSceneEditor.gameObjects`),
-  que nunca fue tocado por el juego → **siempre limpio, exportes cuando exportes**.
-  Ya no hay `stripForExport` ni convención de "exportar desde estado limpio".
+- En **edición** (default) los paneles Game y Scene pintan el **diseño puro**, sin
+  merge: WYSIWYG real, lo que ves es lo que se exporta. El behavior no está montado.
+- En **play** el panel **Game** renderiza `mergeRuntime(diseño, runtime)` completo
+  (incluye el `transform` de las animaciones bounce/slide), y el panel **Scene**
+  renderiza `mergeRuntime(diseño, runtime, { transform: false })`: contenido real
+  pero `transform` de diseño.
+- Al **entrar a play** se toma un snapshot del diseño; al **salir** se restaura, se
+  resetea el runtime y se corta el historial (zundo) en ambas fronteras. El
+  dropdown `On Play: Restrict | Edit` del panel Game (default por juego vía
+  `GameDefinition.playConfig`) decide si los gestos de edición responden en play.
+- El **export** (bloqueado durante play) hace `JSON.stringify` del **diseño** puro
+  (`useSceneEditor.gameObjects`), que nunca fue tocado por el juego → **siempre
+  limpio**. Ya no hay `stripForExport` ni convención de "exportar desde estado limpio".
 
 **Reglas al escribir un behavior nuevo (importante):**
 
-1. El estado de juego (palabra, `status`, `active`, texto, posición animada, la data
-   de sesión de `onLoad`) va a `useSceneRuntime`, **nunca** a `setGameObjects`.
-2. El diseño solo guarda **claves de asset** (`assetKey`), nunca URLs resueltas: un
+1. El estado de juego (palabra, `status`, `active`, texto, posición animada) va a
+   `useSceneRuntime`, **nunca** a `setGameObjects`. El behavior solo corre en play.
+2. La **data de sesión** vive dormida en `useGameSession` (`@/hooks/use-game-session.ts`):
+   `onLoad` solo parsea/valida y hace `setSession(data, { fileName, dispose? })` —
+   no toca el runtime. El behavior es el puente: lee la sesión del store (keyed por
+   `loadedAt`, así una recarga durante play siempre entra) y la vuelca a runtime.
+   `dispose` libera blobs al reemplazar la sesión o desmontar el workspace.
+   Si el juego no funciona sin sesión, declara `requiresSession: true` (Play queda
+   deshabilitado hasta cargar una).
+3. El diseño solo guarda **claves de asset** (`assetKey`), nunca URLs resueltas: un
    `blob:…` muere al recargar y trae `localhost`. Las vistas resuelven la clave con
    `useAssets()` al renderizar (así lo hace `slot` con sus frames, y `image`).
-3. `useSceneRuntime` se resetea al desmontar el workspace (`EditorLayout`).
+4. `useSceneRuntime` se resetea al salir de play y al desmontar el workspace;
+   `useGameSession` sobrevive al salir de play y se limpia al desmontar el workspace.
 
 Con esto, el loop de trabajo cierra: **editás el diseño en el editor viendo el
 contenido real, exportás el `scene.json` limpio, y ese archivo es la nueva

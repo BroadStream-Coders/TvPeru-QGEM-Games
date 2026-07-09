@@ -153,4 +153,4 @@ La foto llega a pantalla por el campo runtime `src` del componente `image`
 |---|---|---|
 | Cálculo Mental | ✅ RM-076 | ✅ (previa a la migración) |
 | Intruso (Nivel 1) | ✅ RM-078 | ✅ RM-014 (Nivel 2 fuera de alcance) |
-| La sabes o No | Pendiente (RM-015) | Pendiente |
+| La sabes o No | ✅ RM-015 | ✅ RM-015 |

@@ -69,17 +69,6 @@ su "Hecho cuando", pero no es el foco actual).
 
 ---
 
-# Fase 1 — Juegos a mano (la ventana de oportunidad)
-
-## [RM-015] Juego "La sabes o No"
-
-- **Objetivo:** Crear el juego "La sabes o No" como workspace propio.
-- **Hecho cuando:** existe su workspace, carga su session file y se muestra
-  fullscreen listo para broadcast.
-- **Fecha:** 2026-06-16 · **Estado:** Abierto
-
----
-
 # Mejoras comprometidas surgidas al cerrar Cálculo Mental (RM-013)
 
 > Patrones reales detectados al terminar Cálculo Mental. Varios obligan a cambiar

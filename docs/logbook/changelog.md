@@ -12,6 +12,9 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-015] Juego "La sabes o No" completo (2026-07-09 09:53)
+Workspace nuevo migrado desde `LoSabesONo.prefab` (25 GameObjects, layout horneado: opciones en x=±335, márgenes TMP en los rects, texto propio por frame de estado para conservar los colores de Unity). Sesión JSON plano (`groups → questions` con 2 opciones); teclas 0-9 pregunta, numpad grupo, N/B, Q/W, V, M. Aprobado visualmente contra Unity.
+
 ## [RM-014] Juego "Intruso" (Nivel 1) completo (2026-07-08 12:20)
 Primer juego con sesión ZIP: `session.ts` lee `sessionData.json` + fotos → blobs decodificados → runtime (categoría "Sesión" del presupuesto de memoria). Behavior con rondas (0-9/N/B), selección virtual Q-W-E-R, V valida con sonido, M revela la correcta con sonido. Engine ganó `onOption`/`onValidate` en useGameKeys y `src` runtime en el componente image; clipping de la foto resuelto con el componente mask nativo (edición manual de la escena). Nivel 2 queda fuera de alcance por acuerdo.
 

@@ -6,6 +6,7 @@ import {
   FlaskConical,
   Calculator,
   VenetianMask,
+  BookOpen,
 } from "lucide-react";
 import { AuthButton } from "@/components/shared/AuthButton";
 
@@ -27,6 +28,12 @@ const workspaces = [
     description: "Encuentra al elemento inconsistente",
     href: "/workspaces/intruso",
     icon: VenetianMask,
+  },
+  {
+    name: "La Sabes o No",
+    description: "Preguntas de dos opciones por grupos",
+    href: "/workspaces/la-sabes-o-no",
+    icon: BookOpen,
   },
   {
     name: "Sandbox",

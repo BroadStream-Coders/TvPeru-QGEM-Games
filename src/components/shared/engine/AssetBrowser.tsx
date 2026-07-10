@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import {
   Image as ImageIcon,
   Video,
@@ -8,6 +8,7 @@ import {
   Type,
   Folder,
   FolderOpen,
+  FolderPlus,
   Check,
   Loader2,
   X,
@@ -32,6 +33,20 @@ const KIND_COLOR: Record<AssetKind, string> = {
   font: "text-type-text",
 };
 
+const KIND_TINT: Record<AssetKind, string> = {
+  image: "bg-type-image/15",
+  video: "bg-type-video/15",
+  audio: "bg-type-audio/15",
+  font: "bg-type-text/15",
+};
+
+const KIND_BADGE: Record<AssetKind, string> = {
+  image: "bg-type-image text-black",
+  video: "bg-type-video text-black",
+  audio: "bg-type-audio text-black",
+  font: "bg-type-text text-black",
+};
+
 interface FolderNode {
   path: string;
   name: string;
@@ -42,11 +57,14 @@ interface FolderNode {
 /** Carpeta local del asset (organización propia, no el origen físico). */
 const folderOf = (entry: CatalogEntry) => entry.folder ?? "";
 
-function buildTree(catalog: AssetCatalog): FolderNode {
+function buildTree(catalog: AssetCatalog, extra: string[]): FolderNode {
   const root: FolderNode = { path: "", name: "Local", depth: 0, children: [] };
+  const dirs = [...extra];
   for (const key in catalog) {
     const dir = folderOf(catalog[key]);
-    if (!dir) continue;
+    if (dir) dirs.push(dir);
+  }
+  for (const dir of dirs) {
     let cur = root;
     let acc = "";
     for (const seg of dir.split("/")) {
@@ -169,17 +187,19 @@ function AssetThumb({
   loaded?: LoadedAsset;
   status?: AssetStatus;
 }) {
+  const checker = {
+    background:
+      "repeating-conic-gradient(#26292f 0 25%, #1d2024 0 50%) 0 / 12px 12px",
+  };
   const ready = status === "ready" && !!loaded?.url;
   if (ready && entry.kind === "image") {
     return (
       <img
         src={loaded.url}
         alt=""
+        draggable={false}
         className="h-full w-full object-contain"
-        style={{
-          background:
-            "repeating-conic-gradient(#26292f 0 25%, #1d2024 0 50%) 0 / 12px 12px",
-        }}
+        style={checker}
       />
     );
   }
@@ -193,7 +213,8 @@ function AssetThumb({
         onLoadedMetadata={(e) => {
           e.currentTarget.currentTime = 0.01;
         }}
-        className="h-full w-full object-cover"
+        className="h-full w-full object-contain"
+        style={checker}
       />
     );
   }
@@ -203,7 +224,7 @@ function AssetThumb({
   if (ready && entry.kind === "font") {
     return (
       <span
-        className="text-[32px] leading-none text-ink"
+        className="text-[32px] leading-none text-type-text"
         style={{ fontFamily: loaded.family ?? entry.family }}
       >
         Ag
@@ -219,16 +240,34 @@ export function AssetBrowser({
   assets,
   statuses,
   onAddFiles,
+  folders,
+  onCreateFolder,
+  onMove,
+  onMoveFolder,
 }: {
   catalog: AssetCatalog;
   assets: Record<string, LoadedAsset | undefined>;
   statuses: Record<string, AssetStatus>;
   onAddFiles: (files: FileList | File[]) => void;
+  folders: string[];
+  onCreateFolder: (path: string) => void;
+  onMove: (keys: string[], folder: string) => void;
+  onMoveFolder: (path: string, target: string) => void;
 }) {
   const keys = Object.keys(catalog);
-  const root = useMemo(() => buildTree(catalog), [catalog]);
+  const root = useMemo(() => buildTree(catalog, folders), [catalog, folders]);
   const [selected, setSelected] = useState("");
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
+  const [selKeys, setSelKeys] = useState<Set<string>>(new Set());
+  const [selDirs, setSelDirs] = useState<Set<string>>(new Set());
+  const [dropTarget, setDropTarget] = useState<string | null>(null);
+  const [creating, setCreating] = useState(false);
+  const anchorRef = useRef<string | null>(null);
+  const dragRef = useRef<{ keys: string[]; dirs: string[] }>({
+    keys: [],
+    dirs: [],
+  });
+  const cancelCreateRef = useRef(false);
 
   const rows = useMemo(() => {
     const out: FolderNode[] = [];
@@ -244,8 +283,101 @@ export function AssetBrowser({
     keys.filter((k) => under(folderOf(catalog[k]), folder)).length;
 
   const files = keys
-    .filter((k) => under(folderOf(catalog[k]), selected))
+    .filter((k) => folderOf(catalog[k]) === selected)
     .sort((a, b) => a.localeCompare(b));
+
+  const clickTile = (e: React.MouseEvent, key: string) => {
+    if (e.shiftKey && anchorRef.current) {
+      const a = files.indexOf(anchorRef.current);
+      const b = files.indexOf(key);
+      if (a >= 0 && b >= 0) {
+        const [lo, hi] = a < b ? [a, b] : [b, a];
+        setSelKeys(new Set(files.slice(lo, hi + 1)));
+        return;
+      }
+    }
+    if (e.ctrlKey || e.metaKey) {
+      setSelKeys((prev) => {
+        const next = new Set(prev);
+        if (next.has(key)) next.delete(key);
+        else next.add(key);
+        return next;
+      });
+    } else {
+      setSelKeys(new Set([key]));
+      setSelDirs(new Set());
+    }
+    anchorRef.current = key;
+  };
+
+  const clickDir = (e: React.MouseEvent, path: string) => {
+    if (e.ctrlKey || e.metaKey) {
+      setSelDirs((prev) => {
+        const next = new Set(prev);
+        if (next.has(path)) next.delete(path);
+        else next.add(path);
+        return next;
+      });
+    } else {
+      setSelDirs(new Set([path]));
+      setSelKeys(new Set());
+    }
+  };
+
+  const clearIfSelf = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      setSelKeys(new Set());
+      setSelDirs(new Set());
+    }
+  };
+
+  const dropOn = (target: string) => {
+    const { keys, dirs } = dragRef.current;
+    dragRef.current = { keys: [], dirs: [] };
+    if (keys.length) onMove(keys, target);
+    if (dirs.length) {
+      for (const dir of dirs) onMoveFolder(dir, target);
+      setSelDirs(new Set());
+    }
+  };
+
+  const findNode = (n: FolderNode, path: string): FolderNode | null => {
+    if (n.path === path) return n;
+    for (const c of n.children) {
+      const hit = findNode(c, path);
+      if (hit) return hit;
+    }
+    return null;
+  };
+
+  const subfolders = findNode(root, selected)?.children ?? [];
+
+  const enterFolder = (path: string) => {
+    setSelected(path);
+    setSelKeys(new Set());
+    setSelDirs(new Set());
+    setCollapsed((c) => {
+      const next = { ...c };
+      let acc = "";
+      for (const seg of path.split("/")) {
+        next[acc] = false;
+        acc = acc ? `${acc}/${seg}` : seg;
+      }
+      return next;
+    });
+  };
+
+  const confirmCreate = (raw: string) => {
+    const name = raw.trim().replace(/\//g, "-");
+    if (!name) return;
+    const siblings = new Set(
+      (findNode(root, selected)?.children ?? []).map((c) => c.name),
+    );
+    let final = name;
+    let i = 2;
+    while (siblings.has(final)) final = `${name} ${i++}`;
+    onCreateFolder(selected ? `${selected}/${final}` : final);
+  };
 
   // breadcrumb: Local › seg › seg
   const crumbs = [
@@ -267,7 +399,7 @@ export function AssetBrowser({
             <span key={c.path} className="flex items-center gap-1">
               {i > 0 && <span className="text-line-2">/</span>}
               <button
-                onClick={() => setSelected(c.path)}
+                onClick={() => enterFolder(c.path)}
                 className={cn(
                   "truncate transition-colors hover:text-dim",
                   c.path === selected && "text-dim",
@@ -280,8 +412,19 @@ export function AssetBrowser({
         </div>
         <div className="flex-1" />
         <span className="shrink-0 font-mono text-[10.5px] text-faint">
-          {files.length} {files.length === 1 ? "item" : "items"}
+          {subfolders.length + files.length}{" "}
+          {subfolders.length + files.length === 1 ? "item" : "items"}
         </span>
+        <button
+          onClick={() => {
+            setCollapsed((c) => ({ ...c, [selected]: false }));
+            setCreating(true);
+          }}
+          className="flex shrink-0 items-center gap-1 rounded-[4px] border border-line px-1.5 py-0.5 text-[11px] text-dim transition-colors hover:border-acc hover:text-ink"
+        >
+          <FolderPlus className="h-3 w-3" />
+          Carpeta
+        </button>
         <label className="flex shrink-0 cursor-pointer items-center gap-1 rounded-[4px] border border-line px-1.5 py-0.5 text-[11px] text-dim transition-colors hover:border-acc hover:text-ink">
           <Upload className="h-3 w-3" />
           Cargar
@@ -306,80 +449,228 @@ export function AssetBrowser({
             const hasKids = f.children.length > 0;
             const open = !collapsed[f.path];
             return (
-              <div
-                key={f.path || "__root"}
-                onClick={() => setSelected(f.path)}
-                className={cn(
-                  "flex h-[22px] cursor-default items-center gap-1.5 pr-2 text-[12px]",
-                  sel ? "bg-acc-bg text-ink" : "text-ink/85 hover:bg-elev",
-                )}
-                style={{ paddingLeft: 8 + f.depth * 12 }}
-              >
-                <span
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    if (hasKids)
-                      setCollapsed((c) => ({ ...c, [f.path]: !c[f.path] }));
+              <Fragment key={f.path || "__root"}>
+                <div
+                  onClick={() => enterFolder(f.path)}
+                  onDragOver={(e) => {
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = "move";
+                    if (dropTarget !== f.path) setDropTarget(f.path);
                   }}
-                  className="flex w-3 shrink-0 justify-center text-[8px] text-faint"
+                  onDragLeave={() =>
+                    setDropTarget((d) => (d === f.path ? null : d))
+                  }
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    setDropTarget(null);
+                    dropOn(f.path);
+                  }}
+                  className={cn(
+                    "flex h-[22px] cursor-default items-center gap-1.5 pr-2 text-[12px]",
+                    sel ? "bg-acc-bg text-ink" : "text-ink/85 hover:bg-elev",
+                    dropTarget === f.path && "bg-acc-bg2",
+                  )}
+                  style={{ paddingLeft: 8 + f.depth * 12 }}
                 >
-                  {hasKids ? (open ? "▾" : "▸") : ""}
-                </span>
-                {open && hasKids ? (
-                  <FolderOpen
-                    className={cn(
-                      "h-3.5 w-3.5 shrink-0",
-                      sel ? "text-type-video" : "text-dim",
-                    )}
-                  />
-                ) : (
-                  <Folder
-                    className={cn(
-                      "h-3.5 w-3.5 shrink-0",
-                      sel ? "text-type-video" : "text-dim",
-                    )}
-                  />
+                  <span
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (hasKids)
+                        setCollapsed((c) => ({ ...c, [f.path]: !c[f.path] }));
+                    }}
+                    className="flex w-3 shrink-0 justify-center text-[8px] text-faint"
+                  >
+                    {hasKids ? (open ? "▾" : "▸") : ""}
+                  </span>
+                  {open && hasKids ? (
+                    <FolderOpen
+                      className={cn(
+                        "h-3.5 w-3.5 shrink-0",
+                        sel ? "text-type-video" : "text-dim",
+                      )}
+                    />
+                  ) : (
+                    <Folder
+                      className={cn(
+                        "h-3.5 w-3.5 shrink-0",
+                        sel ? "text-type-video" : "text-dim",
+                      )}
+                    />
+                  )}
+                  <span className="flex-1 truncate">{f.name}</span>
+                  <span className="font-mono text-[10px] text-faint">
+                    {countUnder(f.path)}
+                  </span>
+                </div>
+                {creating && f.path === selected && (
+                  <div
+                    className="flex h-[22px] items-center gap-1.5 pr-2"
+                    style={{ paddingLeft: 8 + (f.depth + 1) * 12 + 12 }}
+                  >
+                    <Folder className="h-3.5 w-3.5 shrink-0 text-dim" />
+                    <input
+                      autoFocus
+                      defaultValue="Nueva carpeta"
+                      onFocus={(e) => e.currentTarget.select()}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") e.currentTarget.blur();
+                        if (e.key === "Escape") {
+                          cancelCreateRef.current = true;
+                          e.currentTarget.blur();
+                        }
+                      }}
+                      onBlur={(e) => {
+                        const cancelled = cancelCreateRef.current;
+                        cancelCreateRef.current = false;
+                        setCreating(false);
+                        if (!cancelled) confirmCreate(e.currentTarget.value);
+                      }}
+                      className="w-full min-w-0 rounded-[3px] border border-acc bg-elev px-1 text-[12px] text-ink outline-none"
+                    />
+                  </div>
                 )}
-                <span className="flex-1 truncate">{f.name}</span>
-                <span className="font-mono text-[10px] text-faint">
-                  {countUnder(f.path)}
-                </span>
-              </div>
+              </Fragment>
             );
           })}
         </div>
 
         {/* Grid de miniaturas */}
-        <div className="scrl flex-1 overflow-auto bg-bg p-3">
-          {files.length === 0 && (
+        <div
+          className="scrl flex-1 select-none overflow-auto bg-bg p-3"
+          onMouseDown={clearIfSelf}
+        >
+          {files.length === 0 && subfolders.length === 0 && (
             <p className="flex h-full items-center justify-center text-2xs text-faint">
               Carpeta vacía. Usa «Cargar» para traer archivos del equipo.
             </p>
           )}
           <div
             className="grid gap-3"
-            style={{ gridTemplateColumns: "repeat(auto-fill,minmax(92px,1fr))" }}
+            style={{
+              gridTemplateColumns: "repeat(auto-fill,minmax(92px,1fr))",
+            }}
+            onMouseDown={clearIfSelf}
           >
+            {subfolders.map((f) => {
+              const isSel = selDirs.has(f.path);
+              return (
+                <div
+                  key={`dir:${f.path}`}
+                  draggable
+                  onClick={(e) => clickDir(e, f.path)}
+                  onDoubleClick={() => enterFolder(f.path)}
+                  onDragStart={(e) => {
+                    const dirs = isSel ? [...selDirs] : [f.path];
+                    const dragKeys = isSel ? [...selKeys] : [];
+                    if (!isSel) {
+                      setSelDirs(new Set([f.path]));
+                      setSelKeys(new Set());
+                    }
+                    dragRef.current = { keys: dragKeys, dirs };
+                    e.dataTransfer.effectAllowed = "move";
+                    e.dataTransfer.setData("text/plain", "");
+                  }}
+                  onDragOver={(e) => {
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = "move";
+                    if (dropTarget !== f.path) setDropTarget(f.path);
+                  }}
+                  onDragLeave={() =>
+                    setDropTarget((d) => (d === f.path ? null : d))
+                  }
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    setDropTarget(null);
+                    dropOn(f.path);
+                  }}
+                  className="flex cursor-default flex-col gap-1.5"
+                >
+                  <div
+                    className={cn(
+                      "relative flex aspect-square items-center justify-center rounded-[5px]",
+                      (isSel || dropTarget === f.path) &&
+                        "bg-acc-bg ring-1 ring-acc",
+                    )}
+                  >
+                    <Folder
+                      className="h-[62%] w-[62%] text-type-video/75"
+                      fill="currentColor"
+                      strokeWidth={0}
+                    />
+                  </div>
+                  <div className="min-w-0">
+                    <p
+                      className={cn(
+                        "truncate rounded-[3px] px-1 text-[11px]",
+                        isSel ? "bg-acc text-white" : "text-ink",
+                      )}
+                    >
+                      {f.name}
+                    </p>
+                    <p className="truncate px-1 font-mono text-[9.5px] text-faint">
+                      {countUnder(f.path)}{" "}
+                      {countUnder(f.path) === 1 ? "item" : "items"}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
             {files.map((key) => {
               const entry = catalog[key];
+              const isSel = selKeys.has(key);
               return (
-                <div key={key} className="flex cursor-default flex-col gap-1.5">
-                  <div className="relative flex aspect-square items-center justify-center overflow-hidden rounded-[5px] border border-edge bg-panel-2">
+                <div
+                  key={key}
+                  draggable
+                  onClick={(e) => clickTile(e, key)}
+                  onDragStart={(e) => {
+                    const dragKeys = isSel ? [...selKeys] : [key];
+                    const dirs = isSel ? [...selDirs] : [];
+                    if (!isSel) {
+                      setSelKeys(new Set([key]));
+                      setSelDirs(new Set());
+                      anchorRef.current = key;
+                    }
+                    dragRef.current = { keys: dragKeys, dirs };
+                    e.dataTransfer.effectAllowed = "move";
+                    e.dataTransfer.setData("text/plain", "");
+                  }}
+                  className="flex cursor-default flex-col gap-1.5"
+                >
+                  <div
+                    className={cn(
+                      "relative flex aspect-square items-center justify-center overflow-hidden rounded-[5px] border",
+                      KIND_TINT[entry.kind],
+                      isSel ? "border-acc ring-1 ring-acc" : "border-edge",
+                    )}
+                  >
                     <AssetThumb
                       entry={entry}
                       loaded={assets[key]}
                       status={statuses[key]}
                     />
-                    <span className="absolute bottom-1 left-1 rounded-[3px] bg-black/65 px-1 py-px font-mono text-[8.5px] font-bold tracking-wide text-white">
+                    <span
+                      className={cn(
+                        "absolute bottom-1 left-1 rounded-[3px] px-1 py-px font-mono text-[8.5px] font-bold tracking-wide",
+                        KIND_BADGE[entry.kind],
+                      )}
+                    >
                       {extOf(entry.path) || entry.kind.toUpperCase()}
                     </span>
                     <StatusBadge status={statuses[key]} />
                   </div>
                   <div className="min-w-0">
-                    <p className="truncate text-[11px] text-ink">{key}</p>
                     <p
                       className={cn(
-                        "truncate font-mono text-[9.5px] opacity-75",
+                        "truncate rounded-[3px] px-1 text-[11px]",
+                        isSel ? "bg-acc text-white" : "text-ink",
+                      )}
+                    >
+                      {key}
+                    </p>
+                    <p
+                      className={cn(
+                        "truncate px-1 font-mono text-[9.5px] opacity-75",
                         KIND_COLOR[entry.kind],
                       )}
                     >

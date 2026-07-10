@@ -12,63 +12,86 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-081] Carpetas y selección en el panel de assets Local (2026-07-10 15:04)
+
+Navegación two-column estilo Unity: el grid muestra solo los hijos directos de la carpeta activa (subcarpetas como tiles, doble click entra). Selección de assets y carpetas (click / Ctrl multi / Shift rango / vacío deselecciona), botón «Carpeta» con input inline, drag & drop de la selección (mixta) a carpetas del árbol o del grid; `moveFolder` re-prefija todo lo de abajo. Identidad visual por tipo: tinte de fondo + badge de extensión en el color del kind, carpetas como glifo ámbar sin tarjeta, video con letterbox sobre tablero como las imágenes. Estado por sesión en `EditorLayout` (`extraFolders` + `folderOverrides`), expuesto vía `assetsContext`.
+
 ## [RM-080] Miniaturas reales en el panel de assets Local (2026-07-10 13:04)
+
 El AssetBrowser ahora pinta miniaturas por tipo estilo Unity: fuente = "Ag" con la tipografía real (ya registrada vía FontFace), video = primer frame, audio = forma de onda (decodeAudioData → canvas, con caché de picos). Fallbacks e label de tipo coloreados por kind (nuevo token `type-audio`).
 
 ## [RM-079] Juego "Al Vuelo" (ex Si o No) migrado desde Unity (2026-07-09 15:08)
+
 Escena convertida del prefab (banner + pregunta auto-size con GeniusTechno + opciones SÍ/NO con frames normal/correct/incorrect y flecha fija), behavior con teclas convenidas y sesión JSON `{question, answer}`. Se agregó `flipX` al componente `image` del engine (los frames del NO van espejados, scale x −1 en Unity).
 
 ## [RM-075] Play Mode: separación estructura ↔ sesión (2026-07-09 13:30)
+
 Redefinida de "show mode candado" a Play Mode estilo Unity: toggle play/edit con snapshot/restore y corte de zundo, merge y behavior solo en play, sesión dormida en `useGameSession`, topbar del panel Game con `On Play: Restrict | Edit` (default restrict vía `GameDefinition.playConfig`) y Play separado de Fullscreen. El candado original quedó absorbido como el modo restrict.
 
 ## [TD-061] Blobs de sesión sin liberar al salir del workspace (2026-07-09 13:30)
+
 Resuelto por el store de sesión: `setSession` acepta un `dispose` que corre al reemplazar la sesión y en el unmount del workspace; Intruso revoca ahí sus blob URLs y limpia el presupuesto "session".
 
 ## [TD-060] Recargar sesión con el mismo nombre no refrescaba (2026-07-09 13:30)
+
 Resuelto por diseño: `loadedAt` vive en `useGameSession` y los 4 behaviors se re-disparan con él; recargar durante play re-ejecuta el puente siempre, sin sellos por juego.
 
 ## [TD-059] Inspector/Hierarchy no veían el estado runtime (2026-07-09 13:30)
+
 Resuelto por diseño con el Play Mode: en edición el canvas pinta solo diseño (sin merge), así que no hay overrides que mientan al editar; en play la edición queda restringida por defecto (`restrict`).
 
 ## [RM-046] Pipeline de assets por key en el editor (2026-07-09 10:22)
+
 El pipeline (catálogo → preloader → AssetsContext → panel Assets) quedó demostrado con los juegos reales: 32 `assetKey` en los scene.json de Intruso/La sabes o No/Deletreo y `fontAssetKey` en Cálculo Mental; los componentes resuelven por key de forma aditiva.
 
 ## [RM-050] Migrar Intruso al `EditorLayout` (2026-07-09 10:09)
+
 Absorbida por RM-014: Intruso corre sobre `EditorLayout` con `page.tsx` fino, `game.tsx`, `IntrusoBehavior.tsx`, `constants.ts` (+ `session.ts` y `scene.json`). Terminó siendo mucho más que el "background con video" de la descripción original.
 
 ## [RM-049] Migrar Cálculo Mental al `EditorLayout` (2026-07-09 10:09)
+
 Absorbida por RM-013: Cálculo Mental corre sobre `EditorLayout` con `page.tsx` fino, `game.tsx`, `CalculoMentalBehavior.tsx`, `constants.ts` y componentes propios slot/controller.
 
 ## [RM-024] Cargar nuevas fuentes en Cálculo Mental (2026-07-09 10:05)
+
 Resuelto de pasada al migrar Cálculo Mental al componente Text (RM-076): los textos usan `fontAssetKey` (Poppins SemiBold del catálogo, cargada en runtime vía FontFace), el TextInspector permite elegir la fuente y `asset-source.ts` acepta archivos de fuente locales.
 
 ## [RM-022] Una sola fuente en el build; el resto desde storage (2026-07-09 10:00)
+
 Verificado como cumplido: el bundle solo trae la tipografía base de la UI (IBM Plex Sans + Mono vía `next/font/google`), sin fuentes de juego empaquetadas; las fuentes de broadcast se cargan en runtime vía FontFace (`asset-source.ts` local, `asset-preloader.ts` URL/storage).
 
 ## [RM-015] Juego "La sabes o No" completo (2026-07-09 09:53)
+
 Workspace nuevo migrado desde `LoSabesONo.prefab` (25 GameObjects, layout horneado: opciones en x=±335, márgenes TMP en los rects, texto propio por frame de estado para conservar los colores de Unity). Sesión JSON plano (`groups → questions` con 2 opciones); teclas 0-9 pregunta, numpad grupo, N/B, Q/W, V, M. Aprobado visualmente contra Unity.
 
 ## [RM-014] Juego "Intruso" (Nivel 1) completo (2026-07-08 12:20)
+
 Primer juego con sesión ZIP: `session.ts` lee `sessionData.json` + fotos → blobs decodificados → runtime (categoría "Sesión" del presupuesto de memoria). Behavior con rondas (0-9/N/B), selección virtual Q-W-E-R, V valida con sonido, M revela la correcta con sonido. Engine ganó `onOption`/`onValidate` en useGameKeys y `src` runtime en el componente image; clipping de la foto resuelto con el componente mask nativo (edición manual de la escena). Nivel 2 queda fuera de alcance por acuerdo.
 
 ## [RM-078] Conversión Unity prefab → scene.json de Intruso, Nivel 1 (2026-07-08 12:20)
+
 Se leyó `Intruso.prefab` y se regeneró `scene.json` (34 GameObjects) con valores exactos: HorizontalLayoutGroup resuelto a mano (4 opciones en x = ±610.125/±203.375), márgenes TMP horneados en el rect del texto, frames de estado (normal/correct/incorrect) como GameObjects con `active` igual que en Unity. Nivel 2 fuera de alcance; behavior y sesión ZIP pendientes (RM-014).
 
 ## [RM-058] Presupuesto de memoria de assets (2026-07-08 10:31)
+
 `LoadedAsset` ahora captura `bytes` (+`width`/`height` en imágenes) en los dos embudos de carga, con registro incremental por asset (una descarga lenta ya no bloquea el conteo); store `use-memory-budget.ts` acumula por categoría (catálogo/local/sesión — sesión sin consumidor aún). `MemoryBadge` siempre visible en la StatusBar del editor: barra + % con desglose en tooltip (ámbar 70%, rojo 90%) y click → popover con hardware del equipo (RAM/CPU/GPU/heap). Presupuesto provisional 2 GB → calibrar en RM-077.
 
 ## [RM-076] Conversión Unity prefab → scene.json demostrada con Cálculo Mental (2026-07-07 14:25)
+
 Se leyó `CalculoMental.prefab` (YAML) y se regeneró `scene.json` + `SlotView` con los valores exactos de Unity: anclas resueltas a origen-centro, márgenes TMP horneados en el rect del texto, auto-size TMP→engine (`cqh = px ÷ 10.8`). Pipeline validado para replicar los demás juegos sin poner valores a mano.
 
 ## [RM-072] Undo/redo en el editor de escena (2026-07-07 10:06)
+
 Estado de diseño migrado a store Zustand (`use-editor-store.ts`) envuelto con `zundo` (`temporal`, `partialize` a `gameObjects`, `limit` 100); `use-scene-editor.ts` quedó como wrapper delgado. Botones de la topbar cableados + atajos Ctrl+Z / Ctrl+Shift+Z / Ctrl+Y (con guard en inputs). Cada `setGameObjects` = un paso.
 
 ## [RM-071] Intruso sembrado desde scene.json (2026-07-05 08:32)
+
 `intruso/game.tsx` flipeado a `import scene from "./scene.json"` (semilla: el Background con video). No tiene behavior ni onLoad, así
 que no hubo estado de runtime que migrar — solo entró al loop de autoría/export como los otros. Completa los 3 juegos con contenido
 sobre `scene.json`.
 
 ## [RM-070] Capa de runtime del engine: diseño y estado de juego separados (2026-07-05 07:56)
+
 Nuevo store `useSceneRuntime` + `mergeRuntime` (`@engine/runtime`): los behaviors ya no mutan el diseño con `setGameObjects`, escriben
 overrides (`active`/`transform`/componentes) en una capa aparte. El panel Game renderiza `diseño+runtime`; Scene renderiza
 `diseño+runtime` de contenido pero con transform de diseño (para editar layout viendo el contenido real). `deletreo` y `calculo-mental`
@@ -77,22 +100,26 @@ migrados (sesión, palabra, status, active, textos y frame normal/error ahora so
 código muerto del sistema anterior (`animatePosition` y `setTransform` en `useSceneEditor`) y se documentó todo en `engine-arquitectura.md` §2.6.
 
 ## [TD-020] Resuelto: el export ya no puede filtrar data de runtime (2026-07-05 07:56)
+
 Eliminado el mecanismo `stripForExport` (era un parche opt-in que no cubría `text` nativo ni `active`). Con la capa de runtime el diseño
 nunca se ensucia, así que exportar es siempre correcto sin convención de "estado limpio". Ver RM-070.
 
 ## [RM-069] Exportar escena a scene.json y sembrar juegos desde él (2026-07-04 16:31)
+
 Botón File → Export en la topbar (menú radix `Menubar` data-driven que solo lista acciones cableadas) descarga `<id>.scene.json`
 con `JSON.stringify` del estado del editor, limpiando data de runtime vía `ComponentDefinition.stripForExport` (deletreo, spellframe,
 controller, slot). `deletreo` y `calculo-mental` ahora siembran `gameObjects` con `import scene from "./scene.json"` en vez del array
 hardcodeado, cerrando el loop editar→exportar→reemplazar archivo como nueva distribución.
 
 ## [RM-068] Duplicar objetos en Scene (Ctrl/Cmd+D estilo Figma) (2026-07-04 15:52)
+
 `duplicateSubtrees` (gameObject.ts) clona la selección con su subárbol: ids nuevos, `parentId` reapuntado a los clones, offset
 (+20,-20) solo en las raíces y `ComponentRef.gameObjectId` internos remapeados a las copias. Expuesto como `duplicateSelected` en el
 editor y cableado a Ctrl/Cmd+D en `SceneCanvas`; poda descendientes (no duplica hijo si el padre también está seleccionado) y deja
 seleccionadas las copias.
 
 ## [RM-067] Edición de Scene migrada a react-moveable (2026-07-04 15:36)
+
 `SceneCanvas` reemplazó el sistema propio (`SelectionOverlay`+`use-transform-gesture`, eliminados): InfiniteViewer (zoom/pan/encajar,
 panel dockview `renderer:"always"`) + Moveable controlado (drag/resize/rotate, Shift=ratio) que convierte a coordenadas del modelo
 (`sceneTransform.ts`) y escribe directo al DOM en el gesto + commit al soltar; `RectTransform` reposicionado left/top para ser
@@ -100,54 +127,65 @@ Moveable-friendly. Multi-selección por react-selecto (click/marquee/shift, `roo
 y grupos de Moveable; `selectedId`→`selectedIds[]`. Snapping/guías → WL-018.
 
 ## [RM-066] Ventana Game: fit contain sin scroll + look Unity (2026-07-04 10:01)
+
 La rama Game de `Scene.tsx` (solo en ventana) encaja el stage 16:9 con `min(100cqi, 100cqb*16/9)` — pillarbox/letterbox,
 nunca scroll — sobre un backdrop plano `#202327`, sin grilla ni borde (estilo Game view de Unity). Fullscreen y Scene intactos.
 
 ## [RM-065] Topbar "Cargar" cableado a la data del juego (2026-07-04 09:27)
+
 `GameDefinition` gana `onLoad(file, editor)`; `EditorLayout` lo pasa al header (aparece el botón "Cargar"). Deletreo
 y Cálculo Mental definen su `onLoad` (parsean su JSON y patchean su componente de data); se quitó el botón "Cargar
 JSON" de ambos inspectores — un solo punto de carga.
 
 ## [RM-061] Componentes por referencia (estilo Unity) (2026-07-04 09:27)
+
 Primitivo `ComponentRef { gameObjectId, type }` + campo `ComponentRefField`/`AssetSelectField` en el inspector. El
 `controller` de deletreo pasó a componente especializado `Deletreo` (montado en Anchor): referencia un Image y
 togglea `normalFrame`/`errorFrame` según `frame`; el behavior solo setea `frame`. Image quedó renderer tonto.
 
 ## [RM-064] Video "Load First": referenciar Local en vez de cargar (2026-07-03 22:35)
+
 Video quedó `{ fit, assetKey, muted, loop }`: referencia un asset de Local, sin file/URL propio; Inspector igual
 que image (Asset + ajuste, Sound/Loop). Intruso hornea `assetKey:"background"` y su behavior se eliminó. De paso
 se quitó `cover` (lo cubre el mask) y video + videoControl pasaron a inglés.
 
 ## [TD-014] Preloader ↔ Video reconectados (resuelto por RM-064) (2026-07-03 22:35)
+
 Al pasar video a Load First declara su asset en el catálogo/manifest y consume el blob ya precargado; se van los
 caminos file/URL que saltaban el preloader (adiós arranque en negro en vivo).
 
 ## [RM-060] Filosofía "Load First" (paraguas) (2026-07-03 22:35)
+
 Cerrado: todo recurso pasa por Local y los componentes solo lo referencian por `assetKey`. Completado por RM-062
 (ingesta a Local), RM-063 (image) y RM-064 (video). Colocación = dropdown (Nivel A); drag/select-in-Local (Nivel B) → RM-061.
 
 ## [RM-063] Image "Load First": quitar el cargador manual (2026-07-03 22:04)
+
 Image quedó `{ fit, assetKey }`: `ImageView` y el mask resuelven por `assetKey` desde Local, sin carga
 propia; Inspector = recuadro-selector Asset + icono de ajuste. Deletreo migrado (togglea mainFrame/errorFrame);
 `AssetField` borrado (carga manual muerta en Load First).
 
 ## [RM-062] Local: cargar archivos del PC (ingesta a Local) (2026-07-03 21:42)
+
 Botón "Cargar" en la barra de Local sube archivos del equipo (image/video/audio) vía
 `createObjectURL` — blob listo al instante, key autogenerada+dedupe, en la raíz. `assetsState`
 pasó a mutable en `EditorLayout` (`addLocalFiles` fusiona con el catálogo precargado; revoke al desmontar). Primera de RM-060.
 
 ## [TD-056] Fix color de tabs del dockview (activo se confundía con inactivo) (2026-07-03 10:10)
+
 La barra de tabs estaba en `head` (más claro que el tab activo en `panel`), y los inactivos
 también en `head`, así que resaltaban más que el activo. Se pasó barra y tabs inactivos a `bg`
 (oscuro) y el activo queda en `panel` (claro), fusionando con el contenido. En `dockview-theme.css`.
 
 ## [RM-055] Assets: panel "Local" con organización propia + barra breadcrumb (2026-07-03 10:04)
+
 Panel renombrado a "Local" (icono HardDrive); futura ventana "Storage" aparte. El árbol ahora
 sale de un campo nuevo `folder` del catálogo (organización local, independiente del `path` de
 origen), no del path. Barra entre tab y contenido con breadcrumb navegable + contador de items.
 Poblado `folder` de ejemplo en intruso (Frames/Colors/Backgrounds/Fonts) y deletreo (Frames).
 
 ## [RM-016] Panel de Assets tipo Unity (browser carpetas + miniaturas) (2026-07-03 09:55)
+
 `AssetBrowser`: árbol de carpetas derivado de los `path` del catálogo (izq, expandible + conteo)
 y grid de miniaturas de la carpeta seleccionada (der, recursivo). Miniatura real para imágenes
 ready (blob decodificado), ícono por tipo para video/audio/font; badge de tipo (ext) y de estado
@@ -155,16 +193,19 @@ ready (blob decodificado), ícono por tipo para video/audio/font; badge de tipo 
 `AssetsBar` viejo. Diferido a futuro Supabase: pestañas Local/Storage, caching/GET y búsqueda.
 
 ## [RM-054] Iconos en las pestañas del dockview (2026-07-03 09:47)
+
 `defaultTabComponent` custom (`PanelTab`) que muestra icono lucide coloreado + título + cerrar
 en hover, reenviando los handlers de puntero de dockview. Mapa por id: hierarchy/scene (azul),
 inspector (violeta), game (ámbar), assets (verde). Estilos en `dockview-theme.css`.
 
 ## [RM-053] Status bar (footbar) del editor (2026-07-03 09:37)
+
 Barra de 23px bajo el dockview en `EditorLayout` (da respiro al panel Assets). Muestra solo
 datos reales: estado según el preloader (Listo/Cargando assets…), nº de objetos, objeto
 seleccionado, y `N/M assets` listos + tag "QGEM Engine". Sin FPS/GB inventados del diseño.
 
 ## [RM-052] Topbar a 34px igual al diseño, por grupos ocultables (2026-07-03 09:08)
+
 `WorkspaceHeader` reconstruido a 34px: botón Volver icono-only, brand (icono+título, sin
 versión), menus e history presentes pero ocultos vía `const SHOW`, Play (=fullscreen del
 Game, cableado por `onPlay` en el header store + `onFullscreenReady` en `Scene`), Load
@@ -176,16 +217,19 @@ igualado a 34px; `AuthButton` deslogueado = solo ícono Google, logueado = solo 
 de `user_metadata.avatar_url` con fallback a iniciales color+letra), info en el dropdown.
 
 ## [RM-051] Layout por defecto igual al diseño Sandbox (2026-07-03 08:49)
+
 Reordenado `buildDefaultLayout`: Assets se agrega antes que hierarchy/inspector para que
 ocupe todo el ancho abajo (altura 232 del diseño), no solo bajo Scene. Tokens de color ya
 existían (RM-026) y coinciden con el diseño; sin cambios ahí.
 
 ## [RM-004] Operaciones Combinadas eliminado (no se usa) (2026-07-01 00:46)
+
 Se removió el workspace `operaciones-combinadas` por completo (carpeta, card del home,
 menciones en el doc del engine). Era un stub (ex-TD-011) sin uso ni plan a corto plazo; se
 descarta en vez de migrarlo al `EditorLayout`. Cierra RM-004 y TD-011.
 
 ## [RM-048] deletreo migrado al `EditorLayout` (2026-07-01 00:28)
+
 deletreo pasó de un `page.tsx` de ~410 líneas a 4 piezas: `game.tsx` (ficha:
 assets/gameObjects/components/behavior/initialSelectedId), `DeletreoBehavior.tsx` (teclas/
 sonidos/animaciones/sesión vía `useEditor`/`useAssets`/`useAnimations`), `constants.ts` y
@@ -193,12 +237,14 @@ sonidos/animaciones/sesión vía `useEditor`/`useAssets`/`useAnimations`), `cons
 Primer juego real sobre el layout genérico.
 
 ## [RM-047] Pieza de "comportamiento" (behavior) en el contrato (2026-07-01 00:28)
+
 `GameDefinition` ganó `behavior?` (un componente por juego que `EditorLayout` monta bajo sus
 providers) para alojar la lógica de runtime del juego. Se extrajo el `EditorContext` a
 `@engine/editor/editorContext.ts` (`useEditor` importable desde componentes de juego). Es la
 4ta pieza, además de assets/gameObjects/components.
 
 ## [RM-045] Layout genérico del editor + contrato `GameDefinition` (2026-06-30 23:59)
+
 `EditorDock` se volvió `EditorLayout` genérico en `@engine/editor/`, recibe una
 `GameDefinition { id, title, icon?, assets?, gameObjects?, components? }` y de ahí deriva
 registry (`NATIVE_COMPONENTS + game.components`), `initialGameObjects` y el header. El Sandbox
@@ -206,6 +252,7 @@ quedó como página fina (`<EditorLayout game={sandboxGame} />`) con una ficha v
 referencia. Se eliminó el POC `border`. Assets aún placeholder (Fase 2, RM-046).
 
 ## [RM-042] Sistema de ventanas tipo Unity (dockview) en el Sandbox (2026-06-30 23:31)
+
 El chrome de edición del Sandbox usa `dockview-react`: Hierarchy, Inspector, Scene, Game y
 Assets como paneles con pestaña, redimensionables, reubicables y flotantes. Estado real de
 `useSceneEditor` compartido vía Context (cruza el portal de dockview). Scene edita (grid,
@@ -214,6 +261,7 @@ overlay, gestos); Game muestra limpio con botón de fullscreen. `Scene` ganó pr
 paleta del editor, centralizado en `@engine/dockview-theme.css`.
 
 ## [TD-017] Glue de edición de GameObjects extraído a `useSceneEditor` (2026-06-30 14:20)
+
 Las 9 funciones genéricas de edición (estado de `gameObjects`/`selectedId`, setters de
 transform/componentes, jerarquía y gesto) estaban duplicadas en los 5 workspaces. Se
 movieron a `src/hooks/use-scene-editor.ts`; cada página ahora solo desestructura el hook

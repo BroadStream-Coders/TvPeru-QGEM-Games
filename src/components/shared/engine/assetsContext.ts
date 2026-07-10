@@ -13,6 +13,11 @@ export interface LoadedAssetsState {
   kinds: Record<string, AssetKind>;
   progress: { loaded: number; total: number };
   addLocalFiles: (files: FileList | File[]) => void;
+  /** Carpetas creadas por el usuario (pueden estar vacías); las demás se derivan del catálogo. */
+  folders: string[];
+  createFolder: (path: string) => void;
+  moveAssets: (keys: string[], folder: string) => void;
+  moveFolder: (path: string, target: string) => void;
 }
 
 const EMPTY: LoadedAssetsState = {
@@ -22,6 +27,10 @@ const EMPTY: LoadedAssetsState = {
   kinds: {},
   progress: { loaded: 0, total: 0 },
   addLocalFiles: () => {},
+  folders: [],
+  createFolder: () => {},
+  moveAssets: () => {},
+  moveFolder: () => {},
 };
 
 const AssetsContext = createContext<LoadedAssetsState>(EMPTY);

@@ -166,10 +166,7 @@ function ScenePanel() {
   const restricted = useRestricted();
   return (
     <div
-      className={cn(
-        "h-full",
-        restricted && "pointer-events-none opacity-60",
-      )}
+      className={cn("h-full", restricted && "pointer-events-none opacity-60")}
     >
       <SceneCanvas />
     </div>
@@ -260,13 +257,26 @@ function GamePanel(props: IDockviewPanelProps) {
 }
 
 function AssetsPanel() {
-  const { catalog, assets, statuses, addLocalFiles } = useAssets();
+  const {
+    catalog,
+    assets,
+    statuses,
+    addLocalFiles,
+    folders,
+    createFolder,
+    moveAssets,
+    moveFolder,
+  } = useAssets();
   return (
     <AssetBrowser
       catalog={catalog}
       assets={assets}
       statuses={statuses}
       onAddFiles={addLocalFiles}
+      folders={folders}
+      onCreateFolder={createFolder}
+      onMove={moveAssets}
+      onMoveFolder={moveFolder}
     />
   );
 }
@@ -552,11 +562,56 @@ export function EditorLayout({ game }: { game: GameDefinition }) {
     [],
   );
 
+  const [extraFolders, setExtraFolders] = useState<string[]>([]);
+  const [folderOverrides, setFolderOverrides] = useState<
+    Record<string, string>
+  >({});
+  const createFolder = useCallback((path: string) => {
+    setExtraFolders((prev) => (prev.includes(path) ? prev : [...prev, path]));
+  }, []);
+  const moveAssets = useCallback((keys: string[], folder: string) => {
+    setFolderOverrides((prev) => {
+      const next = { ...prev };
+      for (const key of keys) next[key] = folder;
+      return next;
+    });
+  }, []);
+
   const catalog = useMemo(() => {
     const base = { ...(game.assets ?? {}) };
     for (const [key, a] of Object.entries(userAssets)) base[key] = a.entry;
+    for (const [key, folder] of Object.entries(folderOverrides))
+      if (base[key]) base[key] = { ...base[key], folder };
     return base;
-  }, [game.assets, userAssets]);
+  }, [game.assets, userAssets, folderOverrides]);
+  const catalogRef = useRef(catalog);
+  catalogRef.current = catalog;
+  const moveFolder = useCallback((path: string, target: string) => {
+    if (target === path || target.startsWith(`${path}/`)) return;
+    const name = path.split("/").pop() ?? path;
+    const dest = target ? `${target}/${name}` : name;
+    if (dest === path) return;
+    setExtraFolders((prev) => {
+      const next = new Set(
+        prev.map((f) =>
+          f === path || f.startsWith(`${path}/`)
+            ? dest + f.slice(path.length)
+            : f,
+        ),
+      );
+      next.add(dest);
+      return [...next];
+    });
+    setFolderOverrides((prev) => {
+      const next = { ...prev };
+      for (const [key, entry] of Object.entries(catalogRef.current)) {
+        const dir = entry.folder ?? "";
+        if (dir === path || dir.startsWith(`${path}/`))
+          next[key] = dest + dir.slice(path.length);
+      }
+      return next;
+    });
+  }, []);
   const assets = useMemo(() => {
     const base: Record<string, LoadedAsset | undefined> = { ...preload.assets };
     for (const [key, a] of Object.entries(userAssets)) base[key] = a.loaded;
@@ -580,6 +635,10 @@ export function EditorLayout({ game }: { game: GameDefinition }) {
     kinds: mergedKinds,
     progress: preload.progress,
     addLocalFiles,
+    folders: extraFolders,
+    createFolder,
+    moveAssets,
+    moveFolder,
   };
 
   const handleExport = useCallback(() => {

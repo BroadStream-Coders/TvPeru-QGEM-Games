@@ -45,6 +45,7 @@
   --color-type-text: var(--editor-type-text);
   --color-type-image: var(--editor-type-image);
   --color-type-video: var(--editor-type-video);
+  --color-type-audio: var(--editor-type-audio);
   --color-anim: var(--editor-anim);
   --color-play: var(--editor-play);
 
@@ -89,6 +90,7 @@
   --editor-type-text: #7fb0ff;
   --editor-type-image: #46c98b;
   --editor-type-video: #e0a83a;
+  --editor-type-audio: #e07fae;
   --editor-anim: #a779f0;
   --editor-play: #e0a83a;
 }

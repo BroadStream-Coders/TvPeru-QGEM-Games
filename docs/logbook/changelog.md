@@ -12,6 +12,9 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-080] Miniaturas reales en el panel de assets Local (2026-07-10 13:04)
+El AssetBrowser ahora pinta miniaturas por tipo estilo Unity: fuente = "Ag" con la tipografía real (ya registrada vía FontFace), video = primer frame, audio = forma de onda (decodeAudioData → canvas, con caché de picos). Fallbacks e label de tipo coloreados por kind (nuevo token `type-audio`).
+
 ## [RM-079] Juego "Al Vuelo" (ex Si o No) migrado desde Unity (2026-07-09 15:08)
 Escena convertida del prefab (banner + pregunta auto-size con GeniusTechno + opciones SÍ/NO con frames normal/correct/incorrect y flecha fija), behavior con teclas convenidas y sesión JSON `{question, answer}`. Se agregó `flipX` al componente `image` del engine (los frames del NO van espejados, scale x −1 en Unity).
 

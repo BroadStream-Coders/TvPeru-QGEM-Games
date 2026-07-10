@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Image as ImageIcon,
   Video,
@@ -23,6 +23,13 @@ const KIND_ICON: Record<AssetKind, typeof ImageIcon> = {
   video: Video,
   audio: Music,
   font: Type,
+};
+
+const KIND_COLOR: Record<AssetKind, string> = {
+  image: "text-type-image",
+  video: "text-type-video",
+  audio: "text-type-audio",
+  font: "text-type-text",
 };
 
 interface FolderNode {
@@ -91,6 +98,68 @@ function StatusBadge({ status }: { status?: AssetStatus }) {
   );
 }
 
+const peaksCache = new Map<string, number[]>();
+let decodeCtx: AudioContext | null = null;
+
+async function computePeaks(url: string, buckets: number): Promise<number[]> {
+  const cached = peaksCache.get(url);
+  if (cached) return cached;
+  decodeCtx ??= new AudioContext();
+  const buf = await (await fetch(url)).arrayBuffer();
+  const audio = await decodeCtx.decodeAudioData(buf);
+  const data = audio.getChannelData(0);
+  const step = Math.max(1, Math.floor(data.length / buckets));
+  const peaks: number[] = [];
+  let top = 0;
+  for (let i = 0; i < buckets; i++) {
+    let max = 0;
+    const end = Math.min((i + 1) * step, data.length);
+    for (let j = i * step; j < end; j++) {
+      const v = Math.abs(data[j]);
+      if (v > max) max = v;
+    }
+    peaks.push(max);
+    if (max > top) top = max;
+  }
+  const norm = top > 0 ? peaks.map((p) => p / top) : peaks;
+  peaksCache.set(url, norm);
+  return norm;
+}
+
+function AudioWave({ url }: { url: string }) {
+  const ref = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    let alive = true;
+    computePeaks(url, 36)
+      .then((peaks) => {
+        const canvas = ref.current;
+        if (!alive || !canvas) return;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return;
+        const { width: w, height: h } = canvas;
+        ctx.clearRect(0, 0, w, h);
+        ctx.fillStyle = getComputedStyle(canvas).color;
+        const bw = w / peaks.length;
+        peaks.forEach((p, i) => {
+          const bh = Math.max(3, p * h * 0.92);
+          ctx.fillRect(i * bw + bw * 0.2, (h - bh) / 2, bw * 0.6, bh);
+        });
+      })
+      .catch(() => {});
+    return () => {
+      alive = false;
+    };
+  }, [url]);
+  return (
+    <canvas
+      ref={ref}
+      width={144}
+      height={80}
+      className="h-[55%] w-[82%] text-type-audio"
+    />
+  );
+}
+
 function AssetThumb({
   entry,
   loaded,
@@ -100,8 +169,8 @@ function AssetThumb({
   loaded?: LoadedAsset;
   status?: AssetStatus;
 }) {
-  const Icon = KIND_ICON[entry.kind];
-  if (entry.kind === "image" && status === "ready" && loaded?.url) {
+  const ready = status === "ready" && !!loaded?.url;
+  if (ready && entry.kind === "image") {
     return (
       <img
         src={loaded.url}
@@ -114,7 +183,35 @@ function AssetThumb({
       />
     );
   }
-  return <Icon className="h-6 w-6 text-faint" />;
+  if (ready && entry.kind === "video") {
+    return (
+      <video
+        src={loaded.url}
+        muted
+        playsInline
+        preload="metadata"
+        onLoadedMetadata={(e) => {
+          e.currentTarget.currentTime = 0.01;
+        }}
+        className="h-full w-full object-cover"
+      />
+    );
+  }
+  if (ready && entry.kind === "audio") {
+    return <AudioWave url={loaded.url} />;
+  }
+  if (ready && entry.kind === "font") {
+    return (
+      <span
+        className="text-[32px] leading-none text-ink"
+        style={{ fontFamily: loaded.family ?? entry.family }}
+      >
+        Ag
+      </span>
+    );
+  }
+  const Icon = KIND_ICON[entry.kind];
+  return <Icon className={cn("h-6 w-6", KIND_COLOR[entry.kind])} />;
 }
 
 export function AssetBrowser({
@@ -280,7 +377,12 @@ export function AssetBrowser({
                   </div>
                   <div className="min-w-0">
                     <p className="truncate text-[11px] text-ink">{key}</p>
-                    <p className="truncate font-mono text-[9.5px] text-faint">
+                    <p
+                      className={cn(
+                        "truncate font-mono text-[9.5px] opacity-75",
+                        KIND_COLOR[entry.kind],
+                      )}
+                    >
                       {entry.kind}
                     </p>
                   </div>

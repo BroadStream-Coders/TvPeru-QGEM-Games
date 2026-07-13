@@ -56,6 +56,19 @@ su "Hecho cuando", pero no es el foco actual).
 
 # Mejoras de editor / engine comprometidas
 
+## [RM-083] Animaciones de Álbum (flip de carta y bloqueo de tema)
+
+- **Objetivo:** Reemplazar los swaps instantáneos de Álbum (RM-082) por las
+  animaciones de Unity: `DoFlip` (giro de carta al voltear con E/B) y
+  `UIBlinkPulse` (pulso 1.1 + parpadeo ×3 al bloquear un tema con L). Esteban
+  indicó que el sistema de animaciones se va a mejorar/cambiar; hacerlo sobre esa
+  base nueva, no sobre pop/shake actuales.
+- **Hecho cuando:** voltear una carta y bloquear un tema se ven animados en el
+  display, y el swap de estados queda sincronizado con la animación.
+- **Fecha:** 2026-07-13 · **Estado:** Abierto
+
+## [RM-040] En la vista Game nada es seleccionable
+
 ## [RM-040] En la vista Game nada es seleccionable
 
 - **Objetivo:** Que en la vista **Game** el contenido no se pueda seleccionar ni

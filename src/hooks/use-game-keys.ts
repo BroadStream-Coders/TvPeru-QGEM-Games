@@ -19,8 +19,9 @@ import { useEffect, useRef } from "react";
  * tiene acción por defecto en el navegador y es cancelable. Fuera de los
  * dígitos, Alt se ignora.
  *
- * Seguras para mapear aquí: letras sueltas, dígitos, numpad y flechas
- * (estas últimas hacen scroll, por eso se cancela su acción por defecto).
+ * Seguras para mapear aquí: letras sueltas, dígitos, numpad, flechas y el
+ * bloque de navegación Insert/Home/PageUp/Delete/End/PageDown (Home/End/PgUp/
+ * PgDn hacen scroll, por eso se cancela su acción por defecto).
  */
 export interface GameKeyHandlers {
   /** Fila superior 0-9. Shift suma 10, Alt suma 20 (combinables → +30). */
@@ -43,6 +44,18 @@ export interface GameKeyHandlers {
   onInteract?: () => void;
   /** Tecla C (limpiar). */
   onClear?: () => void;
+  /** Tecla Insert (cambio de pantalla/panel, según el juego). */
+  onInsert?: () => void;
+  /** Tecla Home (cambio de pantalla/panel, según el juego). */
+  onHome?: () => void;
+  /** Tecla Page Up. */
+  onPageUp?: () => void;
+  /** Tecla Delete/Supr. */
+  onDelete?: () => void;
+  /** Tecla End/Fin. */
+  onEnd?: () => void;
+  /** Tecla Page Down. */
+  onPageDown?: () => void;
   /** Flecha arriba. */
   onArrowUp?: () => void;
   /** Flecha abajo. */
@@ -108,6 +121,12 @@ export function useGameKeys(handlers: GameKeyHandlers) {
         KeyF: "onMarkError",
         KeyE: "onInteract",
         KeyC: "onClear",
+        Insert: "onInsert",
+        Home: "onHome",
+        PageUp: "onPageUp",
+        Delete: "onDelete",
+        End: "onEnd",
+        PageDown: "onPageDown",
         ArrowUp: "onArrowUp",
         ArrowDown: "onArrowDown",
         ArrowLeft: "onArrowLeft",

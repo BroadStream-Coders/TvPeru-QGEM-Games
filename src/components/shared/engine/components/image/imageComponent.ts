@@ -8,6 +8,7 @@ export interface ImageComponent extends GameObjectComponent {
   assetKey?: string;
   src?: string;
   flipX?: boolean;
+  filter?: string;
 }
 
 export function createImageComponent(

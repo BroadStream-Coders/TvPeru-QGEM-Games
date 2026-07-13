@@ -8,6 +8,7 @@ import {
   VenetianMask,
   BookOpen,
   Zap,
+  Images,
 } from "lucide-react";
 import { AuthButton } from "@/components/shared/AuthButton";
 
@@ -41,6 +42,12 @@ const workspaces = [
     description: "Preguntas rápidas de sí o no",
     href: "/workspaces/al-vuelo",
     icon: Zap,
+  },
+  {
+    name: "Álbum",
+    description: "Cartas por temas con preguntas y fotos",
+    href: "/workspaces/album",
+    icon: Images,
   },
   {
     name: "Sandbox",

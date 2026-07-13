@@ -123,6 +123,9 @@ Espejo de Cálculo Mental / Intruso (`src/app/workspaces/<juego>/`):
 - **Teclas convenidas**: `0-9` índice directo (Shift +10, Alt +20), `N/B`
   siguiente/anterior, `Q/W/E/R` → `onOption(0-3)`, `V` → `onValidate`,
   `M` → `onShowAnswer` (con sonido de correcto), numpad → `onNavigate`.
+  Bloque de navegación → `onInsert/onHome/onPageUp/onDelete/onEnd/onPageDown`
+  (cambio de pantallas/paneles, equivale al INS/HOME del framework de Unity;
+  Álbum usa Ins = temas, Home = cartas).
 
 ### Sesión ZIP (patrón Intruso, `session.ts`)
 
@@ -155,3 +158,4 @@ La foto llega a pantalla por el campo runtime `src` del componente `image`
 | Intruso (Nivel 1) | ✅ RM-078 | ✅ RM-014 (Nivel 2 fuera de alcance) |
 | La sabes o No | ✅ RM-015 | ✅ RM-015 |
 | Al Vuelo (ex Si o No) | ✅ RM-079 | ✅ RM-079 |
+| Álbum | ✅ RM-082 | ✅ RM-082 (animaciones → RM-083) |

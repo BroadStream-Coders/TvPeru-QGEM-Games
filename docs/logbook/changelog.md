@@ -12,6 +12,10 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-082] Juego "Álbum" migrado desde Unity (2026-07-13 14:54)
+
+Escena convertida de los prefabs (6 temas con paquete rotado + estado bloqueado en gris, grid de 5 cartas con reverso/frente, pregunta y foto enmascarada color/gris), behavior con controles replicados (Num 1-6 tema, Ins/Home pantalla temas/cartas, 0-4 carta, E/B voltear, C reset, M/F foto ✓/✗, Shift+U/I masivos, L bloquear; `useGameKeys` ganó el bloque Ins/Supr/Home/Fin/RePág/AvPág como handlers reutilizables) y sesión ZIP `rounds[]{title, cards[]{isCroma, question, imagePath}}`. Se agregó `filter` opcional al componente `image` del engine; flip y bloqueo son swaps instantáneos, las animaciones quedan para RM-083.
+
 ## [RM-081] Carpetas y selección en el panel de assets Local (2026-07-10 15:04)
 
 Navegación two-column estilo Unity: el grid muestra solo los hijos directos de la carpeta activa (subcarpetas como tiles, doble click entra). Selección de assets y carpetas (click / Ctrl multi / Shift rango / vacío deselecciona), botón «Carpeta» con input inline, drag & drop de la selección (mixta) a carpetas del árbol o del grid; `moveFolder` re-prefija todo lo de abajo. Identidad visual por tipo: tinte de fondo + badge de extensión en el color del kind, carpetas como glifo ámbar sin tarjeta, video con letterbox sobre tablero como las imágenes. Estado por sesión en `EditorLayout` (`extraFolders` + `folderOverrides`), expuesto vía `assetsContext`.

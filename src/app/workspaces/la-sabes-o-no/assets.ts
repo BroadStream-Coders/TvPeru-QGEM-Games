@@ -48,10 +48,10 @@ export const LA_SABES_ASSETS = {
     path: "shared/backgrounds/backgroundBlue.mp4",
     folder: "Backgrounds",
   },
-  poppins: {
+  jetBrainsMono: {
     kind: "font",
-    path: "shared/fonts/Poppins-SemiBold.ttf",
-    family: "Poppins SemiBold",
+    path: "shared/fonts/JetBrainsMono.ttf",
+    family: "JetBrains Mono",
     folder: "Fonts",
   },
 } satisfies AssetCatalog;

@@ -81,10 +81,22 @@ export const ALBUM_ASSETS = {
     path: "shared/backgrounds/backgroundBlue.mp4",
     folder: "Backgrounds",
   },
-  poppins: {
+  geniusTechno: {
     kind: "font",
-    path: "shared/fonts/Poppins-SemiBold.ttf",
-    family: "Poppins SemiBold",
+    path: "shared/fonts/GeniusTechno-Regular.ttf",
+    family: "Genius Techno",
+    folder: "Fonts",
+  },
+  retroGaming: {
+    kind: "font",
+    path: "shared/fonts/Retro-Gaming.ttf",
+    family: "Retro Gaming",
+    folder: "Fonts",
+  },
+  jetBrainsMono: {
+    kind: "font",
+    path: "shared/fonts/JetBrainsMono.ttf",
+    family: "JetBrains Mono",
     folder: "Fonts",
   },
 } satisfies AssetCatalog;

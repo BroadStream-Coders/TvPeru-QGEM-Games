@@ -38,6 +38,8 @@ export function TextView({ component }: { component: TextComponent }) {
     : undefined;
 
   const { autoSize, fontSizeMin, fontSizeMax, text, bold, italic } = component;
+  const letterSpacing = component.letterSpacing ?? 0;
+  const lineSpacing = component.lineSpacing ?? 0;
 
   useLayoutEffect(() => {
     if (!autoSize) return;
@@ -106,6 +108,8 @@ export function TextView({ component }: { component: TextComponent }) {
     bold,
     italic,
     wrap,
+    letterSpacing,
+    lineSpacing,
   ]);
 
   const size = autoSize ? fittedSize : component.fontSize;
@@ -129,7 +133,8 @@ export function TextView({ component }: { component: TextComponent }) {
           fontWeight: component.bold ? "bold" : "normal",
           fontStyle: component.italic ? "italic" : "normal",
           textDecoration: component.underline ? "underline" : "none",
-          lineHeight: "normal",
+          letterSpacing: `${letterSpacing / 100}em`,
+          lineHeight: lineSpacing === 0 ? "normal" : 1.2 + lineSpacing / 100,
           textAlign: TEXT_ALIGN[component.alignH],
           whiteSpace: wrap ? "pre-wrap" : "pre",
           overflowWrap: wrap ? "break-word" : undefined,

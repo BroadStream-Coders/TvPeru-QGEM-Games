@@ -166,6 +166,22 @@ export function TextInspector({
         </button>
       </FieldRow>
 
+      <FieldRow label="Char Sp.">
+        <NumberInput
+          value={component.letterSpacing ?? 0}
+          onChange={(letterSpacing) => onChange({ ...component, letterSpacing })}
+          title="Character spacing"
+        />
+      </FieldRow>
+
+      <FieldRow label="Line Sp.">
+        <NumberInput
+          value={component.lineSpacing ?? 0}
+          onChange={(lineSpacing) => onChange({ ...component, lineSpacing })}
+          title="Line spacing"
+        />
+      </FieldRow>
+
       <FieldRow label="Style">
         {STYLE_TOGGLES.map(({ key, icon: Icon, title }) => (
           <button

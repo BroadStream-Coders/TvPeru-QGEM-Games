@@ -16,6 +16,8 @@ export interface TextComponent extends GameObjectComponent {
   bold: boolean;
   italic: boolean;
   underline: boolean;
+  letterSpacing: number;
+  lineSpacing: number;
   alignH: TextAlignH;
   alignV: TextAlignV;
   overflow: TextOverflow;
@@ -36,6 +38,8 @@ export function createTextComponent(
     bold: init?.bold ?? false,
     italic: init?.italic ?? false,
     underline: init?.underline ?? false,
+    letterSpacing: init?.letterSpacing ?? 0,
+    lineSpacing: init?.lineSpacing ?? 0,
     alignH: init?.alignH ?? "center",
     alignV: init?.alignV ?? "middle",
     overflow: init?.overflow ?? "wrap",

@@ -164,6 +164,7 @@
         "bold": true,
         "italic": false,
         "underline": false,
+        "letterSpacing": 5,
         "alignH": "center",
         "alignV": "middle",
         "overflow": "wrap"
@@ -230,6 +231,7 @@
         "bold": true,
         "italic": false,
         "underline": false,
+        "letterSpacing": 5,
         "alignH": "center",
         "alignV": "middle",
         "overflow": "wrap"
@@ -317,6 +319,7 @@
         "bold": true,
         "italic": false,
         "underline": false,
+        "letterSpacing": 5,
         "alignH": "center",
         "alignV": "middle",
         "overflow": "wrap"
@@ -383,6 +386,7 @@
         "bold": true,
         "italic": false,
         "underline": false,
+        "letterSpacing": 5,
         "alignH": "center",
         "alignV": "middle",
         "overflow": "wrap"
@@ -470,6 +474,7 @@
         "bold": true,
         "italic": false,
         "underline": false,
+        "letterSpacing": 5,
         "alignH": "center",
         "alignV": "middle",
         "overflow": "wrap"
@@ -536,6 +541,7 @@
         "bold": true,
         "italic": false,
         "underline": false,
+        "letterSpacing": 5,
         "alignH": "center",
         "alignV": "middle",
         "overflow": "wrap"
@@ -623,6 +629,7 @@
         "bold": true,
         "italic": false,
         "underline": false,
+        "letterSpacing": 5,
         "alignH": "center",
         "alignV": "middle",
         "overflow": "wrap"
@@ -689,6 +696,7 @@
         "bold": true,
         "italic": false,
         "underline": false,
+        "letterSpacing": 5,
         "alignH": "center",
         "alignV": "middle",
         "overflow": "wrap"
@@ -776,6 +784,7 @@
         "bold": true,
         "italic": false,
         "underline": false,
+        "letterSpacing": 5,
         "alignH": "center",
         "alignV": "middle",
         "overflow": "wrap"
@@ -842,6 +851,7 @@
         "bold": true,
         "italic": false,
         "underline": false,
+        "letterSpacing": 5,
         "alignH": "center",
         "alignV": "middle",
         "overflow": "wrap"
@@ -929,6 +939,7 @@
         "bold": true,
         "italic": false,
         "underline": false,
+        "letterSpacing": 5,
         "alignH": "center",
         "alignV": "middle",
         "overflow": "wrap"
@@ -995,6 +1006,7 @@
         "bold": true,
         "italic": false,
         "underline": false,
+        "letterSpacing": 5,
         "alignH": "center",
         "alignV": "middle",
         "overflow": "wrap"

@@ -12,6 +12,10 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-084] Text: inputs de separación de letra y de línea (2026-07-14 14:42)
+
+El componente Text expone `letterSpacing` y `lineSpacing` en el inspector (filas "Char Sp." y "Line Sp."), en unidades TMP de Unity (valor/100 em) para copiar valores de prefabs tal cual; se guardan en `scene.json` y el display los aplica (line spacing ≠ 0 usa base 1.2 en vez de `normal`). AutoSize re-mide al cambiarlos. Los 12 títulos "TEMA" de Álbum quedaron con character spacing 5.
+
 ## [RM-082] Juego "Álbum" migrado desde Unity (2026-07-13 14:54)
 
 Escena convertida de los prefabs (6 temas con paquete rotado + estado bloqueado en gris, grid de 5 cartas con reverso/frente, pregunta y foto enmascarada color/gris), behavior con controles replicados (Num 1-6 tema, Ins/Home pantalla temas/cartas, 0-4 carta, E/B voltear, C reset, M/F foto ✓/✗, Shift+U/I masivos, L bloquear; `useGameKeys` ganó el bloque Ins/Supr/Home/Fin/RePág/AvPág como handlers reutilizables) y sesión ZIP `rounds[]{title, cards[]{isCroma, question, imagePath}}`. Se agregó `filter` opcional al componente `image` del engine; flip y bloqueo son swaps instantáneos, las animaciones quedan para RM-083.

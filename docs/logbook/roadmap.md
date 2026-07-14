@@ -56,15 +56,6 @@ su "Hecho cuando", pero no es el foco actual).
 
 # Mejoras de editor / engine comprometidas
 
-## [RM-084] Text: inputs de separación de letra y de línea (como Unity)
-
-- **Objetivo:** El componente Text del engine debe exponer en el inspector campos
-  de **letter spacing** y **line spacing** (separación entre letras y entre
-  líneas), equivalentes a los de Unity, para poder afinar la tipografía por texto.
-- **Hecho cuando:** el inspector del Text tiene ambos campos, se guardan en
-  `scene.json`, y el display los aplica al renderizar.
-- **Fecha:** 2026-07-14 · **Estado:** Abierto
-
 ## [RM-083] Animaciones de Álbum (flip de carta y bloqueo de tema)
 
 - **Objetivo:** Reemplazar los swaps instantáneos de Álbum (RM-082) por las
@@ -75,8 +66,6 @@ su "Hecho cuando", pero no es el foco actual).
 - **Hecho cuando:** voltear una carta y bloquear un tema se ven animados en el
   display, y el swap de estados queda sincronizado con la animación.
 - **Fecha:** 2026-07-13 · **Estado:** Abierto
-
-## [RM-040] En la vista Game nada es seleccionable
 
 ## [RM-040] En la vista Game nada es seleccionable
 
@@ -109,4 +98,3 @@ su "Hecho cuando", pero no es el foco actual).
   RAM como regla base).
 - **Hecho cuando:** la constante refleja un presupuesto derivado de las specs reales.
 - **Fecha:** 2026-07-07 · **Estado:** Abierto
-

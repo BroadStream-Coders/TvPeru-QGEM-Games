@@ -34,6 +34,8 @@ To validate a change, prefer `pnpm build`: `eslint` does not type-check, so `nex
 
 QGEM Games is a **fullscreen game display** system for TV Perú's show "Que Gane el Mejor". It is a _display/visualization_ tool, not a data collector: each game loads a session file and renders it fullscreen for broadcast (often over a chroma background that the TV studio keys). Each game is a self-contained **workspace** route under `src/app/workspaces/<name>/`.
 
+**The app is deployed on the internet** (deploy wired to the GitHub repo), same as its sibling project QGEM Studio — it is NOT a localhost-only app. The studio machine consumes the public URL. "Target is Chrome only (the studio machine)" refers to where it is _rendered on air_, not where it is hosted.
+
 ## Architecture
 
 **Two layout shells.** `src/app/page.tsx` is the home launcher (a `workspaces` array of cards linking into each route). `src/app/workspaces/layout.tsx` wraps every workspace with the shared `WorkspaceHeader` + footer.

@@ -12,6 +12,10 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-085] Sesiones desde Supabase Storage — bajada en Games (2026-07-15 11:45)
+
+Bucket privado `data` (oficial/ejemplo, allowlist `production_access`) operativo end-to-end: Studio sube desde sus 8 colectores JSON y Games consume vía `/sesiones` (árbol, preview, descarga individual, carpeta en ZIP y "lo de hoy" por fecha). La integración a workspaces quedó pateada; el flujo es descargar y cargar con el picker local.
+
 ## [RM-084] Text: inputs de separación de letra y de línea (2026-07-14 14:42)
 
 El componente Text expone `letterSpacing` y `lineSpacing` en el inspector (filas "Char Sp." y "Line Sp."), en unidades TMP de Unity (valor/100 em) para copiar valores de prefabs tal cual; se guardan en `scene.json` y el display los aplica (line spacing ≠ 0 usa base 1.2 en vez de `normal`). AutoSize re-mide al cambiarlos. Los 12 títulos "TEMA" de Álbum quedaron con character spacing 5.

@@ -9,6 +9,7 @@ import {
   BookOpen,
   Zap,
   Images,
+  FolderDown,
 } from "lucide-react";
 import { AuthButton } from "@/components/shared/AuthButton";
 
@@ -53,6 +54,21 @@ const workspaces = [
     name: "Sandbox",
     description: "Compositor estilo OBS",
     href: "/workspaces/sandbox",
+    icon: FlaskConical,
+  },
+];
+
+const tools = [
+  {
+    name: "Sesiones",
+    description: "Archivos de sesión subidos desde Studio",
+    href: "/sesiones",
+    icon: FolderDown,
+  },
+  {
+    name: "Lab",
+    description: "Demos aisladas de librerías, antes de producción",
+    href: "/lab",
     icon: FlaskConical,
   },
 ];
@@ -128,25 +144,28 @@ export default function Home() {
               </span>
               <div className="h-px flex-1 bg-edge" />
             </div>
-            <Link
-              href="/lab"
-              className="group flex items-center gap-4 rounded-xl border border-dashed border-line bg-transparent p-4 transition-all hover:border-acc/40 hover:bg-panel/50"
-            >
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-dashed border-line text-faint group-hover:border-acc/40 group-hover:text-acc transition-colors">
-                <FlaskConical className="h-4 w-4" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-bold text-dim group-hover:text-ink truncate">
-                  Lab
-                </p>
-                <p className="mt-0.5 text-xs text-faint line-clamp-1">
-                  Demos aisladas de librerías, antes de producción
-                </p>
-              </div>
-              <div className="text-faint transition-all group-hover:text-acc group-hover:translate-x-0.5 pr-1">
-                <ArrowRight className="h-4 w-4" />
-              </div>
-            </Link>
+            {tools.map((tool) => (
+              <Link
+                key={tool.href}
+                href={tool.href}
+                className="group flex items-center gap-4 rounded-xl border border-dashed border-line bg-transparent p-4 transition-all hover:border-acc/40 hover:bg-panel/50"
+              >
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-dashed border-line text-faint group-hover:border-acc/40 group-hover:text-acc transition-colors">
+                  <tool.icon className="h-4 w-4" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-bold text-dim group-hover:text-ink truncate">
+                    {tool.name}
+                  </p>
+                  <p className="mt-0.5 text-xs text-faint line-clamp-1">
+                    {tool.description}
+                  </p>
+                </div>
+                <div className="text-faint transition-all group-hover:text-acc group-hover:translate-x-0.5 pr-1">
+                  <ArrowRight className="h-4 w-4" />
+                </div>
+              </Link>
+            ))}
           </div>
         </div>
       </main>

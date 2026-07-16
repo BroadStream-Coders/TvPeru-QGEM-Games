@@ -27,19 +27,36 @@ changelog y se borra de aquí.
   los tipos de componente de diseño).
 - **Fecha:** 2026-07-09 · **Estado:** Abierto
 
-## [TD-058] Páginas `lab/` (~1.250 líneas de demos) conviven con producción
+## [TD-063] Lab `motion` (~517 líneas) vive como ruta de producción
 
-- **Ubicación:** `src/app/lab/` (`motion`, `react-moveable`, `dockview`)
+- **Ubicación:** `src/app/lab/motion/`
 - **Riesgo:** 2/10
-- **Problema:** Los laboratorios de exploración (motion 517 líneas, moveable 458,
-  dockview 280) viven como rutas del mismo app de producción. Cumplieron su rol
-  (validar librerías antes de cablear); hoy son peso muerto en el build y rutas
-  accesibles desde el navegador del estudio.
-- **Impacto futuro:** Ruido al navegar el código y superficie accidental en
-  producción. Cuando un lab ya se promovió al engine (motion → RM/WL-019,
-  moveable/dockview ya cableados), su página puede borrarse; git conserva la
-  referencia.
-- **Fecha:** 2026-07-07 · **Estado:** Abierto
+- **Problema:** Demo de exploración de `motion` como ruta del app de producción.
+  Ya cumplió su rol (validar la librería antes de cablearla al engine).
+- **Impacto futuro:** Peso muerto en el build y ruta accesible desde el navegador
+  del estudio. Borrable una vez que el plan de animaciones (RM-088/089) cierre;
+  git conserva la referencia.
+- **Fecha:** 2026-07-16 · **Estado:** Abierto
+
+## [TD-064] Lab `react-moveable` (~458 líneas) vive como ruta de producción
+
+- **Ubicación:** `src/app/lab/react-moveable/`
+- **Riesgo:** 2/10
+- **Problema:** Demo de exploración de `react-moveable` como ruta del app de
+  producción. La librería ya está cableada en el sandbox.
+- **Impacto futuro:** Peso muerto en el build y ruta accesible desde el navegador
+  del estudio. Borrable ya; git conserva la referencia.
+- **Fecha:** 2026-07-16 · **Estado:** Abierto
+
+## [TD-065] Lab `dockview` (~280 líneas) vive como ruta de producción
+
+- **Ubicación:** `src/app/lab/dockview/`
+- **Riesgo:** 2/10
+- **Problema:** Demo de exploración de `dockview` como ruta del app de
+  producción. La librería ya está cableada en `EditorDock`.
+- **Impacto futuro:** Peso muerto en el build y ruta accesible desde el navegador
+  del estudio. Borrable ya; git conserva la referencia.
+- **Fecha:** 2026-07-16 · **Estado:** Abierto
 
 ## [TD-018] El dockview del editor no tiene tamaño mínimo de panel
 

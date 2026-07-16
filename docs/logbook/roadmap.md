@@ -56,6 +56,63 @@ su "Hecho cuando", pero no es el foco actual).
 
 # Mejoras de editor / engine comprometidas
 
+> **Plan de animaciones (2026-07-16):** base estructural para gamefeel nivel
+> Balatro, en fases shippeables: RM-086 (ejecutor sobre motion) → RM-087
+> (orquestación) → RM-088 (presencia) → RM-083 (Álbum como piloto) → RM-089
+> (limpieza del lab). Nace de la promoción de WL-019. Largo plazo (sin
+> compromiso): magic move entre pantallas y animaciones editables por el
+> usuario (encaja con WL-025). Esteban avaló romper la estructura actual de
+> "pantallas como subárboles activados/desactivados" si el magic move lo pide.
+
+## [RM-086] Fase 1 — Migrar el ejecutor de animaciones a `motion`
+
+- **Objetivo:** Reemplazar los 4 hooks caseros (`use-pop`, `use-shake`,
+  `use-bounce-move`, `use-slide`) por `animate()` de `motion` (ya instalado,
+  validado en `/lab/motion`). Pop/Shake sobre el content-div; Bounce/Slide
+  manteniendo el canal `onAnimatePosition` → runtime pero con springs reales.
+  Nacen los tokens de feel compartidos (springs con nombre: snappy/bouncy/gentle).
+  Sin cambio de API para los juegos: mismo `trigger()`, mismos componentes e
+  inspectores. Verificar API actual de motion (context7) al cablear.
+- **Hecho cuando:** los 4 hooks caseros están eliminados, las 4 animaciones
+  corren sobre motion con tokens compartidos y los 3 juegos que las usan se ven
+  igual o mejor en play.
+- **Fecha:** 2026-07-16 · **Estado:** En progreso (2026-07-16)
+
+## [RM-087] Fase 2 — API de orquestación de animaciones
+
+- **Objetivo:** `trigger()` fire-and-forget → `play()` que devuelve promesa
+  (motion las da gratis), cancelación coordinada real (hoy bounce/slide se
+  cancelan entre sí a mano) y helper de secuencia/stagger (reemplaza los
+  `setTimeout` escalonados de calculo-mental). Permite sincronizar animación +
+  sonido + swap de estado en los behaviors. Cierra TD-008 (la "API formal de
+  animación" que esa entrada pedía).
+- **Hecho cuando:** los behaviors pueden `await play(id, tipo)` y encadenar
+  secuencias sin `setTimeout`; calculo-mental migrado como prueba; TD-008
+  cerrado.
+- **Fecha:** 2026-07-16 · **Estado:** Abierto
+
+## [RM-088] Fase 3 — Primitivo de presencia (enter/exit animado)
+
+- **Objetivo:** Componente de transición del engine: cuando el runtime togglea
+  `active`, el objeto entra/sale animado (variantes configurables: fade, pop,
+  slide, flip) en vez del swap instantáneo de hoy. Es el primitivo que RM-083
+  necesita (el flip de carta es una transición entre dos estados) y anima de
+  golpe todos los juegos de quiz sin tocar cada behavior.
+- **Hecho cuando:** existe el componente de presencia con su tripleta, un
+  `setActive` de runtime dispara la animación de entrada/salida configurada, y
+  al menos un caso real lo usa.
+- **Fecha:** 2026-07-16 · **Estado:** Abierto
+
+## [RM-089] Eliminar `/lab` al cerrar el sistema de animaciones
+
+- **Objetivo:** Borrar `src/app/lab/` completo. Sus 3 demos ya habrán graduado
+  a producción: dockview (EditorLayout), react-moveable (SelectionOverlay) y
+  motion (RM-086..088). Mantenerlo hasta el final de RM-083 porque los juguetes
+  del lab (repartir cartas, shiny, camera shake) sirven de referencia de
+  gamefeel para el piloto.
+- **Hecho cuando:** `src/app/lab/` no existe y el build pasa.
+- **Fecha:** 2026-07-16 · **Estado:** Abierto
+
 ## [RM-083] Animaciones de Álbum (flip de carta y bloqueo de tema)
 
 - **Objetivo:** Reemplazar los swaps instantáneos de Álbum (RM-082) por las

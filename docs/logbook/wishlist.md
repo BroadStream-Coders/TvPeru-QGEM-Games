@@ -103,6 +103,12 @@ Ventana Storage paralela a Local para navegar los assets remotos (Supabase) y de
 
 Click en un asset del panel Local muestra sus metadatos (tipo, peso, dimensiones, origen) en el Inspector; evaluar si el peso va en el tile o en el Inspector. Era RM-057; degradada 2026-07-09 por nice-to-have.
 
-## [WL-019] Integrar animaciones/transiciones con `motion` (ex-framer-motion)
+## [WL-026] Magic move entre pantallas (`layoutId`)
 
-Reemplazar los 4 hooks caseros de animación (`usePop`/`useShake`/`useBounceMove`/`useSlide`) por un sistema sobre **`motion`**, que da springs reales, `AnimatePresence` (enter/exit) y **`layoutId`** (shared layout / *magic move*: un objeto que existe en dos pantallas vuela y se transforma de una a la otra — el efecto tipo Balatro). Explorado en el lab `/lab/motion` (transición entre pantallas con modos magic move / slide / fade / pop + sliders de rebote/duración). Camino: promover a un componente de animación del engine (misma tripleta) que declare el objeto y su feel, montándose sobre el registro de `AnimationsContext`. Encaja con el modelo del engine (objetos con `id` → posiciones), así que la migración es directa. Verificar la API actual de `motion` (context7) al cablear; import es `motion/react`.
+El efecto shared-layout de `motion` (*magic move*: un objeto que existe en dos
+pantallas vuela y se transforma de una a la otra, estilo Balatro), explorado en
+`/lab/motion`. Quedó fuera del plan comprometido de animaciones (RM-086..088)
+por ser lo de mayor fricción con el engine: requiere que ambos estados del
+objeto compartan identidad React entre renders, y hoy las pantallas son
+subárboles que se activan/desactivan. Esteban avaló romper esa estructura si
+hace falta. Promover cuando la base nueva esté asentada.

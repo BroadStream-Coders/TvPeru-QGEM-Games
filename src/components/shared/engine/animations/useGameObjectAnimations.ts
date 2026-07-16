@@ -86,14 +86,19 @@ export function useGameObjectAnimations(
     const pop = async () => {
       const el = elRef.current;
       if (!el || popScale <= 0 || popDuration <= 0) return;
-      popRef.current?.stop();
+      popRef.current?.cancel();
       const controls = animate(
         el,
         { scale: [1, popScale, 1] },
         { duration: popDuration, ease: ["backOut", "easeOut"] },
       );
       popRef.current = controls;
-      await controls;
+      try {
+        await controls;
+      } catch {
+        return;
+      }
+      if (popRef.current === controls) el.style.transform = "";
     };
     register(id, "pop", pop);
     return () => unregister(id, "pop");
@@ -105,7 +110,7 @@ export function useGameObjectAnimations(
       const el = elRef.current;
       if (!el || shakeShakes <= 0 || shakeDuration <= 0 || shakeAmplitude <= 0)
         return;
-      shakeRef.current?.stop();
+      shakeRef.current?.cancel();
       const values: number[] = [0];
       for (let i = 0; i < shakeShakes * 2; i++) {
         values.push(i % 2 === 0 ? shakeAmplitude : -shakeAmplitude);
@@ -117,7 +122,12 @@ export function useGameObjectAnimations(
         { duration: shakeDuration, ease: "linear" },
       );
       shakeRef.current = controls;
-      await controls;
+      try {
+        await controls;
+      } catch {
+        return;
+      }
+      if (shakeRef.current === controls) el.style.transform = "";
     };
     register(id, "shake", shake);
     return () => unregister(id, "shake");
@@ -215,8 +225,8 @@ export function useGameObjectAnimations(
 
   useEffect(
     () => () => {
-      popRef.current?.stop();
-      shakeRef.current?.stop();
+      popRef.current?.cancel();
+      shakeRef.current?.cancel();
       cancelMove();
     },
     [cancelMove],

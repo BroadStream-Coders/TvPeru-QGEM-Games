@@ -10,22 +10,20 @@ const FRAME_KEYS = {
 } as const;
 
 const frameStyle = (
-  left: string,
-  top: string,
+  centerLeft: string,
+  centerTop: string,
   width: string,
   height: string,
   src: string,
 ): CSSProperties => ({
   position: "absolute",
-  left,
-  top,
+  left: `calc(${centerLeft} - ${width} / 2)`,
+  top: `calc(${centerTop} - ${height} / 2)`,
   width,
   height,
-  transform: "translate(-50%, -50%)",
   backgroundImage: src ? `url(${src})` : undefined,
-  backgroundSize: "contain",
+  backgroundSize: "100% 100%",
   backgroundRepeat: "no-repeat",
-  backgroundPosition: "center",
 });
 
 export function SlotView({ component }: { component: SlotComponent }) {

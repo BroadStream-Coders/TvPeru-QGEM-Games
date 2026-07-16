@@ -27,20 +27,6 @@ changelog y se borra de aquí.
   los tipos de componente de diseño).
 - **Fecha:** 2026-07-09 · **Estado:** Abierto
 
-## [TD-057] `supabase.ts` lee las env vars con `!` sin validar
-
-- **Ubicación:** `src/helpers/supabase.ts:4-5`
-- **Riesgo:** 3/10
-- **Problema:** `createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, …ANON_KEY!)`
-  usa non-null assertion: si falta una env var, el cliente se crea con
-  `undefined` y el error aparece lejos de la causa (en el primer request o en
-  auth), no al arrancar. `storage-check` y `asset-source` sí manejan la ausencia
-  con `|| ""` / opcional.
-- **Impacto futuro:** En una máquina nueva (estudio, otro dev) sin `.env` el
-  síntoma será críptico. Un guard que lance "falta NEXT_PUBLIC_SUPABASE_URL" al
-  crear el cliente lo hace obvio.
-- **Fecha:** 2026-07-07 · **Estado:** Abierto
-
 ## [TD-058] Páginas `lab/` (~1.250 líneas de demos) conviven con producción
 
 - **Ubicación:** `src/app/lab/` (`motion`, `react-moveable`, `dockview`)

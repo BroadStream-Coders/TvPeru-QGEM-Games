@@ -12,6 +12,10 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [TD-057] Resuelto: env vars de Supabase validadas al crear el cliente (2026-07-16 14:03)
+
+`src/helpers/supabase.ts` deja de usar non-null assertion: un `requireEnv` lanza "Falta NEXT_PUBLIC_SUPABASE_URL en .env.local" al crear el cliente, en vez de fallar críptico en el primer request o en auth.
+
 ## [RM-087] API de orquestación de animaciones (2026-07-16 13:09)
 
 `trigger()` → `play(id, tipo)` que devuelve promesa (resuelta al terminar; el bounce cubre viaje + rebote), y `playStagger(ids, tipo, stepMs?)` que dispara en escalera y resuelve cuando todas acaban. Runners async en `useGameObjectAnimations` con cancelación coordinada por guard de secuencia. calculo-mental migrado (muere el bucle de `setTimeout`), deletreo renombrado. Fase 2 del plan de animaciones; cerró TD-008.

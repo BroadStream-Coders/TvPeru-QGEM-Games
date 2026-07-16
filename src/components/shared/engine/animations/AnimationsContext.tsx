@@ -9,20 +9,28 @@ import {
   type ReactNode,
 } from "react";
 
-export type AnimationTrigger = () => void;
+export type AnimationTrigger = () => Promise<void>;
 
 export interface AnimationsApi {
   register: (goId: string, type: string, fn: AnimationTrigger) => void;
   unregister: (goId: string, type: string) => void;
-  trigger: (goId: string, type: string) => void;
+  play: (goId: string, type: string) => Promise<void>;
+  playStagger: (
+    goIds: string[],
+    type: string,
+    stepMs?: number,
+  ) => Promise<void>;
 }
 
 const noop = () => {};
+const resolved = () => Promise.resolve();
+const delay = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
 
 const AnimationsContext = createContext<AnimationsApi>({
   register: noop,
   unregister: noop,
-  trigger: noop,
+  play: resolved,
+  playStagger: resolved,
 });
 
 export function AnimationsProvider({ children }: { children: ReactNode }) {
@@ -47,13 +55,23 @@ export function AnimationsProvider({ children }: { children: ReactNode }) {
     if (byType.size === 0) mapRef.current.delete(goId);
   }, []);
 
-  const trigger = useCallback((goId: string, type: string) => {
-    mapRef.current.get(goId)?.get(type)?.();
-  }, []);
+  const play = useCallback(
+    (goId: string, type: string) =>
+      mapRef.current.get(goId)?.get(type)?.() ?? Promise.resolve(),
+    [],
+  );
+
+  const playStagger = useCallback(
+    (goIds: string[], type: string, stepMs = 100) =>
+      Promise.all(
+        goIds.map((goId, i) => delay(i * stepMs).then(() => play(goId, type))),
+      ).then(noop),
+    [play],
+  );
 
   const api = useMemo(
-    () => ({ register, unregister, trigger }),
-    [register, unregister, trigger],
+    () => ({ register, unregister, play, playStagger }),
+    [register, unregister, play, playStagger],
   );
 
   return (

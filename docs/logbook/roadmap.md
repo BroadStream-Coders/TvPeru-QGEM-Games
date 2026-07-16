@@ -64,19 +64,6 @@ su "Hecho cuando", pero no es el foco actual).
 > usuario (encaja con WL-025). Esteban avaló romper la estructura actual de
 > "pantallas como subárboles activados/desactivados" si el magic move lo pide.
 
-## [RM-087] Fase 2 — API de orquestación de animaciones
-
-- **Objetivo:** `trigger()` fire-and-forget → `play()` que devuelve promesa
-  (motion las da gratis), cancelación coordinada real (hoy bounce/slide se
-  cancelan entre sí a mano) y helper de secuencia/stagger (reemplaza los
-  `setTimeout` escalonados de calculo-mental). Permite sincronizar animación +
-  sonido + swap de estado en los behaviors. Cierra TD-008 (la "API formal de
-  animación" que esa entrada pedía).
-- **Hecho cuando:** los behaviors pueden `await play(id, tipo)` y encadenar
-  secuencias sin `setTimeout`; calculo-mental migrado como prueba; TD-008
-  cerrado.
-- **Fecha:** 2026-07-16 · **Estado:** Abierto
-
 ## [RM-088] Fase 3 — Primitivo de presencia (enter/exit animado)
 
 - **Objetivo:** Componente de transición del engine: cuando el runtime togglea

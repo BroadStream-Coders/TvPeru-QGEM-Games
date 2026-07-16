@@ -22,8 +22,6 @@ function easeOutBounce(t: number) {
   return n1 * (t -= 2.625 / d1) * t + 0.984375;
 }
 
-const noop = () => {};
-
 /**
  * Corre las animaciones de un GameObject sobre `motion`. Pop y Shake animan el
  * content-div (que envuelve componentes + hijos); Bounce y Slide animan la
@@ -85,15 +83,17 @@ export function useGameObjectAnimations(
 
   useEffect(() => {
     if (!hasPop) return;
-    const pop = () => {
+    const pop = async () => {
       const el = elRef.current;
       if (!el || popScale <= 0 || popDuration <= 0) return;
       popRef.current?.stop();
-      popRef.current = animate(
+      const controls = animate(
         el,
         { scale: [1, popScale, 1] },
         { duration: popDuration, ease: ["backOut", "easeOut"] },
       );
+      popRef.current = controls;
+      await controls;
     };
     register(id, "pop", pop);
     return () => unregister(id, "pop");
@@ -101,7 +101,7 @@ export function useGameObjectAnimations(
 
   useEffect(() => {
     if (!hasShake) return;
-    const shake = () => {
+    const shake = async () => {
       const el = elRef.current;
       if (!el || shakeShakes <= 0 || shakeDuration <= 0 || shakeAmplitude <= 0)
         return;
@@ -111,11 +111,13 @@ export function useGameObjectAnimations(
         values.push(i % 2 === 0 ? shakeAmplitude : -shakeAmplitude);
       }
       values.push(0);
-      shakeRef.current = animate(
+      const controls = animate(
         el,
         { x: values.map((v) => `${v}%`) },
         { duration: shakeDuration, ease: "linear" },
       );
+      shakeRef.current = controls;
+      await controls;
     };
     register(id, "shake", shake);
     return () => unregister(id, "shake");
@@ -131,7 +133,7 @@ export function useGameObjectAnimations(
 
   useEffect(() => {
     if (!hasBounce) return;
-    const run = () => {
+    const run = async () => {
       cancelMove();
       const seq = moveRef.current.seq;
       const from = posRef.current;
@@ -153,14 +155,15 @@ export function useGameObjectAnimations(
         onUpdate: (t) => onAnimatePosition?.(id, lerp(from, overshoot, t)),
       });
       moveRef.current.controls = travel;
-      travel.then(() => {
-        if (moveRef.current.seq !== seq) return;
-        moveRef.current.controls = animate(0, 1, {
-          duration: bounceDuration,
-          ease: easeOutBounce,
-          onUpdate: (t) => onAnimatePosition?.(id, lerp(overshoot, to, t)),
-        });
-      }, noop);
+      await travel;
+      if (moveRef.current.seq !== seq) return;
+      const settle = animate(0, 1, {
+        duration: bounceDuration,
+        ease: easeOutBounce,
+        onUpdate: (t) => onAnimatePosition?.(id, lerp(overshoot, to, t)),
+      });
+      moveRef.current.controls = settle;
+      await settle;
     };
     register(id, "bounce", run);
     return () => unregister(id, "bounce");
@@ -178,7 +181,7 @@ export function useGameObjectAnimations(
 
   useEffect(() => {
     if (!hasSlide) return;
-    const run = () => {
+    const run = async () => {
       cancelMove();
       const from = posRef.current;
       const home = homeRef.current ?? from;
@@ -188,11 +191,13 @@ export function useGameObjectAnimations(
         onAnimatePosition?.(id, to);
         return;
       }
-      moveRef.current.controls = animate(0, 1, {
+      const controls = animate(0, 1, {
         duration: dist / slideSpeed,
         ease: "easeInOut",
         onUpdate: (t) => onAnimatePosition?.(id, lerp(from, to, t)),
       });
+      moveRef.current.controls = controls;
+      await controls;
     };
     register(id, "slide", run);
     return () => unregister(id, "slide");

@@ -16,7 +16,7 @@ import { ANCHOR_ID, FRAME_ID, TEXT_ID } from "./constants";
 
 export function DeletreoBehavior() {
   const { assets } = useAssets();
-  const { trigger } = useAnimations();
+  const { play } = useAnimations();
   const runtime = useSceneRuntime((s) => s.runtime);
   const patchComponent = useSceneRuntime((s) => s.patchComponent);
 
@@ -85,16 +85,16 @@ export function DeletreoBehavior() {
       setSpellStep(word.length);
       setFrame("normal");
       if (correctUrl) playSound(correctUrl);
-      trigger(FRAME_ID, "pop");
+      play(FRAME_ID, "pop");
     },
     onMarkError: () => {
       setFrame("error");
       if (incorrectUrl) playSound(incorrectUrl);
-      trigger(FRAME_ID, "shake");
+      play(FRAME_ID, "shake");
     },
     onInteract: () => setSpellStep((s) => Math.min(s + 1, word.length)),
-    onArrowUp: () => trigger(FRAME_ID, "bounce"),
-    onArrowDown: () => trigger(FRAME_ID, "slide"),
+    onArrowUp: () => play(FRAME_ID, "bounce"),
+    onArrowDown: () => play(FRAME_ID, "slide"),
   });
 
   return null;

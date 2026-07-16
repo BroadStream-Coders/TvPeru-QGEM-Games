@@ -21,7 +21,7 @@ import {
 
 export function CalculoMentalBehavior() {
   const { assets } = useAssets();
-  const { trigger } = useAnimations();
+  const { play, playStagger } = useAnimations();
   const runtime = useSceneRuntime((s) => s.runtime);
   const patchComponent = useSceneRuntime((s) => s.patchComponent);
   const setActive = useSceneRuntime((s) => s.setActive);
@@ -104,24 +104,21 @@ export function CalculoMentalBehavior() {
     patchController({ cursor: cursor - 1 });
   };
 
-  const playSequence = (anim: "bounce" | "slide", delayMs = 100) =>
-    SLOT_IDS.forEach((id, i) =>
-      setTimeout(() => trigger(id, anim), i * delayMs),
-    );
+  const playSequence = (anim: "bounce" | "slide") => playStagger(SLOT_IDS, anim);
 
   const showCurrentAnswer = () => {
     if (cursor < 0) return;
     setActive(ANSWER_IDS[cursor], true);
     setStatus(SLOT_IDS[cursor], "correct");
     if (correctUrl) playSound(correctUrl);
-    trigger(SLOT_IDS[cursor], "pop");
+    play(SLOT_IDS[cursor], "pop");
   };
 
   const markCurrentError = () => {
     if (cursor < 0) return;
     setStatus(SLOT_IDS[cursor], "incorrect");
     if (incorrectUrl) playSound(incorrectUrl);
-    trigger(SLOT_IDS[cursor], "shake");
+    play(SLOT_IDS[cursor], "shake");
   };
 
   const clearCurrent = () => {

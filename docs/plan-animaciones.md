@@ -65,14 +65,15 @@ sistema: el trabajo estructural real son tres carencias del engine actual:
   Los juegos no se tocan; deben verse igual o mejor.
 - Verificar la API actual de motion (context7) antes de escribir.
 
-### Fase 2 — RM-087: API de orquestación
+### Fase 2 — RM-087: API de orquestación ✅ (2026-07-16)
 
-- `trigger()` → `play()` que devuelve **promesa** (motion las da gratis);
-  cancelación coordinada real (hoy bounce/slide se cancelan entre sí a mano);
-  helper de secuencia/stagger.
-- Los behaviors pasan de `setTimeout` a `await play(id, tipo)`; sincroniza
-  animación + sonido + swap de estado. Calculo-mental migra como prueba.
-- Cierra **TD-008** (la "API formal de animación" que esa entrada pedía).
+- `trigger()` → `play(id, tipo)` que devuelve **promesa** (resuelta al
+  terminar; la del bounce cubre viaje + rebote), y `playStagger(ids, tipo,
+  stepMs?)` que resuelve cuando todas acaban. Runners async con cancelación
+  por guard de secuencia en `useGameObjectAnimations`.
+- calculo-mental migrado (sin `setTimeout`); deletreo renombrado.
+- Cerró **TD-008**: el prop ad-hoc `contentRef` de `GameObjectView` quedó sin
+  consumidores y se eliminó junto con `@engine/refs.ts`.
 
 ### Fase 3 — RM-088: primitivo de presencia (enter/exit)
 

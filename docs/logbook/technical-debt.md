@@ -65,15 +65,6 @@ changelog y se borra de aquí.
   recuperarlos; se agrava mientras no exista el menú "Windows" (RM-043).
 - **Fecha:** 2026-06-30 · **Estado:** Abierto
 
-## [TD-008] `contentRef` añadido al `GameObjectView` genérico por una necesidad de un juego
-
-- **Ubicación:** `src/components/shared/engine/GameObjectView.tsx`
-- **Riesgo:** 3/10
-- **Problema:** Se añadió el prop `contentRef?: (go) => Ref<HTMLDivElement>` al `GameObjectView` del engine para que Deletreo pudiera atar las animaciones de shake/pop al div de contenido interno del MainFrame (envuelve la imagen, sin el `transform` de pivote del `RectTransform`, que la animación pisaría). Es código genérico del engine modificado para resolver una necesidad puntual de un workspace.
-- **Objetivo del cambio:** Que las animaciones de error (tecla F) y correcto (tecla M) se apliquen a la imagen del marco y a sus hijos, no solo a las letras; el `contentRef` da acceso al único elemento del árbol del GameObject que se puede animar sin romper el posicionamiento.
-- **Impacto futuro:** Es un punto de extensión válido pero abre la puerta a que el engine acumule props ad-hoc por demanda de juegos. Revisar si conviene una API de animación/efectos más formal a nivel de GameObject (p. ej. un componente o hook del engine) antes de que aparezcan más casos así.
-- **Fecha:** 2026-06-11 · **Estado:** Abierto
-
 ## [TD-010] Raíz del engine plana: 13 archivos mezclando 4 roles
 
 - **Ubicación:** `src/components/shared/engine/` (raíz)

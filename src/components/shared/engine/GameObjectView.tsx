@@ -1,9 +1,8 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { RectTransform, Vec2 } from "@engine/RectTransform";
 import { GameObject } from "@engine/gameObject";
 import { useComponentRegistry } from "@engine/componentRegistry";
 import { useGameObjectAnimations } from "@engine/animations/useGameObjectAnimations";
-import { mergeRefs } from "@engine/refs";
 import {
   MaskComponent,
   maskStyle,
@@ -17,7 +16,6 @@ interface GameObjectViewProps {
   parentSize?: Vec2;
   selectedId?: string | null;
   renderContent?: (go: GameObject) => React.ReactNode;
-  contentRef?: (go: GameObject) => React.Ref<HTMLDivElement> | undefined;
   onAnimatePosition?: (goId: string, position: Vec2) => void;
 }
 
@@ -27,7 +25,6 @@ export function GameObjectView({
   parentSize,
   selectedId,
   renderContent,
-  contentRef,
   onAnimatePosition,
 }: GameObjectViewProps) {
   const registry = useComponentRegistry();
@@ -49,11 +46,6 @@ export function GameObjectView({
     maskUrl && maskImage ? maskStyle(maskUrl, maskImage.fit) : undefined;
 
   const animationRef = useGameObjectAnimations(gameObject, onAnimatePosition);
-  const externalRef = contentRef?.(gameObject);
-  const mergedContentRef = useMemo(
-    () => mergeRefs(animationRef, externalRef),
-    [animationRef, externalRef],
-  );
 
   return (
     <RectTransform
@@ -64,11 +56,7 @@ export function GameObjectView({
       rotation={gameObject.transform.rotation}
       parentSize={parentSize}
     >
-      <div
-        ref={mergedContentRef}
-        className="absolute inset-0"
-        style={wrapperStyle}
-      >
+      <div ref={animationRef} className="absolute inset-0" style={wrapperStyle}>
         {gameObject.components.map((component, index) => {
           if (mask && component === maskImage && !mask.showImage) return null;
           const View = registry.get(component.type)?.view;
@@ -83,7 +71,6 @@ export function GameObjectView({
               parentSize={gameObject.transform.size}
               selectedId={selectedId}
               renderContent={renderContent}
-              contentRef={contentRef}
               onAnimatePosition={onAnimatePosition}
             />
           ) : null,

@@ -12,6 +12,14 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-087] API de orquestación de animaciones (2026-07-16 13:09)
+
+`trigger()` → `play(id, tipo)` que devuelve promesa (resuelta al terminar; el bounce cubre viaje + rebote), y `playStagger(ids, tipo, stepMs?)` que dispara en escalera y resuelve cuando todas acaban. Runners async en `useGameObjectAnimations` con cancelación coordinada por guard de secuencia. calculo-mental migrado (muere el bucle de `setTimeout`), deletreo renombrado. Fase 2 del plan de animaciones; cerró TD-008.
+
+## [TD-008] Resuelto: `contentRef` ad-hoc eliminado del `GameObjectView` (2026-07-16 13:06)
+
+El prop `contentRef` (agregado para que Deletreo atara pop/shake al content-div) quedó sin consumidores cuando `useGameObjectAnimations` absorbió ese manejo; se eliminó junto con `@engine/refs.ts` (`mergeRefs`). La "API formal de animación" que la entrada pedía es el sistema de animaciones sobre motion (RM-086/087).
+
 ## [RM-086] Ejecutor de animaciones migrado a `motion` (2026-07-16 13:00)
 
 Los 4 hooks caseros (`use-pop`/`use-shake`/`use-bounce-move`/`use-slide`, rAF + easings a mano) se eliminaron; `useGameObjectAnimations` corre sobre `animate()` de motion (pop/shake en el content-div con transforms componibles, bounce/slide por el canal `onAnimatePosition` con guard de secuencia). Nace `@engine/animations/feel.ts` (tokens snappy/bouncy/gentle para las fases siguientes). Sin cambio de API ni de feel: el asentamiento del bounce conserva su `easeOutBounce` custom por decisión de Esteban (se probó spring y se rechazó; ver `docs/plan-animaciones.md`). Fase 1 del plan de animaciones (RM-087/088/083/089 siguen).

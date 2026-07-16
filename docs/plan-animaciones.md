@@ -52,7 +52,7 @@ sistema: el trabajo estructural real son tres carencias del engine actual:
 
 ## Las fases (paso a paso, cada una shippeable)
 
-### Fase 1 — RM-086: migrar el ejecutor a motion ⏳
+### Fase 1 — RM-086: migrar el ejecutor a motion ✅ (2026-07-16)
 
 - **Muere:** los 4 hooks caseros de `src/hooks/`.
 - **Nace:** `@engine/animations/feel.ts` — tokens de feel: 2–3 springs con
@@ -110,6 +110,12 @@ sistema: el trabajo estructural real son tres carencias del engine actual:
 ## Decisiones ya tomadas (no re-litigar)
 
 - Motion es el ejecutor; el modelo animación-como-componente se conserva.
+- **El asentamiento del bounce usa la curva `easeOutBounce` custom (rebote "de
+  pelota"), NO un spring.** Se probó reemplazarlo por spring en Fase 1 y
+  Esteban lo rechazó: es otro carácter y se veía mal. Motion acepta funciones
+  de easing custom en `ease`, así que la curva original vive en
+  `useGameObjectAnimations.ts`. Los tokens de `feel.ts` quedan para las fases
+  siguientes (presencia, Álbum), no para pisar feels ya aprobados.
 - El canal `onAnimatePosition` → runtime se mantiene en Fase 1 (correcto y
   WYSIWYG en el panel Scene); optimizar a motion values solo si el perf lo
   pide en la práctica.

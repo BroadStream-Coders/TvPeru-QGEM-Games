@@ -64,20 +64,6 @@ su "Hecho cuando", pero no es el foco actual).
 > usuario (encaja con WL-025). Esteban avaló romper la estructura actual de
 > "pantallas como subárboles activados/desactivados" si el magic move lo pide.
 
-## [RM-086] Fase 1 — Migrar el ejecutor de animaciones a `motion`
-
-- **Objetivo:** Reemplazar los 4 hooks caseros (`use-pop`, `use-shake`,
-  `use-bounce-move`, `use-slide`) por `animate()` de `motion` (ya instalado,
-  validado en `/lab/motion`). Pop/Shake sobre el content-div; Bounce/Slide
-  manteniendo el canal `onAnimatePosition` → runtime pero con springs reales.
-  Nacen los tokens de feel compartidos (springs con nombre: snappy/bouncy/gentle).
-  Sin cambio de API para los juegos: mismo `trigger()`, mismos componentes e
-  inspectores. Verificar API actual de motion (context7) al cablear.
-- **Hecho cuando:** los 4 hooks caseros están eliminados, las 4 animaciones
-  corren sobre motion con tokens compartidos y los 3 juegos que las usan se ven
-  igual o mejor en play.
-- **Fecha:** 2026-07-16 · **Estado:** En progreso (2026-07-16)
-
 ## [RM-087] Fase 2 — API de orquestación de animaciones
 
 - **Objetivo:** `trigger()` fire-and-forget → `play()` que devuelve promesa

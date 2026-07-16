@@ -12,6 +12,10 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-086] Ejecutor de animaciones migrado a `motion` (2026-07-16 13:00)
+
+Los 4 hooks caseros (`use-pop`/`use-shake`/`use-bounce-move`/`use-slide`, rAF + easings a mano) se eliminaron; `useGameObjectAnimations` corre sobre `animate()` de motion (pop/shake en el content-div con transforms componibles, bounce/slide por el canal `onAnimatePosition` con guard de secuencia). Nace `@engine/animations/feel.ts` (tokens snappy/bouncy/gentle para las fases siguientes). Sin cambio de API ni de feel: el asentamiento del bounce conserva su `easeOutBounce` custom por decisión de Esteban (se probó spring y se rechazó; ver `docs/plan-animaciones.md`). Fase 1 del plan de animaciones (RM-087/088/083/089 siguen).
+
 ## [RM-085] Sesiones desde Supabase Storage — bajada en Games (2026-07-15 11:45)
 
 Bucket privado `data` (oficial/ejemplo, allowlist `production_access`) operativo end-to-end: Studio sube desde sus 8 colectores JSON y Games consume vía `/sesiones` (árbol, preview, descarga individual, carpeta en ZIP y "lo de hoy" por fecha). La integración a workspaces quedó pateada; el flujo es descargar y cargar con el picker local.

@@ -12,6 +12,10 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [TD-064] [TD-065] Resueltos: labs de `react-moveable` y `dockview` borrados (2026-07-16 14:14)
+
+Ambas librerías ya están cableadas a producción (sandbox y `EditorDock`), así que sus demos se eliminaron junto con sus entradas en el índice `/lab`; git conserva la referencia. Queda solo el lab de `motion` (TD-063), pendiente del cierre de RM-088/089.
+
 ## [TD-057] Resuelto: env vars de Supabase validadas al crear el cliente (2026-07-16 14:03)
 
 `src/helpers/supabase.ts` deja de usar non-null assertion: un `requireEnv` lanza "Falta NEXT_PUBLIC_SUPABASE_URL en .env.local" al crear el cliente, en vez de fallar críptico en el primer request o en auth.

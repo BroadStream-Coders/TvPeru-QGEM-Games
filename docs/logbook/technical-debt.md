@@ -38,26 +38,6 @@ changelog y se borra de aquí.
   git conserva la referencia.
 - **Fecha:** 2026-07-16 · **Estado:** Abierto
 
-## [TD-064] Lab `react-moveable` (~458 líneas) vive como ruta de producción
-
-- **Ubicación:** `src/app/lab/react-moveable/`
-- **Riesgo:** 2/10
-- **Problema:** Demo de exploración de `react-moveable` como ruta del app de
-  producción. La librería ya está cableada en el sandbox.
-- **Impacto futuro:** Peso muerto en el build y ruta accesible desde el navegador
-  del estudio. Borrable ya; git conserva la referencia.
-- **Fecha:** 2026-07-16 · **Estado:** Abierto
-
-## [TD-065] Lab `dockview` (~280 líneas) vive como ruta de producción
-
-- **Ubicación:** `src/app/lab/dockview/`
-- **Riesgo:** 2/10
-- **Problema:** Demo de exploración de `dockview` como ruta del app de
-  producción. La librería ya está cableada en `EditorDock`.
-- **Impacto futuro:** Peso muerto en el build y ruta accesible desde el navegador
-  del estudio. Borrable ya; git conserva la referencia.
-- **Fecha:** 2026-07-16 · **Estado:** Abierto
-
 ## [TD-018] El dockview del editor no tiene tamaño mínimo de panel
 
 - **Ubicación:** `src/app/workspaces/sandbox/EditorDock.tsx`

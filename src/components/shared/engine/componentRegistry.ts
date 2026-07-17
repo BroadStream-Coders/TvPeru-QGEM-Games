@@ -12,6 +12,7 @@ import { maskDefinition } from "@engine/components/mask";
 import { popDefinition } from "@engine/components/pop";
 import { flipDefinition } from "@engine/components/flip";
 import { floatDefinition } from "@engine/components/float";
+import { shimmerDefinition } from "@engine/components/shimmer";
 import { shakeDefinition } from "@engine/components/shake";
 import { bounceDefinition } from "@engine/components/bounce";
 import { slideDefinition } from "@engine/components/slide";
@@ -63,6 +64,7 @@ export const NATIVE_COMPONENTS: ComponentDefinition[] = [
   popDefinition,
   flipDefinition,
   floatDefinition,
+  shimmerDefinition,
   shakeDefinition,
   bounceDefinition,
   slideDefinition,

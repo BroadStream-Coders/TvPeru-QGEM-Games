@@ -1189,7 +1189,16 @@
         "y": 0.5
       }
     },
-    "components": []
+    "components": [
+      {
+        "type": "shimmer",
+        "period": 5.5,
+        "sweep": 1,
+        "phase": 0,
+        "intensity": 0.55,
+        "radius": 1
+      }
+    ]
   },
   {
     "id": "card-0-back-bg",
@@ -1264,7 +1273,16 @@
         "y": 0.5
       }
     },
-    "components": []
+    "components": [
+      {
+        "type": "shimmer",
+        "period": 5.5,
+        "sweep": 1,
+        "phase": 0,
+        "intensity": 0.55,
+        "radius": 1
+      }
+    ]
   },
   {
     "id": "card-0-front-bg",
@@ -1470,7 +1488,16 @@
         "y": 0.5
       }
     },
-    "components": []
+    "components": [
+      {
+        "type": "shimmer",
+        "period": 5.5,
+        "sweep": 1,
+        "phase": 0.95,
+        "intensity": 0.55,
+        "radius": 1
+      }
+    ]
   },
   {
     "id": "card-1-back-bg",
@@ -1545,7 +1572,16 @@
         "y": 0.5
       }
     },
-    "components": []
+    "components": [
+      {
+        "type": "shimmer",
+        "period": 5.5,
+        "sweep": 1,
+        "phase": 0.95,
+        "intensity": 0.55,
+        "radius": 1
+      }
+    ]
   },
   {
     "id": "card-1-front-bg",
@@ -1751,7 +1787,16 @@
         "y": 0.5
       }
     },
-    "components": []
+    "components": [
+      {
+        "type": "shimmer",
+        "period": 5.5,
+        "sweep": 1,
+        "phase": 1.9,
+        "intensity": 0.55,
+        "radius": 1
+      }
+    ]
   },
   {
     "id": "card-2-back-bg",
@@ -1826,7 +1871,16 @@
         "y": 0.5
       }
     },
-    "components": []
+    "components": [
+      {
+        "type": "shimmer",
+        "period": 5.5,
+        "sweep": 1,
+        "phase": 1.9,
+        "intensity": 0.55,
+        "radius": 1
+      }
+    ]
   },
   {
     "id": "card-2-front-bg",
@@ -2032,7 +2086,16 @@
         "y": 0.5
       }
     },
-    "components": []
+    "components": [
+      {
+        "type": "shimmer",
+        "period": 5.5,
+        "sweep": 1,
+        "phase": 2.85,
+        "intensity": 0.55,
+        "radius": 1
+      }
+    ]
   },
   {
     "id": "card-3-back-bg",
@@ -2107,7 +2170,16 @@
         "y": 0.5
       }
     },
-    "components": []
+    "components": [
+      {
+        "type": "shimmer",
+        "period": 5.5,
+        "sweep": 1,
+        "phase": 2.85,
+        "intensity": 0.55,
+        "radius": 1
+      }
+    ]
   },
   {
     "id": "card-3-front-bg",
@@ -2313,7 +2385,16 @@
         "y": 0.5
       }
     },
-    "components": []
+    "components": [
+      {
+        "type": "shimmer",
+        "period": 5.5,
+        "sweep": 1,
+        "phase": 3.8,
+        "intensity": 0.55,
+        "radius": 1
+      }
+    ]
   },
   {
     "id": "card-4-back-bg",
@@ -2388,7 +2469,16 @@
         "y": 0.5
       }
     },
-    "components": []
+    "components": [
+      {
+        "type": "shimmer",
+        "period": 5.5,
+        "sweep": 1,
+        "phase": 3.8,
+        "intensity": 0.55,
+        "radius": 1
+      }
+    ]
   },
   {
     "id": "card-4-front-bg",

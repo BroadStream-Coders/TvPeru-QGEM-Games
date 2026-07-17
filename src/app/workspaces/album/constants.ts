@@ -8,6 +8,10 @@ export const THEME_COUNT = 6;
 const cardIds = (suffix: string) =>
   Array.from({ length: CARD_COUNT }, (_, i) => `card-${i}-${suffix}`);
 
+export const CARD_IDS = Array.from(
+  { length: CARD_COUNT },
+  (_, i) => `card-${i}`,
+);
 export const CARD_BACK_IDS = cardIds("back");
 export const CARD_FRONT_IDS = cardIds("front");
 export const CARD_BACK_BG_IDS = cardIds("back-bg");

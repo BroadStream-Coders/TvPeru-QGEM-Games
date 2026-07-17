@@ -10,6 +10,7 @@ import { videoControlDefinition } from "@engine/components/videoControl";
 import { textDefinition } from "@engine/components/text";
 import { maskDefinition } from "@engine/components/mask";
 import { popDefinition } from "@engine/components/pop";
+import { flipDefinition } from "@engine/components/flip";
 import { shakeDefinition } from "@engine/components/shake";
 import { bounceDefinition } from "@engine/components/bounce";
 import { slideDefinition } from "@engine/components/slide";
@@ -59,6 +60,7 @@ export const NATIVE_COMPONENTS: ComponentDefinition[] = [
   textDefinition,
   maskDefinition,
   popDefinition,
+  flipDefinition,
   shakeDefinition,
   bounceDefinition,
   slideDefinition,

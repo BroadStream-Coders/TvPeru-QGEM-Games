@@ -3,6 +3,7 @@ import { animate, type AnimationPlaybackControls } from "motion";
 import { GameObject } from "@engine/gameObject";
 import { Vec2 } from "@engine/RectTransform";
 import { PopComponent } from "@engine/components/pop/popComponent";
+import { FlipComponent } from "@engine/components/flip/flipComponent";
 import { ShakeComponent } from "@engine/components/shake/shakeComponent";
 import { BounceComponent } from "@engine/components/bounce/bounceComponent";
 import { SlideComponent } from "@engine/components/slide/slideComponent";
@@ -23,9 +24,11 @@ function easeOutBounce(t: number) {
 }
 
 /**
- * Corre las animaciones de un GameObject sobre `motion`. Pop y Shake animan el
- * content-div (que envuelve componentes + hijos); Bounce y Slide animan la
- * posición del transform (a través de `onAnimatePosition`, capa runtime).
+ * Corre las animaciones de un GameObject sobre `motion`. Pop, Shake y Flip
+ * animan el content-div (que envuelve componentes + hijos); Bounce y Slide
+ * animan la posición del transform (a través de `onAnimatePosition`, capa
+ * runtime). Flip registra dos triggers (`flipHide`: 0→90°, sostiene el canto;
+ * `flipShow`: 90°→0) para que el behavior haga el swap de caras en el medio.
  * Registra cada trigger en el contexto de animaciones bajo el id del
  * GameObject, sólo para los tipos presentes como componentes. Devuelve un
  * callback-ref para el content-div.
@@ -36,6 +39,8 @@ export function useGameObjectAnimations(
 ): (node: HTMLDivElement | null) => void {
   const popComp = gameObject.components.find((c) => c.type === "pop") as
     PopComponent | undefined;
+  const flipComp = gameObject.components.find((c) => c.type === "flip") as
+    FlipComponent | undefined;
   const shakeComp = gameObject.components.find((c) => c.type === "shake") as
     ShakeComponent | undefined;
   const bounceComp = gameObject.components.find((c) => c.type === "bounce") as
@@ -46,12 +51,16 @@ export function useGameObjectAnimations(
   const { register, unregister } = useAnimations();
   const id = gameObject.id;
   const hasPop = !!popComp;
+  const hasFlip = !!flipComp;
   const hasShake = !!shakeComp;
   const hasBounce = !!bounceComp;
   const hasSlide = !!slideComp;
 
   const popScale = popComp?.scale ?? 1.1;
   const popDuration = popComp?.duration ?? 0.3;
+  const flipHideDuration = flipComp?.hideDuration ?? 0.25;
+  const flipShowDuration = flipComp?.showDuration ?? 0.45;
+  const flipPerspective = flipComp?.perspective ?? 6;
   const shakeAmplitude = shakeComp?.amplitude ?? 2;
   const shakeShakes = shakeComp?.shakes ?? 3;
   const shakeDuration = shakeComp?.duration ?? 0.4;
@@ -64,6 +73,7 @@ export function useGameObjectAnimations(
 
   const elRef = useRef<HTMLDivElement | null>(null);
   const popRef = useRef<AnimationPlaybackControls | null>(null);
+  const flipRef = useRef<AnimationPlaybackControls | null>(null);
   const shakeRef = useRef<AnimationPlaybackControls | null>(null);
   const moveRef = useRef<{ seq: number; controls: AnimationPlaybackControls | null }>({
     seq: 0,
@@ -103,6 +113,65 @@ export function useGameObjectAnimations(
     register(id, "pop", pop);
     return () => unregister(id, "pop");
   }, [id, hasPop, popScale, popDuration, register, unregister]);
+
+  useEffect(() => {
+    if (!hasFlip) return;
+    const hide = async () => {
+      const el = elRef.current;
+      if (!el || flipHideDuration <= 0) return;
+      flipRef.current?.stop();
+      const controls = animate(
+        el,
+        {
+          transformPerspective: el.offsetWidth * flipPerspective,
+          rotateY: [0, 90],
+        },
+        { duration: flipHideDuration, ease: "easeIn" },
+      );
+      flipRef.current = controls;
+      try {
+        await controls;
+      } catch {}
+    };
+    const show = async () => {
+      const el = elRef.current;
+      if (!el) return;
+      flipRef.current?.stop();
+      if (flipShowDuration <= 0) {
+        el.style.transform = "";
+        return;
+      }
+      const controls = animate(
+        el,
+        {
+          transformPerspective: el.offsetWidth * flipPerspective,
+          rotateY: [90, 0],
+        },
+        { duration: flipShowDuration, ease: "backOut" },
+      );
+      flipRef.current = controls;
+      try {
+        await controls;
+      } catch {
+        return;
+      }
+      if (flipRef.current === controls) el.style.transform = "";
+    };
+    register(id, "flipHide", hide);
+    register(id, "flipShow", show);
+    return () => {
+      unregister(id, "flipHide");
+      unregister(id, "flipShow");
+    };
+  }, [
+    id,
+    hasFlip,
+    flipHideDuration,
+    flipShowDuration,
+    flipPerspective,
+    register,
+    unregister,
+  ]);
 
   useEffect(() => {
     if (!hasShake) return;
@@ -226,6 +295,7 @@ export function useGameObjectAnimations(
   useEffect(
     () => () => {
       popRef.current?.cancel();
+      flipRef.current?.stop();
       shakeRef.current?.cancel();
       cancelMove();
     },

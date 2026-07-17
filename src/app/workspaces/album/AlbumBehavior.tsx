@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { useAssets } from "@engine/assetsContext";
+import { useAnimations } from "@engine/animations/AnimationsContext";
 import { useSceneRuntime } from "@/hooks/use-scene-runtime";
 import { useGameSession } from "@/hooks/use-game-session";
 import { useGameKeys } from "@/hooks/use-game-keys";
@@ -11,6 +12,7 @@ import type { AlbumSession } from "./session";
 import { CARD_COLOR_KEYS } from "./assets";
 import {
   ALBUM_ID,
+  CARD_IDS,
   THEMES_ID,
   GAMEPLAY_ID,
   ROUND_TITLE_ID,
@@ -35,6 +37,8 @@ export function AlbumBehavior() {
   const runtime = useSceneRuntime((s) => s.runtime);
   const patchComponent = useSceneRuntime((s) => s.patchComponent);
   const setActive = useSceneRuntime((s) => s.setActive);
+  const { play } = useAnimations();
+  const flippingRef = useRef(new Set<number>());
 
   const correctUrl = assets.correct?.url;
   const incorrectUrl = assets.incorrect?.url;
@@ -117,14 +121,27 @@ export function AlbumBehavior() {
     patchController({ roundIndex: i, cardIndex: 0 });
   };
 
+  const flipCard = async (i: number, up: boolean) => {
+    if (flippingRef.current.has(i)) return;
+    const isUp = runtime[CARD_FRONT_IDS[i]]?.active === true;
+    if (isUp === up) return;
+    flippingRef.current.add(i);
+    try {
+      await play(CARD_IDS[i], "flipHide");
+      setActive(CARD_BACK_IDS[i], !up);
+      setActive(CARD_FRONT_IDS[i], up);
+      await play(CARD_IDS[i], "flipShow");
+    } finally {
+      flippingRef.current.delete(i);
+    }
+  };
+
   const flipUp = (i: number) => {
-    setActive(CARD_BACK_IDS[i], false);
-    setActive(CARD_FRONT_IDS[i], true);
+    void flipCard(i, true);
   };
 
   const flipDown = (i: number) => {
-    setActive(CARD_BACK_IDS[i], true);
-    setActive(CARD_FRONT_IDS[i], false);
+    void flipCard(i, false);
   };
 
   const resetCard = (i: number) => {
@@ -148,7 +165,9 @@ export function AlbumBehavior() {
   };
 
   const allFaceUp = () => {
-    for (let i = 0; i < CARD_COUNT; i++) flipUp(i);
+    for (let i = 0; i < CARD_COUNT; i++) {
+      setTimeout(() => flipUp(i), i * 80);
+    }
   };
 
   const allToColor = () => {

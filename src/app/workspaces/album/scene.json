@@ -1112,7 +1112,14 @@
         "y": 0.5
       }
     },
-    "components": []
+    "components": [
+      {
+        "type": "flip",
+        "hideDuration": 0.25,
+        "showDuration": 0.45,
+        "perspective": 6
+      }
+    ]
   },
   {
     "id": "card-0-back",
@@ -1379,7 +1386,14 @@
         "y": 0.5
       }
     },
-    "components": []
+    "components": [
+      {
+        "type": "flip",
+        "hideDuration": 0.25,
+        "showDuration": 0.45,
+        "perspective": 6
+      }
+    ]
   },
   {
     "id": "card-1-back",
@@ -1646,7 +1660,14 @@
         "y": 0.5
       }
     },
-    "components": []
+    "components": [
+      {
+        "type": "flip",
+        "hideDuration": 0.25,
+        "showDuration": 0.45,
+        "perspective": 6
+      }
+    ]
   },
   {
     "id": "card-2-back",
@@ -1913,7 +1934,14 @@
         "y": 0.5
       }
     },
-    "components": []
+    "components": [
+      {
+        "type": "flip",
+        "hideDuration": 0.25,
+        "showDuration": 0.45,
+        "perspective": 6
+      }
+    ]
   },
   {
     "id": "card-3-back",
@@ -2180,7 +2208,14 @@
         "y": 0.5
       }
     },
-    "components": []
+    "components": [
+      {
+        "type": "flip",
+        "hideDuration": 0.25,
+        "showDuration": 0.45,
+        "perspective": 6
+      }
+    ]
   },
   {
     "id": "card-4-back",

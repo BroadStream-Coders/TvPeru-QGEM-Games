@@ -112,7 +112,7 @@ su "Hecho cuando", pero no es el foco actual).
   base nueva, no sobre pop/shake actuales.
 - **Hecho cuando:** voltear una carta y bloquear un tema se ven animados en el
   display, y el swap de estados queda sincronizado con la animación.
-- **Fecha:** 2026-07-13 · **Estado:** Abierto
+- **Fecha:** 2026-07-13 · **Estado:** En progreso (2026-07-16)
 
 ## [RM-040] En la vista Game nada es seleccionable
 

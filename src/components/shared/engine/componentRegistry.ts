@@ -11,6 +11,7 @@ import { textDefinition } from "@engine/components/text";
 import { maskDefinition } from "@engine/components/mask";
 import { popDefinition } from "@engine/components/pop";
 import { flipDefinition } from "@engine/components/flip";
+import { floatDefinition } from "@engine/components/float";
 import { shakeDefinition } from "@engine/components/shake";
 import { bounceDefinition } from "@engine/components/bounce";
 import { slideDefinition } from "@engine/components/slide";
@@ -61,6 +62,7 @@ export const NATIVE_COMPONENTS: ComponentDefinition[] = [
   maskDefinition,
   popDefinition,
   flipDefinition,
+  floatDefinition,
   shakeDefinition,
   bounceDefinition,
   slideDefinition,

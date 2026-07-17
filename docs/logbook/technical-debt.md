@@ -14,6 +14,21 @@ changelog y se borra de aquí.
 
 ---
 
+## [TD-064] Pop y Shake resetean `el.style.transform` y pisan animaciones ambientales
+
+- **Ubicación:** `src/components/shared/engine/animations/useGameObjectAnimations.ts` (runners de pop y shake, `el.style.transform = ""` al terminar)
+- **Riesgo:** 4/10
+- **Problema:** El reset de transform al final de pop/shake borra por un frame
+  el transform compuesto de cualquier animación ambiental concurrente (float)
+  en el mismo GameObject → salto visible. Ya pasó con flip en Álbum y se quitó
+  el reset ahí; pop/shake conservan el patrón porque hoy ningún juego los
+  combina con float.
+- **Impacto futuro:** Al agregar float a un objeto que ya usa pop/shake
+  (deletreo, cálculo mental), reaparece el salto. Arreglo: quitar los resets
+  (ambas animaciones terminan en valores identidad) o resetear solo las
+  propiedades propias.
+- **Fecha:** 2026-07-16 · **Estado:** Abierto
+
 ## [TD-062] Los inspectors de sesión muestran "Sin sesión cargada" leyendo del diseño
 
 - **Ubicación:** `src/app/workspaces/*/components/*/​*Inspector.tsx` (los 4 juegos muestran `component.fileName`)

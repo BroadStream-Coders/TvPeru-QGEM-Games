@@ -129,6 +129,13 @@
         "type": "image",
         "fit": "fill",
         "assetKey": "themeRed"
+      },
+      {
+        "type": "float",
+        "amplitude": 3,
+        "rotation": 0.6,
+        "period": 6,
+        "phase": 0.4
       }
     ]
   },
@@ -284,6 +291,13 @@
         "type": "image",
         "fit": "fill",
         "assetKey": "themeYellow"
+      },
+      {
+        "type": "float",
+        "amplitude": 3,
+        "rotation": 0.6,
+        "period": 6,
+        "phase": 1.4
       }
     ]
   },
@@ -439,6 +453,13 @@
         "type": "image",
         "fit": "fill",
         "assetKey": "themeBlue"
+      },
+      {
+        "type": "float",
+        "amplitude": 3,
+        "rotation": 0.6,
+        "period": 6,
+        "phase": 2.5
       }
     ]
   },
@@ -594,6 +615,13 @@
         "type": "image",
         "fit": "fill",
         "assetKey": "themeOrange"
+      },
+      {
+        "type": "float",
+        "amplitude": 3,
+        "rotation": 0.6,
+        "period": 6,
+        "phase": 3.5
       }
     ]
   },
@@ -749,6 +777,13 @@
         "type": "image",
         "fit": "fill",
         "assetKey": "themeGreen"
+      },
+      {
+        "type": "float",
+        "amplitude": 3,
+        "rotation": 0.6,
+        "period": 6,
+        "phase": 4.6
       }
     ]
   },
@@ -904,6 +939,13 @@
         "type": "image",
         "fit": "fill",
         "assetKey": "themePurple"
+      },
+      {
+        "type": "float",
+        "amplitude": 3,
+        "rotation": 0.6,
+        "period": 6,
+        "phase": 5.3
       }
     ]
   },
@@ -1118,6 +1160,13 @@
         "hideDuration": 0.25,
         "showDuration": 0.45,
         "perspective": 6
+      },
+      {
+        "type": "float",
+        "amplitude": 1,
+        "rotation": 0.2,
+        "period": 6,
+        "phase": 0
       }
     ]
   },
@@ -1392,6 +1441,13 @@
         "hideDuration": 0.25,
         "showDuration": 0.45,
         "perspective": 6
+      },
+      {
+        "type": "float",
+        "amplitude": 1,
+        "rotation": 0.2,
+        "period": 6,
+        "phase": 1.1
       }
     ]
   },
@@ -1666,6 +1722,13 @@
         "hideDuration": 0.25,
         "showDuration": 0.45,
         "perspective": 6
+      },
+      {
+        "type": "float",
+        "amplitude": 1,
+        "rotation": 0.2,
+        "period": 6,
+        "phase": 2.3
       }
     ]
   },
@@ -1940,6 +2003,13 @@
         "hideDuration": 0.25,
         "showDuration": 0.45,
         "perspective": 6
+      },
+      {
+        "type": "float",
+        "amplitude": 1,
+        "rotation": 0.2,
+        "period": 6,
+        "phase": 3.4
       }
     ]
   },
@@ -2214,6 +2284,13 @@
         "hideDuration": 0.25,
         "showDuration": 0.45,
         "perspective": 6
+      },
+      {
+        "type": "float",
+        "amplitude": 1,
+        "rotation": 0.2,
+        "period": 6,
+        "phase": 4.6
       }
     ]
   },

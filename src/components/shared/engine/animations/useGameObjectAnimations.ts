@@ -4,6 +4,7 @@ import { GameObject } from "@engine/gameObject";
 import { Vec2 } from "@engine/RectTransform";
 import { PopComponent } from "@engine/components/pop/popComponent";
 import { FlipComponent } from "@engine/components/flip/flipComponent";
+import { FloatComponent } from "@engine/components/float/floatComponent";
 import { ShakeComponent } from "@engine/components/shake/shakeComponent";
 import { BounceComponent } from "@engine/components/bounce/bounceComponent";
 import { SlideComponent } from "@engine/components/slide/slideComponent";
@@ -29,6 +30,9 @@ function easeOutBounce(t: number) {
  * animan la posición del transform (a través de `onAnimatePosition`, capa
  * runtime). Flip registra dos triggers (`flipHide`: 0→90°, sostiene el canto;
  * `flipShow`: 90°→0) para que el behavior haga el swap de caras en el medio.
+ * Float es ambiental: no se dispara con `play()`, corre en loop mientras el
+ * GameObject esté montado (bob vertical en % de la altura + balanceo de
+ * rotación a período distinto; `phase` desincroniza instancias).
  * Registra cada trigger en el contexto de animaciones bajo el id del
  * GameObject, sólo para los tipos presentes como componentes. Devuelve un
  * callback-ref para el content-div.
@@ -41,6 +45,8 @@ export function useGameObjectAnimations(
     PopComponent | undefined;
   const flipComp = gameObject.components.find((c) => c.type === "flip") as
     FlipComponent | undefined;
+  const floatComp = gameObject.components.find((c) => c.type === "float") as
+    FloatComponent | undefined;
   const shakeComp = gameObject.components.find((c) => c.type === "shake") as
     ShakeComponent | undefined;
   const bounceComp = gameObject.components.find((c) => c.type === "bounce") as
@@ -61,6 +67,11 @@ export function useGameObjectAnimations(
   const flipHideDuration = flipComp?.hideDuration ?? 0.25;
   const flipShowDuration = flipComp?.showDuration ?? 0.45;
   const flipPerspective = flipComp?.perspective ?? 6;
+  const hasFloat = !!floatComp;
+  const floatAmplitude = floatComp?.amplitude ?? 3;
+  const floatRotation = floatComp?.rotation ?? 0.6;
+  const floatPeriod = floatComp?.period ?? 6;
+  const floatPhase = floatComp?.phase ?? 0;
   const shakeAmplitude = shakeComp?.amplitude ?? 2;
   const shakeShakes = shakeComp?.shakes ?? 3;
   const shakeDuration = shakeComp?.duration ?? 0.4;
@@ -137,25 +148,18 @@ export function useGameObjectAnimations(
       const el = elRef.current;
       if (!el) return;
       flipRef.current?.stop();
-      if (flipShowDuration <= 0) {
-        el.style.transform = "";
-        return;
-      }
       const controls = animate(
         el,
         {
           transformPerspective: el.offsetWidth * flipPerspective,
           rotateY: [90, 0],
         },
-        { duration: flipShowDuration, ease: "backOut" },
+        { duration: Math.max(flipShowDuration, 0.01), ease: "backOut" },
       );
       flipRef.current = controls;
       try {
         await controls;
-      } catch {
-        return;
-      }
-      if (flipRef.current === controls) el.style.transform = "";
+      } catch {}
     };
     register(id, "flipHide", hide);
     register(id, "flipShow", show);
@@ -172,6 +176,37 @@ export function useGameObjectAnimations(
     register,
     unregister,
   ]);
+
+  useEffect(() => {
+    if (!hasFloat) return;
+    const el = elRef.current;
+    if (!el || floatPeriod <= 0) return;
+    const anims: AnimationPlaybackControls[] = [];
+    if (floatAmplitude !== 0) {
+      const bob = animate(
+        el,
+        { y: ["0%", `${-floatAmplitude}%`, "0%"] },
+        { duration: floatPeriod, ease: "easeInOut", repeat: Infinity },
+      );
+      bob.time = floatPhase;
+      anims.push(bob);
+    }
+    if (floatRotation !== 0) {
+      const sway = animate(
+        el,
+        { rotate: [-floatRotation, floatRotation] },
+        {
+          duration: floatPeriod * 0.65,
+          ease: "easeInOut",
+          repeat: Infinity,
+          repeatType: "mirror",
+        },
+      );
+      sway.time = floatPhase;
+      anims.push(sway);
+    }
+    return () => anims.forEach((a) => a.stop());
+  }, [hasFloat, floatAmplitude, floatRotation, floatPeriod, floatPhase]);
 
   useEffect(() => {
     if (!hasShake) return;

@@ -56,24 +56,41 @@ su "Hecho cuando", pero no es el foco actual).
 
 # Mejoras de editor / engine comprometidas
 
-> **Plan de animaciones (2026-07-16):** base estructural para gamefeel nivel
-> Balatro, en fases shippeables: RM-086 (ejecutor sobre motion) → RM-087
-> (orquestación) → RM-088 (presencia) → RM-083 (Álbum como piloto) → RM-089
-> (limpieza del lab). Nace de la promoción de WL-019. Largo plazo (sin
-> compromiso): magic move entre pantallas y animaciones editables por el
+> **Plan de animaciones (2026-07-16, reordenado el mismo día):** gamefeel al
+> nivel de Balatro, pero **dinámica primero**: RM-086 (ejecutor sobre motion,
+> ✅) → RM-087 (orquestación, ✅) → RM-090 (definición de dinámicas por juego)
+> → RM-083 (Álbum como piloto, guiado por su dinámica) → RM-088 (extraer
+> componentes de lo aprobado) → RM-089 (limpieza del lab). Nace de la
+> promoción de WL-019. Principio de Esteban: **cada juego es una experiencia
+> independiente y fresca, con sus propios tiempos y feel, aunque se repita
+> código** — no hay tokens de feel compartidos a nivel engine. Largo plazo
+> (sin compromiso): magic move entre pantallas y animaciones editables por el
 > usuario (encaja con WL-025). Esteban avaló romper la estructura actual de
 > "pantallas como subárboles activados/desactivados" si el magic move lo pide.
 
-## [RM-088] Fase 3 — Primitivo de presencia (enter/exit animado)
+## [RM-090] Estructura de definición de dinámicas por juego
 
-- **Objetivo:** Componente de transición del engine: cuando el runtime togglea
-  `active`, el objeto entra/sale animado (variantes configurables: fade, pop,
-  slide, flip) en vez del swap instantáneo de hoy. Es el primitivo que RM-083
-  necesita (el flip de carta es una transición entre dos estados) y anima de
-  golpe todos los juegos de quiz sin tocar cada behavior.
-- **Hecho cuando:** existe el componente de presencia con su tripleta, un
-  `setActive` de runtime dispara la animación de entrada/salida configurada, y
-  al menos un caso real lo usa.
+- **Objetivo:** Formato estándar para describir la dinámica de cada juego en
+  `docs/juegos/<juego>.md` (plantilla en `docs/juegos/plantilla.md`): concepto,
+  pantallas/estados, flujo del segmento al aire, controles del operador, beats
+  emocionales y ritmo, animación/feel deseado. Es el insumo sin el cual no se
+  pueden recomendar ni diseñar animaciones útiles; todo juego nuevo nace
+  describiendo su dinámica antes de tocar código.
+- **Hecho cuando:** existe la plantilla y Álbum tiene su documento escrito (el
+  primero), usado como insumo directo de RM-083.
+- **Fecha:** 2026-07-16 · **Estado:** En progreso (2026-07-16)
+
+## [RM-088] Extraer componentes de presencia/transición de lo aprobado en Álbum
+
+- **Objetivo:** Cosechar del piloto de Álbum (RM-083) los patrones de
+  animación que Esteban apruebe y promoverlos a componentes del engine (misma
+  tripleta), incluido — si el patrón aparece — el enter/exit animado sobre el
+  `active` de runtime. Redefinida el 2026-07-16: antes era "diseñar el
+  primitivo de presencia genérico primero"; se invirtió para extraer de un
+  feel real aprobado, no diseñar en abstracto (misma estrategia SpellFrame).
+  Las transiciones de pantalla quedan on/off instantáneo mientras tanto.
+- **Hecho cuando:** los patrones repetibles del piloto viven como componentes
+  del engine y Álbum los consume desde el registro.
 - **Fecha:** 2026-07-16 · **Estado:** Abierto
 
 ## [RM-089] Eliminar `/lab` al cerrar el sistema de animaciones

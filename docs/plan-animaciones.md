@@ -75,21 +75,34 @@ sistema: el trabajo estructural real son tres carencias del engine actual:
 - Cerró **TD-008**: el prop ad-hoc `contentRef` de `GameObjectView` quedó sin
   consumidores y se eliminó junto con `@engine/refs.ts`.
 
-### Fase 3 — RM-088: primitivo de presencia (enter/exit)
+### Fase 3 — RM-090: definición de dinámicas por juego ⏳
 
-- Componente de transición del engine: cuando el runtime togglea `active`, el
-  objeto entra/sale animado (variantes config: fade, pop, slide, flip) en vez
-  del swap instantáneo.
-- Es el prerequisito real de RM-083: el flip de carta de Álbum no es "animar
-  un objeto" sino una **transición entre dos estados** (back activo → front
-  activo). Bien hecho, anima todos los juegos de quiz sin tocar cada behavior.
+- **Reordenada el 2026-07-16:** antes la fase 3 era diseñar el primitivo de
+  presencia genérico; Esteban señaló (con razón) que se estaban asumiendo las
+  animaciones sin conocer la dinámica real de cada juego. Primero la
+  dramaturgia, después los primitivos.
+- Formato estándar en `docs/juegos/<juego>.md` (plantilla:
+  `docs/juegos/plantilla.md`): concepto, pantallas/estados, flujo del segmento
+  al aire, controles del operador, beats emocionales, ritmo, feel deseado.
+- Todo juego nuevo nace describiendo su dinámica antes de tocar código. El
+  primero es Álbum (insumo directo de RM-083).
 
 ### Fase 4 — RM-083: Álbum como piloto de gamefeel
 
-- Flip de carta (`DoFlip`, teclas E/B) y blink de bloqueo de tema
-  (`UIBlinkPulse`: pulso 1.1 + parpadeo ×3, tecla L) sobre la base nueva,
-  swap sincronizado con la animación, puliendo tokens hasta que se sienta
-  **muy** bien. Álbum (cartas) es el juego más Balatro-shaped del proyecto.
+- Guiado por `docs/juegos/album.md` (la visión de Esteban), no por las
+  animaciones heredadas de Unity a secas. Prototipar el feel directamente
+  sobre Álbum — aunque sea código a mano en el behavior — hasta que Esteban lo
+  apruebe viéndolo en play. Las transiciones de pantalla quedan on/off
+  instantáneo por ahora (aplazadas a propósito).
+
+### Fase 5 — RM-088: extraer componentes de lo aprobado
+
+- **Redefinida el 2026-07-16:** de "diseñar primitivo de presencia" a
+  **cosechar** del piloto los patrones que Esteban apruebe y promoverlos a
+  componentes del engine (misma tripleta), incluido — si el patrón aparece —
+  el enter/exit animado sobre el `active` de runtime. Misma estrategia que
+  parió al SpellFrame: el componente se extrae de algo concreto que funciona,
+  no se diseña en abstracto.
 
 ### Fase final — RM-089: borrar `/lab`
 
@@ -111,6 +124,17 @@ sistema: el trabajo estructural real son tres carencias del engine actual:
 ## Decisiones ya tomadas (no re-litigar)
 
 - Motion es el ejecutor; el modelo animación-como-componente se conserva.
+- **Cada juego es una experiencia independiente y fresca, con sus propios
+  tiempos y feel, aunque se repita código** (principio de Esteban, 2026-07-16).
+  No hay tokens de feel compartidos a nivel engine: `@engine/animations/feel.ts`
+  se eliminó sin haberse usado. Los tiempos de cada juego viven en sus propios
+  componentes (`scene.json`) y, si un juego necesita constantes de feel, en su
+  carpeta (`workspaces/<juego>/`). Esto invalida la idea original de
+  "vocabulario de feel global estilo Balatro" de la sección La visión: la
+  consistencia de feel es **por juego**, no por proyecto.
+- **Dinámica antes que animación:** no se recomiendan ni diseñan animaciones
+  para un juego sin su `docs/juegos/<juego>.md` (RM-090). Las fases 3–5 se
+  reordenaron por esto.
 - **El asentamiento del bounce usa la curva `easeOutBounce` custom (rebote "de
   pelota"), NO un spring.** Se probó reemplazarlo por spring en Fase 1 y
   Esteban lo rechazó: es otro carácter y se veía mal. Motion acepta funciones

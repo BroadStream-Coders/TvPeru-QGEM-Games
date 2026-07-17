@@ -60,7 +60,7 @@ export function TextView({ component }: { component: TextComponent }) {
       const fits = (size: number) => {
         el.style.fontSize = `${size}cqh`;
         const fitsH = el.scrollHeight <= maxH + 0.5;
-        const fitsW = wrap || el.scrollWidth <= maxW + 0.5;
+        const fitsW = el.scrollWidth <= maxW + 0.5;
         return fitsH && fitsW;
       };
 
@@ -127,6 +127,7 @@ export function TextView({ component }: { component: TextComponent }) {
       <div
         ref={textRef}
         style={{
+          minWidth: 0,
           color: component.color,
           fontFamily,
           fontSize: `${size}cqh`,
@@ -137,7 +138,6 @@ export function TextView({ component }: { component: TextComponent }) {
           lineHeight: lineSpacing === 0 ? "normal" : 1.2 + lineSpacing / 100,
           textAlign: TEXT_ALIGN[component.alignH],
           whiteSpace: wrap ? "pre-wrap" : "pre",
-          overflowWrap: wrap ? "break-word" : undefined,
         }}
       >
         {component.text}

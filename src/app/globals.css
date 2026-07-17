@@ -141,3 +141,15 @@
 ::selection {
   background: rgba(76, 141, 255, 0.35);
 }
+
+/* Componente `holo` del engine: barrido holográfico de carta croma (Álbum, RM-083) */
+@keyframes engine-holo-sweep {
+  0%,
+  55%,
+  100% {
+    transform: translateX(0) rotate(8deg);
+  }
+  75% {
+    transform: translateX(400%) rotate(8deg);
+  }
+}

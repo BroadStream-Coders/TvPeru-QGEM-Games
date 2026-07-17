@@ -5,6 +5,7 @@ import { Vec2 } from "@engine/RectTransform";
 import { PopComponent } from "@engine/components/pop/popComponent";
 import { FlipComponent } from "@engine/components/flip/flipComponent";
 import { FloatComponent } from "@engine/components/float/floatComponent";
+import { SparklesComponent } from "@engine/components/sparkles/sparklesComponent";
 import { ShakeComponent } from "@engine/components/shake/shakeComponent";
 import { BounceComponent } from "@engine/components/bounce/bounceComponent";
 import { SlideComponent } from "@engine/components/slide/slideComponent";
@@ -47,6 +48,9 @@ export function useGameObjectAnimations(
     FlipComponent | undefined;
   const floatComp = gameObject.components.find((c) => c.type === "float") as
     FloatComponent | undefined;
+  const sparklesComp = gameObject.components.find(
+    (c) => c.type === "sparkles",
+  ) as SparklesComponent | undefined;
   const shakeComp = gameObject.components.find((c) => c.type === "shake") as
     ShakeComponent | undefined;
   const bounceComp = gameObject.components.find((c) => c.type === "bounce") as
@@ -68,6 +72,10 @@ export function useGameObjectAnimations(
   const flipShowDuration = flipComp?.showDuration ?? 0.45;
   const flipPerspective = flipComp?.perspective ?? 6;
   const hasFloat = !!floatComp;
+  const hasSparkles = !!sparklesComp;
+  const sparklesRate = sparklesComp?.rate ?? 3;
+  const sparklesSize = sparklesComp?.size ?? 3.5;
+  const sparklesDuration = sparklesComp?.duration ?? 0.7;
   const floatAmplitude = floatComp?.amplitude ?? 3;
   const floatRotation = floatComp?.rotation ?? 0.6;
   const floatPeriod = floatComp?.period ?? 6;
@@ -176,6 +184,57 @@ export function useGameObjectAnimations(
     register,
     unregister,
   ]);
+
+  useEffect(() => {
+    if (!hasSparkles) return;
+    const el = elRef.current;
+    if (!el || sparklesRate <= 0 || sparklesDuration <= 0) return;
+    const container = document.createElement("div");
+    container.style.cssText =
+      "position:absolute;inset:0;pointer-events:none;z-index:30;";
+    el.appendChild(container);
+    let timer = 0;
+    const spawn = () => {
+      const size =
+        ((el.offsetWidth * sparklesSize) / 100) * (0.6 + Math.random() * 0.8);
+      const p = document.createElement("div");
+      const color = Math.random() < 0.35 ? "white" : "oklch(0.9 0.13 92)";
+      p.style.cssText =
+        `position:absolute;left:${5 + Math.random() * 90}%;top:${5 + Math.random() * 90}%;` +
+        `width:${size}px;height:${size}px;margin:${-size / 2}px 0 0 ${-size / 2}px;` +
+        `background:${color};` +
+        "clip-path:polygon(50% 0%, 65% 35%, 100% 50%, 65% 65%, 50% 100%, 35% 65%, 0% 50%, 35% 35%);" +
+        `filter:drop-shadow(0 0 ${size / 3}px oklch(0.85 0.16 90 / 0.9));`;
+      container.appendChild(p);
+      const twinkle = animate(
+        p,
+        {
+          scale: [0, 1, 0],
+          rotate: [0, 90 + Math.random() * 90],
+        },
+        {
+          duration: sparklesDuration * (0.7 + Math.random() * 0.6),
+          ease: "easeInOut",
+        },
+      );
+      twinkle.then(
+        () => p.remove(),
+        () => p.remove(),
+      );
+    };
+    const tick = () => {
+      spawn();
+      timer = window.setTimeout(
+        tick,
+        (1000 / sparklesRate) * (0.5 + Math.random()),
+      );
+    };
+    tick();
+    return () => {
+      window.clearTimeout(timer);
+      container.remove();
+    };
+  }, [hasSparkles, sparklesRate, sparklesSize, sparklesDuration]);
 
   useEffect(() => {
     if (!hasFloat) return;

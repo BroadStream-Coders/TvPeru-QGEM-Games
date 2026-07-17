@@ -142,7 +142,16 @@
   background: rgba(76, 141, 255, 0.35);
 }
 
-/* Componente `holo` del engine: barrido holográfico de carta croma (Álbum, RM-083) */
+/* Componente `holo` del engine: aura + barrido holográfico de carta croma (Álbum, RM-083) */
+@keyframes engine-holo-pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
 @keyframes engine-holo-sweep {
   0%,
   55%,

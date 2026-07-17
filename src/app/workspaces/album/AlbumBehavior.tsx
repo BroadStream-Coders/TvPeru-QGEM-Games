@@ -91,6 +91,9 @@ export function AlbumBehavior() {
       const card = round?.cards[i];
       const bgKey = card?.isCroma ? "cardCroma" : colorKey;
       patchComponent(CARD_IDS[i], "holo", { enabled: !!card?.isCroma });
+      patchComponent(CARD_PHOTO_COLOR_IDS[i], "sparkles", {
+        enabled: !!card?.isCroma,
+      });
       patchComponent(CARD_BACK_BG_IDS[i], "image", { assetKey: bgKey });
       patchComponent(CARD_FRONT_BG_IDS[i], "image", { assetKey: bgKey });
       patchComponent(CARD_QUESTION_IDS[i], "text", {

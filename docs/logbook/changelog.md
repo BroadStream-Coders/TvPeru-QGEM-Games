@@ -12,6 +12,10 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [TD-066] Resuelto: autosize de Text ignoraba el ancho en modo wrap (2026-07-17 08:14)
+
+En `TextView` el medidor saltaba el chequeo de ancho cuando `overflow: "wrap"`, así que palabras largas ("Rostworowski") no achicaban el texto: se cortaban o partían a la mitad. Ahora el ancho se chequea siempre, las palabras nunca se parten (`break-word` eliminado, wrap solo en espacios) y `minWidth: 0` confina el texto al box para medir bien.
+
 ## [TD-064] [TD-065] Resueltos: labs de `react-moveable` y `dockview` borrados (2026-07-16 14:14)
 
 Ambas librerías ya están cableadas a producción (sandbox y `EditorDock`), así que sus demos se eliminaron junto con sus entradas en el índice `/lab`; git conserva la referencia. Queda solo el lab de `motion` (TD-063), pendiente del cierre de RM-088/089.

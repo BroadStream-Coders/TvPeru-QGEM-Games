@@ -37,6 +37,11 @@ export function HoloInspector({
         onChange={(intensity) => onChange({ ...component, intensity })}
       />
       <NumberField
+        label="Glow"
+        value={component.glow}
+        onChange={(glow) => onChange({ ...component, glow })}
+      />
+      <NumberField
         label="Radius"
         value={component.radius}
         onChange={(radius) => onChange({ ...component, radius })}

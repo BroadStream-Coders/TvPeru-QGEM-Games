@@ -72,7 +72,7 @@ export function useGameObjectAnimations(
   const flipShowDuration = flipComp?.showDuration ?? 0.45;
   const flipPerspective = flipComp?.perspective ?? 6;
   const hasFloat = !!floatComp;
-  const hasSparkles = !!sparklesComp;
+  const hasSparkles = !!sparklesComp && sparklesComp.enabled !== false;
   const sparklesRate = sparklesComp?.rate ?? 3;
   const sparklesSize = sparklesComp?.size ?? 3.5;
   const sparklesDuration = sparklesComp?.duration ?? 0.7;

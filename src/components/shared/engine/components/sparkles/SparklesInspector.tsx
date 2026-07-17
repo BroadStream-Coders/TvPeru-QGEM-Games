@@ -1,6 +1,7 @@
 import { Sparkle } from "lucide-react";
 import { ComponentSection } from "@engine/ComponentSection";
 import { NumberField } from "@engine/NumberField";
+import { ToggleField } from "@engine/InspectorFields";
 import { SparklesComponent } from "./sparklesComponent";
 
 export function SparklesInspector({
@@ -20,6 +21,11 @@ export function SparklesInspector({
       accent="anim"
       onRemove={onRemove}
     >
+      <ToggleField
+        label="Enabled"
+        checked={component.enabled}
+        onChange={(enabled) => onChange({ ...component, enabled })}
+      />
       <NumberField
         label="Rate"
         value={component.rate}

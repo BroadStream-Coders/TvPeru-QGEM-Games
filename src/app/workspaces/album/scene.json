@@ -1173,6 +1173,7 @@
         "enabled": false,
         "period": 4,
         "intensity": 0.7,
+        "glow": 0.85,
         "radius": 1
       }
     ]
@@ -1414,8 +1415,9 @@
       },
       {
         "type": "sparkles",
-        "rate": 3,
-        "size": 3.5,
+        "enabled": false,
+        "rate": 6,
+        "size": 5.5,
         "duration": 0.7
       }
     ]
@@ -1485,6 +1487,7 @@
         "enabled": false,
         "period": 4,
         "intensity": 0.7,
+        "glow": 0.85,
         "radius": 1
       }
     ]
@@ -1726,8 +1729,9 @@
       },
       {
         "type": "sparkles",
-        "rate": 3,
-        "size": 3.5,
+        "enabled": false,
+        "rate": 6,
+        "size": 5.5,
         "duration": 0.7
       }
     ]
@@ -1797,6 +1801,7 @@
         "enabled": false,
         "period": 4,
         "intensity": 0.7,
+        "glow": 0.85,
         "radius": 1
       }
     ]
@@ -2038,8 +2043,9 @@
       },
       {
         "type": "sparkles",
-        "rate": 3,
-        "size": 3.5,
+        "enabled": false,
+        "rate": 6,
+        "size": 5.5,
         "duration": 0.7
       }
     ]
@@ -2109,6 +2115,7 @@
         "enabled": false,
         "period": 4,
         "intensity": 0.7,
+        "glow": 0.85,
         "radius": 1
       }
     ]
@@ -2350,8 +2357,9 @@
       },
       {
         "type": "sparkles",
-        "rate": 3,
-        "size": 3.5,
+        "enabled": false,
+        "rate": 6,
+        "size": 5.5,
         "duration": 0.7
       }
     ]
@@ -2421,6 +2429,7 @@
         "enabled": false,
         "period": 4,
         "intensity": 0.7,
+        "glow": 0.85,
         "radius": 1
       }
     ]
@@ -2662,8 +2671,9 @@
       },
       {
         "type": "sparkles",
-        "rate": 3,
-        "size": 3.5,
+        "enabled": false,
+        "rate": 6,
+        "size": 5.5,
         "duration": 0.7
       }
     ]

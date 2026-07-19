@@ -209,6 +209,7 @@ function GamePanel(props: IDockviewPanelProps) {
   );
   const editing = usePlayMode((s) => s.editing);
   const setEditing = usePlayMode((s) => s.setEditing);
+  const [cursorInFullscreen, setCursorInFullscreen] = useState(false);
   const toggleRef = useRef<(() => void) | null>(null);
   const registerFullscreen = useCallback((toggle: () => void) => {
     toggleRef.current = toggle;
@@ -240,6 +241,18 @@ function GamePanel(props: IDockviewPanelProps) {
           ))}
         </div>
         <div className="flex-1" />
+        <label
+          title="Mostrar el cursor en fullscreen"
+          className="flex cursor-pointer items-center gap-1.5 rounded-[5px] px-2 py-1 text-2xs font-medium text-dim transition-colors hover:bg-elev hover:text-ink"
+        >
+          <input
+            type="checkbox"
+            checked={cursorInFullscreen}
+            onChange={(e) => setCursorInFullscreen(e.target.checked)}
+            className="h-3 w-3 accent-acc"
+          />
+          Cursor
+        </label>
         <button
           onClick={() => toggleRef.current?.()}
           title="Pantalla completa"
@@ -252,7 +265,7 @@ function GamePanel(props: IDockviewPanelProps) {
       <div className="min-h-0 flex-1">
         <Scene
           viewMode="game"
-          hideCursorOnFullscreen
+          hideCursorOnFullscreen={!cursorInFullscreen}
           onFullscreenReady={registerFullscreen}
         >
           <div className="absolute inset-0">

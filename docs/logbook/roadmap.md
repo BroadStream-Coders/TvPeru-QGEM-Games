@@ -121,10 +121,12 @@ su "Hecho cuando", pero no es el foco actual).
   `playing`, escribiendo al runtime (nunca al diseño). Banco de pruebas: el
   workspace nuevo `operaciones-combinadas` (3 botones que cambian el color de un
   objeto central). El drag (pointer events + `setPointerCapture`, no HTML5 DnD)
-  viene después sobre la misma base. Pendientes conocidos: `hideCursorOnFullscreen`
-  oculta el cursor en fullscreen (necesitará flag por juego si un juego se opera
-  con mouse), y no copiar el patrón de registro por `goId` de AnimationsContext
-  (TD-067).
+  viene después sobre la misma base. Contexto clave: en el estudio la web corre
+  en una laptop conectada a una **pantalla táctil** que actúa como puntero
+  (pointer events cubren mouse y touch por igual; los views interactivos llevan
+  `touch-action: none`). El cursor en fullscreen ya es opcional: checkbox
+  "Cursor" en la topbar del panel Game (oculto por defecto). Pendiente: no
+  copiar el patrón de registro por `goId` de AnimationsContext (TD-067).
 - **Hecho cuando:** los botones funcionan en Play (panel y fullscreen) y existe
   una prueba de drag funcionando en el mismo workspace.
 - **Fecha:** 2026-07-19 · **Estado:** En progreso (2026-07-19)

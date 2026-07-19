@@ -85,7 +85,7 @@ export function DraggableView({
   return (
     <div
       className={cn(
-        "h-full w-full rounded-[1cqi] border-[0.2cqi] border-white/25 shadow-lg",
+        "h-full w-full touch-none rounded-[1cqi] border-[0.2cqi] border-white/25 shadow-lg",
         interactive && "cursor-grab",
         dragging && "cursor-grabbing brightness-110",
       )}

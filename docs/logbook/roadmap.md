@@ -114,15 +114,6 @@ su "Hecho cuando", pero no es el foco actual).
   display, y el swap de estados queda sincronizado con la animación.
 - **Fecha:** 2026-07-13 · **Estado:** En progreso (2026-07-16)
 
-## [RM-040] En la vista Game nada es seleccionable
-
-- **Objetivo:** Que en la vista **Game** el contenido no se pueda seleccionar ni
-  arrastrar por el usuario: ni seleccionar/copiar texto, ni la selección accidental
-  de un div que termina marcando todo.
-- **Hecho cuando:** en Game no se puede seleccionar texto ni marcar/arrastrar
-  contenido; la selección del navegador queda anulada en el área de display.
-- **Fecha:** 2026-06-29 · **Estado:** Abierto
-
 ## [RM-043] Menú "Windows" para reabrir paneles cerrados
 
 - **Objetivo:** Un desplegable **"Windows"** en el chrome del editor que liste los

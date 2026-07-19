@@ -42,33 +42,27 @@ QGEM Games is a **fullscreen game display** system for TV Perú's show "Que Gane
 
 **Workspace ↔ header handshake.** The header is rendered once by the workspace layout, but its contents are driven by each page through a Zustand store:
 
-- `useWorkspaceHeader` (`src/hooks/use-workspace-header.ts`) holds `{ title, icon, onLoad }`.
-- A workspace `page.tsx` (client component) calls `setHeader({ title, icon, onLoad })` inside a `useEffect`, and **must** call `resetHeader()` on unmount.
+- `useWorkspaceHeader` (`src/hooks/use-workspace-header.ts`) holds `{ title, icon, onLoad, … }`.
+- `EditorLayout` calls `setHeader(…)` inside a `useEffect` (fed from the workspace's `GameDefinition`) and calls `resetHeader()` on unmount — workspace pages don't touch the store themselves.
 - `WorkspaceHeader` renders nothing until `title` is set; it shows the load button (`FileActions`) only when `onLoad` is provided.
 
 **No data persistence (design philosophy).** This project does **not** persist data — not in `localStorage`, not in a database, not anywhere. Nothing is meant to survive a page reload. Files loaded from the user's machine via blob URLs (`URL.createObjectURL`) intentionally die on reload; that is by design, **not** technical debt. Do not propose adding `localStorage`, IndexedDB, a DB, or a save/export flow unless the user explicitly asks. A future Supabase integration may serve remote read-only assets (images/video for backgrounds), but **not** as a storage backend for app data.
 
-**Load-only persistence.** `src/helpers/persistence.ts` exposes `loadJsonFile<T>(file, validator?)` and `loadZipFile(file)`. Save/export was intentionally removed — this app consumes session files, it does not produce them. Workspaces validate the parsed JSON with a type-guard passed to `loadJsonFile` (see `deletreo/page.tsx`).
+**Load-only persistence.** `src/helpers/persistence.ts` exposes `loadJsonFile<T>(file, validator?)` and `loadZipFile(file)`. Save/export was intentionally removed — this app consumes session files, it does not produce them. Workspaces validate the parsed JSON with a type-guard passed to `loadJsonFile` (see `album/session.ts`).
 
-**`FullScreen` is the display primitive** (`src/components/shared/FullScreen.tsx`). It renders a 16:9 "stage" that a workspace fills with its game UI. Two things are essential and non-obvious:
+**`Scene` is the display primitive** (`src/components/shared/engine/Scene.tsx`). It renders the 16:9 "stage" of the Game view and owns browser fullscreen (letterboxed 16:9 on black, optional hidden cursor). The editor's Scene panel does NOT use it — that is `SceneCanvas`, a separate editing canvas. Two things are essential and non-obvious:
 
-1. **The stage is a container-query context (`[container-type:size]`), so game content MUST be sized in container-query units (`cqi`/`cqw`/`cqh`), not `vw`/`rem`/`px`.** This is the whole point: `cqi` resolves against the stage box, so the layout looks _identical_ whether or not the user is in browser fullscreen. Sizing content in viewport/absolute units reintroduces the bug where fullscreen and windowed views diverge. In fullscreen the stage is letterboxed (centered 16:9 on black) so the aspect ratio never distorts.
+1. **The stage is a container-query context (`[container-type:size]`), so game content MUST be sized in container-query units (`cqi`/`cqw`/`cqh`), not `vw`/`rem`/`px`.** This is the whole point: `cqi` resolves against the stage box, so the layout looks _identical_ whether or not the user is in browser fullscreen. Sizing content in viewport/absolute units reintroduces the bug where fullscreen and windowed views diverge.
 
-2. **The `background` prop** is a discriminated union — all three variants take a URL/value, render behind the content, and are meant to be swappable per game:
-
-   ```tsx
-   background={{ type: "color", value: "#00B140" }}   // hex; default is #000000
-   background={{ type: "image", value: "https://…" }} // bg-cover div
-   background={{ type: "video", value: "https://…" }} // autoPlay loop muted playsInline, object-cover
-   ```
-
-   Video/image URLs are expected to come from remote storage (Supabase). Video always plays muted + looped (no audio, autoplay-safe). Content is layered above the background via a `relative z-10` wrapper.
+2. **Nothing inside the stage is selectable** (`select-none` on the stage container, RM-040): the Game view is a broadcast display, so text selection and drag-selection are disabled wholesale. This does NOT block pointer events — future in-game buttons/drag interactions work on top of it (gate them on `useSceneViewMode() === "game"`).
 
 ## Adding a new workspace
 
-1. Create `src/app/workspaces/<name>/page.tsx` — a client component that calls `setHeader` (with an `onLoad` handler using `loadJsonFile` + a type-guard) and `resetHeader` on unmount.
-2. Render `<FullScreen background={…}>` and size the game UI in `cqi` units.
+1. Create `src/app/workspaces/<name>/game.ts` — a `GameDefinition` (scene `gameObjects`, `assets`, custom `components`, `behavior`, session `onLoad` with a type-guard).
+2. Create `page.tsx` — a client component that just renders `<EditorLayout game={…} />`.
 3. Register the workspace in the `workspaces` array in `src/app/page.tsx`.
+
+For a game migrated from Unity, `docs/migracion-unity.md` covers this end to end.
 
 ## Conventions
 
@@ -76,5 +70,5 @@ QGEM Games is a **fullscreen game display** system for TV Perú's show "Que Gane
 - No code comments unless explicitly requested; record tech debt in `docs/logbook/technical-debt.md` instead.
 - UI copy is in Spanish.
 - **Target is Chrome only** (the studio machine). Don't spend effort on cross-browser compatibility; recent Chromium is the assumed runtime.
-- **Default background is black** (`#000000`, the `FullScreen` default). New workspaces don't assume a chroma background.
+- **Default background is dark/black** (the stage's `bg-stage` token). New workspaces don't assume a chroma background.
 - **Session file format is per-game.** Games that carry images use a **ZIP bundle** (`loadZipFile` — JSON + embedded assets, so there are no loose folders/paths to manage); simpler games use plain **JSON** (`loadJsonFile`). This will likely change once Supabase storage lands, but that is a **distant** future, not a current concern.

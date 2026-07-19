@@ -12,6 +12,14 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-040] En la vista Game nada es seleccionable (2026-07-19 16:56)
+
+`select-none` en el contenedor del stage de `Scene` (que hoy solo usa la vista Game; `SceneCanvas` es aparte): sin selección de texto ni drag-selección accidental, en panel y en fullscreen. No bloquea pointer events, así que botones/drag futuros dentro del juego siguen viables.
+
+## [TD-068] Resuelto: CLAUDE.md describía `FullScreen.tsx`, que ya no existe (2026-07-19 16:56)
+
+La sección del primitivo de display ahora describe `Scene` (stage cqi + select-none), el handshake del header refleja que lo maneja `EditorLayout`, y "Adding a new workspace" pasa al flujo real `GameDefinition` + `<EditorLayout>`; también se corrigieron el ejemplo de type-guard y la nota del fondo default.
+
 ## [RM-092] Juego "Mi Libro Favorito" migrado desde Unity (2026-07-19 08:15)
 
 Escena (marco de pregunta + 2 banners con corazones enmascarados, diseñados fuera de pantalla como en el prefab), behavior completo (preguntas por grupo, jugadores con flechas, vidas con Num +/−) y sesión JSON. Al engine se sumaron: componente `blink` (UIBlinkPulse), Num +/− en `useGameKeys`, mask sin imagen = recorte al rect, y bounce/slide pasaron a `target` absoluto en coordenadas locales del padre (como en Unity; muere el "home" capturado al montar y su bug de destino obsoleto). Los `scene.json` de deletreo y calculo-mental se migraron al nuevo formato.

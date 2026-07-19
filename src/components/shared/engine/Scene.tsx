@@ -105,7 +105,7 @@ export function Scene({
               : VIEWPORT_CHECKER
         }
         className={cn(
-          "relative focus:outline-none flex items-center justify-center transition-all duration-300",
+          "relative select-none focus:outline-none flex items-center justify-center transition-all duration-300",
           isFullscreen && "w-screen h-screen bg-black",
           gameWindowed &&
             "min-h-0 w-full flex-1 overflow-hidden [container-type:size]",

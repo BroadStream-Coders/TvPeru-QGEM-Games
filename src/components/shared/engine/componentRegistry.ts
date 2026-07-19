@@ -1,8 +1,11 @@
 "use client";
 
 import { ComponentType, createContext, useContext } from "react";
+import type { LucideIcon } from "lucide-react";
 import { GameObjectComponent } from "@engine/gameObject";
 import { Vec2 } from "@engine/RectTransform";
+import type { SectionAccent } from "@engine/ComponentSection";
+import type { AssetKind } from "@/helpers/asset-preloader";
 import { imageDefinition } from "@engine/components/image";
 import { colorDefinition } from "@engine/components/color";
 import { videoDefinition } from "@engine/components/video";
@@ -19,6 +22,31 @@ import { shakeDefinition } from "@engine/components/shake";
 import { bounceDefinition } from "@engine/components/bounce";
 import { slideDefinition } from "@engine/components/slide";
 
+export type SchemaField =
+  | { key: string; type: "number"; label: string }
+  | { key: string; type: "boolean"; label: string; invert?: boolean }
+  | { key: string; type: "color"; label?: string }
+  | { key: string; type: "vec2"; label: string }
+  | {
+      key: string;
+      type: "enum";
+      label: string;
+      options: { value: string; label: string }[];
+    }
+  | {
+      key: string;
+      type: "assetKey";
+      label: string;
+      kind: AssetKind;
+      resize?: boolean;
+    };
+
+export interface ComponentSchema {
+  icon: LucideIcon;
+  accent?: SectionAccent;
+  fields: SchemaField[];
+}
+
 export interface ComponentDefinition<
   C extends GameObjectComponent = GameObjectComponent,
 > {
@@ -26,7 +54,8 @@ export interface ComponentDefinition<
   label: string;
   create: () => C;
   view?: ComponentType<{ component: C }>;
-  editor: ComponentType<{
+  schema?: ComponentSchema;
+  editor?: ComponentType<{
     component: C;
     onChange: (next: C) => void;
     onRemove: () => void;

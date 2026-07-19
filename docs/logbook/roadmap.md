@@ -65,7 +65,7 @@ su "Hecho cuando", pero no es el foco actual).
 > independiente y fresca, con sus propios tiempos y feel, aunque se repita
 > código** — no hay tokens de feel compartidos a nivel engine. Largo plazo
 > (sin compromiso): magic move entre pantallas y animaciones editables por el
-> usuario (encaja con WL-025). Esteban avaló romper la estructura actual de
+> usuario (base lista con RM-091). Esteban avaló romper la estructura actual de
 > "pantallas como subárboles activados/desactivados" si el magic move lo pide.
 
 ## [RM-090] Estructura de definición de dinámicas por juego

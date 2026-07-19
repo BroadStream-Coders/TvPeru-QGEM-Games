@@ -34,6 +34,7 @@ import { SceneCanvas } from "@engine/editor/SceneCanvas";
 import { Hierarchy } from "@engine/Hierarchy";
 import { GameObjectInspector } from "@engine/GameObjectInspector";
 import { RectTransformInspector } from "@engine/RectTransformInspector";
+import { SchemaInspector } from "@engine/SchemaInspector";
 import { AddComponentButton } from "@engine/AddComponentButton";
 import { gameObjectKind, type GameObject } from "@engine/gameObject";
 import {
@@ -106,8 +107,12 @@ function HierarchyPanel() {
 
 function InspectorPanel() {
   const e = useEditor();
-  const selected = e.selected;
   const restricted = useRestricted();
+  const runtime = useSceneRuntime((s) => s.runtime);
+  const selected =
+    restricted && e.selected
+      ? mergeRuntime([e.selected], runtime)[0]
+      : e.selected;
   return (
     <div
       className={cn(
@@ -132,17 +137,32 @@ function InspectorPanel() {
             setRotation={e.setRotation}
           />
           {selected.components.map((component, index) => {
-            const Editor = e.registry.get(component.type)?.editor;
-            return Editor ? (
-              <Editor
+            const def = e.registry.get(component.type);
+            if (!def) return null;
+            const Editor = def.editor;
+            if (Editor)
+              return (
+                <Editor
+                  key={index}
+                  component={component}
+                  onChange={(next) =>
+                    e.patchComponent(selected.id, index, next)
+                  }
+                  onRemove={() => e.removeComponent(selected.id, index)}
+                  onResize={(size) => e.setGameObjectSize(selected.id, size)}
+                  onAddComponent={(type) => e.addComponent(selected.id, type)}
+                />
+              );
+            return (
+              <SchemaInspector
                 key={index}
+                definition={def}
                 component={component}
                 onChange={(next) => e.patchComponent(selected.id, index, next)}
                 onRemove={() => e.removeComponent(selected.id, index)}
                 onResize={(size) => e.setGameObjectSize(selected.id, size)}
-                onAddComponent={(type) => e.addComponent(selected.id, type)}
               />
-            ) : null;
+            );
           })}
           <AddComponentButton
             options={e.registry.options}

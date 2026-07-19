@@ -12,6 +12,10 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-091] Motor de inspector por esquema (2026-07-18 21:10)
+
+Los componentes declaran `schema` en su definición y `SchemaInspector` genera el inspector; los 13 simples migraron y sus `*Inspector.tsx` se borraron (−470 líneas netas), quedando Text y VideoControl como overrides a mano. En play restringido el inspector muestra los valores fusionados con el runtime. Promoción de WL-025 (absorbía WL-008; el renombrado `GameObjectComponent`→`Component` quedó fuera).
+
 ## [TD-066] Resuelto: autosize de Text ignoraba el ancho en modo wrap (2026-07-17 08:14)
 
 En `TextView` el medidor saltaba el chequeo de ancho cuando `overflow: "wrap"`, así que palabras largas ("Rostworowski") no achicaban el texto: se cortaban o partían a la mitad. Ahora el ancho se chequea siempre, las palabras nunca se parten (`break-word` eliminado, wrap solo en espacios) y `minWidth: 0` confina el texto al box para medir bien.

@@ -273,6 +273,15 @@ Un tipo de componente (RectTransform, Image, Text…) se define con **tres pieza
 | **Editor** (control) | el formulario que edita ese dato           | en el **Inspector** |
 | **Vista** (render)   | cómo se dibuja ese dato                    | en la **Scene**     |
 
+> **RM-091 (2026-07-18):** la pieza Editor ya casi nunca se escribe a mano. El
+> componente declara un **`schema`** de propiedades en su definición y el
+> renderer genérico **`SchemaInspector`** genera el formulario con los
+> primitivos compartidos (`NumberField`, `ColorField`, `SelectField`,
+> `AssetSelectField`, `ToggleField`, `AxisField`). `editor` quedó como
+> **override opcional** para casos con lógica propia (hoy: Text, VideoControl —
+> estilo custom editors de Unity). La tripleta típica baja a modelo+esquema y
+> vista.
+
 El Modelo no sabe dibujarse ni editarse; el Editor no sabe de render; la Vista no
 sabe de edición. Los tres se pegan con un **registro indexado por `type`** que ya
 existe y funciona: `engine/componentRegistry.ts`. El registro es **componible y
@@ -285,9 +294,13 @@ export interface ComponentDefinition<C extends GameObjectComponent = GameObjectC
   type: C["type"];
   label: string; // nombre visible en el dropdown "Agregar componente"
   create: () => C; // fábrica del modelo por defecto
-  view: ComponentType<{ component: C }>; // la Vista (Scene)
-  editor: ComponentType<{ component: C; onChange; onRemove; onResize }>; // el Editor (Inspector)
+  view?: ComponentType<{ component: C }>; // la Vista (Scene); los sin render (Mask config) no la traen
+  schema?: ComponentSchema; // { icon, accent?, fields[] } → SchemaInspector genera el Editor
+  editor?: ComponentType<{ component: C; onChange; onRemove; onResize }>; // override a mano (Text, VideoControl)
 }
+
+// Tipos de campo del esquema (SchemaField): number, boolean (con invert),
+// color, vec2, enum (options) y assetKey (kind + resize → botón "fit to asset").
 
 // Helper tipado: ata vista/editor al modelo C en compilación (cierra TD-004).
 export function defineComponent<C>(def: ComponentDefinition<C>): ComponentDefinition { … }
@@ -324,7 +337,10 @@ Contrato de cada pieza:
 
 Cómo lo consumen las dos UIs (idéntico en deletreo y sandbox):
 
-- Inspector: `selected.components.map(c => REGISTRY[c.type].editor)` + `AddComponentButton`.
+- Inspector: por cada componente usa `def.editor` si existe (override) y si no
+  `SchemaInspector` con `def.schema`; + `AddComponentButton`. En play con
+  edición restringida el Inspector muestra los **valores fusionados con el
+  runtime** (`mergeRuntime`), así se ve lo que el behavior pisa.
 - Scene: `GameObjectView` hace `gameObject.components.map(c => REGISTRY[c.type].view)`.
 
 **Agregar un componente nuevo = crear su tripleta y registrar una entrada. No se

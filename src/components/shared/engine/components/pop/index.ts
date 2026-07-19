@@ -1,12 +1,19 @@
+import { Maximize2 } from "lucide-react";
 import { defineComponent } from "@engine/componentRegistry";
 import { PopComponent, createPopComponent } from "./popComponent";
 import { PopView } from "./PopView";
-import { PopInspector } from "./PopInspector";
 
 export const popDefinition = defineComponent<PopComponent>({
   type: "pop",
   label: "Pop",
   create: () => createPopComponent(),
   view: PopView,
-  editor: PopInspector,
+  schema: {
+    icon: Maximize2,
+    accent: "anim",
+    fields: [
+      { key: "scale", type: "number", label: "Scale" },
+      { key: "duration", type: "number", label: "Duration" },
+    ],
+  },
 });

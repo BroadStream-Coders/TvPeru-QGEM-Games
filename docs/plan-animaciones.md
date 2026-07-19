@@ -11,7 +11,8 @@ similares, la calidad de animación es lo que más aporta visualmente al display
 Corto plazo: las animaciones se controlan **por código** (behaviors). Largo
 plazo (sin compromiso): el usuario podrá editarlas desde el inspector — el
 modelo de "animación = componente con config JSON serializable" ya lo deja
-casi gratis (solo es agregar campos al inspector; encaja con WL-025).
+casi gratis (con RM-091 los componentes de animación ya se editan por esquema
+en el inspector; falta solo la editabilidad durante play).
 
 La herramienta es **`motion`** (ex framer-motion, import `motion/react`, ya
 instalado y validado en `/lab/motion`). Pero motion es el ejecutor, no el
@@ -118,7 +119,7 @@ sistema: el trabajo estructural real son tres carencias del engine actual:
   renders, y hoy las pantallas son subárboles que se activan/desactivan.
   **Esteban avaló romper esa estructura** (es propuesta suya, no sagrada) con
   tal de que se vea bien al aire y sea manejable en desarrollo.
-- Editabilidad completa del usuario (con WL-025, inspector por esquema).
+- Editabilidad completa del usuario (base lista con RM-091, inspector por esquema).
 - Camera shake a nivel de stage.
 
 ## Decisiones ya tomadas (no re-litigar)

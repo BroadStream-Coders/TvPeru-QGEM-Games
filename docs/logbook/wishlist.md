@@ -39,13 +39,6 @@ reset, copiar/pegar valores…). No se implementaron: `enabled` no existe en el 
 primitivo dropdown-menu (hoy solo hay context-menu). Hoy `ComponentSection` solo trae
 remove directo. Promover si se quiere desactivar componentes sin eliminarlos.
 
-## [WL-025] Motor de inspector por esquema (absorbe WL-008)
-
-Que cada componente declare un esquema de propiedades y un renderer genérico
-genere el inspector (a mano solo como override, estilo Unity). Segunda fase:
-el renderer lee valores vivos (merge) durante play. Base para componentes
-scripteados por el usuario a futuro. Detalle y preguntas: `docs/idea-inspector-engine.md`.
-
 ## [WL-011] Login con Google One Tap / FedCM (prompt en la esquina)
 
 Reemplazar el botón de redirect actual (`signInWithOAuth`) por el prompt One Tap de Google que aparece en la esquina, sin salir de la app. Es otro mecanismo: Google Identity Services (`gsi/client`) + `supabase.auth.signInWithIdToken` (no `signInWithOAuth`), requiere `NEXT_PUBLIC_GOOGLE_CLIENT_ID` y generar un nonce; corre sobre FedCM (encaja bien con target solo-Chrome). Las piezas actuales (`useAuth`, cliente Supabase, sesión) se reutilizan; solo cambia el disparador del login.

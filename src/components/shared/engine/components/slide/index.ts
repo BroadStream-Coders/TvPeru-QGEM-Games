@@ -13,7 +13,7 @@ export const slideDefinition = defineComponent<SlideComponent>({
     accent: "anim",
     fields: [
       { key: "speed", type: "number", label: "Speed" },
-      { key: "hiddenOffset", type: "vec2", label: "Hide" },
+      { key: "target", type: "vec2", label: "Target" },
     ],
   },
 });

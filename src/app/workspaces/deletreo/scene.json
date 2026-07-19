@@ -98,12 +98,16 @@
         "type": "bounce",
         "travelSpeed": 1800,
         "bounceAmplitude": 40,
-        "bounceDuration": 0.4
+        "bounceDuration": 0.4,
+        "target": {
+          "x": 0,
+          "y": 0
+        }
       },
       {
         "type": "slide",
         "speed": 1800,
-        "hiddenOffset": {
+        "target": {
           "x": 0,
           "y": -330
         }

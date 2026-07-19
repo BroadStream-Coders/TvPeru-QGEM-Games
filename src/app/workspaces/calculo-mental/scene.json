@@ -91,14 +91,18 @@
         "type": "bounce",
         "travelSpeed": 1800,
         "bounceAmplitude": 40,
-        "bounceDuration": 0.4
+        "bounceDuration": 0.4,
+        "target": {
+          "x": -673.25,
+          "y": -396.8
+        }
       },
       {
         "type": "slide",
         "speed": 1800,
-        "hiddenOffset": {
-          "x": 0,
-          "y": -393.2
+        "target": {
+          "x": -673.25,
+          "y": -790
         }
       }
     ]
@@ -218,14 +222,18 @@
         "type": "bounce",
         "travelSpeed": 1800,
         "bounceAmplitude": 40,
-        "bounceDuration": 0.4
+        "bounceDuration": 0.4,
+        "target": {
+          "x": -279.75,
+          "y": -396.8
+        }
       },
       {
         "type": "slide",
         "speed": 1800,
-        "hiddenOffset": {
-          "x": 0,
-          "y": -393.2
+        "target": {
+          "x": -279.75,
+          "y": -790
         }
       }
     ]
@@ -345,14 +353,18 @@
         "type": "bounce",
         "travelSpeed": 1800,
         "bounceAmplitude": 40,
-        "bounceDuration": 0.4
+        "bounceDuration": 0.4,
+        "target": {
+          "x": 113.75,
+          "y": -396.8
+        }
       },
       {
         "type": "slide",
         "speed": 1800,
-        "hiddenOffset": {
-          "x": 0,
-          "y": -393.2
+        "target": {
+          "x": 113.75,
+          "y": -790
         }
       }
     ]
@@ -472,14 +484,18 @@
         "type": "bounce",
         "travelSpeed": 1800,
         "bounceAmplitude": 40,
-        "bounceDuration": 0.4
+        "bounceDuration": 0.4,
+        "target": {
+          "x": 507.25,
+          "y": -396.8
+        }
       },
       {
         "type": "slide",
         "speed": 1800,
-        "hiddenOffset": {
-          "x": 0,
-          "y": -393.2
+        "target": {
+          "x": 507.25,
+          "y": -790
         }
       }
     ]

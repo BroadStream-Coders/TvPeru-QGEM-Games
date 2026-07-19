@@ -4,7 +4,7 @@ import { Vec2 } from "@engine/RectTransform";
 export interface SlideComponent extends GameObjectComponent {
   type: "slide";
   speed: number;
-  hiddenOffset: Vec2;
+  target: Vec2;
 }
 
 export function createSlideComponent(
@@ -13,6 +13,6 @@ export function createSlideComponent(
   return {
     type: "slide",
     speed: init?.speed ?? 1800,
-    hiddenOffset: init?.hiddenOffset ?? { x: 0, y: -330 },
+    target: init?.target ?? { x: 0, y: 0 },
   };
 }

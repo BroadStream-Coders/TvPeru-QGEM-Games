@@ -3,6 +3,7 @@ import { animate, type AnimationPlaybackControls } from "motion";
 import { GameObject } from "@engine/gameObject";
 import { Vec2 } from "@engine/RectTransform";
 import { PopComponent } from "@engine/components/pop/popComponent";
+import { BlinkComponent } from "@engine/components/blink/blinkComponent";
 import { FlipComponent } from "@engine/components/flip/flipComponent";
 import { FloatComponent } from "@engine/components/float/floatComponent";
 import { SparklesComponent } from "@engine/components/sparkles/sparklesComponent";
@@ -26,11 +27,17 @@ function easeOutBounce(t: number) {
 }
 
 /**
- * Corre las animaciones de un GameObject sobre `motion`. Pop, Shake y Flip
- * animan el content-div (que envuelve componentes + hijos); Bounce y Slide
- * animan la posición del transform (a través de `onAnimatePosition`, capa
- * runtime). Flip registra dos triggers (`flipHide`: 0→90°, sostiene el canto;
- * `flipShow`: 90°→0) para que el behavior haga el swap de caras en el medio.
+ * Corre las animaciones de un GameObject sobre `motion`. Pop, Shake, Flip y
+ * Blink animan el content-div (que envuelve componentes + hijos); Bounce y
+ * Slide animan la posición del transform (a través de `onAnimatePosition`,
+ * capa runtime). Bounce y Slide viajan desde la posición actual hacia su
+ * `target`: una posición **absoluta en coordenadas locales del padre** (igual
+ * que `transform.position` y que los `target` de UIBounceMove/UISlide en
+ * Unity); no hay "home" implícito. Flip registra dos
+ * triggers (`flipHide`: 0→90°, sostiene el canto; `flipShow`: 90°→0) para que
+ * el behavior haga el swap de caras en el medio; Blink hace lo mismo con
+ * `blink` (pulso + parpadeos, resuelve antes del swap) y `blinkSettle` (dip
+ * final tras el swap).
  * Float es ambiental: no se dispara con `play()`, corre en loop mientras el
  * GameObject esté montado (bob vertical en % de la altura + balanceo de
  * rotación a período distinto; `phase` desincroniza instancias).
@@ -57,6 +64,8 @@ export function useGameObjectAnimations(
     BounceComponent | undefined;
   const slideComp = gameObject.components.find((c) => c.type === "slide") as
     SlideComponent | undefined;
+  const blinkComp = gameObject.components.find((c) => c.type === "blink") as
+    BlinkComponent | undefined;
 
   const { register, unregister } = useAnimations();
   const id = gameObject.id;
@@ -86,12 +95,21 @@ export function useGameObjectAnimations(
   const travelSpeed = bounceComp?.travelSpeed ?? 1800;
   const bounceAmplitude = bounceComp?.bounceAmplitude ?? 40;
   const bounceDuration = bounceComp?.bounceDuration ?? 0.4;
+  const bounceTargetX = bounceComp?.target?.x ?? 0;
+  const bounceTargetY = bounceComp?.target?.y ?? 0;
   const slideSpeed = slideComp?.speed ?? 1800;
-  const offsetX = slideComp?.hiddenOffset.x ?? 0;
-  const offsetY = slideComp?.hiddenOffset.y ?? 0;
+  const slideTargetX = slideComp?.target?.x ?? 0;
+  const slideTargetY = slideComp?.target?.y ?? 0;
+  const hasBlink = !!blinkComp;
+  const blinkPulseScale = blinkComp?.pulseScale ?? 1.25;
+  const blinkPulseDuration = blinkComp?.pulseDuration ?? 0.12;
+  const blinkCount = blinkComp?.blinkCount ?? 3;
+  const blinkDuration = blinkComp?.blinkDuration ?? 0.08;
 
   const elRef = useRef<HTMLDivElement | null>(null);
   const popRef = useRef<AnimationPlaybackControls | null>(null);
+  const blinkRef = useRef<AnimationPlaybackControls | null>(null);
+  const blinkSeqRef = useRef(0);
   const flipRef = useRef<AnimationPlaybackControls | null>(null);
   const shakeRef = useRef<AnimationPlaybackControls | null>(null);
   const moveRef = useRef<{ seq: number; controls: AnimationPlaybackControls | null }>({
@@ -101,8 +119,6 @@ export function useGameObjectAnimations(
 
   const posRef = useRef<Vec2>(gameObject.transform.position);
   posRef.current = gameObject.transform.position;
-  const homeRef = useRef<Vec2 | null>(null);
-  if (homeRef.current === null) homeRef.current = gameObject.transform.position;
 
   const cancelMove = useCallback(() => {
     moveRef.current.seq++;
@@ -310,7 +326,7 @@ export function useGameObjectAnimations(
       cancelMove();
       const seq = moveRef.current.seq;
       const from = posRef.current;
-      const to = homeRef.current ?? from;
+      const to = { x: bounceTargetX, y: bounceTargetY };
       const dist = Math.hypot(to.x - from.x, to.y - from.y);
       if (dist < 0.001) {
         onAnimatePosition?.(id, to);
@@ -346,8 +362,73 @@ export function useGameObjectAnimations(
     travelSpeed,
     bounceAmplitude,
     bounceDuration,
+    bounceTargetX,
+    bounceTargetY,
     cancelMove,
     onAnimatePosition,
+    register,
+    unregister,
+  ]);
+
+  useEffect(() => {
+    if (!hasBlink) return;
+    const wait = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
+    const blink = async () => {
+      const el = elRef.current;
+      if (!el || blinkPulseDuration <= 0) return;
+      const seq = ++blinkSeqRef.current;
+      el.style.opacity = "";
+      const pulse = animate(
+        el,
+        { scale: [1, blinkPulseScale, 1] },
+        { duration: blinkPulseDuration * 2, ease: "easeInOut" },
+      );
+      blinkRef.current = pulse;
+      try {
+        await pulse;
+      } catch {
+        return;
+      }
+      for (let i = 0; i < blinkCount; i++) {
+        if (blinkSeqRef.current !== seq) return;
+        el.style.opacity = "0";
+        await wait(blinkDuration * 1000);
+        if (blinkSeqRef.current !== seq) return;
+        el.style.opacity = "";
+        await wait(blinkDuration * 1000);
+      }
+      if (blinkSeqRef.current === seq) el.style.transform = "";
+    };
+    const settle = async () => {
+      const el = elRef.current;
+      if (!el) return;
+      blinkRef.current?.cancel();
+      const controls = animate(
+        el,
+        { scale: [1, 0.9, 1] },
+        { duration: 0.16, ease: "easeInOut" },
+      );
+      blinkRef.current = controls;
+      try {
+        await controls;
+      } catch {
+        return;
+      }
+      if (blinkRef.current === controls) el.style.transform = "";
+    };
+    register(id, "blink", blink);
+    register(id, "blinkSettle", settle);
+    return () => {
+      unregister(id, "blink");
+      unregister(id, "blinkSettle");
+    };
+  }, [
+    id,
+    hasBlink,
+    blinkPulseScale,
+    blinkPulseDuration,
+    blinkCount,
+    blinkDuration,
     register,
     unregister,
   ]);
@@ -357,8 +438,7 @@ export function useGameObjectAnimations(
     const run = async () => {
       cancelMove();
       const from = posRef.current;
-      const home = homeRef.current ?? from;
-      const to = { x: home.x + offsetX, y: home.y + offsetY };
+      const to = { x: slideTargetX, y: slideTargetY };
       const dist = Math.hypot(to.x - from.x, to.y - from.y);
       if (dist < 0.001 || slideSpeed <= 0) {
         onAnimatePosition?.(id, to);
@@ -378,8 +458,8 @@ export function useGameObjectAnimations(
     id,
     hasSlide,
     slideSpeed,
-    offsetX,
-    offsetY,
+    slideTargetX,
+    slideTargetY,
     cancelMove,
     onAnimatePosition,
     register,
@@ -391,6 +471,8 @@ export function useGameObjectAnimations(
       popRef.current?.cancel();
       flipRef.current?.stop();
       shakeRef.current?.cancel();
+      blinkRef.current?.cancel();
+      blinkSeqRef.current++;
       cancelMove();
     },
     [cancelMove],

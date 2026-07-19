@@ -15,6 +15,7 @@ export const bounceDefinition = defineComponent<BounceComponent>({
       { key: "travelSpeed", type: "number", label: "Speed" },
       { key: "bounceAmplitude", type: "number", label: "Amplitude" },
       { key: "bounceDuration", type: "number", label: "Duration" },
+      { key: "target", type: "vec2", label: "Target" },
     ],
   },
 });

@@ -12,6 +12,10 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-092] Juego "Mi Libro Favorito" migrado desde Unity (2026-07-19 08:15)
+
+Escena (marco de pregunta + 2 banners con corazones enmascarados, diseñados fuera de pantalla como en el prefab), behavior completo (preguntas por grupo, jugadores con flechas, vidas con Num +/−) y sesión JSON. Al engine se sumaron: componente `blink` (UIBlinkPulse), Num +/− en `useGameKeys`, mask sin imagen = recorte al rect, y bounce/slide pasaron a `target` absoluto en coordenadas locales del padre (como en Unity; muere el "home" capturado al montar y su bug de destino obsoleto). Los `scene.json` de deletreo y calculo-mental se migraron al nuevo formato.
+
 ## [RM-091] Motor de inspector por esquema (2026-07-18 21:10)
 
 Los componentes declaran `schema` en su definición y `SchemaInspector` genera el inspector; los 13 simples migraron y sus `*Inspector.tsx` se borraron (−470 líneas netas), quedando Text y VideoControl como overrides a mano. En play restringido el inspector muestra los valores fusionados con el runtime. Promoción de WL-025 (absorbía WL-008; el renombrado `GameObjectComponent`→`Component` quedó fuera).

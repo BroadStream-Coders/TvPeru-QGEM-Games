@@ -21,6 +21,7 @@ import { sparklesDefinition } from "@engine/components/sparkles";
 import { shakeDefinition } from "@engine/components/shake";
 import { bounceDefinition } from "@engine/components/bounce";
 import { slideDefinition } from "@engine/components/slide";
+import { blinkDefinition } from "@engine/components/blink";
 
 export type SchemaField =
   | { key: string; type: "number"; label: string }
@@ -101,6 +102,7 @@ export const NATIVE_COMPONENTS: ComponentDefinition[] = [
   shakeDefinition,
   bounceDefinition,
   slideDefinition,
+  blinkDefinition,
 ];
 
 const ComponentRegistryContext = createContext<ComponentRegistry>(

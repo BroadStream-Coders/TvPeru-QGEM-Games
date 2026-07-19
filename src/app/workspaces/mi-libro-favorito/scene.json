@@ -1,0 +1,1665 @@
+[
+  {
+    "id": "background",
+    "name": "Background",
+    "active": true,
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 1920,
+        "y": 1080
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "color",
+        "value": "#01FF02"
+      }
+    ]
+  },
+  {
+    "id": "level1",
+    "name": "Level 1",
+    "active": true,
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 1920,
+        "y": 1080
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "controller",
+        "players": [],
+        "groups": [],
+        "groupIndex": 0,
+        "slotIndex": 0,
+        "selectedPlayer": 0,
+        "lives": []
+      }
+    ]
+  },
+  {
+    "id": "question-container",
+    "name": "QuestionContainer",
+    "active": true,
+    "parentId": "level1",
+    "transform": {
+      "position": {
+        "x": -7.5,
+        "y": -412
+      },
+      "size": {
+        "x": 1368,
+        "y": 185
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": []
+  },
+  {
+    "id": "question-frame",
+    "name": "QuestionFrame",
+    "active": true,
+    "parentId": "question-container",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": -275
+      },
+      "size": {
+        "x": 1368,
+        "y": 185
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "mainFrame"
+      },
+      {
+        "type": "pop",
+        "scale": 1.1,
+        "duration": 0.3
+      },
+      {
+        "type": "shake",
+        "amplitude": 1.5,
+        "shakes": 3,
+        "duration": 0.4
+      },
+      {
+        "type": "bounce",
+        "travelSpeed": 1800,
+        "bounceAmplitude": 40,
+        "bounceDuration": 0.4,
+        "target": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      {
+        "type": "slide",
+        "speed": 1800,
+        "target": {
+          "x": 0,
+          "y": -275
+        }
+      }
+    ]
+  },
+  {
+    "id": "question-text",
+    "name": "QuestionText",
+    "active": true,
+    "parentId": "question-frame",
+    "transform": {
+      "position": {
+        "x": 8.13,
+        "y": -6.75
+      },
+      "size": {
+        "x": 1293.65,
+        "y": 112.13
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "text",
+        "text": "¿PREGUNTA?",
+        "fontSize": 2.96,
+        "autoSize": true,
+        "fontSizeMin": 1.67,
+        "fontSizeMax": 6.67,
+        "color": "#ffffff",
+        "fontAssetKey": "geniusTechno",
+        "bold": false,
+        "italic": false,
+        "underline": false,
+        "letterSpacing": 0,
+        "lineSpacing": 0,
+        "alignH": "center",
+        "alignV": "middle",
+        "overflow": "wrap"
+      }
+    ]
+  },
+  {
+    "id": "player-banner-left",
+    "name": "PlayerBannerLeft",
+    "active": true,
+    "parentId": "level1",
+    "transform": {
+      "position": {
+        "x": -613,
+        "y": -226
+      },
+      "size": {
+        "x": 590.64,
+        "y": 137.08
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": []
+  },
+  {
+    "id": "content-left",
+    "name": "ContentRoot",
+    "active": true,
+    "parentId": "player-banner-left",
+    "transform": {
+      "position": {
+        "x": -644,
+        "y": 0
+      },
+      "size": {
+        "x": 590.64,
+        "y": 137.08
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "bounce",
+        "travelSpeed": 1656,
+        "bounceAmplitude": 36.8,
+        "bounceDuration": 0.4,
+        "target": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      {
+        "type": "slide",
+        "speed": 1656,
+        "target": {
+          "x": -644,
+          "y": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "lives-left",
+    "name": "LivesContainer",
+    "active": true,
+    "parentId": "content-left",
+    "transform": {
+      "position": {
+        "x": 24.82,
+        "y": 36.8
+      },
+      "size": {
+        "x": 460,
+        "y": 82.8
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "mask",
+        "showImage": false
+      }
+    ]
+  },
+  {
+    "id": "heart-slot-left-0",
+    "name": "HeartSlot 0",
+    "active": true,
+    "parentId": "lives-left",
+    "transform": {
+      "position": {
+        "x": -83.72,
+        "y": -7.36
+      },
+      "size": {
+        "x": 75.44,
+        "y": 68.08
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": []
+  },
+  {
+    "id": "heart-root-left-0",
+    "name": "HeartRoot",
+    "active": true,
+    "parentId": "heart-slot-left-0",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": -68.08
+      },
+      "size": {
+        "x": 75.44,
+        "y": 68.08
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "bounce",
+        "travelSpeed": 552,
+        "bounceAmplitude": 4.6,
+        "bounceDuration": 0.7,
+        "target": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      {
+        "type": "blink",
+        "pulseScale": 1.25,
+        "pulseDuration": 0.12,
+        "blinkCount": 3,
+        "blinkDuration": 0.08
+      }
+    ]
+  },
+  {
+    "id": "heart-full-left-0",
+    "name": "FullHeart",
+    "active": true,
+    "parentId": "heart-root-left-0",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 75.44,
+        "y": 68.08
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "fullHeart"
+      }
+    ]
+  },
+  {
+    "id": "heart-broken-left-0",
+    "name": "BrokenHeart",
+    "active": false,
+    "parentId": "heart-root-left-0",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": -4.6
+      },
+      "size": {
+        "x": 75.44,
+        "y": 58.88
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "brokenHeart"
+      }
+    ]
+  },
+  {
+    "id": "heart-slot-left-1",
+    "name": "HeartSlot 1",
+    "active": true,
+    "parentId": "lives-left",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": -7.36
+      },
+      "size": {
+        "x": 75.44,
+        "y": 68.08
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": []
+  },
+  {
+    "id": "heart-root-left-1",
+    "name": "HeartRoot",
+    "active": true,
+    "parentId": "heart-slot-left-1",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": -68.08
+      },
+      "size": {
+        "x": 75.44,
+        "y": 68.08
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "bounce",
+        "travelSpeed": 552,
+        "bounceAmplitude": 4.6,
+        "bounceDuration": 0.7,
+        "target": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      {
+        "type": "blink",
+        "pulseScale": 1.25,
+        "pulseDuration": 0.12,
+        "blinkCount": 3,
+        "blinkDuration": 0.08
+      }
+    ]
+  },
+  {
+    "id": "heart-full-left-1",
+    "name": "FullHeart",
+    "active": true,
+    "parentId": "heart-root-left-1",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 75.44,
+        "y": 68.08
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "fullHeart"
+      }
+    ]
+  },
+  {
+    "id": "heart-broken-left-1",
+    "name": "BrokenHeart",
+    "active": false,
+    "parentId": "heart-root-left-1",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": -4.6
+      },
+      "size": {
+        "x": 75.44,
+        "y": 58.88
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "brokenHeart"
+      }
+    ]
+  },
+  {
+    "id": "heart-slot-left-2",
+    "name": "HeartSlot 2",
+    "active": true,
+    "parentId": "lives-left",
+    "transform": {
+      "position": {
+        "x": 83.72,
+        "y": -7.36
+      },
+      "size": {
+        "x": 75.44,
+        "y": 68.08
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": []
+  },
+  {
+    "id": "heart-root-left-2",
+    "name": "HeartRoot",
+    "active": true,
+    "parentId": "heart-slot-left-2",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": -68.08
+      },
+      "size": {
+        "x": 75.44,
+        "y": 68.08
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "bounce",
+        "travelSpeed": 552,
+        "bounceAmplitude": 4.6,
+        "bounceDuration": 0.7,
+        "target": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      {
+        "type": "blink",
+        "pulseScale": 1.25,
+        "pulseDuration": 0.12,
+        "blinkCount": 3,
+        "blinkDuration": 0.08
+      }
+    ]
+  },
+  {
+    "id": "heart-full-left-2",
+    "name": "FullHeart",
+    "active": true,
+    "parentId": "heart-root-left-2",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 75.44,
+        "y": 68.08
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "fullHeart"
+      }
+    ]
+  },
+  {
+    "id": "heart-broken-left-2",
+    "name": "BrokenHeart",
+    "active": false,
+    "parentId": "heart-root-left-2",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": -4.6
+      },
+      "size": {
+        "x": 75.44,
+        "y": 58.88
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "brokenHeart"
+      }
+    ]
+  },
+  {
+    "id": "heart-slot-left-3",
+    "name": "HeartSlot 3",
+    "active": false,
+    "parentId": "lives-left",
+    "transform": {
+      "position": {
+        "x": 83.72,
+        "y": -7.36
+      },
+      "size": {
+        "x": 75.44,
+        "y": 68.08
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": []
+  },
+  {
+    "id": "heart-root-left-3",
+    "name": "HeartRoot",
+    "active": true,
+    "parentId": "heart-slot-left-3",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": -68.08
+      },
+      "size": {
+        "x": 75.44,
+        "y": 68.08
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "bounce",
+        "travelSpeed": 552,
+        "bounceAmplitude": 4.6,
+        "bounceDuration": 0.7,
+        "target": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      {
+        "type": "blink",
+        "pulseScale": 1.25,
+        "pulseDuration": 0.12,
+        "blinkCount": 3,
+        "blinkDuration": 0.08
+      }
+    ]
+  },
+  {
+    "id": "heart-full-left-3",
+    "name": "FullHeart",
+    "active": true,
+    "parentId": "heart-root-left-3",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 75.44,
+        "y": 68.08
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "fullHeart"
+      }
+    ]
+  },
+  {
+    "id": "heart-broken-left-3",
+    "name": "BrokenHeart",
+    "active": false,
+    "parentId": "heart-root-left-3",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": -4.6
+      },
+      "size": {
+        "x": 75.44,
+        "y": 58.88
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "brokenHeart"
+      }
+    ]
+  },
+  {
+    "id": "heart-slot-left-4",
+    "name": "HeartSlot 4",
+    "active": false,
+    "parentId": "lives-left",
+    "transform": {
+      "position": {
+        "x": 167.44,
+        "y": -7.36
+      },
+      "size": {
+        "x": 75.44,
+        "y": 68.08
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": []
+  },
+  {
+    "id": "heart-root-left-4",
+    "name": "HeartRoot",
+    "active": true,
+    "parentId": "heart-slot-left-4",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": -68.08
+      },
+      "size": {
+        "x": 75.44,
+        "y": 68.08
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "bounce",
+        "travelSpeed": 552,
+        "bounceAmplitude": 4.6,
+        "bounceDuration": 0.7,
+        "target": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      {
+        "type": "blink",
+        "pulseScale": 1.25,
+        "pulseDuration": 0.12,
+        "blinkCount": 3,
+        "blinkDuration": 0.08
+      }
+    ]
+  },
+  {
+    "id": "heart-full-left-4",
+    "name": "FullHeart",
+    "active": true,
+    "parentId": "heart-root-left-4",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 75.44,
+        "y": 68.08
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "fullHeart"
+      }
+    ]
+  },
+  {
+    "id": "heart-broken-left-4",
+    "name": "BrokenHeart",
+    "active": false,
+    "parentId": "heart-root-left-4",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": -4.6
+      },
+      "size": {
+        "x": 75.44,
+        "y": 58.88
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "brokenHeart"
+      }
+    ]
+  },
+  {
+    "id": "name-container-left",
+    "name": "NameContainer",
+    "active": true,
+    "parentId": "content-left",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": -34.96
+      },
+      "size": {
+        "x": 590.64,
+        "y": 67.16
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": []
+  },
+  {
+    "id": "name-frame-left",
+    "name": "NameFrame",
+    "active": true,
+    "parentId": "name-container-left",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 590.64,
+        "y": 67.16
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "nameFrame"
+      }
+    ]
+  },
+  {
+    "id": "name-text-left",
+    "name": "NameText",
+    "active": true,
+    "parentId": "name-container-left",
+    "transform": {
+      "position": {
+        "x": 64.63,
+        "y": 2.07
+      },
+      "size": {
+        "x": 442.98,
+        "y": 52.9
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "text",
+        "text": "JUGADOR 1",
+        "fontSize": 3.41,
+        "autoSize": false,
+        "fontSizeMin": 1.67,
+        "fontSizeMax": 6.67,
+        "color": "#ffffff",
+        "fontAssetKey": "geniusTechno",
+        "bold": true,
+        "italic": false,
+        "underline": false,
+        "letterSpacing": 0,
+        "lineSpacing": 0,
+        "alignH": "center",
+        "alignV": "middle",
+        "overflow": "wrap"
+      }
+    ]
+  },
+  {
+    "id": "player-banner-right",
+    "name": "PlayerBannerRight",
+    "active": true,
+    "parentId": "level1",
+    "transform": {
+      "position": {
+        "x": 613,
+        "y": -226
+      },
+      "size": {
+        "x": 590.64,
+        "y": 137.08
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": []
+  },
+  {
+    "id": "content-right",
+    "name": "ContentRoot",
+    "active": true,
+    "parentId": "player-banner-right",
+    "transform": {
+      "position": {
+        "x": 644,
+        "y": 0
+      },
+      "size": {
+        "x": 590.64,
+        "y": 137.08
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "bounce",
+        "travelSpeed": 1656,
+        "bounceAmplitude": 36.8,
+        "bounceDuration": 0.4,
+        "target": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      {
+        "type": "slide",
+        "speed": 1656,
+        "target": {
+          "x": 644,
+          "y": 0
+        }
+      }
+    ]
+  },
+  {
+    "id": "lives-right",
+    "name": "LivesContainer",
+    "active": true,
+    "parentId": "content-right",
+    "transform": {
+      "position": {
+        "x": -24.82,
+        "y": 36.8
+      },
+      "size": {
+        "x": 460,
+        "y": 82.8
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "mask",
+        "showImage": false
+      }
+    ]
+  },
+  {
+    "id": "heart-slot-right-0",
+    "name": "HeartSlot 0",
+    "active": true,
+    "parentId": "lives-right",
+    "transform": {
+      "position": {
+        "x": -83.72,
+        "y": -7.36
+      },
+      "size": {
+        "x": 75.44,
+        "y": 68.08
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": []
+  },
+  {
+    "id": "heart-root-right-0",
+    "name": "HeartRoot",
+    "active": true,
+    "parentId": "heart-slot-right-0",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": -68.08
+      },
+      "size": {
+        "x": 75.44,
+        "y": 68.08
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "bounce",
+        "travelSpeed": 552,
+        "bounceAmplitude": 4.6,
+        "bounceDuration": 0.7,
+        "target": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      {
+        "type": "blink",
+        "pulseScale": 1.25,
+        "pulseDuration": 0.12,
+        "blinkCount": 3,
+        "blinkDuration": 0.08
+      }
+    ]
+  },
+  {
+    "id": "heart-full-right-0",
+    "name": "FullHeart",
+    "active": true,
+    "parentId": "heart-root-right-0",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 75.44,
+        "y": 68.08
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "fullHeart"
+      }
+    ]
+  },
+  {
+    "id": "heart-broken-right-0",
+    "name": "BrokenHeart",
+    "active": false,
+    "parentId": "heart-root-right-0",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": -4.6
+      },
+      "size": {
+        "x": 75.44,
+        "y": 58.88
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "brokenHeart"
+      }
+    ]
+  },
+  {
+    "id": "heart-slot-right-1",
+    "name": "HeartSlot 1",
+    "active": true,
+    "parentId": "lives-right",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": -7.36
+      },
+      "size": {
+        "x": 75.44,
+        "y": 68.08
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": []
+  },
+  {
+    "id": "heart-root-right-1",
+    "name": "HeartRoot",
+    "active": true,
+    "parentId": "heart-slot-right-1",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": -68.08
+      },
+      "size": {
+        "x": 75.44,
+        "y": 68.08
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "bounce",
+        "travelSpeed": 552,
+        "bounceAmplitude": 4.6,
+        "bounceDuration": 0.7,
+        "target": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      {
+        "type": "blink",
+        "pulseScale": 1.25,
+        "pulseDuration": 0.12,
+        "blinkCount": 3,
+        "blinkDuration": 0.08
+      }
+    ]
+  },
+  {
+    "id": "heart-full-right-1",
+    "name": "FullHeart",
+    "active": true,
+    "parentId": "heart-root-right-1",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 75.44,
+        "y": 68.08
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "fullHeart"
+      }
+    ]
+  },
+  {
+    "id": "heart-broken-right-1",
+    "name": "BrokenHeart",
+    "active": false,
+    "parentId": "heart-root-right-1",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": -4.6
+      },
+      "size": {
+        "x": 75.44,
+        "y": 58.88
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "brokenHeart"
+      }
+    ]
+  },
+  {
+    "id": "heart-slot-right-2",
+    "name": "HeartSlot 2",
+    "active": true,
+    "parentId": "lives-right",
+    "transform": {
+      "position": {
+        "x": 83.72,
+        "y": -7.36
+      },
+      "size": {
+        "x": 75.44,
+        "y": 68.08
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": []
+  },
+  {
+    "id": "heart-root-right-2",
+    "name": "HeartRoot",
+    "active": true,
+    "parentId": "heart-slot-right-2",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": -68.08
+      },
+      "size": {
+        "x": 75.44,
+        "y": 68.08
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "bounce",
+        "travelSpeed": 552,
+        "bounceAmplitude": 4.6,
+        "bounceDuration": 0.7,
+        "target": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      {
+        "type": "blink",
+        "pulseScale": 1.25,
+        "pulseDuration": 0.12,
+        "blinkCount": 3,
+        "blinkDuration": 0.08
+      }
+    ]
+  },
+  {
+    "id": "heart-full-right-2",
+    "name": "FullHeart",
+    "active": true,
+    "parentId": "heart-root-right-2",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 75.44,
+        "y": 68.08
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "fullHeart"
+      }
+    ]
+  },
+  {
+    "id": "heart-broken-right-2",
+    "name": "BrokenHeart",
+    "active": false,
+    "parentId": "heart-root-right-2",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": -4.6
+      },
+      "size": {
+        "x": 75.44,
+        "y": 58.88
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "brokenHeart"
+      }
+    ]
+  },
+  {
+    "id": "heart-slot-right-3",
+    "name": "HeartSlot 3",
+    "active": false,
+    "parentId": "lives-right",
+    "transform": {
+      "position": {
+        "x": 83.72,
+        "y": -7.36
+      },
+      "size": {
+        "x": 75.44,
+        "y": 68.08
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": []
+  },
+  {
+    "id": "heart-root-right-3",
+    "name": "HeartRoot",
+    "active": true,
+    "parentId": "heart-slot-right-3",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": -68.08
+      },
+      "size": {
+        "x": 75.44,
+        "y": 68.08
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "bounce",
+        "travelSpeed": 552,
+        "bounceAmplitude": 4.6,
+        "bounceDuration": 0.7,
+        "target": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      {
+        "type": "blink",
+        "pulseScale": 1.25,
+        "pulseDuration": 0.12,
+        "blinkCount": 3,
+        "blinkDuration": 0.08
+      }
+    ]
+  },
+  {
+    "id": "heart-full-right-3",
+    "name": "FullHeart",
+    "active": true,
+    "parentId": "heart-root-right-3",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 75.44,
+        "y": 68.08
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "fullHeart"
+      }
+    ]
+  },
+  {
+    "id": "heart-broken-right-3",
+    "name": "BrokenHeart",
+    "active": false,
+    "parentId": "heart-root-right-3",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": -4.6
+      },
+      "size": {
+        "x": 75.44,
+        "y": 58.88
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "brokenHeart"
+      }
+    ]
+  },
+  {
+    "id": "heart-slot-right-4",
+    "name": "HeartSlot 4",
+    "active": false,
+    "parentId": "lives-right",
+    "transform": {
+      "position": {
+        "x": 167.44,
+        "y": -7.36
+      },
+      "size": {
+        "x": 75.44,
+        "y": 68.08
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": []
+  },
+  {
+    "id": "heart-root-right-4",
+    "name": "HeartRoot",
+    "active": true,
+    "parentId": "heart-slot-right-4",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": -68.08
+      },
+      "size": {
+        "x": 75.44,
+        "y": 68.08
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "bounce",
+        "travelSpeed": 552,
+        "bounceAmplitude": 4.6,
+        "bounceDuration": 0.7,
+        "target": {
+          "x": 0,
+          "y": 0
+        }
+      },
+      {
+        "type": "blink",
+        "pulseScale": 1.25,
+        "pulseDuration": 0.12,
+        "blinkCount": 3,
+        "blinkDuration": 0.08
+      }
+    ]
+  },
+  {
+    "id": "heart-full-right-4",
+    "name": "FullHeart",
+    "active": true,
+    "parentId": "heart-root-right-4",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 75.44,
+        "y": 68.08
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "fullHeart"
+      }
+    ]
+  },
+  {
+    "id": "heart-broken-right-4",
+    "name": "BrokenHeart",
+    "active": false,
+    "parentId": "heart-root-right-4",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": -4.6
+      },
+      "size": {
+        "x": 75.44,
+        "y": 58.88
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "brokenHeart"
+      }
+    ]
+  },
+  {
+    "id": "name-container-right",
+    "name": "NameContainer",
+    "active": true,
+    "parentId": "content-right",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": -34.96
+      },
+      "size": {
+        "x": 590.64,
+        "y": 67.16
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": []
+  },
+  {
+    "id": "name-frame-right",
+    "name": "NameFrame",
+    "active": true,
+    "parentId": "name-container-right",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 590.64,
+        "y": 67.16
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "nameFrame",
+        "flipX": true
+      }
+    ]
+  },
+  {
+    "id": "name-text-right",
+    "name": "NameText",
+    "active": true,
+    "parentId": "name-container-right",
+    "transform": {
+      "position": {
+        "x": -64.63,
+        "y": 2.07
+      },
+      "size": {
+        "x": 442.98,
+        "y": 52.9
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "text",
+        "text": "JUGADOR 2",
+        "fontSize": 3.41,
+        "autoSize": false,
+        "fontSizeMin": 1.67,
+        "fontSizeMax": 6.67,
+        "color": "#ffffff",
+        "fontAssetKey": "geniusTechno",
+        "bold": true,
+        "italic": false,
+        "underline": false,
+        "letterSpacing": 0,
+        "lineSpacing": 0,
+        "alignH": "center",
+        "alignV": "middle",
+        "overflow": "wrap"
+      }
+    ]
+  }
+]

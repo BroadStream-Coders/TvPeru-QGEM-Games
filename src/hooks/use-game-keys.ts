@@ -64,6 +64,10 @@ export interface GameKeyHandlers {
   onArrowLeft?: () => void;
   /** Flecha derecha. */
   onArrowRight?: () => void;
+  /** Numpad + (sumar vida/punto, según el juego). */
+  onPlus?: () => void;
+  /** Numpad − (quitar vida/punto, según el juego). */
+  onMinus?: () => void;
 }
 
 export function useGameKeys(handlers: GameKeyHandlers) {
@@ -131,6 +135,8 @@ export function useGameKeys(handlers: GameKeyHandlers) {
         ArrowDown: "onArrowDown",
         ArrowLeft: "onArrowLeft",
         ArrowRight: "onArrowRight",
+        NumpadAdd: "onPlus",
+        NumpadSubtract: "onMinus",
       };
       const handlerKey = map[code];
       if (!handlerKey) return;

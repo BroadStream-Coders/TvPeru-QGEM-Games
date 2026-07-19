@@ -42,8 +42,11 @@ export function GameObjectView({
   const { assets } = useAssets();
   const maskUrl =
     mask && maskImage?.assetKey ? assets[maskImage.assetKey]?.url : undefined;
-  const wrapperStyle =
-    maskUrl && maskImage ? maskStyle(maskUrl, maskImage.fit) : undefined;
+  const wrapperStyle = mask
+    ? maskUrl && maskImage
+      ? maskStyle(maskUrl, maskImage.fit)
+      : { overflow: "hidden" as const }
+    : undefined;
 
   const animationRef = useGameObjectAnimations(gameObject, onAnimatePosition);
 

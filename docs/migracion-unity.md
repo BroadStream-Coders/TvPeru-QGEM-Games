@@ -97,13 +97,21 @@ grandes que en Unity).
 - **IDs** kebab-case predecibles (`option-0-text`, `slot-1-answer`); los
   behaviors los generan con helpers en `constants.ts`. Nombres de GameObjects
   en inglés (convención del engine).
+- **Objetos que entran a pantalla**: se diseñan en su posición **oculta** (la
+  guardada en el prefab, fuera de pantalla), igual que en Unity. Los `target`
+  de `UIBounceMove`/`UISlide` se copian **tal cual** al `target` de los
+  componentes `bounce`/`slide` (posición absoluta en coordenadas locales del
+  padre, tras la conversión de anclas; no son offsets ni hay "home" implícito).
+  `UIBlinkPulse` = componente `blink` (triggers `blink` + `blinkSettle`; el
+  behavior hace el swap de caras entre ambos, como con Flip).
 - **Frames de estado** (normal/correct/incorrect): GameObjects hermanos con
   `active` igual que en Unity (normal on, resto off). El behavior los conmuta
   vía `useSceneRuntime.setActive` — el `active` del diseño es solo el estado
   inicial; el override de runtime siempre gana en `mergeRuntime`.
 - **Mask de Unity** (Mask + `m_ShowMaskGraphic: 0`): componente nativo `mask`
   + componente `image` con el sprite en el **mismo** GO, `showImage: false`.
-  Recorta a los hijos con CSS mask.
+  Recorta a los hijos con CSS mask. Si la Image de Unity no tiene sprite, basta
+  el componente `mask` solo: recorta al rect (`overflow: hidden`).
 - **Nivel como grupo**: el GO que en Unity tenía el script del nivel (p. ej.
   "Level 1") se convierte en grupo y **lleva el componente `controller`** con
   el estado del juego. Niveles futuros = grupos hermanos.
@@ -159,3 +167,4 @@ La foto llega a pantalla por el campo runtime `src` del componente `image`
 | La sabes o No | ✅ RM-015 | ✅ RM-015 |
 | Al Vuelo (ex Si o No) | ✅ RM-079 | ✅ RM-079 |
 | Álbum | ✅ RM-082 | ✅ RM-082 (animaciones → RM-083) |
+| Mi Libro Favorito | ✅ RM-092 | ✅ RM-092 |

@@ -11,6 +11,7 @@ import {
   Images,
   BookHeart,
   FolderDown,
+  Sigma,
 } from "lucide-react";
 import { AuthButton } from "@/components/shared/AuthButton";
 
@@ -56,6 +57,12 @@ const workspaces = [
     description: "Preguntas de libros con vidas por jugador",
     href: "/workspaces/mi-libro-favorito",
     icon: BookHeart,
+  },
+  {
+    name: "Operaciones Combinadas",
+    description: "Prototipo: pruebas de botones con mouse",
+    href: "/workspaces/operaciones-combinadas",
+    icon: Sigma,
   },
   {
     name: "Sandbox",

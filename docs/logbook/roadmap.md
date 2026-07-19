@@ -114,6 +114,21 @@ su "Hecho cuando", pero no es el foco actual).
   display, y el swap de estados queda sincronizado con la animación.
 - **Fecha:** 2026-07-13 · **Estado:** En progreso (2026-07-16)
 
+## [RM-093] Interacción con mouse en la vista Game (botones, luego drag)
+
+- **Objetivo:** Probar y asentar el patrón de input por mouse dentro del display:
+  vistas de componente clickeables gateadas por `useSceneViewMode() === "game"` +
+  `playing`, escribiendo al runtime (nunca al diseño). Banco de pruebas: el
+  workspace nuevo `operaciones-combinadas` (3 botones que cambian el color de un
+  objeto central). El drag (pointer events + `setPointerCapture`, no HTML5 DnD)
+  viene después sobre la misma base. Pendientes conocidos: `hideCursorOnFullscreen`
+  oculta el cursor en fullscreen (necesitará flag por juego si un juego se opera
+  con mouse), y no copiar el patrón de registro por `goId` de AnimationsContext
+  (TD-067).
+- **Hecho cuando:** los botones funcionan en Play (panel y fullscreen) y existe
+  una prueba de drag funcionando en el mismo workspace.
+- **Fecha:** 2026-07-19 · **Estado:** En progreso (2026-07-19)
+
 ## [RM-043] Menú "Windows" para reabrir paneles cerrados
 
 - **Objetivo:** Un desplegable **"Windows"** en el chrome del editor que liste los

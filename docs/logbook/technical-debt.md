@@ -14,22 +14,6 @@ changelog y se borra de aquí.
 
 ---
 
-## [TD-067] Los paneles Scene y Game registran triggers de animación bajo el mismo id y se pisan
-
-- **Ubicación:** `src/components/shared/engine/animations/AnimationsContext.tsx` (mapa `goId → type → fn`) + `GameObjectView.tsx` (cada instancia registra)
-- **Riesgo:** 5/10
-- **Problema:** Los paneles Scene (`SceneCanvas`) y Game (`EditorLayout`) montan
-  cada uno su árbol de `GameObjectView` para los mismos GameObjects; ambos
-  registran triggers con la misma clave `(goId, type)`, así que el último en
-  montar gana. La instancia del panel Scene no recibe `onAnimatePosition`, y su
-  `unregister` al desmontar borra el trigger del otro panel.
-- **Impacto futuro:** Según el orden de montaje/desmontaje de paneles (mover
-  pestañas, flotar, cerrar), un `play()` puede animar el content-div del panel
-  equivocado, no mover bounce/slide, o quedarse sin trigger. Arreglo probable:
-  registrar por instancia (Set de fns por clave) o registrar solo desde el
-  panel Game.
-- **Fecha:** 2026-07-19 · **Estado:** Abierto
-
 ## [TD-064] Pop, Shake y Blink resetean `el.style.transform` y pisan animaciones ambientales
 
 - **Ubicación:** `src/components/shared/engine/animations/useGameObjectAnimations.ts` (runners de pop, shake y blink/blinkSettle, `el.style.transform = ""` al terminar)

@@ -125,8 +125,9 @@ su "Hecho cuando", pero no es el foco actual).
   en una laptop conectada a una **pantalla táctil** que actúa como puntero
   (pointer events cubren mouse y touch por igual; los views interactivos llevan
   `touch-action: none`). El cursor en fullscreen ya es opcional: checkbox
-  "Cursor" en la topbar del panel Game (oculto por defecto). Pendiente: no
-  copiar el patrón de registro por `goId` de AnimationsContext (TD-067).
+  "Cursor" en la topbar del panel Game (oculto por defecto). TD-067 (registro
+  por `goId` pisado entre paneles) quedó resuelto: los triggers solo se
+  registran desde la vista Game.
 - **Hecho cuando:** los botones funcionan en Play (panel y fullscreen) y existe
   una prueba de drag funcionando en el mismo workspace.
 - **Fecha:** 2026-07-19 · **Estado:** En progreso (2026-07-19)

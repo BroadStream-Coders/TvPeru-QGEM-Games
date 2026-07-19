@@ -12,6 +12,10 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [TD-067] Resuelto: los paneles Scene y Game se pisaban los triggers de animación (2026-07-19 17:37)
+
+Ambos paneles montan `GameObjectView` para los mismos GameObjects y registraban con la misma clave `(goId, type)` en el mapa único de `AnimationsProvider`: el último en montar ganaba y el `unregister` de uno borraba el trigger del otro. Ahora `useGameObjectAnimations` registra sólo cuando `useSceneViewMode() === "game"` (los 6 efectos con registro; float/sparkles son ambientales y no cambian), así que el orden de montaje/desmontaje de paneles ya no importa.
+
 ## [RM-040] En la vista Game nada es seleccionable (2026-07-19 16:56)
 
 `select-none` en el contenedor del stage de `Scene` (que hoy solo usa la vista Game; `SceneCanvas` es aparte): sin selección de texto ni drag-selección accidental, en panel y en fullscreen. No bloquea pointer events, así que botones/drag futuros dentro del juego siguen viables.

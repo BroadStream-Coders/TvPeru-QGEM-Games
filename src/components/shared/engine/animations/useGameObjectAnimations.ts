@@ -10,6 +10,7 @@ import { SparklesComponent } from "@engine/components/sparkles/sparklesComponent
 import { ShakeComponent } from "@engine/components/shake/shakeComponent";
 import { BounceComponent } from "@engine/components/bounce/bounceComponent";
 import { SlideComponent } from "@engine/components/slide/slideComponent";
+import { useSceneViewMode } from "@engine/SceneViewMode";
 import { useAnimations } from "./AnimationsContext";
 
 const lerp = (a: Vec2, b: Vec2, t: number): Vec2 => ({
@@ -42,8 +43,10 @@ function easeOutBounce(t: number) {
  * GameObject esté montado (bob vertical en % de la altura + balanceo de
  * rotación a período distinto; `phase` desincroniza instancias).
  * Registra cada trigger en el contexto de animaciones bajo el id del
- * GameObject, sólo para los tipos presentes como componentes. Devuelve un
- * callback-ref para el content-div.
+ * GameObject, sólo para los tipos presentes como componentes y sólo cuando la
+ * vista es Game: las instancias del editor (panel Scene) no registran, para no
+ * pisar los triggers del display (los paneles comparten un único mapa por
+ * clave `(goId, type)`). Devuelve un callback-ref para el content-div.
  */
 export function useGameObjectAnimations(
   gameObject: GameObject,
@@ -68,6 +71,7 @@ export function useGameObjectAnimations(
     BlinkComponent | undefined;
 
   const { register, unregister } = useAnimations();
+  const isGameView = useSceneViewMode() === "game";
   const id = gameObject.id;
   const hasPop = !!popComp;
   const hasFlip = !!flipComp;
@@ -127,7 +131,7 @@ export function useGameObjectAnimations(
   }, []);
 
   useEffect(() => {
-    if (!hasPop) return;
+    if (!hasPop || !isGameView) return;
     const pop = async () => {
       const el = elRef.current;
       if (!el || popScale <= 0 || popDuration <= 0) return;
@@ -147,10 +151,10 @@ export function useGameObjectAnimations(
     };
     register(id, "pop", pop);
     return () => unregister(id, "pop");
-  }, [id, hasPop, popScale, popDuration, register, unregister]);
+  }, [id, hasPop, isGameView, popScale, popDuration, register, unregister]);
 
   useEffect(() => {
-    if (!hasFlip) return;
+    if (!hasFlip || !isGameView) return;
     const hide = async () => {
       const el = elRef.current;
       if (!el || flipHideDuration <= 0) return;
@@ -194,6 +198,7 @@ export function useGameObjectAnimations(
   }, [
     id,
     hasFlip,
+    isGameView,
     flipHideDuration,
     flipShowDuration,
     flipPerspective,
@@ -284,7 +289,7 @@ export function useGameObjectAnimations(
   }, [hasFloat, floatAmplitude, floatRotation, floatPeriod, floatPhase]);
 
   useEffect(() => {
-    if (!hasShake) return;
+    if (!hasShake || !isGameView) return;
     const shake = async () => {
       const el = elRef.current;
       if (!el || shakeShakes <= 0 || shakeDuration <= 0 || shakeAmplitude <= 0)
@@ -313,6 +318,7 @@ export function useGameObjectAnimations(
   }, [
     id,
     hasShake,
+    isGameView,
     shakeAmplitude,
     shakeShakes,
     shakeDuration,
@@ -321,7 +327,7 @@ export function useGameObjectAnimations(
   ]);
 
   useEffect(() => {
-    if (!hasBounce) return;
+    if (!hasBounce || !isGameView) return;
     const run = async () => {
       cancelMove();
       const seq = moveRef.current.seq;
@@ -359,6 +365,7 @@ export function useGameObjectAnimations(
   }, [
     id,
     hasBounce,
+    isGameView,
     travelSpeed,
     bounceAmplitude,
     bounceDuration,
@@ -371,7 +378,7 @@ export function useGameObjectAnimations(
   ]);
 
   useEffect(() => {
-    if (!hasBlink) return;
+    if (!hasBlink || !isGameView) return;
     const wait = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
     const blink = async () => {
       const el = elRef.current;
@@ -425,6 +432,7 @@ export function useGameObjectAnimations(
   }, [
     id,
     hasBlink,
+    isGameView,
     blinkPulseScale,
     blinkPulseDuration,
     blinkCount,
@@ -434,7 +442,7 @@ export function useGameObjectAnimations(
   ]);
 
   useEffect(() => {
-    if (!hasSlide) return;
+    if (!hasSlide || !isGameView) return;
     const run = async () => {
       cancelMove();
       const from = posRef.current;
@@ -457,6 +465,7 @@ export function useGameObjectAnimations(
   }, [
     id,
     hasSlide,
+    isGameView,
     slideSpeed,
     slideTargetX,
     slideTargetY,

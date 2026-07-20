@@ -11,11 +11,18 @@ import {
   Images,
   BookHeart,
   FolderDown,
+  Search,
   Sigma,
 } from "lucide-react";
 import { AuthButton } from "@/components/shared/AuthButton";
 
 const workspaces = [
+  {
+    name: "Mi Libro Favorito",
+    description: "Preguntas de libros con vidas por jugador",
+    href: "/workspaces/mi-libro-favorito",
+    icon: BookHeart,
+  },
   {
     name: "Deletreo",
     description: "Gestión de palabras por rondas",
@@ -35,6 +42,12 @@ const workspaces = [
     icon: VenetianMask,
   },
   {
+    name: "Álbum",
+    description: "Cartas por temas con preguntas y fotos",
+    href: "/workspaces/album",
+    icon: Images,
+  },
+  {
     name: "La Sabes o No",
     description: "Preguntas de dos opciones por grupos",
     href: "/workspaces/la-sabes-o-no",
@@ -47,16 +60,10 @@ const workspaces = [
     icon: Zap,
   },
   {
-    name: "Álbum",
-    description: "Cartas por temas con preguntas y fotos",
-    href: "/workspaces/album",
-    icon: Images,
-  },
-  {
-    name: "Mi Libro Favorito",
-    description: "Preguntas de libros con vidas por jugador",
-    href: "/workspaces/mi-libro-favorito",
-    icon: BookHeart,
+    name: "Busca Logo",
+    description: "Tablero de cartas con logos escondidos",
+    href: "/workspaces/busca-logo",
+    icon: Search,
   },
   {
     name: "Operaciones Combinadas",

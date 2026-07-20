@@ -1,0 +1,5917 @@
+[
+  {
+    "id": "background",
+    "name": "Background",
+    "active": true,
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 1920,
+        "y": 1080
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "video",
+        "fit": "fill",
+        "muted": true,
+        "loop": true
+      }
+    ]
+  },
+  {
+    "id": "level2",
+    "name": "Level 2",
+    "active": true,
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 1300,
+        "y": 1000
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "controller",
+        "boardIndex": 0,
+        "selected": -1,
+        "locked": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ]
+      }
+    ]
+  },
+  {
+    "id": "card-0",
+    "name": "Card 1A",
+    "active": true,
+    "parentId": "level2",
+    "transform": {
+      "position": {
+        "x": -482,
+        "y": 357
+      },
+      "size": {
+        "x": 235,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "flip",
+        "hideDuration": 0.25,
+        "showDuration": 0.45,
+        "perspective": 6
+      },
+      {
+        "type": "card",
+        "index": 0
+      }
+    ]
+  },
+  {
+    "id": "card-0-back",
+    "name": "Back",
+    "active": true,
+    "parentId": "card-0",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 235,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": []
+  },
+  {
+    "id": "card-0-normal",
+    "name": "Normal",
+    "active": true,
+    "parentId": "card-0-back",
+    "transform": {
+      "position": {
+        "x": -2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 252,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardNormal"
+      }
+    ]
+  },
+  {
+    "id": "card-0-selected",
+    "name": "Selected",
+    "active": false,
+    "parentId": "card-0-back",
+    "transform": {
+      "position": {
+        "x": -2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 252,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardSelected"
+      }
+    ]
+  },
+  {
+    "id": "card-0-label",
+    "name": "Label",
+    "active": true,
+    "parentId": "card-0-back",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 232,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "text",
+        "text": "1A",
+        "fontSize": 11.85,
+        "autoSize": false,
+        "fontSizeMin": 1,
+        "fontSizeMax": 20,
+        "color": "#ffffff",
+        "fontAssetKey": "geniusTechno",
+        "bold": false,
+        "italic": false,
+        "underline": false,
+        "letterSpacing": 0,
+        "lineSpacing": 0,
+        "alignH": "center",
+        "alignV": "middle",
+        "overflow": "wrap"
+      }
+    ]
+  },
+  {
+    "id": "card-0-locked",
+    "name": "Locked",
+    "active": false,
+    "parentId": "card-0-back",
+    "transform": {
+      "position": {
+        "x": -2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 252,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardLocked"
+      }
+    ]
+  },
+  {
+    "id": "card-0-locked-label",
+    "name": "Locked Label",
+    "active": true,
+    "parentId": "card-0-locked",
+    "transform": {
+      "position": {
+        "x": 2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 239,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "text",
+        "text": "1A",
+        "fontSize": 11.85,
+        "autoSize": false,
+        "fontSizeMin": 1,
+        "fontSizeMax": 20,
+        "color": "#959595",
+        "fontAssetKey": "geniusTechno",
+        "bold": false,
+        "italic": false,
+        "underline": false,
+        "letterSpacing": 0,
+        "lineSpacing": 0,
+        "alignH": "center",
+        "alignV": "middle",
+        "overflow": "wrap"
+      }
+    ]
+  },
+  {
+    "id": "card-0-front",
+    "name": "Front",
+    "active": false,
+    "parentId": "card-0",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 235,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": []
+  },
+  {
+    "id": "card-0-empty",
+    "name": "Empty",
+    "active": true,
+    "parentId": "card-0-front",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 232,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardEmpty"
+      }
+    ]
+  },
+  {
+    "id": "card-0-logo",
+    "name": "With Logo",
+    "active": false,
+    "parentId": "card-0-front",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 232,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardWithLogo"
+      }
+    ]
+  },
+  {
+    "id": "card-1",
+    "name": "Card 1B",
+    "active": true,
+    "parentId": "level2",
+    "transform": {
+      "position": {
+        "x": -241,
+        "y": 357
+      },
+      "size": {
+        "x": 235,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "flip",
+        "hideDuration": 0.25,
+        "showDuration": 0.45,
+        "perspective": 6
+      },
+      {
+        "type": "card",
+        "index": 1
+      }
+    ]
+  },
+  {
+    "id": "card-1-back",
+    "name": "Back",
+    "active": true,
+    "parentId": "card-1",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 235,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": []
+  },
+  {
+    "id": "card-1-normal",
+    "name": "Normal",
+    "active": true,
+    "parentId": "card-1-back",
+    "transform": {
+      "position": {
+        "x": -2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 252,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardNormal"
+      }
+    ]
+  },
+  {
+    "id": "card-1-selected",
+    "name": "Selected",
+    "active": false,
+    "parentId": "card-1-back",
+    "transform": {
+      "position": {
+        "x": -2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 252,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardSelected"
+      }
+    ]
+  },
+  {
+    "id": "card-1-label",
+    "name": "Label",
+    "active": true,
+    "parentId": "card-1-back",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 232,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "text",
+        "text": "1B",
+        "fontSize": 11.85,
+        "autoSize": false,
+        "fontSizeMin": 1,
+        "fontSizeMax": 20,
+        "color": "#ffffff",
+        "fontAssetKey": "geniusTechno",
+        "bold": false,
+        "italic": false,
+        "underline": false,
+        "letterSpacing": 0,
+        "lineSpacing": 0,
+        "alignH": "center",
+        "alignV": "middle",
+        "overflow": "wrap"
+      }
+    ]
+  },
+  {
+    "id": "card-1-locked",
+    "name": "Locked",
+    "active": false,
+    "parentId": "card-1-back",
+    "transform": {
+      "position": {
+        "x": -2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 252,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardLocked"
+      }
+    ]
+  },
+  {
+    "id": "card-1-locked-label",
+    "name": "Locked Label",
+    "active": true,
+    "parentId": "card-1-locked",
+    "transform": {
+      "position": {
+        "x": 2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 239,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "text",
+        "text": "1B",
+        "fontSize": 11.85,
+        "autoSize": false,
+        "fontSizeMin": 1,
+        "fontSizeMax": 20,
+        "color": "#959595",
+        "fontAssetKey": "geniusTechno",
+        "bold": false,
+        "italic": false,
+        "underline": false,
+        "letterSpacing": 0,
+        "lineSpacing": 0,
+        "alignH": "center",
+        "alignV": "middle",
+        "overflow": "wrap"
+      }
+    ]
+  },
+  {
+    "id": "card-1-front",
+    "name": "Front",
+    "active": false,
+    "parentId": "card-1",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 235,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": []
+  },
+  {
+    "id": "card-1-empty",
+    "name": "Empty",
+    "active": true,
+    "parentId": "card-1-front",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 232,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardEmpty"
+      }
+    ]
+  },
+  {
+    "id": "card-1-logo",
+    "name": "With Logo",
+    "active": false,
+    "parentId": "card-1-front",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 232,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardWithLogo"
+      }
+    ]
+  },
+  {
+    "id": "card-2",
+    "name": "Card 1C",
+    "active": true,
+    "parentId": "level2",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 357
+      },
+      "size": {
+        "x": 235,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "flip",
+        "hideDuration": 0.25,
+        "showDuration": 0.45,
+        "perspective": 6
+      },
+      {
+        "type": "card",
+        "index": 2
+      }
+    ]
+  },
+  {
+    "id": "card-2-back",
+    "name": "Back",
+    "active": true,
+    "parentId": "card-2",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 235,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": []
+  },
+  {
+    "id": "card-2-normal",
+    "name": "Normal",
+    "active": true,
+    "parentId": "card-2-back",
+    "transform": {
+      "position": {
+        "x": -2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 252,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardNormal"
+      }
+    ]
+  },
+  {
+    "id": "card-2-selected",
+    "name": "Selected",
+    "active": false,
+    "parentId": "card-2-back",
+    "transform": {
+      "position": {
+        "x": -2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 252,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardSelected"
+      }
+    ]
+  },
+  {
+    "id": "card-2-label",
+    "name": "Label",
+    "active": true,
+    "parentId": "card-2-back",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 232,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "text",
+        "text": "1C",
+        "fontSize": 11.85,
+        "autoSize": false,
+        "fontSizeMin": 1,
+        "fontSizeMax": 20,
+        "color": "#ffffff",
+        "fontAssetKey": "geniusTechno",
+        "bold": false,
+        "italic": false,
+        "underline": false,
+        "letterSpacing": 0,
+        "lineSpacing": 0,
+        "alignH": "center",
+        "alignV": "middle",
+        "overflow": "wrap"
+      }
+    ]
+  },
+  {
+    "id": "card-2-locked",
+    "name": "Locked",
+    "active": false,
+    "parentId": "card-2-back",
+    "transform": {
+      "position": {
+        "x": -2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 252,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardLocked"
+      }
+    ]
+  },
+  {
+    "id": "card-2-locked-label",
+    "name": "Locked Label",
+    "active": true,
+    "parentId": "card-2-locked",
+    "transform": {
+      "position": {
+        "x": 2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 239,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "text",
+        "text": "1C",
+        "fontSize": 11.85,
+        "autoSize": false,
+        "fontSizeMin": 1,
+        "fontSizeMax": 20,
+        "color": "#959595",
+        "fontAssetKey": "geniusTechno",
+        "bold": false,
+        "italic": false,
+        "underline": false,
+        "letterSpacing": 0,
+        "lineSpacing": 0,
+        "alignH": "center",
+        "alignV": "middle",
+        "overflow": "wrap"
+      }
+    ]
+  },
+  {
+    "id": "card-2-front",
+    "name": "Front",
+    "active": false,
+    "parentId": "card-2",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 235,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": []
+  },
+  {
+    "id": "card-2-empty",
+    "name": "Empty",
+    "active": true,
+    "parentId": "card-2-front",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 232,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardEmpty"
+      }
+    ]
+  },
+  {
+    "id": "card-2-logo",
+    "name": "With Logo",
+    "active": false,
+    "parentId": "card-2-front",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 232,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardWithLogo"
+      }
+    ]
+  },
+  {
+    "id": "card-3",
+    "name": "Card 1D",
+    "active": true,
+    "parentId": "level2",
+    "transform": {
+      "position": {
+        "x": 241,
+        "y": 357
+      },
+      "size": {
+        "x": 235,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "flip",
+        "hideDuration": 0.25,
+        "showDuration": 0.45,
+        "perspective": 6
+      },
+      {
+        "type": "card",
+        "index": 3
+      }
+    ]
+  },
+  {
+    "id": "card-3-back",
+    "name": "Back",
+    "active": true,
+    "parentId": "card-3",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 235,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": []
+  },
+  {
+    "id": "card-3-normal",
+    "name": "Normal",
+    "active": true,
+    "parentId": "card-3-back",
+    "transform": {
+      "position": {
+        "x": -2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 252,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardNormal"
+      }
+    ]
+  },
+  {
+    "id": "card-3-selected",
+    "name": "Selected",
+    "active": false,
+    "parentId": "card-3-back",
+    "transform": {
+      "position": {
+        "x": -2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 252,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardSelected"
+      }
+    ]
+  },
+  {
+    "id": "card-3-label",
+    "name": "Label",
+    "active": true,
+    "parentId": "card-3-back",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 232,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "text",
+        "text": "1D",
+        "fontSize": 11.85,
+        "autoSize": false,
+        "fontSizeMin": 1,
+        "fontSizeMax": 20,
+        "color": "#ffffff",
+        "fontAssetKey": "geniusTechno",
+        "bold": false,
+        "italic": false,
+        "underline": false,
+        "letterSpacing": 0,
+        "lineSpacing": 0,
+        "alignH": "center",
+        "alignV": "middle",
+        "overflow": "wrap"
+      }
+    ]
+  },
+  {
+    "id": "card-3-locked",
+    "name": "Locked",
+    "active": false,
+    "parentId": "card-3-back",
+    "transform": {
+      "position": {
+        "x": -2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 252,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardLocked"
+      }
+    ]
+  },
+  {
+    "id": "card-3-locked-label",
+    "name": "Locked Label",
+    "active": true,
+    "parentId": "card-3-locked",
+    "transform": {
+      "position": {
+        "x": 2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 239,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "text",
+        "text": "1D",
+        "fontSize": 11.85,
+        "autoSize": false,
+        "fontSizeMin": 1,
+        "fontSizeMax": 20,
+        "color": "#959595",
+        "fontAssetKey": "geniusTechno",
+        "bold": false,
+        "italic": false,
+        "underline": false,
+        "letterSpacing": 0,
+        "lineSpacing": 0,
+        "alignH": "center",
+        "alignV": "middle",
+        "overflow": "wrap"
+      }
+    ]
+  },
+  {
+    "id": "card-3-front",
+    "name": "Front",
+    "active": false,
+    "parentId": "card-3",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 235,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": []
+  },
+  {
+    "id": "card-3-empty",
+    "name": "Empty",
+    "active": true,
+    "parentId": "card-3-front",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 232,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardEmpty"
+      }
+    ]
+  },
+  {
+    "id": "card-3-logo",
+    "name": "With Logo",
+    "active": false,
+    "parentId": "card-3-front",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 232,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardWithLogo"
+      }
+    ]
+  },
+  {
+    "id": "card-4",
+    "name": "Card 1E",
+    "active": true,
+    "parentId": "level2",
+    "transform": {
+      "position": {
+        "x": 482,
+        "y": 357
+      },
+      "size": {
+        "x": 235,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "flip",
+        "hideDuration": 0.25,
+        "showDuration": 0.45,
+        "perspective": 6
+      },
+      {
+        "type": "card",
+        "index": 4
+      }
+    ]
+  },
+  {
+    "id": "card-4-back",
+    "name": "Back",
+    "active": true,
+    "parentId": "card-4",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 235,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": []
+  },
+  {
+    "id": "card-4-normal",
+    "name": "Normal",
+    "active": true,
+    "parentId": "card-4-back",
+    "transform": {
+      "position": {
+        "x": -2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 252,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardNormal"
+      }
+    ]
+  },
+  {
+    "id": "card-4-selected",
+    "name": "Selected",
+    "active": false,
+    "parentId": "card-4-back",
+    "transform": {
+      "position": {
+        "x": -2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 252,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardSelected"
+      }
+    ]
+  },
+  {
+    "id": "card-4-label",
+    "name": "Label",
+    "active": true,
+    "parentId": "card-4-back",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 232,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "text",
+        "text": "1E",
+        "fontSize": 11.85,
+        "autoSize": false,
+        "fontSizeMin": 1,
+        "fontSizeMax": 20,
+        "color": "#ffffff",
+        "fontAssetKey": "geniusTechno",
+        "bold": false,
+        "italic": false,
+        "underline": false,
+        "letterSpacing": 0,
+        "lineSpacing": 0,
+        "alignH": "center",
+        "alignV": "middle",
+        "overflow": "wrap"
+      }
+    ]
+  },
+  {
+    "id": "card-4-locked",
+    "name": "Locked",
+    "active": false,
+    "parentId": "card-4-back",
+    "transform": {
+      "position": {
+        "x": -2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 252,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardLocked"
+      }
+    ]
+  },
+  {
+    "id": "card-4-locked-label",
+    "name": "Locked Label",
+    "active": true,
+    "parentId": "card-4-locked",
+    "transform": {
+      "position": {
+        "x": 2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 239,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "text",
+        "text": "1E",
+        "fontSize": 11.85,
+        "autoSize": false,
+        "fontSizeMin": 1,
+        "fontSizeMax": 20,
+        "color": "#959595",
+        "fontAssetKey": "geniusTechno",
+        "bold": false,
+        "italic": false,
+        "underline": false,
+        "letterSpacing": 0,
+        "lineSpacing": 0,
+        "alignH": "center",
+        "alignV": "middle",
+        "overflow": "wrap"
+      }
+    ]
+  },
+  {
+    "id": "card-4-front",
+    "name": "Front",
+    "active": false,
+    "parentId": "card-4",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 235,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": []
+  },
+  {
+    "id": "card-4-empty",
+    "name": "Empty",
+    "active": true,
+    "parentId": "card-4-front",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 232,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardEmpty"
+      }
+    ]
+  },
+  {
+    "id": "card-4-logo",
+    "name": "With Logo",
+    "active": false,
+    "parentId": "card-4-front",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 232,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardWithLogo"
+      }
+    ]
+  },
+  {
+    "id": "card-5",
+    "name": "Card 2A",
+    "active": true,
+    "parentId": "level2",
+    "transform": {
+      "position": {
+        "x": -482,
+        "y": 119
+      },
+      "size": {
+        "x": 235,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "flip",
+        "hideDuration": 0.25,
+        "showDuration": 0.45,
+        "perspective": 6
+      },
+      {
+        "type": "card",
+        "index": 5
+      }
+    ]
+  },
+  {
+    "id": "card-5-back",
+    "name": "Back",
+    "active": true,
+    "parentId": "card-5",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 235,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": []
+  },
+  {
+    "id": "card-5-normal",
+    "name": "Normal",
+    "active": true,
+    "parentId": "card-5-back",
+    "transform": {
+      "position": {
+        "x": -2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 252,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardNormal"
+      }
+    ]
+  },
+  {
+    "id": "card-5-selected",
+    "name": "Selected",
+    "active": false,
+    "parentId": "card-5-back",
+    "transform": {
+      "position": {
+        "x": -2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 252,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardSelected"
+      }
+    ]
+  },
+  {
+    "id": "card-5-label",
+    "name": "Label",
+    "active": true,
+    "parentId": "card-5-back",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 232,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "text",
+        "text": "2A",
+        "fontSize": 11.85,
+        "autoSize": false,
+        "fontSizeMin": 1,
+        "fontSizeMax": 20,
+        "color": "#ffffff",
+        "fontAssetKey": "geniusTechno",
+        "bold": false,
+        "italic": false,
+        "underline": false,
+        "letterSpacing": 0,
+        "lineSpacing": 0,
+        "alignH": "center",
+        "alignV": "middle",
+        "overflow": "wrap"
+      }
+    ]
+  },
+  {
+    "id": "card-5-locked",
+    "name": "Locked",
+    "active": false,
+    "parentId": "card-5-back",
+    "transform": {
+      "position": {
+        "x": -2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 252,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardLocked"
+      }
+    ]
+  },
+  {
+    "id": "card-5-locked-label",
+    "name": "Locked Label",
+    "active": true,
+    "parentId": "card-5-locked",
+    "transform": {
+      "position": {
+        "x": 2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 239,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "text",
+        "text": "2A",
+        "fontSize": 11.85,
+        "autoSize": false,
+        "fontSizeMin": 1,
+        "fontSizeMax": 20,
+        "color": "#959595",
+        "fontAssetKey": "geniusTechno",
+        "bold": false,
+        "italic": false,
+        "underline": false,
+        "letterSpacing": 0,
+        "lineSpacing": 0,
+        "alignH": "center",
+        "alignV": "middle",
+        "overflow": "wrap"
+      }
+    ]
+  },
+  {
+    "id": "card-5-front",
+    "name": "Front",
+    "active": false,
+    "parentId": "card-5",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 235,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": []
+  },
+  {
+    "id": "card-5-empty",
+    "name": "Empty",
+    "active": true,
+    "parentId": "card-5-front",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 232,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardEmpty"
+      }
+    ]
+  },
+  {
+    "id": "card-5-logo",
+    "name": "With Logo",
+    "active": false,
+    "parentId": "card-5-front",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 232,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardWithLogo"
+      }
+    ]
+  },
+  {
+    "id": "card-6",
+    "name": "Card 2B",
+    "active": true,
+    "parentId": "level2",
+    "transform": {
+      "position": {
+        "x": -241,
+        "y": 119
+      },
+      "size": {
+        "x": 235,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "flip",
+        "hideDuration": 0.25,
+        "showDuration": 0.45,
+        "perspective": 6
+      },
+      {
+        "type": "card",
+        "index": 6
+      }
+    ]
+  },
+  {
+    "id": "card-6-back",
+    "name": "Back",
+    "active": true,
+    "parentId": "card-6",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 235,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": []
+  },
+  {
+    "id": "card-6-normal",
+    "name": "Normal",
+    "active": true,
+    "parentId": "card-6-back",
+    "transform": {
+      "position": {
+        "x": -2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 252,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardNormal"
+      }
+    ]
+  },
+  {
+    "id": "card-6-selected",
+    "name": "Selected",
+    "active": false,
+    "parentId": "card-6-back",
+    "transform": {
+      "position": {
+        "x": -2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 252,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardSelected"
+      }
+    ]
+  },
+  {
+    "id": "card-6-label",
+    "name": "Label",
+    "active": true,
+    "parentId": "card-6-back",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 232,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "text",
+        "text": "2B",
+        "fontSize": 11.85,
+        "autoSize": false,
+        "fontSizeMin": 1,
+        "fontSizeMax": 20,
+        "color": "#ffffff",
+        "fontAssetKey": "geniusTechno",
+        "bold": false,
+        "italic": false,
+        "underline": false,
+        "letterSpacing": 0,
+        "lineSpacing": 0,
+        "alignH": "center",
+        "alignV": "middle",
+        "overflow": "wrap"
+      }
+    ]
+  },
+  {
+    "id": "card-6-locked",
+    "name": "Locked",
+    "active": false,
+    "parentId": "card-6-back",
+    "transform": {
+      "position": {
+        "x": -2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 252,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardLocked"
+      }
+    ]
+  },
+  {
+    "id": "card-6-locked-label",
+    "name": "Locked Label",
+    "active": true,
+    "parentId": "card-6-locked",
+    "transform": {
+      "position": {
+        "x": 2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 239,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "text",
+        "text": "2B",
+        "fontSize": 11.85,
+        "autoSize": false,
+        "fontSizeMin": 1,
+        "fontSizeMax": 20,
+        "color": "#959595",
+        "fontAssetKey": "geniusTechno",
+        "bold": false,
+        "italic": false,
+        "underline": false,
+        "letterSpacing": 0,
+        "lineSpacing": 0,
+        "alignH": "center",
+        "alignV": "middle",
+        "overflow": "wrap"
+      }
+    ]
+  },
+  {
+    "id": "card-6-front",
+    "name": "Front",
+    "active": false,
+    "parentId": "card-6",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 235,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": []
+  },
+  {
+    "id": "card-6-empty",
+    "name": "Empty",
+    "active": true,
+    "parentId": "card-6-front",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 232,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardEmpty"
+      }
+    ]
+  },
+  {
+    "id": "card-6-logo",
+    "name": "With Logo",
+    "active": false,
+    "parentId": "card-6-front",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 232,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardWithLogo"
+      }
+    ]
+  },
+  {
+    "id": "card-7",
+    "name": "Card 2C",
+    "active": true,
+    "parentId": "level2",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 119
+      },
+      "size": {
+        "x": 235,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "flip",
+        "hideDuration": 0.25,
+        "showDuration": 0.45,
+        "perspective": 6
+      },
+      {
+        "type": "card",
+        "index": 7
+      }
+    ]
+  },
+  {
+    "id": "card-7-back",
+    "name": "Back",
+    "active": true,
+    "parentId": "card-7",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 235,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": []
+  },
+  {
+    "id": "card-7-normal",
+    "name": "Normal",
+    "active": true,
+    "parentId": "card-7-back",
+    "transform": {
+      "position": {
+        "x": -2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 252,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardNormal"
+      }
+    ]
+  },
+  {
+    "id": "card-7-selected",
+    "name": "Selected",
+    "active": false,
+    "parentId": "card-7-back",
+    "transform": {
+      "position": {
+        "x": -2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 252,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardSelected"
+      }
+    ]
+  },
+  {
+    "id": "card-7-label",
+    "name": "Label",
+    "active": true,
+    "parentId": "card-7-back",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 232,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "text",
+        "text": "2C",
+        "fontSize": 11.85,
+        "autoSize": false,
+        "fontSizeMin": 1,
+        "fontSizeMax": 20,
+        "color": "#ffffff",
+        "fontAssetKey": "geniusTechno",
+        "bold": false,
+        "italic": false,
+        "underline": false,
+        "letterSpacing": 0,
+        "lineSpacing": 0,
+        "alignH": "center",
+        "alignV": "middle",
+        "overflow": "wrap"
+      }
+    ]
+  },
+  {
+    "id": "card-7-locked",
+    "name": "Locked",
+    "active": false,
+    "parentId": "card-7-back",
+    "transform": {
+      "position": {
+        "x": -2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 252,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardLocked"
+      }
+    ]
+  },
+  {
+    "id": "card-7-locked-label",
+    "name": "Locked Label",
+    "active": true,
+    "parentId": "card-7-locked",
+    "transform": {
+      "position": {
+        "x": 2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 239,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "text",
+        "text": "2C",
+        "fontSize": 11.85,
+        "autoSize": false,
+        "fontSizeMin": 1,
+        "fontSizeMax": 20,
+        "color": "#959595",
+        "fontAssetKey": "geniusTechno",
+        "bold": false,
+        "italic": false,
+        "underline": false,
+        "letterSpacing": 0,
+        "lineSpacing": 0,
+        "alignH": "center",
+        "alignV": "middle",
+        "overflow": "wrap"
+      }
+    ]
+  },
+  {
+    "id": "card-7-front",
+    "name": "Front",
+    "active": false,
+    "parentId": "card-7",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 235,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": []
+  },
+  {
+    "id": "card-7-empty",
+    "name": "Empty",
+    "active": true,
+    "parentId": "card-7-front",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 232,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardEmpty"
+      }
+    ]
+  },
+  {
+    "id": "card-7-logo",
+    "name": "With Logo",
+    "active": false,
+    "parentId": "card-7-front",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 232,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardWithLogo"
+      }
+    ]
+  },
+  {
+    "id": "card-8",
+    "name": "Card 2D",
+    "active": true,
+    "parentId": "level2",
+    "transform": {
+      "position": {
+        "x": 241,
+        "y": 119
+      },
+      "size": {
+        "x": 235,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "flip",
+        "hideDuration": 0.25,
+        "showDuration": 0.45,
+        "perspective": 6
+      },
+      {
+        "type": "card",
+        "index": 8
+      }
+    ]
+  },
+  {
+    "id": "card-8-back",
+    "name": "Back",
+    "active": true,
+    "parentId": "card-8",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 235,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": []
+  },
+  {
+    "id": "card-8-normal",
+    "name": "Normal",
+    "active": true,
+    "parentId": "card-8-back",
+    "transform": {
+      "position": {
+        "x": -2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 252,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardNormal"
+      }
+    ]
+  },
+  {
+    "id": "card-8-selected",
+    "name": "Selected",
+    "active": false,
+    "parentId": "card-8-back",
+    "transform": {
+      "position": {
+        "x": -2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 252,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardSelected"
+      }
+    ]
+  },
+  {
+    "id": "card-8-label",
+    "name": "Label",
+    "active": true,
+    "parentId": "card-8-back",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 232,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "text",
+        "text": "2D",
+        "fontSize": 11.85,
+        "autoSize": false,
+        "fontSizeMin": 1,
+        "fontSizeMax": 20,
+        "color": "#ffffff",
+        "fontAssetKey": "geniusTechno",
+        "bold": false,
+        "italic": false,
+        "underline": false,
+        "letterSpacing": 0,
+        "lineSpacing": 0,
+        "alignH": "center",
+        "alignV": "middle",
+        "overflow": "wrap"
+      }
+    ]
+  },
+  {
+    "id": "card-8-locked",
+    "name": "Locked",
+    "active": false,
+    "parentId": "card-8-back",
+    "transform": {
+      "position": {
+        "x": -2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 252,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardLocked"
+      }
+    ]
+  },
+  {
+    "id": "card-8-locked-label",
+    "name": "Locked Label",
+    "active": true,
+    "parentId": "card-8-locked",
+    "transform": {
+      "position": {
+        "x": 2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 239,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "text",
+        "text": "2D",
+        "fontSize": 11.85,
+        "autoSize": false,
+        "fontSizeMin": 1,
+        "fontSizeMax": 20,
+        "color": "#959595",
+        "fontAssetKey": "geniusTechno",
+        "bold": false,
+        "italic": false,
+        "underline": false,
+        "letterSpacing": 0,
+        "lineSpacing": 0,
+        "alignH": "center",
+        "alignV": "middle",
+        "overflow": "wrap"
+      }
+    ]
+  },
+  {
+    "id": "card-8-front",
+    "name": "Front",
+    "active": false,
+    "parentId": "card-8",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 235,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": []
+  },
+  {
+    "id": "card-8-empty",
+    "name": "Empty",
+    "active": true,
+    "parentId": "card-8-front",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 232,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardEmpty"
+      }
+    ]
+  },
+  {
+    "id": "card-8-logo",
+    "name": "With Logo",
+    "active": false,
+    "parentId": "card-8-front",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 232,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardWithLogo"
+      }
+    ]
+  },
+  {
+    "id": "card-9",
+    "name": "Card 2E",
+    "active": true,
+    "parentId": "level2",
+    "transform": {
+      "position": {
+        "x": 482,
+        "y": 119
+      },
+      "size": {
+        "x": 235,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "flip",
+        "hideDuration": 0.25,
+        "showDuration": 0.45,
+        "perspective": 6
+      },
+      {
+        "type": "card",
+        "index": 9
+      }
+    ]
+  },
+  {
+    "id": "card-9-back",
+    "name": "Back",
+    "active": true,
+    "parentId": "card-9",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 235,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": []
+  },
+  {
+    "id": "card-9-normal",
+    "name": "Normal",
+    "active": true,
+    "parentId": "card-9-back",
+    "transform": {
+      "position": {
+        "x": -2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 252,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardNormal"
+      }
+    ]
+  },
+  {
+    "id": "card-9-selected",
+    "name": "Selected",
+    "active": false,
+    "parentId": "card-9-back",
+    "transform": {
+      "position": {
+        "x": -2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 252,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardSelected"
+      }
+    ]
+  },
+  {
+    "id": "card-9-label",
+    "name": "Label",
+    "active": true,
+    "parentId": "card-9-back",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 232,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "text",
+        "text": "2E",
+        "fontSize": 11.85,
+        "autoSize": false,
+        "fontSizeMin": 1,
+        "fontSizeMax": 20,
+        "color": "#ffffff",
+        "fontAssetKey": "geniusTechno",
+        "bold": false,
+        "italic": false,
+        "underline": false,
+        "letterSpacing": 0,
+        "lineSpacing": 0,
+        "alignH": "center",
+        "alignV": "middle",
+        "overflow": "wrap"
+      }
+    ]
+  },
+  {
+    "id": "card-9-locked",
+    "name": "Locked",
+    "active": false,
+    "parentId": "card-9-back",
+    "transform": {
+      "position": {
+        "x": -2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 252,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardLocked"
+      }
+    ]
+  },
+  {
+    "id": "card-9-locked-label",
+    "name": "Locked Label",
+    "active": true,
+    "parentId": "card-9-locked",
+    "transform": {
+      "position": {
+        "x": 2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 239,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "text",
+        "text": "2E",
+        "fontSize": 11.85,
+        "autoSize": false,
+        "fontSizeMin": 1,
+        "fontSizeMax": 20,
+        "color": "#959595",
+        "fontAssetKey": "geniusTechno",
+        "bold": false,
+        "italic": false,
+        "underline": false,
+        "letterSpacing": 0,
+        "lineSpacing": 0,
+        "alignH": "center",
+        "alignV": "middle",
+        "overflow": "wrap"
+      }
+    ]
+  },
+  {
+    "id": "card-9-front",
+    "name": "Front",
+    "active": false,
+    "parentId": "card-9",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 235,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": []
+  },
+  {
+    "id": "card-9-empty",
+    "name": "Empty",
+    "active": true,
+    "parentId": "card-9-front",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 232,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardEmpty"
+      }
+    ]
+  },
+  {
+    "id": "card-9-logo",
+    "name": "With Logo",
+    "active": false,
+    "parentId": "card-9-front",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 232,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardWithLogo"
+      }
+    ]
+  },
+  {
+    "id": "card-10",
+    "name": "Card 3A",
+    "active": true,
+    "parentId": "level2",
+    "transform": {
+      "position": {
+        "x": -482,
+        "y": -119
+      },
+      "size": {
+        "x": 235,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "flip",
+        "hideDuration": 0.25,
+        "showDuration": 0.45,
+        "perspective": 6
+      },
+      {
+        "type": "card",
+        "index": 10
+      }
+    ]
+  },
+  {
+    "id": "card-10-back",
+    "name": "Back",
+    "active": true,
+    "parentId": "card-10",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 235,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": []
+  },
+  {
+    "id": "card-10-normal",
+    "name": "Normal",
+    "active": true,
+    "parentId": "card-10-back",
+    "transform": {
+      "position": {
+        "x": -2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 252,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardNormal"
+      }
+    ]
+  },
+  {
+    "id": "card-10-selected",
+    "name": "Selected",
+    "active": false,
+    "parentId": "card-10-back",
+    "transform": {
+      "position": {
+        "x": -2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 252,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardSelected"
+      }
+    ]
+  },
+  {
+    "id": "card-10-label",
+    "name": "Label",
+    "active": true,
+    "parentId": "card-10-back",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 232,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "text",
+        "text": "3A",
+        "fontSize": 11.85,
+        "autoSize": false,
+        "fontSizeMin": 1,
+        "fontSizeMax": 20,
+        "color": "#ffffff",
+        "fontAssetKey": "geniusTechno",
+        "bold": false,
+        "italic": false,
+        "underline": false,
+        "letterSpacing": 0,
+        "lineSpacing": 0,
+        "alignH": "center",
+        "alignV": "middle",
+        "overflow": "wrap"
+      }
+    ]
+  },
+  {
+    "id": "card-10-locked",
+    "name": "Locked",
+    "active": false,
+    "parentId": "card-10-back",
+    "transform": {
+      "position": {
+        "x": -2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 252,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardLocked"
+      }
+    ]
+  },
+  {
+    "id": "card-10-locked-label",
+    "name": "Locked Label",
+    "active": true,
+    "parentId": "card-10-locked",
+    "transform": {
+      "position": {
+        "x": 2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 239,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "text",
+        "text": "3A",
+        "fontSize": 11.85,
+        "autoSize": false,
+        "fontSizeMin": 1,
+        "fontSizeMax": 20,
+        "color": "#959595",
+        "fontAssetKey": "geniusTechno",
+        "bold": false,
+        "italic": false,
+        "underline": false,
+        "letterSpacing": 0,
+        "lineSpacing": 0,
+        "alignH": "center",
+        "alignV": "middle",
+        "overflow": "wrap"
+      }
+    ]
+  },
+  {
+    "id": "card-10-front",
+    "name": "Front",
+    "active": false,
+    "parentId": "card-10",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 235,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": []
+  },
+  {
+    "id": "card-10-empty",
+    "name": "Empty",
+    "active": true,
+    "parentId": "card-10-front",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 232,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardEmpty"
+      }
+    ]
+  },
+  {
+    "id": "card-10-logo",
+    "name": "With Logo",
+    "active": false,
+    "parentId": "card-10-front",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 232,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardWithLogo"
+      }
+    ]
+  },
+  {
+    "id": "card-11",
+    "name": "Card 3B",
+    "active": true,
+    "parentId": "level2",
+    "transform": {
+      "position": {
+        "x": -241,
+        "y": -119
+      },
+      "size": {
+        "x": 235,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "flip",
+        "hideDuration": 0.25,
+        "showDuration": 0.45,
+        "perspective": 6
+      },
+      {
+        "type": "card",
+        "index": 11
+      }
+    ]
+  },
+  {
+    "id": "card-11-back",
+    "name": "Back",
+    "active": true,
+    "parentId": "card-11",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 235,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": []
+  },
+  {
+    "id": "card-11-normal",
+    "name": "Normal",
+    "active": true,
+    "parentId": "card-11-back",
+    "transform": {
+      "position": {
+        "x": -2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 252,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardNormal"
+      }
+    ]
+  },
+  {
+    "id": "card-11-selected",
+    "name": "Selected",
+    "active": false,
+    "parentId": "card-11-back",
+    "transform": {
+      "position": {
+        "x": -2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 252,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardSelected"
+      }
+    ]
+  },
+  {
+    "id": "card-11-label",
+    "name": "Label",
+    "active": true,
+    "parentId": "card-11-back",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 232,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "text",
+        "text": "3B",
+        "fontSize": 11.85,
+        "autoSize": false,
+        "fontSizeMin": 1,
+        "fontSizeMax": 20,
+        "color": "#ffffff",
+        "fontAssetKey": "geniusTechno",
+        "bold": false,
+        "italic": false,
+        "underline": false,
+        "letterSpacing": 0,
+        "lineSpacing": 0,
+        "alignH": "center",
+        "alignV": "middle",
+        "overflow": "wrap"
+      }
+    ]
+  },
+  {
+    "id": "card-11-locked",
+    "name": "Locked",
+    "active": false,
+    "parentId": "card-11-back",
+    "transform": {
+      "position": {
+        "x": -2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 252,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardLocked"
+      }
+    ]
+  },
+  {
+    "id": "card-11-locked-label",
+    "name": "Locked Label",
+    "active": true,
+    "parentId": "card-11-locked",
+    "transform": {
+      "position": {
+        "x": 2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 239,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "text",
+        "text": "3B",
+        "fontSize": 11.85,
+        "autoSize": false,
+        "fontSizeMin": 1,
+        "fontSizeMax": 20,
+        "color": "#959595",
+        "fontAssetKey": "geniusTechno",
+        "bold": false,
+        "italic": false,
+        "underline": false,
+        "letterSpacing": 0,
+        "lineSpacing": 0,
+        "alignH": "center",
+        "alignV": "middle",
+        "overflow": "wrap"
+      }
+    ]
+  },
+  {
+    "id": "card-11-front",
+    "name": "Front",
+    "active": false,
+    "parentId": "card-11",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 235,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": []
+  },
+  {
+    "id": "card-11-empty",
+    "name": "Empty",
+    "active": true,
+    "parentId": "card-11-front",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 232,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardEmpty"
+      }
+    ]
+  },
+  {
+    "id": "card-11-logo",
+    "name": "With Logo",
+    "active": false,
+    "parentId": "card-11-front",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 232,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardWithLogo"
+      }
+    ]
+  },
+  {
+    "id": "card-12",
+    "name": "Card 3C",
+    "active": true,
+    "parentId": "level2",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": -119
+      },
+      "size": {
+        "x": 235,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "flip",
+        "hideDuration": 0.25,
+        "showDuration": 0.45,
+        "perspective": 6
+      },
+      {
+        "type": "card",
+        "index": 12
+      }
+    ]
+  },
+  {
+    "id": "card-12-back",
+    "name": "Back",
+    "active": true,
+    "parentId": "card-12",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 235,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": []
+  },
+  {
+    "id": "card-12-normal",
+    "name": "Normal",
+    "active": true,
+    "parentId": "card-12-back",
+    "transform": {
+      "position": {
+        "x": -2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 252,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardNormal"
+      }
+    ]
+  },
+  {
+    "id": "card-12-selected",
+    "name": "Selected",
+    "active": false,
+    "parentId": "card-12-back",
+    "transform": {
+      "position": {
+        "x": -2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 252,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardSelected"
+      }
+    ]
+  },
+  {
+    "id": "card-12-label",
+    "name": "Label",
+    "active": true,
+    "parentId": "card-12-back",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 232,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "text",
+        "text": "3C",
+        "fontSize": 11.85,
+        "autoSize": false,
+        "fontSizeMin": 1,
+        "fontSizeMax": 20,
+        "color": "#ffffff",
+        "fontAssetKey": "geniusTechno",
+        "bold": false,
+        "italic": false,
+        "underline": false,
+        "letterSpacing": 0,
+        "lineSpacing": 0,
+        "alignH": "center",
+        "alignV": "middle",
+        "overflow": "wrap"
+      }
+    ]
+  },
+  {
+    "id": "card-12-locked",
+    "name": "Locked",
+    "active": false,
+    "parentId": "card-12-back",
+    "transform": {
+      "position": {
+        "x": -2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 252,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardLocked"
+      }
+    ]
+  },
+  {
+    "id": "card-12-locked-label",
+    "name": "Locked Label",
+    "active": true,
+    "parentId": "card-12-locked",
+    "transform": {
+      "position": {
+        "x": 2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 239,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "text",
+        "text": "3C",
+        "fontSize": 11.85,
+        "autoSize": false,
+        "fontSizeMin": 1,
+        "fontSizeMax": 20,
+        "color": "#959595",
+        "fontAssetKey": "geniusTechno",
+        "bold": false,
+        "italic": false,
+        "underline": false,
+        "letterSpacing": 0,
+        "lineSpacing": 0,
+        "alignH": "center",
+        "alignV": "middle",
+        "overflow": "wrap"
+      }
+    ]
+  },
+  {
+    "id": "card-12-front",
+    "name": "Front",
+    "active": false,
+    "parentId": "card-12",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 235,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": []
+  },
+  {
+    "id": "card-12-empty",
+    "name": "Empty",
+    "active": true,
+    "parentId": "card-12-front",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 232,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardEmpty"
+      }
+    ]
+  },
+  {
+    "id": "card-12-logo",
+    "name": "With Logo",
+    "active": false,
+    "parentId": "card-12-front",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 232,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardWithLogo"
+      }
+    ]
+  },
+  {
+    "id": "card-13",
+    "name": "Card 3D",
+    "active": true,
+    "parentId": "level2",
+    "transform": {
+      "position": {
+        "x": 241,
+        "y": -119
+      },
+      "size": {
+        "x": 235,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "flip",
+        "hideDuration": 0.25,
+        "showDuration": 0.45,
+        "perspective": 6
+      },
+      {
+        "type": "card",
+        "index": 13
+      }
+    ]
+  },
+  {
+    "id": "card-13-back",
+    "name": "Back",
+    "active": true,
+    "parentId": "card-13",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 235,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": []
+  },
+  {
+    "id": "card-13-normal",
+    "name": "Normal",
+    "active": true,
+    "parentId": "card-13-back",
+    "transform": {
+      "position": {
+        "x": -2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 252,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardNormal"
+      }
+    ]
+  },
+  {
+    "id": "card-13-selected",
+    "name": "Selected",
+    "active": false,
+    "parentId": "card-13-back",
+    "transform": {
+      "position": {
+        "x": -2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 252,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardSelected"
+      }
+    ]
+  },
+  {
+    "id": "card-13-label",
+    "name": "Label",
+    "active": true,
+    "parentId": "card-13-back",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 232,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "text",
+        "text": "3D",
+        "fontSize": 11.85,
+        "autoSize": false,
+        "fontSizeMin": 1,
+        "fontSizeMax": 20,
+        "color": "#ffffff",
+        "fontAssetKey": "geniusTechno",
+        "bold": false,
+        "italic": false,
+        "underline": false,
+        "letterSpacing": 0,
+        "lineSpacing": 0,
+        "alignH": "center",
+        "alignV": "middle",
+        "overflow": "wrap"
+      }
+    ]
+  },
+  {
+    "id": "card-13-locked",
+    "name": "Locked",
+    "active": false,
+    "parentId": "card-13-back",
+    "transform": {
+      "position": {
+        "x": -2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 252,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardLocked"
+      }
+    ]
+  },
+  {
+    "id": "card-13-locked-label",
+    "name": "Locked Label",
+    "active": true,
+    "parentId": "card-13-locked",
+    "transform": {
+      "position": {
+        "x": 2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 239,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "text",
+        "text": "3D",
+        "fontSize": 11.85,
+        "autoSize": false,
+        "fontSizeMin": 1,
+        "fontSizeMax": 20,
+        "color": "#959595",
+        "fontAssetKey": "geniusTechno",
+        "bold": false,
+        "italic": false,
+        "underline": false,
+        "letterSpacing": 0,
+        "lineSpacing": 0,
+        "alignH": "center",
+        "alignV": "middle",
+        "overflow": "wrap"
+      }
+    ]
+  },
+  {
+    "id": "card-13-front",
+    "name": "Front",
+    "active": false,
+    "parentId": "card-13",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 235,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": []
+  },
+  {
+    "id": "card-13-empty",
+    "name": "Empty",
+    "active": true,
+    "parentId": "card-13-front",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 232,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardEmpty"
+      }
+    ]
+  },
+  {
+    "id": "card-13-logo",
+    "name": "With Logo",
+    "active": false,
+    "parentId": "card-13-front",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 232,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardWithLogo"
+      }
+    ]
+  },
+  {
+    "id": "card-14",
+    "name": "Card 3E",
+    "active": true,
+    "parentId": "level2",
+    "transform": {
+      "position": {
+        "x": 482,
+        "y": -119
+      },
+      "size": {
+        "x": 235,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "flip",
+        "hideDuration": 0.25,
+        "showDuration": 0.45,
+        "perspective": 6
+      },
+      {
+        "type": "card",
+        "index": 14
+      }
+    ]
+  },
+  {
+    "id": "card-14-back",
+    "name": "Back",
+    "active": true,
+    "parentId": "card-14",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 235,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": []
+  },
+  {
+    "id": "card-14-normal",
+    "name": "Normal",
+    "active": true,
+    "parentId": "card-14-back",
+    "transform": {
+      "position": {
+        "x": -2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 252,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardNormal"
+      }
+    ]
+  },
+  {
+    "id": "card-14-selected",
+    "name": "Selected",
+    "active": false,
+    "parentId": "card-14-back",
+    "transform": {
+      "position": {
+        "x": -2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 252,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardSelected"
+      }
+    ]
+  },
+  {
+    "id": "card-14-label",
+    "name": "Label",
+    "active": true,
+    "parentId": "card-14-back",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 232,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "text",
+        "text": "3E",
+        "fontSize": 11.85,
+        "autoSize": false,
+        "fontSizeMin": 1,
+        "fontSizeMax": 20,
+        "color": "#ffffff",
+        "fontAssetKey": "geniusTechno",
+        "bold": false,
+        "italic": false,
+        "underline": false,
+        "letterSpacing": 0,
+        "lineSpacing": 0,
+        "alignH": "center",
+        "alignV": "middle",
+        "overflow": "wrap"
+      }
+    ]
+  },
+  {
+    "id": "card-14-locked",
+    "name": "Locked",
+    "active": false,
+    "parentId": "card-14-back",
+    "transform": {
+      "position": {
+        "x": -2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 252,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardLocked"
+      }
+    ]
+  },
+  {
+    "id": "card-14-locked-label",
+    "name": "Locked Label",
+    "active": true,
+    "parentId": "card-14-locked",
+    "transform": {
+      "position": {
+        "x": 2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 239,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "text",
+        "text": "3E",
+        "fontSize": 11.85,
+        "autoSize": false,
+        "fontSizeMin": 1,
+        "fontSizeMax": 20,
+        "color": "#959595",
+        "fontAssetKey": "geniusTechno",
+        "bold": false,
+        "italic": false,
+        "underline": false,
+        "letterSpacing": 0,
+        "lineSpacing": 0,
+        "alignH": "center",
+        "alignV": "middle",
+        "overflow": "wrap"
+      }
+    ]
+  },
+  {
+    "id": "card-14-front",
+    "name": "Front",
+    "active": false,
+    "parentId": "card-14",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 235,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": []
+  },
+  {
+    "id": "card-14-empty",
+    "name": "Empty",
+    "active": true,
+    "parentId": "card-14-front",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 232,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardEmpty"
+      }
+    ]
+  },
+  {
+    "id": "card-14-logo",
+    "name": "With Logo",
+    "active": false,
+    "parentId": "card-14-front",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 232,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardWithLogo"
+      }
+    ]
+  },
+  {
+    "id": "card-15",
+    "name": "Card 4A",
+    "active": true,
+    "parentId": "level2",
+    "transform": {
+      "position": {
+        "x": -482,
+        "y": -357
+      },
+      "size": {
+        "x": 235,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "flip",
+        "hideDuration": 0.25,
+        "showDuration": 0.45,
+        "perspective": 6
+      },
+      {
+        "type": "card",
+        "index": 15
+      }
+    ]
+  },
+  {
+    "id": "card-15-back",
+    "name": "Back",
+    "active": true,
+    "parentId": "card-15",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 235,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": []
+  },
+  {
+    "id": "card-15-normal",
+    "name": "Normal",
+    "active": true,
+    "parentId": "card-15-back",
+    "transform": {
+      "position": {
+        "x": -2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 252,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardNormal"
+      }
+    ]
+  },
+  {
+    "id": "card-15-selected",
+    "name": "Selected",
+    "active": false,
+    "parentId": "card-15-back",
+    "transform": {
+      "position": {
+        "x": -2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 252,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardSelected"
+      }
+    ]
+  },
+  {
+    "id": "card-15-label",
+    "name": "Label",
+    "active": true,
+    "parentId": "card-15-back",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 232,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "text",
+        "text": "4A",
+        "fontSize": 11.85,
+        "autoSize": false,
+        "fontSizeMin": 1,
+        "fontSizeMax": 20,
+        "color": "#ffffff",
+        "fontAssetKey": "geniusTechno",
+        "bold": false,
+        "italic": false,
+        "underline": false,
+        "letterSpacing": 0,
+        "lineSpacing": 0,
+        "alignH": "center",
+        "alignV": "middle",
+        "overflow": "wrap"
+      }
+    ]
+  },
+  {
+    "id": "card-15-locked",
+    "name": "Locked",
+    "active": false,
+    "parentId": "card-15-back",
+    "transform": {
+      "position": {
+        "x": -2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 252,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardLocked"
+      }
+    ]
+  },
+  {
+    "id": "card-15-locked-label",
+    "name": "Locked Label",
+    "active": true,
+    "parentId": "card-15-locked",
+    "transform": {
+      "position": {
+        "x": 2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 239,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "text",
+        "text": "4A",
+        "fontSize": 11.85,
+        "autoSize": false,
+        "fontSizeMin": 1,
+        "fontSizeMax": 20,
+        "color": "#959595",
+        "fontAssetKey": "geniusTechno",
+        "bold": false,
+        "italic": false,
+        "underline": false,
+        "letterSpacing": 0,
+        "lineSpacing": 0,
+        "alignH": "center",
+        "alignV": "middle",
+        "overflow": "wrap"
+      }
+    ]
+  },
+  {
+    "id": "card-15-front",
+    "name": "Front",
+    "active": false,
+    "parentId": "card-15",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 235,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": []
+  },
+  {
+    "id": "card-15-empty",
+    "name": "Empty",
+    "active": true,
+    "parentId": "card-15-front",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 232,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardEmpty"
+      }
+    ]
+  },
+  {
+    "id": "card-15-logo",
+    "name": "With Logo",
+    "active": false,
+    "parentId": "card-15-front",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 232,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardWithLogo"
+      }
+    ]
+  },
+  {
+    "id": "card-16",
+    "name": "Card 4B",
+    "active": true,
+    "parentId": "level2",
+    "transform": {
+      "position": {
+        "x": -241,
+        "y": -357
+      },
+      "size": {
+        "x": 235,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "flip",
+        "hideDuration": 0.25,
+        "showDuration": 0.45,
+        "perspective": 6
+      },
+      {
+        "type": "card",
+        "index": 16
+      }
+    ]
+  },
+  {
+    "id": "card-16-back",
+    "name": "Back",
+    "active": true,
+    "parentId": "card-16",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 235,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": []
+  },
+  {
+    "id": "card-16-normal",
+    "name": "Normal",
+    "active": true,
+    "parentId": "card-16-back",
+    "transform": {
+      "position": {
+        "x": -2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 252,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardNormal"
+      }
+    ]
+  },
+  {
+    "id": "card-16-selected",
+    "name": "Selected",
+    "active": false,
+    "parentId": "card-16-back",
+    "transform": {
+      "position": {
+        "x": -2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 252,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardSelected"
+      }
+    ]
+  },
+  {
+    "id": "card-16-label",
+    "name": "Label",
+    "active": true,
+    "parentId": "card-16-back",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 232,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "text",
+        "text": "4B",
+        "fontSize": 11.85,
+        "autoSize": false,
+        "fontSizeMin": 1,
+        "fontSizeMax": 20,
+        "color": "#ffffff",
+        "fontAssetKey": "geniusTechno",
+        "bold": false,
+        "italic": false,
+        "underline": false,
+        "letterSpacing": 0,
+        "lineSpacing": 0,
+        "alignH": "center",
+        "alignV": "middle",
+        "overflow": "wrap"
+      }
+    ]
+  },
+  {
+    "id": "card-16-locked",
+    "name": "Locked",
+    "active": false,
+    "parentId": "card-16-back",
+    "transform": {
+      "position": {
+        "x": -2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 252,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardLocked"
+      }
+    ]
+  },
+  {
+    "id": "card-16-locked-label",
+    "name": "Locked Label",
+    "active": true,
+    "parentId": "card-16-locked",
+    "transform": {
+      "position": {
+        "x": 2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 239,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "text",
+        "text": "4B",
+        "fontSize": 11.85,
+        "autoSize": false,
+        "fontSizeMin": 1,
+        "fontSizeMax": 20,
+        "color": "#959595",
+        "fontAssetKey": "geniusTechno",
+        "bold": false,
+        "italic": false,
+        "underline": false,
+        "letterSpacing": 0,
+        "lineSpacing": 0,
+        "alignH": "center",
+        "alignV": "middle",
+        "overflow": "wrap"
+      }
+    ]
+  },
+  {
+    "id": "card-16-front",
+    "name": "Front",
+    "active": false,
+    "parentId": "card-16",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 235,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": []
+  },
+  {
+    "id": "card-16-empty",
+    "name": "Empty",
+    "active": true,
+    "parentId": "card-16-front",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 232,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardEmpty"
+      }
+    ]
+  },
+  {
+    "id": "card-16-logo",
+    "name": "With Logo",
+    "active": false,
+    "parentId": "card-16-front",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 232,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardWithLogo"
+      }
+    ]
+  },
+  {
+    "id": "card-17",
+    "name": "Card 4C",
+    "active": true,
+    "parentId": "level2",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": -357
+      },
+      "size": {
+        "x": 235,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "flip",
+        "hideDuration": 0.25,
+        "showDuration": 0.45,
+        "perspective": 6
+      },
+      {
+        "type": "card",
+        "index": 17
+      }
+    ]
+  },
+  {
+    "id": "card-17-back",
+    "name": "Back",
+    "active": true,
+    "parentId": "card-17",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 235,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": []
+  },
+  {
+    "id": "card-17-normal",
+    "name": "Normal",
+    "active": true,
+    "parentId": "card-17-back",
+    "transform": {
+      "position": {
+        "x": -2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 252,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardNormal"
+      }
+    ]
+  },
+  {
+    "id": "card-17-selected",
+    "name": "Selected",
+    "active": false,
+    "parentId": "card-17-back",
+    "transform": {
+      "position": {
+        "x": -2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 252,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardSelected"
+      }
+    ]
+  },
+  {
+    "id": "card-17-label",
+    "name": "Label",
+    "active": true,
+    "parentId": "card-17-back",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 232,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "text",
+        "text": "4C",
+        "fontSize": 11.85,
+        "autoSize": false,
+        "fontSizeMin": 1,
+        "fontSizeMax": 20,
+        "color": "#ffffff",
+        "fontAssetKey": "geniusTechno",
+        "bold": false,
+        "italic": false,
+        "underline": false,
+        "letterSpacing": 0,
+        "lineSpacing": 0,
+        "alignH": "center",
+        "alignV": "middle",
+        "overflow": "wrap"
+      }
+    ]
+  },
+  {
+    "id": "card-17-locked",
+    "name": "Locked",
+    "active": false,
+    "parentId": "card-17-back",
+    "transform": {
+      "position": {
+        "x": -2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 252,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardLocked"
+      }
+    ]
+  },
+  {
+    "id": "card-17-locked-label",
+    "name": "Locked Label",
+    "active": true,
+    "parentId": "card-17-locked",
+    "transform": {
+      "position": {
+        "x": 2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 239,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "text",
+        "text": "4C",
+        "fontSize": 11.85,
+        "autoSize": false,
+        "fontSizeMin": 1,
+        "fontSizeMax": 20,
+        "color": "#959595",
+        "fontAssetKey": "geniusTechno",
+        "bold": false,
+        "italic": false,
+        "underline": false,
+        "letterSpacing": 0,
+        "lineSpacing": 0,
+        "alignH": "center",
+        "alignV": "middle",
+        "overflow": "wrap"
+      }
+    ]
+  },
+  {
+    "id": "card-17-front",
+    "name": "Front",
+    "active": false,
+    "parentId": "card-17",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 235,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": []
+  },
+  {
+    "id": "card-17-empty",
+    "name": "Empty",
+    "active": true,
+    "parentId": "card-17-front",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 232,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardEmpty"
+      }
+    ]
+  },
+  {
+    "id": "card-17-logo",
+    "name": "With Logo",
+    "active": false,
+    "parentId": "card-17-front",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 232,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardWithLogo"
+      }
+    ]
+  },
+  {
+    "id": "card-18",
+    "name": "Card 4D",
+    "active": true,
+    "parentId": "level2",
+    "transform": {
+      "position": {
+        "x": 241,
+        "y": -357
+      },
+      "size": {
+        "x": 235,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "flip",
+        "hideDuration": 0.25,
+        "showDuration": 0.45,
+        "perspective": 6
+      },
+      {
+        "type": "card",
+        "index": 18
+      }
+    ]
+  },
+  {
+    "id": "card-18-back",
+    "name": "Back",
+    "active": true,
+    "parentId": "card-18",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 235,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": []
+  },
+  {
+    "id": "card-18-normal",
+    "name": "Normal",
+    "active": true,
+    "parentId": "card-18-back",
+    "transform": {
+      "position": {
+        "x": -2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 252,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardNormal"
+      }
+    ]
+  },
+  {
+    "id": "card-18-selected",
+    "name": "Selected",
+    "active": false,
+    "parentId": "card-18-back",
+    "transform": {
+      "position": {
+        "x": -2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 252,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardSelected"
+      }
+    ]
+  },
+  {
+    "id": "card-18-label",
+    "name": "Label",
+    "active": true,
+    "parentId": "card-18-back",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 232,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "text",
+        "text": "4D",
+        "fontSize": 11.85,
+        "autoSize": false,
+        "fontSizeMin": 1,
+        "fontSizeMax": 20,
+        "color": "#ffffff",
+        "fontAssetKey": "geniusTechno",
+        "bold": false,
+        "italic": false,
+        "underline": false,
+        "letterSpacing": 0,
+        "lineSpacing": 0,
+        "alignH": "center",
+        "alignV": "middle",
+        "overflow": "wrap"
+      }
+    ]
+  },
+  {
+    "id": "card-18-locked",
+    "name": "Locked",
+    "active": false,
+    "parentId": "card-18-back",
+    "transform": {
+      "position": {
+        "x": -2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 252,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardLocked"
+      }
+    ]
+  },
+  {
+    "id": "card-18-locked-label",
+    "name": "Locked Label",
+    "active": true,
+    "parentId": "card-18-locked",
+    "transform": {
+      "position": {
+        "x": 2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 239,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "text",
+        "text": "4D",
+        "fontSize": 11.85,
+        "autoSize": false,
+        "fontSizeMin": 1,
+        "fontSizeMax": 20,
+        "color": "#959595",
+        "fontAssetKey": "geniusTechno",
+        "bold": false,
+        "italic": false,
+        "underline": false,
+        "letterSpacing": 0,
+        "lineSpacing": 0,
+        "alignH": "center",
+        "alignV": "middle",
+        "overflow": "wrap"
+      }
+    ]
+  },
+  {
+    "id": "card-18-front",
+    "name": "Front",
+    "active": false,
+    "parentId": "card-18",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 235,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": []
+  },
+  {
+    "id": "card-18-empty",
+    "name": "Empty",
+    "active": true,
+    "parentId": "card-18-front",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 232,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardEmpty"
+      }
+    ]
+  },
+  {
+    "id": "card-18-logo",
+    "name": "With Logo",
+    "active": false,
+    "parentId": "card-18-front",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 232,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardWithLogo"
+      }
+    ]
+  },
+  {
+    "id": "card-19",
+    "name": "Card 4E",
+    "active": true,
+    "parentId": "level2",
+    "transform": {
+      "position": {
+        "x": 482,
+        "y": -357
+      },
+      "size": {
+        "x": 235,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "flip",
+        "hideDuration": 0.25,
+        "showDuration": 0.45,
+        "perspective": 6
+      },
+      {
+        "type": "card",
+        "index": 19
+      }
+    ]
+  },
+  {
+    "id": "card-19-back",
+    "name": "Back",
+    "active": true,
+    "parentId": "card-19",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 235,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": []
+  },
+  {
+    "id": "card-19-normal",
+    "name": "Normal",
+    "active": true,
+    "parentId": "card-19-back",
+    "transform": {
+      "position": {
+        "x": -2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 252,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardNormal"
+      }
+    ]
+  },
+  {
+    "id": "card-19-selected",
+    "name": "Selected",
+    "active": false,
+    "parentId": "card-19-back",
+    "transform": {
+      "position": {
+        "x": -2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 252,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardSelected"
+      }
+    ]
+  },
+  {
+    "id": "card-19-label",
+    "name": "Label",
+    "active": true,
+    "parentId": "card-19-back",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 232,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "text",
+        "text": "4E",
+        "fontSize": 11.85,
+        "autoSize": false,
+        "fontSizeMin": 1,
+        "fontSizeMax": 20,
+        "color": "#ffffff",
+        "fontAssetKey": "geniusTechno",
+        "bold": false,
+        "italic": false,
+        "underline": false,
+        "letterSpacing": 0,
+        "lineSpacing": 0,
+        "alignH": "center",
+        "alignV": "middle",
+        "overflow": "wrap"
+      }
+    ]
+  },
+  {
+    "id": "card-19-locked",
+    "name": "Locked",
+    "active": false,
+    "parentId": "card-19-back",
+    "transform": {
+      "position": {
+        "x": -2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 252,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardLocked"
+      }
+    ]
+  },
+  {
+    "id": "card-19-locked-label",
+    "name": "Locked Label",
+    "active": true,
+    "parentId": "card-19-locked",
+    "transform": {
+      "position": {
+        "x": 2.5,
+        "y": 0
+      },
+      "size": {
+        "x": 239,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "text",
+        "text": "4E",
+        "fontSize": 11.85,
+        "autoSize": false,
+        "fontSizeMin": 1,
+        "fontSizeMax": 20,
+        "color": "#959595",
+        "fontAssetKey": "geniusTechno",
+        "bold": false,
+        "italic": false,
+        "underline": false,
+        "letterSpacing": 0,
+        "lineSpacing": 0,
+        "alignH": "center",
+        "alignV": "middle",
+        "overflow": "wrap"
+      }
+    ]
+  },
+  {
+    "id": "card-19-front",
+    "name": "Front",
+    "active": false,
+    "parentId": "card-19",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 235,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": []
+  },
+  {
+    "id": "card-19-empty",
+    "name": "Empty",
+    "active": true,
+    "parentId": "card-19-front",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 232,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardEmpty"
+      }
+    ]
+  },
+  {
+    "id": "card-19-logo",
+    "name": "With Logo",
+    "active": false,
+    "parentId": "card-19-front",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 232,
+        "y": 232
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "image",
+        "fit": "fill",
+        "assetKey": "cardWithLogo"
+      }
+    ]
+  },
+  {
+    "id": "level0",
+    "name": "Level 0",
+    "active": false,
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 1300,
+        "y": 1000
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": []
+  },
+  {
+    "id": "level0-message",
+    "name": "Message",
+    "active": true,
+    "parentId": "level0",
+    "transform": {
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "size": {
+        "x": 900,
+        "y": 250
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "components": [
+      {
+        "type": "text",
+        "text": "",
+        "fontSize": 3.33,
+        "autoSize": false,
+        "fontSizeMin": 1,
+        "fontSizeMax": 20,
+        "color": "#ffffff",
+        "fontAssetKey": "geniusTechno",
+        "bold": false,
+        "italic": false,
+        "underline": false,
+        "letterSpacing": 0,
+        "lineSpacing": 0,
+        "alignH": "center",
+        "alignV": "middle",
+        "overflow": "wrap"
+      }
+    ]
+  }
+]

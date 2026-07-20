@@ -12,6 +12,11 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-094] Busca Logo — migración del Nivel 2 (2026-07-20 13:21)
+
+Workspace nuevo `busca-logo` con el tablero 5×4 del Nivel 2 migrado desde Unity: `GridLayoutGroup` horneado (202 GameObjects), cartas con caras Back/Front vía `flip`, frames normal/selected/locked y sesión JSON plana. La sesión conserva **todos** los tableros: los de otro tamaño se navegan igual y caen en el `Level 0` heredado de Unity, con el mensaje de formato no disponible.
+Selección por tap (componente `card`, mismo patrón que `operaciones-combinadas`); los frames normal/selected/locked se derivan de `(selected, locked)` del controller. Teclas E/B (voltear), L (bloquear), C (limpiar selección y bloqueos), numpad/N (tablero) y Shift+U/Shift+I (debug: voltear todas).
+
 ## [TD-067] Resuelto: los paneles Scene y Game se pisaban los triggers de animación (2026-07-19 17:37)
 
 Ambos paneles montan `GameObjectView` para los mismos GameObjects y registraban con la misma clave `(goId, type)` en el mapa único de `AnimationsProvider`: el último en montar ganaba y el `unregister` de uno borraba el trigger del otro. Ahora `useGameObjectAnimations` registra sólo cuando `useSceneViewMode() === "game"` (los 6 efectos con registro; float/sparkles son ambientales y no cambian), así que el orden de montaje/desmontaje de paneles ya no importa.

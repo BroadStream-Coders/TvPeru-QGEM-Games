@@ -168,3 +168,4 @@ La foto llega a pantalla por el campo runtime `src` del componente `image`
 | Al Vuelo (ex Si o No) | ✅ RM-079 | ✅ RM-079 |
 | Álbum | ✅ RM-082 | ✅ RM-082 (animaciones → RM-083) |
 | Mi Libro Favorito | ✅ RM-092 | ✅ RM-092 |
+| Busca Logo (Nivel 2) | ✅ RM-094 | ✅ RM-094 (Niveles 1 y 3 fuera de alcance) |

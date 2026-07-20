@@ -44,11 +44,6 @@ export const INTRUSO_ASSETS = {
     path: "games/intruso/color/yellow.png",
     folder: "Colors",
   },
-  background: {
-    kind: "video",
-    path: "shared/backgrounds/backgroundBlue.mp4",
-    folder: "Backgrounds",
-  },
   geniusTechno: {
     kind: "font",
     path: "shared/fonts/GeniusTechno-Regular.ttf",

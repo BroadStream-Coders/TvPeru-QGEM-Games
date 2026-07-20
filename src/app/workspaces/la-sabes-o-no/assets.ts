@@ -43,11 +43,6 @@ export const LA_SABES_ASSETS = {
     path: "games/la-sabes-o-no/bookRight.png",
     folder: "Decor",
   },
-  background: {
-    kind: "video",
-    path: "shared/backgrounds/backgroundBlue.mp4",
-    folder: "Backgrounds",
-  },
   jetBrainsMono: {
     kind: "font",
     path: "shared/fonts/JetBrainsMono.ttf",

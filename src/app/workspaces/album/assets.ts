@@ -76,11 +76,6 @@ export const ALBUM_ASSETS = {
     path: "games/album/themes/06_PurplePackage.png",
     folder: "Themes",
   },
-  background: {
-    kind: "video",
-    path: "shared/backgrounds/backgroundBlue.mp4",
-    folder: "Backgrounds",
-  },
   geniusTechno: {
     kind: "font",
     path: "shared/fonts/GeniusTechno-Regular.ttf",

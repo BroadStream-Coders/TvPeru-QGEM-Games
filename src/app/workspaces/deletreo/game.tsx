@@ -10,7 +10,6 @@ import {
 } from "./components/deletreo/deletreoComponent";
 import { loadJsonFile } from "@/helpers/persistence";
 import { useGameSession } from "@/hooks/use-game-session";
-import { FRAME_ID } from "./constants";
 import { DeletreoBehavior } from "./DeletreoBehavior";
 import scene from "./scene.json";
 
@@ -18,7 +17,6 @@ export const deletreoGame: GameDefinition = {
   id: "deletreo",
   title: "Deletreo",
   icon: <SpellCheck className="h-3 w-3" />,
-  initialSelectedId: FRAME_ID,
   assets: DELETREO_ASSETS,
   components: [spellframeDefinition, deletreoDefinition],
   behavior: DeletreoBehavior,

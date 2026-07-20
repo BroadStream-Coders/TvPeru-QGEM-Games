@@ -10,7 +10,6 @@ import {
 } from "./components/controller/controllerComponent";
 import { loadJsonFile } from "@/helpers/persistence";
 import { useGameSession } from "@/hooks/use-game-session";
-import { SLOT_IDS } from "./constants";
 import { CalculoMentalBehavior } from "./CalculoMentalBehavior";
 import scene from "./scene.json";
 
@@ -18,7 +17,6 @@ export const calculoMentalGame: GameDefinition = {
   id: "calculo-mental",
   title: "Cálculo Mental",
   icon: <Calculator className="h-3 w-3" />,
-  initialSelectedId: SLOT_IDS[0],
   assets: CALCULO_ASSETS,
   components: [slotDefinition, controllerDefinition],
   behavior: CalculoMentalBehavior,

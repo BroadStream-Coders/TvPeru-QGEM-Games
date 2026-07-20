@@ -12,6 +12,10 @@ Resumen en ≤2 líneas de lo que se hizo.
 
 ---
 
+## [RM-095] Ningún GameObject seleccionado al entrar a un juego (2026-07-20 15:04)
+
+Se quitó `initialSelectedId` de los 9 workspaces (y los imports de `constants` que quedaron sin uso). `useSceneEditor` ya soportaba el campo opcional, así que arranca con `selectedIds: []`: sin outline en Scene ni inspector abierto por defecto.
+
 ## [RM-094] Busca Logo — migración del Nivel 2 (2026-07-20 13:21)
 
 Workspace nuevo `busca-logo` con el tablero 5×4 del Nivel 2 migrado desde Unity: `GridLayoutGroup` horneado (202 GameObjects), cartas con caras Back/Front vía `flip`, frames normal/selected/locked y sesión JSON plana. La sesión conserva **todos** los tableros: los de otro tamaño se navegan igual y caen en el `Level 0` heredado de Unity, con el mensaje de formato no disponible.

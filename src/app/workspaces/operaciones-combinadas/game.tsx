@@ -85,5 +85,4 @@ export const operacionesCombinadasGame: GameDefinition = {
   icon: <Sigma className="h-3 w-3" />,
   components: [buttonDefinition, draggableDefinition, dropZoneDefinition],
   gameObjects,
-  initialSelectedId: TARGET_ID,
 };
